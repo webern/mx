@@ -42,20 +42,33 @@ std::string Percent::toString() const
 
 bool Percent::tryParse(std::string_view text, Percent &out)
 {
-    Decimal v;
-    if (!Decimal::tryParse(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    Percent parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = Percent{std::move(v)};
+    out = std::move(parsed);
     return true;
 }
 
 Percent Percent::parse(std::string_view text)
 {
-    Percent v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Percent Percent::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    Decimal v;
+    if (!Decimal::tryParse(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return Percent{};
+    }
+    Percent out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

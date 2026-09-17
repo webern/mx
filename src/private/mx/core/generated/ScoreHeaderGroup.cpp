@@ -3,6 +3,7 @@
 #include "mx/core/generated/ScoreHeaderGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -85,12 +86,12 @@ void ScoreHeaderGroup::setPartList(PartList value)
     m_partList = std::move(value);
 }
 
-ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor)
+ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     ScoreHeaderGroup out;
     if (cursorIs(cursor, "work"))
     {
-        out.setWork(parseWork(cursor));
+        out.setWork(parseWork(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "movement-number"))
@@ -105,22 +106,22 @@ ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor
     }
     if (cursorIs(cursor, "identification"))
     {
-        out.setIdentification(parseIdentification(cursor));
+        out.setIdentification(parseIdentification(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "defaults"))
     {
-        out.setDefaults(parseDefaults(cursor));
+        out.setDefaults(parseDefaults(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "credit"))
     {
-        out.addCredit(parseCredit(cursor));
+        out.addCredit(parseCredit(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "part-list"))
     {
-        out.setPartList(parsePartList(cursor));
+        out.setPartList(parsePartList(cursor, context));
         cursor = nextElement(cursor);
     }
     else

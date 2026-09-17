@@ -12,6 +12,7 @@
 
 #include "mx/core/Error.h"
 #include "mx/core/OneOrMore.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 #include "mx/core/generated/Beam.h"
 #include "mx/core/generated/BeamValue.h"
@@ -60,7 +61,7 @@ ErrorCode parsePitchExpectingError(const char *xml)
     CHECK(doc.load_string(xml));
     try
     {
-        parsePitch(doc.first_child());
+        parsePitch(doc.first_child(), ParseContext{});
     }
     catch (const ParseError &e)
     {
@@ -193,7 +194,7 @@ TEST(StrictStructureParse, Shapes)
     // A round trip of valid input parses cleanly (values lenient).
     pugi::xml_document doc;
     CHECK(doc.load_string("<pitch><step>G</step><alter>-1</alter><octave>11</octave></pitch>"));
-    const Pitch p = parsePitch(doc.first_child());
+    const Pitch p = parsePitch(doc.first_child(), ParseContext{});
     CHECK(p.step() == Step::g());
     CHECK_EQUAL(9, p.octave().value()); // out-of-range value clamps
 }

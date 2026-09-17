@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A shared content group (synthesized from an anonymous
 /// particle of the schema): transparent on the wire, its
 /// fields serialize directly into the referencing element (plan §2.3).
@@ -38,7 +40,7 @@ class OrnamentsGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor);
+OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeOrnamentsGroup(const OrnamentsGroup &v, pugi::xml_node el);
 

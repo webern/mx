@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The grace type indicates the presence of a grace note. The slash attribute for a grace note is
 /// yes for slashed grace notes. The steal-time-previous attribute indicates the percentage of time
 /// to steal from the previous note for the grace note. The steal-time-following attribute indicates
@@ -43,9 +45,9 @@ class Grace final
     std::optional<YesNo> m_slash;
 };
 
-Grace parseGrace(pugi::xml_node el);
+Grace parseGrace(pugi::xml_node el, const ParseContext &context);
 
-void parseGraceContent(Grace &out, pugi::xml_node el);
+void parseGraceContent(Grace &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeGrace(const Grace &v, pugi::xml_node parent, const char *tag);
 

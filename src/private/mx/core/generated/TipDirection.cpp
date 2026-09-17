@@ -72,8 +72,14 @@ bool TipDirection::tryParse(std::string_view text, TipDirection &out) noexcept
 
 TipDirection TipDirection::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+TipDirection TipDirection::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     TipDirection v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

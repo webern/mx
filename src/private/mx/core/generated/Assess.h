@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// By default, an assessment application should assess all notes without a cue child element, and
 /// not assess any note with a cue child element. The assess type allows this default assessment to
 /// be overridden for individual notes. The optional player and time-only attributes restrict the
@@ -42,9 +44,9 @@ class Assess final
     std::optional<TimeOnly> m_timeOnly;
 };
 
-Assess parseAssess(pugi::xml_node el);
+Assess parseAssess(pugi::xml_node el, const ParseContext &context);
 
-void parseAssessContent(Assess &out, pugi::xml_node el);
+void parseAssessContent(Assess &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeAssess(const Assess &v, pugi::xml_node parent, const char *tag);
 

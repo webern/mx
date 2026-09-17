@@ -28,6 +28,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The harp-pedals type is used to create harp pedal diagrams. The pedal-step and pedal-alter
 /// elements use the same values as the step and alter elements. For easiest reading, the
 /// pedal-tuning elements should follow standard harp pedal order, with pedal-step values of D, C, B,
@@ -82,9 +84,9 @@ class HarpPedals final
     OneOrMore<PedalTuning> m_pedalTuning;
 };
 
-HarpPedals parseHarpPedals(pugi::xml_node el);
+HarpPedals parseHarpPedals(pugi::xml_node el, const ParseContext &context);
 
-void parseHarpPedalsContent(HarpPedals &out, pugi::xml_node el);
+void parseHarpPedalsContent(HarpPedals &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHarpPedals(const HarpPedals &v, pugi::xml_node parent, const char *tag);
 

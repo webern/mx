@@ -74,10 +74,28 @@ PartWriter::PartWriter(const api::PartData &inPartData, int inPartIndex, int inT
 {
 }
 
+const DiagnosticsContext &PartWriter::diagnostics() const
+{
+    return myScoreWriter.getDiagnostics();
+}
+
+core::Token PartWriter::writtenToken(const char *name, const std::string &text) const
+{
+    core::ValueParseOutcome outcome = core::ValueParseOutcome::valid;
+    auto token = core::Token::parse(text, outcome);
+    if (outcome != core::ValueParseOutcome::valid)
+    {
+        diagnostics().report(api::Severity::warning, api::DiagnosticCode::invalidValue, partLocation(myPartIndex),
+                             std::string{name} + " \"" + text + "\" is not a valid id; using \"" + token.value() +
+                                 "\"");
+    }
+    return token;
+}
+
 core::ScorePart PartWriter::getScorePart() const
 {
     core::ScorePart scorePart{};
-    scorePart.setID(core::Token{myPartData.uniqueId});
+    scorePart.setID(writtenToken("part id", myPartData.uniqueId));
 
     // <part-name> is required, so always write it. print-object is round-
     // tripped from the model (not force-hidden); deprecated formatting is never
@@ -115,7 +133,9 @@ core::ScorePart PartWriter::getScorePart() const
 
     core::ScoreInstrument scoreInstrument{};
     bool addScoreInstrument = false;
-    scoreInstrument.setID(core::Token{myPartData.instrumentData.uniqueId});
+    scoreInstrument.setID(myPartData.instrumentData.uniqueId.empty()
+                              ? core::Token{}
+                              : writtenToken("instrument id", myPartData.instrumentData.uniqueId));
 
     if (myPartData.instrumentData.name.size() > 0)
     {
@@ -195,7 +215,10 @@ core::ScorePart PartWriter::getScorePart() const
 
         if (apiMidiData.devicePort.has_value())
         {
-            midiDevice.setPort(core::MIDI16{*apiMidiData.devicePort});
+            const core::MIDI16 port{*apiMidiData.devicePort};
+            reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-device port", *apiMidiData.devicePort,
+                           port.value());
+            midiDevice.setPort(port);
         }
 
         // The midi-device attaches to this part's instrument, the same instrument the
@@ -218,37 +241,55 @@ core::ScorePart PartWriter::getScorePart() const
     if (myPartData.instrumentData.midiData.bank >= 0)
     {
         addMidiElement = true;
-        midiInstrument.setMIDIBank(core::MIDI16384{myPartData.instrumentData.midiData.bank});
+        const core::MIDI16384 bank{myPartData.instrumentData.midiData.bank};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-bank", myPartData.instrumentData.midiData.bank,
+                       bank.value());
+        midiInstrument.setMIDIBank(bank);
     }
 
     if (myPartData.instrumentData.midiData.channel >= 0)
     {
         addMidiElement = true;
-        midiInstrument.setMIDIChannel(core::MIDI16{myPartData.instrumentData.midiData.channel});
+        const core::MIDI16 channel{myPartData.instrumentData.midiData.channel};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-channel",
+                       myPartData.instrumentData.midiData.channel, channel.value());
+        midiInstrument.setMIDIChannel(channel);
     }
 
     if (myPartData.instrumentData.midiData.program >= 0)
     {
         addMidiElement = true;
-        midiInstrument.setMIDIProgram(core::MIDI128{myPartData.instrumentData.midiData.program});
+        const core::MIDI128 program{myPartData.instrumentData.midiData.program};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-program",
+                       myPartData.instrumentData.midiData.program, program.value());
+        midiInstrument.setMIDIProgram(program);
     }
 
     if (myPartData.instrumentData.midiData.isElevationSpecified)
     {
         addMidiElement = true;
-        midiInstrument.setElevation(core::RotationDegrees{core::Decimal{myPartData.instrumentData.midiData.elevation}});
+        const core::RotationDegrees elevation{core::Decimal{myPartData.instrumentData.midiData.elevation}};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "elevation",
+                       myPartData.instrumentData.midiData.elevation, elevation.value().value());
+        midiInstrument.setElevation(elevation);
     }
 
     if (myPartData.instrumentData.midiData.isPanSpecified)
     {
         addMidiElement = true;
-        midiInstrument.setPan(core::RotationDegrees{core::Decimal{myPartData.instrumentData.midiData.pan}});
+        const core::RotationDegrees pan{core::Decimal{myPartData.instrumentData.midiData.pan}};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "pan", myPartData.instrumentData.midiData.pan,
+                       pan.value().value());
+        midiInstrument.setPan(pan);
     }
 
     if (myPartData.instrumentData.midiData.isVolumeSpecified)
     {
         addMidiElement = true;
-        midiInstrument.setVolume(core::Percent{core::Decimal{myPartData.instrumentData.midiData.volume}});
+        const core::Percent volume{core::Decimal{myPartData.instrumentData.midiData.volume}};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "volume", myPartData.instrumentData.midiData.volume,
+                       volume.value().value());
+        midiInstrument.setVolume(volume);
     }
 
     if (addMidiElement)
@@ -280,6 +321,7 @@ core::ScorePart PartWriter::getScorePart() const
 core::PartwisePart PartWriter::getPartwisePart() const
 {
     core::PartwisePart partwisePart{};
+    // getScorePart reports a scrubbed part id
     partwisePart.setID(core::Token{myPartData.uniqueId});
     writeMeasures(partwisePart);
     return partwisePart;

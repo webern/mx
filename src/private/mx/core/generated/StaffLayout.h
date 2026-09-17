@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Staff layout includes the vertical distance from the bottom line of the previous staff in this
 /// system to the top line of the staff specified by the number attribute. The optional number
 /// attribute refers to staff numbers within the part, from top to bottom on the system. A value of 1
@@ -40,9 +42,9 @@ class StaffLayout final
     std::optional<Tenths> m_staffDistance;
 };
 
-StaffLayout parseStaffLayout(pugi::xml_node el);
+StaffLayout parseStaffLayout(pugi::xml_node el, const ParseContext &context);
 
-void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el);
+void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeStaffLayout(const StaffLayout &v, pugi::xml_node parent, const char *tag);
 

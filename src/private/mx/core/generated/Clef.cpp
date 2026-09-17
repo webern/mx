@@ -3,6 +3,7 @@
 #include "mx/core/generated/Clef.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -170,7 +171,7 @@ void Clef::setClef(ClefGroup value)
     m_clef = std::move(value);
 }
 
-Clef parseClef(pugi::xml_node el)
+Clef parseClef(pugi::xml_node el, const ParseContext &context)
 {
     Clef out;
     for (pugi::xml_attribute a : el.attributes())
@@ -182,79 +183,79 @@ Clef parseClef(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(StaffNumber::parse(a.value()));
+            out.setNumber(parseValue<StaffNumber>(a.value(), context, el, "number"));
         }
         else if (aname == "additional")
         {
-            out.setAdditional(YesNo::parse(a.value()));
+            out.setAdditional(parseValue<YesNo>(a.value(), context, el, "additional"));
         }
         else if (aname == "size")
         {
-            out.setSize(SymbolSize::parse(a.value()));
+            out.setSize(parseValue<SymbolSize>(a.value(), context, el, "size"));
         }
         else if (aname == "after-barline")
         {
-            out.setAfterBarline(YesNo::parse(a.value()));
+            out.setAfterBarline(parseValue<YesNo>(a.value(), context, el, "after-barline"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseClefContent(out, el);
+    parseClefContent(out, el, context);
     return out;
 }
 
-void parseClefContent(Clef &out, pugi::xml_node el)
+void parseClefContent(Clef &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "sign")))
     {
-        out.setClef(parseClefGroup(el, cursor));
+        out.setClef(parseClefGroup(el, cursor, context));
     }
     else
     {

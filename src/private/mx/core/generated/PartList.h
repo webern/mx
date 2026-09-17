@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The part-list identifies the different musical parts in this document. Each part has an ID that
 /// is used later within the musical data. Since parts may be encoded separately and combined later,
 /// identification elements are present at both the score and score-part levels. There must be at
@@ -46,9 +48,9 @@ class PartList final
     std::vector<PartListChoice> m_choice;
 };
 
-PartList parsePartList(pugi::xml_node el);
+PartList parsePartList(pugi::xml_node el, const ParseContext &context);
 
-void parsePartListContent(PartList &out, pugi::xml_node el);
+void parsePartListContent(PartList &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePartList(const PartList &v, pugi::xml_node parent, const char *tag);
 

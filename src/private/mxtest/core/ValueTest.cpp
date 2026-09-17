@@ -273,6 +273,11 @@ TEST(TokenRepairsToNCName, Values)
     CHECK(!Token::tryParse("1P", parsed));  // leading digit
     CHECK(!Token::tryParse("P 1", parsed)); // space
     CHECK(!Token::tryParse("", parsed));    // empty
+    ValueParseOutcome outcome = ValueParseOutcome::invalid;
+    CHECK_EQUAL(std::string{"P1"}, Token::parse(" P1 ", outcome).toString());
+    CHECK(ValueParseOutcome::valid == outcome); // surrounding whitespace is not a repair
+    CHECK_EQUAL(std::string{"P1"}, Token::parse("P 1", outcome).toString());
+    CHECK(ValueParseOutcome::invalid == outcome);
 }
 
 TEST(NameTokenRepairsToNmtoken, Values)
@@ -287,4 +292,9 @@ TEST(NameTokenRepairsToNmtoken, Values)
     CHECK(NameToken::tryParse("verse-1", parsed));
     CHECK(!NameToken::tryParse("verse one", parsed)); // space
     CHECK(!NameToken::tryParse("", parsed));          // empty
+    ValueParseOutcome outcome = ValueParseOutcome::invalid;
+    CHECK_EQUAL(std::string{"1"}, NameToken::parse(" 1 ", outcome).toString());
+    CHECK(ValueParseOutcome::valid == outcome); // surrounding whitespace is not a repair
+    CHECK_EQUAL(std::string{"verseone"}, NameToken::parse("verse one", outcome).toString());
+    CHECK(ValueParseOutcome::invalid == outcome);
 }

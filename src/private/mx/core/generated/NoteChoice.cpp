@@ -3,6 +3,7 @@
 #include "mx/core/generated/NoteChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,20 +31,20 @@ NoteChoice NoteChoice::normalNoteGroup(NormalNoteGroup value)
     return NoteChoice{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-NoteChoice parseNoteChoice(pugi::xml_node el, pugi::xml_node &cursor)
+NoteChoice parseNoteChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "grace")))
     {
-        return NoteChoice::graceNoteGroup(parseGraceNoteGroup(el, cursor));
+        return NoteChoice::graceNoteGroup(parseGraceNoteGroup(el, cursor, context));
     }
     if (cursor && (cursorIs(cursor, "cue")))
     {
-        return NoteChoice::cueNoteGroup(parseCueNoteGroup(el, cursor));
+        return NoteChoice::cueNoteGroup(parseCueNoteGroup(el, cursor, context));
     }
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
                    cursorIs(cursor, "rest")))
     {
-        return NoteChoice::normalNoteGroup(parseNormalNoteGroup(el, cursor));
+        return NoteChoice::normalNoteGroup(parseNormalNoteGroup(el, cursor, context));
     }
     if (cursor)
     {

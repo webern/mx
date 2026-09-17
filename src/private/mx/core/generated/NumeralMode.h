@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string_view>
 
 namespace mx::core
@@ -49,6 +51,9 @@ class NumeralMode final
     /// Lenient: an unrecognized literal falls back to the first variant
     /// (the import leniency policy; never produces an invalid value).
     static NumeralMode parse(std::string_view text) noexcept;
+
+    /// Lenient, and says whether the literal was recognized.
+    static NumeralMode parse(std::string_view text, ValueParseOutcome &outcome) noexcept;
 
     bool operator==(const NumeralMode &other) const noexcept = default;
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/Barline.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -150,7 +151,7 @@ void Barline::setRepeat(std::optional<Repeat> value)
     m_repeat = std::move(value);
 }
 
-Barline parseBarline(pugi::xml_node el)
+Barline parseBarline(pugi::xml_node el, const ParseContext &context)
 {
     Barline out;
     for (pugi::xml_attribute a : el.attributes())
@@ -162,7 +163,7 @@ Barline parseBarline(pugi::xml_node el)
         }
         if (aname == "location")
         {
-            out.setLocation(RightLeftMiddle::parse(a.value()));
+            out.setLocation(parseValue<RightLeftMiddle>(a.value(), context, el, "location"));
         }
         else if (aname == "segno")
         {
@@ -174,51 +175,51 @@ Barline parseBarline(pugi::xml_node el)
         }
         else if (aname == "divisions")
         {
-            out.setDivisions(Divisions::parse(a.value()));
+            out.setDivisions(parseValue<Divisions>(a.value(), context, el, "divisions"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseBarlineContent(out, el);
+    parseBarlineContent(out, el, context);
     return out;
 }
 
-void parseBarlineContent(Barline &out, pugi::xml_node el)
+void parseBarlineContent(Barline &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "bar-style"))
     {
-        out.setBarStyle(parseBarStyleColor(cursor));
+        out.setBarStyle(parseBarStyleColor(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
-        out.setEditorial(parseEditorialGroup(el, cursor));
+        out.setEditorial(parseEditorialGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "wavy-line"))
     {
-        out.setWavyLine(parseWavyLine(cursor));
+        out.setWavyLine(parseWavyLine(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "segno"))
     {
-        out.setSegno(parseSegno(cursor));
+        out.setSegno(parseSegno(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "coda"))
     {
-        out.setCoda(parseCoda(cursor));
+        out.setCoda(parseCoda(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "fermata"))
     {
-        if (!out.addFermata(parseFermata(cursor)))
+        if (!out.addFermata(parseFermata(cursor, context)))
         {
             throwTooManyElements(cursor);
         }
@@ -226,12 +227,12 @@ void parseBarlineContent(Barline &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "ending"))
     {
-        out.setEnding(parseEnding(cursor));
+        out.setEnding(parseEnding(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "repeat"))
     {
-        out.setRepeat(parseRepeat(cursor));
+        out.setRepeat(parseRepeat(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

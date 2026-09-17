@@ -3,6 +3,7 @@
 #include "mx/core/generated/Forward.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void Forward::setStaff(std::optional<int> value)
     m_staff = std::move(value);
 }
 
-Forward parseForward(pugi::xml_node el)
+Forward parseForward(pugi::xml_node el, const ParseContext &context)
 {
     Forward out;
     for (pugi::xml_attribute a : el.attributes())
@@ -52,16 +53,16 @@ Forward parseForward(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseForwardContent(out, el);
+    parseForwardContent(out, el, context);
     return out;
 }
 
-void parseForwardContent(Forward &out, pugi::xml_node el)
+void parseForwardContent(Forward &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "duration"))
     {
-        out.setDuration(PositiveDivisions::parse(childText(cursor)));
+        out.setDuration(parseValue<PositiveDivisions>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -70,11 +71,11 @@ void parseForwardContent(Forward &out, pugi::xml_node el)
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level") || cursorIs(cursor, "voice")))
     {
-        out.setEditorialVoice(parseEditorialVoiceGroup(el, cursor));
+        out.setEditorialVoice(parseEditorialVoiceGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "staff"))
     {
-        out.setStaff(parseInt(childText(cursor)));
+        out.setStaff(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor)

@@ -3,6 +3,7 @@
 #include "mx/core/generated/FullNoteGroupChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,23 +31,23 @@ FullNoteGroupChoice FullNoteGroupChoice::rest(Rest value)
     return FullNoteGroupChoice{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-FullNoteGroupChoice parseFullNoteGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
+FullNoteGroupChoice parseFullNoteGroupChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "pitch")))
     {
-        Pitch value = parsePitch(cursor);
+        Pitch value = parsePitch(cursor, context);
         cursor = nextElement(cursor);
         return FullNoteGroupChoice::pitch(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "unpitched")))
     {
-        Unpitched value = parseUnpitched(cursor);
+        Unpitched value = parseUnpitched(cursor, context);
         cursor = nextElement(cursor);
         return FullNoteGroupChoice::unpitched(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "rest")))
     {
-        Rest value = parseRest(cursor);
+        Rest value = parseRest(cursor, context);
         cursor = nextElement(cursor);
         return FullNoteGroupChoice::rest(std::move(value));
     }

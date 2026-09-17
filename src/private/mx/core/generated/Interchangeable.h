@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The interchangeable type is used to represent the second in a pair of interchangeable dual time
 /// signatures, such as the 6/8 in 3/4 (6/8). A separate symbol attribute value is available compared
 /// to the time element's symbol attribute, which applies to the first of the dual time signatures.
@@ -47,9 +49,9 @@ class Interchangeable final
     OneOrMore<TimeSignatureGroup> m_timeSignature;
 };
 
-Interchangeable parseInterchangeable(pugi::xml_node el);
+Interchangeable parseInterchangeable(pugi::xml_node el, const ParseContext &context);
 
-void parseInterchangeableContent(Interchangeable &out, pugi::xml_node el);
+void parseInterchangeableContent(Interchangeable &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeInterchangeable(const Interchangeable &v, pugi::xml_node parent, const char *tag);
 

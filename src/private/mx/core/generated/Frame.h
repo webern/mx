@@ -25,6 +25,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The frame type represents a frame or fretboard diagram used together with a chord symbol. The
 /// representation is based on the NIFF guitar grid with additional information. The frame type's
 /// unplayed attribute indicates what to display above a string that has no associated frame-note
@@ -86,9 +88,9 @@ class Frame final
     OneOrMore<FrameNote> m_frameNote;
 };
 
-Frame parseFrame(pugi::xml_node el);
+Frame parseFrame(pugi::xml_node el, const ParseContext &context);
 
-void parseFrameContent(Frame &out, pugi::xml_node el);
+void parseFrameContent(Frame &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFrame(const Frame &v, pugi::xml_node parent, const char *tag);
 

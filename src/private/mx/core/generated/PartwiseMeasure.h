@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
 class PartwiseMeasure final
@@ -54,9 +56,9 @@ class PartwiseMeasure final
     std::vector<MusicDataChoice> m_musicData;
 };
 
-PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el);
+PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el, const ParseContext &context);
 
-void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el);
+void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePartwiseMeasure(const PartwiseMeasure &v, pugi::xml_node parent, const char *tag);
 

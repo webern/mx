@@ -3,6 +3,7 @@
 #include "mx/core/generated/LyricLanguage.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void LyricLanguage::setXMLLang(std::string value)
     m_xmlLang = std::move(value);
 }
 
-LyricLanguage parseLyricLanguage(pugi::xml_node el)
+LyricLanguage parseLyricLanguage(pugi::xml_node el, const ParseContext &context)
 {
     LyricLanguage out;
     bool seen_xmlLang = false;
@@ -53,7 +54,7 @@ LyricLanguage parseLyricLanguage(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(NameToken::parse(a.value()));
+            out.setNumber(parseValue<NameToken>(a.value(), context, el, "number"));
         }
         else if (aname == "name")
         {
@@ -73,14 +74,16 @@ LyricLanguage parseLyricLanguage(pugi::xml_node el)
     {
         // Configured import repair (plan §2.4): inject the default.
         out.setXMLLang(std::string("und"));
+        reportAttributeDefaulted(context, el, "xml:lang", "und");
     }
-    parseLyricLanguageContent(out, el);
+    parseLyricLanguageContent(out, el, context);
     return out;
 }
 
-void parseLyricLanguageContent(LyricLanguage &out, pugi::xml_node el)
+void parseLyricLanguageContent(LyricLanguage &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

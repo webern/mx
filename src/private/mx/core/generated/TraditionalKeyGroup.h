@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The traditional-key group represents a traditional key signature using the cycle of fifths.
 /// A shared content group: transparent on the wire, its
 /// fields serialize directly into the referencing element (plan §2.3).
@@ -41,7 +43,7 @@ class TraditionalKeyGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TraditionalKeyGroup parseTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor);
+TraditionalKeyGroup parseTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeTraditionalKeyGroup(const TraditionalKeyGroup &v, pugi::xml_node el);
 

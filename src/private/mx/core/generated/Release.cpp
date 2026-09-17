@@ -3,6 +3,7 @@
 #include "mx/core/generated/Release.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -20,7 +21,7 @@ void Release::setOffset(std::optional<Divisions> value)
     m_offset = std::move(value);
 }
 
-Release parseRelease(pugi::xml_node el)
+Release parseRelease(pugi::xml_node el, const ParseContext &context)
 {
     Release out;
     for (pugi::xml_attribute a : el.attributes())
@@ -32,14 +33,14 @@ Release parseRelease(pugi::xml_node el)
         }
         if (aname == "offset")
         {
-            out.setOffset(Divisions::parse(a.value()));
+            out.setOffset(parseValue<Divisions>(a.value(), context, el, "offset"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseEmptyContent(out, el);
+    parseEmptyContent(out, el, context);
     return out;
 }
 

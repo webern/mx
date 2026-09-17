@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The barre element indicates placing a finger over multiple strings on a single fret. The type is
 /// "start" for the lowest pitched string (e.g., the string with the highest MusicXML number) and is
 /// "stop" for the highest pitched string.
@@ -33,9 +35,9 @@ class Barre final
     std::optional<Color> m_color;
 };
 
-Barre parseBarre(pugi::xml_node el);
+Barre parseBarre(pugi::xml_node el, const ParseContext &context);
 
-void parseBarreContent(Barre &out, pugi::xml_node el);
+void parseBarreContent(Barre &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBarre(const Barre &v, pugi::xml_node parent, const char *tag);
 

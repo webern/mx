@@ -3,6 +3,7 @@
 #include "mx/core/generated/LyricSyllableGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,16 +31,16 @@ void LyricSyllableGroup::setText(TextElementData value)
     m_text = std::move(value);
 }
 
-LyricSyllableGroup parseLyricSyllableGroup(pugi::xml_node el, pugi::xml_node &cursor)
+LyricSyllableGroup parseLyricSyllableGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     LyricSyllableGroup out;
     if (cursor && (cursorIs(cursor, "elision")))
     {
-        out.setElisionSyllabicGroup(parseElisionSyllabicGroup(el, cursor));
+        out.setElisionSyllabicGroup(parseElisionSyllabicGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "text"))
     {
-        out.setText(parseTextElementData(cursor));
+        out.setText(parseTextElementData(cursor, context));
         cursor = nextElement(cursor);
     }
     else

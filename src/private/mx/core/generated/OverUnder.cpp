@@ -43,8 +43,14 @@ bool OverUnder::tryParse(std::string_view text, OverUnder &out) noexcept
 
 OverUnder OverUnder::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+OverUnder OverUnder::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     OverUnder v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

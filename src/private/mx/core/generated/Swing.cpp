@@ -3,6 +3,7 @@
 #include "mx/core/generated/Swing.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Swing::setSwingStyle(std::optional<std::string> value)
     m_swingStyle = std::move(value);
 }
 
-Swing parseSwing(pugi::xml_node el)
+Swing parseSwing(pugi::xml_node el, const ParseContext &context)
 {
     Swing out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,16 +43,16 @@ Swing parseSwing(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseSwingContent(out, el);
+    parseSwingContent(out, el, context);
     return out;
 }
 
-void parseSwingContent(Swing &out, pugi::xml_node el)
+void parseSwingContent(Swing &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "straight") || cursorIs(cursor, "first")))
     {
-        out.setChoice(parseSwingChoice(el, cursor));
+        out.setChoice(parseSwingChoice(el, cursor, context));
     }
     else
     {

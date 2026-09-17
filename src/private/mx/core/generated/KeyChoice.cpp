@@ -3,6 +3,7 @@
 #include "mx/core/generated/KeyChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,18 +26,18 @@ KeyChoice KeyChoice::nonTraditionalKey(std::vector<NonTraditionalKeyGroup> value
     return KeyChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-KeyChoice parseKeyChoice(pugi::xml_node el, pugi::xml_node &cursor)
+KeyChoice parseKeyChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "cancel") || cursorIs(cursor, "fifths")))
     {
-        return KeyChoice::traditionalKey(parseTraditionalKeyGroup(el, cursor));
+        return KeyChoice::traditionalKey(parseTraditionalKeyGroup(el, cursor, context));
     }
     if (cursor && (cursorIs(cursor, "key-step")))
     {
         std::vector<NonTraditionalKeyGroup> items;
         while (cursor && (cursorIs(cursor, "key-step")))
         {
-            items.push_back(parseNonTraditionalKeyGroup(el, cursor));
+            items.push_back(parseNonTraditionalKeyGroup(el, cursor, context));
         }
         return KeyChoice::nonTraditionalKey(std::move(items));
     }

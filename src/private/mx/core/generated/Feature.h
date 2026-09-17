@@ -13,6 +13,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The feature type is a part of the grouping element used for musical analysis. The type attribute
 /// represents the type of the feature and the element content represents its value. This type is
 /// flexible to allow for different analyses.
@@ -30,9 +32,9 @@ class Feature final
     std::string m_value{};
 };
 
-Feature parseFeature(pugi::xml_node el);
+Feature parseFeature(pugi::xml_node el, const ParseContext &context);
 
-void parseFeatureContent(Feature &out, pugi::xml_node el);
+void parseFeatureContent(Feature &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFeature(const Feature &v, pugi::xml_node parent, const char *tag);
 

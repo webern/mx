@@ -3,6 +3,7 @@
 #include "mx/core/generated/Articulations.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,7 +36,7 @@ void Articulations::setChoice(std::vector<ArticulationsChoice> value)
     m_choice = std::move(value);
 }
 
-Articulations parseArticulations(pugi::xml_node el)
+Articulations parseArticulations(pugi::xml_node el, const ParseContext &context)
 {
     Articulations out;
     for (pugi::xml_attribute a : el.attributes())
@@ -47,18 +48,18 @@ Articulations parseArticulations(pugi::xml_node el)
         }
         if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseArticulationsContent(out, el);
+    parseArticulationsContent(out, el, context);
     return out;
 }
 
-void parseArticulationsContent(Articulations &out, pugi::xml_node el)
+void parseArticulationsContent(Articulations &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursor &&
@@ -69,7 +70,7 @@ void parseArticulationsContent(Articulations &out, pugi::xml_node el)
             cursorIs(cursor, "caesura") || cursorIs(cursor, "stress") || cursorIs(cursor, "unstress") ||
             cursorIs(cursor, "soft-accent") || cursorIs(cursor, "other-articulation")))
     {
-        out.addChoice(parseArticulationsChoice(el, cursor));
+        out.addChoice(parseArticulationsChoice(el, cursor, context));
     }
     if (cursor)
     {

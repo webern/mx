@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The bar-style-color type contains barline style and color information.
 class BarStyleColor final
 {
@@ -31,9 +33,9 @@ class BarStyleColor final
     BarStyle m_value{};
 };
 
-BarStyleColor parseBarStyleColor(pugi::xml_node el);
+BarStyleColor parseBarStyleColor(pugi::xml_node el, const ParseContext &context);
 
-void parseBarStyleColorContent(BarStyleColor &out, pugi::xml_node el);
+void parseBarStyleColorContent(BarStyleColor &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBarStyleColor(const BarStyleColor &v, pugi::xml_node parent, const char *tag);
 

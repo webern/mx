@@ -3,6 +3,7 @@
 #include "mx/core/generated/NonTraditionalKeyGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,12 +41,13 @@ void NonTraditionalKeyGroup::setKeyAccidental(std::optional<KeyAccidental> value
     m_keyAccidental = std::move(value);
 }
 
-NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor)
+NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor,
+                                                   const ParseContext &context)
 {
     NonTraditionalKeyGroup out;
     if (cursorIs(cursor, "key-step"))
     {
-        out.setKeyStep(Step::parse(childText(cursor)));
+        out.setKeyStep(parseValue<Step>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -54,7 +56,7 @@ NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_
     }
     if (cursorIs(cursor, "key-alter"))
     {
-        out.setKeyAlter(Semitones::parse(childText(cursor)));
+        out.setKeyAlter(parseValue<Semitones>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -63,7 +65,7 @@ NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_
     }
     if (cursorIs(cursor, "key-accidental"))
     {
-        out.setKeyAccidental(parseKeyAccidental(cursor));
+        out.setKeyAccidental(parseKeyAccidental(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

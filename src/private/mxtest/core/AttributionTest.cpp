@@ -9,6 +9,7 @@
 #include "cpul/cpulTestHarness.h"
 
 #include "mx/core/Attribution.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Version.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/Encoding.h"
@@ -102,7 +103,7 @@ TEST(DoesNotAccumulateAcrossRoundTrips, Attribution)
     serializeWithAttribution(doc, first);
 
     // Parsing mx's own output, then re-writing, must still yield one stamp.
-    const auto reparsed = parse(first);
+    const auto reparsed = parse(first, ParseContext{});
     CHECK(reparsed.ok());
     if (reparsed.ok())
     {

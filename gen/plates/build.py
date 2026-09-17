@@ -512,6 +512,7 @@ class _Builder:
                 if ref.name in _PRIM_NUMERIC
                 else "primitive-string",
                 name_token=ref.name in _PRIM_NAME_TOKEN,
+                unique_id=ref.name == "id",
             )
         if ref.category == "value":
             kind = self.values_by_name[ref.name].kind

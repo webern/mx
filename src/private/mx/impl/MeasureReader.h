@@ -37,6 +37,7 @@ class Clef;
 
 namespace impl
 {
+class NoteReader;
 
 class MeasureReader
 {
@@ -130,6 +131,9 @@ class MeasureReader
     bool isUserRequestedVoiceNumberConsistentAcrossAllVoices(const api::StaffData &staff) const;
     int getUserRequestedVoiceNumber(const api::VoiceData &voiceData) const;
     void advanceTickTimePosition(int amount, std::string reason) const;
+    void reportRoundedDuration(const char *element, double duration, api::Location location) const;
+    void reportBeamRepairs(const core::Note &inMxNote, const NoteReader &noteReader,
+                           const api::Location &location) const;
 };
 } // namespace impl
 } // namespace mx

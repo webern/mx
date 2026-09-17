@@ -487,6 +487,75 @@ static void spannerDetectSameNoteSpans(const std::vector<SpannerNumberEvent> &in
     }
 }
 
+static const char *spannerClassName(SpannerNumberClass inClass)
+{
+    switch (inClass)
+    {
+    case SpannerNumberClass::slur:
+        return "slur";
+    case SpannerNumberClass::tie:
+        return "tie";
+    case SpannerNumberClass::wedge:
+        return "wedge";
+    case SpannerNumberClass::octaveShift:
+        return "octave-shift";
+    case SpannerNumberClass::bracket:
+        return "bracket";
+    case SpannerNumberClass::dashes:
+        return "dashes";
+    case SpannerNumberClass::glissando:
+        return "glissando";
+    case SpannerNumberClass::slide:
+        return "slide";
+    case SpannerNumberClass::wavyLine:
+        return "wavy-line";
+    }
+    return "spanner";
+}
+
+// Reports the starts and stops of one class that have no partner. Endpoints pair by count within
+// their pairing key rather than in stream order, so a spanner that starts and stops on one note
+// pairs whichever endpoint is serialized first; the unpaired starts are the last ones and the
+// unpaired stops the first ones.
+static void spannerReportUnmatched(SpannerNumberClass inClass, const std::vector<SpannerNumberEvent> &inEvents,
+                                   const DiagnosticsContext &diagnostics)
+{
+    std::map<std::string, std::vector<const SpannerNumberEvent *>> starts;
+    std::map<std::string, std::vector<const SpannerNumberEvent *>> stops;
+    for (const auto &event : inEvents)
+    {
+        if (event.opens)
+        {
+            starts[spannerPairingKey(event.number)].push_back(&event);
+        }
+        else if (event.closes)
+        {
+            stops[spannerPairingKey(event.number)].push_back(&event);
+        }
+    }
+
+    const std::string name = spannerClassName(inClass);
+    for (const auto &keyAndStarts : starts)
+    {
+        const auto stopCount = stops[keyAndStarts.first].size();
+        for (std::size_t i = stopCount; i < keyAndStarts.second.size(); ++i)
+        {
+            diagnostics.report(api::Severity::warning, api::DiagnosticCode::unmatchedSpanner,
+                               keyAndStarts.second[i]->location, name + " start has no matching stop");
+        }
+    }
+    for (const auto &keyAndStops : stops)
+    {
+        const auto startIter = starts.find(keyAndStops.first);
+        const auto startCount = startIter == starts.cend() ? std::size_t{0} : startIter->second.size();
+        for (std::size_t i = 0; i + startCount < keyAndStops.second.size(); ++i)
+        {
+            diagnostics.report(api::Severity::warning, api::DiagnosticCode::unmatchedSpanner,
+                               keyAndStops.second[i]->location, name + " stop has no matching start");
+        }
+    }
+}
+
 void SpannerResolver::resolvePart(const api::PartData &inPart, int partIndex, DiagnosticsContext diagnostics)
 {
     SpannerEventCollector collector{partIndex};
@@ -521,6 +590,12 @@ void SpannerResolver::resolvePart(const api::PartData &inPart, int partIndex, Di
         spannerNumberAssignClass(classAndEvents.second, myResolved);
 
         const auto spannerClass = classAndEvents.first;
+
+        // an octave-shift stop with no start is reported with the size it is written with
+        if (spannerClass != SpannerNumberClass::octaveShift)
+        {
+            spannerReportUnmatched(spannerClass, classAndEvents.second, diagnostics);
+        }
         if (spannerClass == SpannerNumberClass::glissando || spannerClass == SpannerNumberClass::slide ||
             spannerClass == SpannerNumberClass::wavyLine)
         {

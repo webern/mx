@@ -38,20 +38,33 @@ std::string StaffNumber::toString() const
 
 bool StaffNumber::tryParse(std::string_view text, StaffNumber &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    StaffNumber parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = StaffNumber{v};
+    out = std::move(parsed);
     return true;
 }
 
 StaffNumber StaffNumber::parse(std::string_view text)
 {
-    StaffNumber v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+StaffNumber StaffNumber::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return StaffNumber{};
+    }
+    StaffNumber out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

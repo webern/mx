@@ -3,6 +3,7 @@
 #include "mx/core/generated/ClefGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,12 +41,12 @@ void ClefGroup::setClefOctaveChange(std::optional<int> value)
     m_clefOctaveChange = std::move(value);
 }
 
-ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor)
+ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     ClefGroup out;
     if (cursorIs(cursor, "sign"))
     {
-        out.setSign(ClefSign::parse(childText(cursor)));
+        out.setSign(parseValue<ClefSign>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -54,12 +55,12 @@ ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursorIs(cursor, "line"))
     {
-        out.setLine(StaffLinePosition::parse(childText(cursor)));
+        out.setLine(parseValue<StaffLinePosition>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "clef-octave-change"))
     {
-        out.setClefOctaveChange(parseInt(childText(cursor)));
+        out.setClefOctaveChange(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     return out;

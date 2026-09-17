@@ -3,6 +3,7 @@
 #include "mx/core/generated/Direction.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -115,7 +116,7 @@ void Direction::setListening(std::optional<Listening> value)
     m_listening = std::move(value);
 }
 
-Direction parseDirection(pugi::xml_node el)
+Direction parseDirection(pugi::xml_node el, const ParseContext &context)
 {
     Direction out;
     for (pugi::xml_attribute a : el.attributes())
@@ -127,65 +128,65 @@ Direction parseDirection(pugi::xml_node el)
         }
         if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "directive")
         {
-            out.setDirective(YesNo::parse(a.value()));
+            out.setDirective(parseValue<YesNo>(a.value(), context, el, "directive"));
         }
         else if (aname == "system")
         {
-            out.setSystem(SystemRelation::parse(a.value()));
+            out.setSystem(parseValue<SystemRelation>(a.value(), context, el, "system"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseDirectionContent(out, el);
+    parseDirectionContent(out, el, context);
     return out;
 }
 
-void parseDirectionContent(Direction &out, pugi::xml_node el)
+void parseDirectionContent(Direction &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (!cursorIs(cursor, "direction-type"))
     {
         throwMissingOrMisplaced(el, cursor, "direction-type");
     }
-    out.setDirectionType(OneOrMore<DirectionType>{parseDirectionType(cursor)});
+    out.setDirectionType(OneOrMore<DirectionType>{parseDirectionType(cursor, context)});
     cursor = nextElement(cursor);
     while (cursorIs(cursor, "direction-type"))
     {
-        out.addDirectionType(parseDirectionType(cursor));
+        out.addDirectionType(parseDirectionType(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "offset"))
     {
-        out.setOffset(parseOffset(cursor));
+        out.setOffset(parseOffset(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level") || cursorIs(cursor, "voice")))
     {
-        out.setEditorialVoiceDirection(parseEditorialVoiceDirectionGroup(el, cursor));
+        out.setEditorialVoiceDirection(parseEditorialVoiceDirectionGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "staff"))
     {
-        out.setStaff(parseInt(childText(cursor)));
+        out.setStaff(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "sound"))
     {
-        out.setSound(parseSound(cursor));
+        out.setSound(parseSound(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "listening"))
     {
-        out.setListening(parseListening(cursor));
+        out.setListening(parseListening(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

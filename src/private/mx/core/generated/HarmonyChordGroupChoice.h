@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A schema choice (synthesized from an anonymous particle
 /// of the schema): exactly one alternative by construction.
 /// Alternatives are positional; dispatch is by Kind/index, never by type
@@ -95,7 +97,8 @@ class HarmonyChordGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-HarmonyChordGroupChoice parseHarmonyChordGroupChoice(pugi::xml_node el, pugi::xml_node &cursor);
+HarmonyChordGroupChoice parseHarmonyChordGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
+                                                     const ParseContext &context);
 
 void serializeHarmonyChordGroupChoice(const HarmonyChordGroupChoice &v, pugi::xml_node el);
 

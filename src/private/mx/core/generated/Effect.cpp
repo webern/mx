@@ -3,6 +3,7 @@
 #include "mx/core/generated/Effect.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Effect::setValue(EffectValue value)
     m_value = std::move(value);
 }
 
-Effect parseEffect(pugi::xml_node el)
+Effect parseEffect(pugi::xml_node el, const ParseContext &context)
 {
     Effect out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,20 +43,20 @@ Effect parseEffect(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflPictogramGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflPictogramGlyphName>(a.value(), context, el, "smufl"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseEffectContent(out, el);
+    parseEffectContent(out, el, context);
     return out;
 }
 
-void parseEffectContent(Effect &out, pugi::xml_node el)
+void parseEffectContent(Effect &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(EffectValue::parse(childText(el)));
+    out.setValue(parseValue<EffectValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

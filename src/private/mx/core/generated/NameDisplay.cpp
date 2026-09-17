@@ -3,6 +3,7 @@
 #include "mx/core/generated/NameDisplay.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,7 +36,7 @@ void NameDisplay::setChoice(std::vector<NameDisplayChoice> value)
     m_choice = std::move(value);
 }
 
-NameDisplay parseNameDisplay(pugi::xml_node el)
+NameDisplay parseNameDisplay(pugi::xml_node el, const ParseContext &context)
 {
     NameDisplay out;
     for (pugi::xml_attribute a : el.attributes())
@@ -47,23 +48,23 @@ NameDisplay parseNameDisplay(pugi::xml_node el)
         }
         if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseNameDisplayContent(out, el);
+    parseNameDisplayContent(out, el, context);
     return out;
 }
 
-void parseNameDisplayContent(NameDisplay &out, pugi::xml_node el)
+void parseNameDisplayContent(NameDisplay &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "display-text") || cursorIs(cursor, "accidental-text")))
     {
-        out.addChoice(parseNameDisplayChoice(el, cursor));
+        out.addChoice(parseNameDisplayChoice(el, cursor, context));
     }
     if (cursor)
     {

@@ -3,6 +3,7 @@
 #include "mx/core/generated/TypedText.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void TypedText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-TypedText parseTypedText(pugi::xml_node el)
+TypedText parseTypedText(pugi::xml_node el, const ParseContext &context)
 {
     TypedText out;
     for (pugi::xml_attribute a : el.attributes())
@@ -49,11 +50,11 @@ TypedText parseTypedText(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseTypedTextContent(out, el);
+    parseTypedTextContent(out, el, context);
     return out;
 }
 
-void parseTypedTextContent(TypedText &out, pugi::xml_node el)
+void parseTypedTextContent(TypedText &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

@@ -3,6 +3,7 @@
 #include "mx/core/generated/OrnamentsGroupChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -90,95 +91,95 @@ OrnamentsGroupChoice OrnamentsGroupChoice::otherOrnament(OtherPlacementText valu
     return OrnamentsGroupChoice{Storage{std::in_place_index<14>, std::move(value)}};
 }
 
-OrnamentsGroupChoice parseOrnamentsGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
+OrnamentsGroupChoice parseOrnamentsGroupChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "trill-mark")))
     {
-        EmptyTrillSound value = parseEmptyTrillSound(cursor);
+        EmptyTrillSound value = parseEmptyTrillSound(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::trillMark(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "turn")))
     {
-        HorizontalTurn value = parseHorizontalTurn(cursor);
+        HorizontalTurn value = parseHorizontalTurn(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::turn(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "delayed-turn")))
     {
-        HorizontalTurn value = parseHorizontalTurn(cursor);
+        HorizontalTurn value = parseHorizontalTurn(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::delayedTurn(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "inverted-turn")))
     {
-        HorizontalTurn value = parseHorizontalTurn(cursor);
+        HorizontalTurn value = parseHorizontalTurn(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::invertedTurn(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "delayed-inverted-turn")))
     {
-        HorizontalTurn value = parseHorizontalTurn(cursor);
+        HorizontalTurn value = parseHorizontalTurn(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::delayedInvertedTurn(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "vertical-turn")))
     {
-        EmptyTrillSound value = parseEmptyTrillSound(cursor);
+        EmptyTrillSound value = parseEmptyTrillSound(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::verticalTurn(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "inverted-vertical-turn")))
     {
-        EmptyTrillSound value = parseEmptyTrillSound(cursor);
+        EmptyTrillSound value = parseEmptyTrillSound(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::invertedVerticalTurn(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "shake")))
     {
-        EmptyTrillSound value = parseEmptyTrillSound(cursor);
+        EmptyTrillSound value = parseEmptyTrillSound(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::shake(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "wavy-line")))
     {
-        WavyLine value = parseWavyLine(cursor);
+        WavyLine value = parseWavyLine(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::wavyLine(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "mordent")))
     {
-        Mordent value = parseMordent(cursor);
+        Mordent value = parseMordent(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::mordent(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "inverted-mordent")))
     {
-        Mordent value = parseMordent(cursor);
+        Mordent value = parseMordent(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::invertedMordent(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "schleifer")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::schleifer(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "tremolo")))
     {
-        Tremolo value = parseTremolo(cursor);
+        Tremolo value = parseTremolo(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::tremolo(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "haydn")))
     {
-        EmptyTrillSound value = parseEmptyTrillSound(cursor);
+        EmptyTrillSound value = parseEmptyTrillSound(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::haydn(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "other-ornament")))
     {
-        OtherPlacementText value = parseOtherPlacementText(cursor);
+        OtherPlacementText value = parseOtherPlacementText(cursor, context);
         cursor = nextElement(cursor);
         return OrnamentsGroupChoice::otherOrnament(std::move(value));
     }

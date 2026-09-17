@@ -4,6 +4,7 @@
 
 #include "mx/core/Error.h"
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 #include "mx/core/generated/Version.h"
 
@@ -13,7 +14,7 @@
 namespace mx::core
 {
 
-Result<Document> parse(const pugi::xml_document &doc)
+Result<Document> parse(const pugi::xml_document &doc, const ParseContext &context)
 {
     try
     {
@@ -41,11 +42,11 @@ Result<Document> parse(const pugi::xml_document &doc)
         Document d;
         if (tag == "score-partwise")
         {
-            d = Document{parseScorePartwise(root)};
+            d = Document{parseScorePartwise(root, context)};
         }
         else if (tag == "score-timewise")
         {
-            d = Document{parseScoreTimewise(root)};
+            d = Document{parseScoreTimewise(root, context)};
         }
         else
         {

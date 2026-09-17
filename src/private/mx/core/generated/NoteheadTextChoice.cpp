@@ -3,6 +3,7 @@
 #include "mx/core/generated/NoteheadTextChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,17 +26,17 @@ NoteheadTextChoice NoteheadTextChoice::accidentalText(AccidentalText value)
     return NoteheadTextChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-NoteheadTextChoice parseNoteheadTextChoice(pugi::xml_node el, pugi::xml_node &cursor)
+NoteheadTextChoice parseNoteheadTextChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "display-text")))
     {
-        FormattedText value = parseFormattedText(cursor);
+        FormattedText value = parseFormattedText(cursor, context);
         cursor = nextElement(cursor);
         return NoteheadTextChoice::displayText(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "accidental-text")))
     {
-        AccidentalText value = parseAccidentalText(cursor);
+        AccidentalText value = parseAccidentalText(cursor, context);
         cursor = nextElement(cursor);
         return NoteheadTextChoice::accidentalText(std::move(value));
     }

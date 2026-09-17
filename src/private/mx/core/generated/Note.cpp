@@ -3,6 +3,7 @@
 #include "mx/core/generated/Note.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -410,7 +411,7 @@ void Note::setListen(std::optional<Listen> value)
     m_listen = std::move(value);
 }
 
-Note parseNote(pugi::xml_node el)
+Note parseNote(pugi::xml_node el, const ParseContext &context)
 {
     Note out;
     for (pugi::xml_attribute a : el.attributes())
@@ -422,104 +423,104 @@ Note parseNote(pugi::xml_node el)
         }
         if (aname == "print-leger")
         {
-            out.setPrintLeger(YesNo::parse(a.value()));
+            out.setPrintLeger(parseValue<YesNo>(a.value(), context, el, "print-leger"));
         }
         else if (aname == "dynamics")
         {
-            out.setDynamics(NonNegativeDecimal::parse(a.value()));
+            out.setDynamics(parseValue<NonNegativeDecimal>(a.value(), context, el, "dynamics"));
         }
         else if (aname == "end-dynamics")
         {
-            out.setEndDynamics(NonNegativeDecimal::parse(a.value()));
+            out.setEndDynamics(parseValue<NonNegativeDecimal>(a.value(), context, el, "end-dynamics"));
         }
         else if (aname == "attack")
         {
-            out.setAttack(Divisions::parse(a.value()));
+            out.setAttack(parseValue<Divisions>(a.value(), context, el, "attack"));
         }
         else if (aname == "release")
         {
-            out.setRelease(Divisions::parse(a.value()));
+            out.setRelease(parseValue<Divisions>(a.value(), context, el, "release"));
         }
         else if (aname == "time-only")
         {
-            out.setTimeOnly(TimeOnly::parse(a.value()));
+            out.setTimeOnly(parseValue<TimeOnly>(a.value(), context, el, "time-only"));
         }
         else if (aname == "pizzicato")
         {
-            out.setPizzicato(YesNo::parse(a.value()));
+            out.setPizzicato(parseValue<YesNo>(a.value(), context, el, "pizzicato"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "print-dot")
         {
-            out.setPrintDot(YesNo::parse(a.value()));
+            out.setPrintDot(parseValue<YesNo>(a.value(), context, el, "print-dot"));
         }
         else if (aname == "print-lyric")
         {
-            out.setPrintLyric(YesNo::parse(a.value()));
+            out.setPrintLyric(parseValue<YesNo>(a.value(), context, el, "print-lyric"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else if (aname == "print-spacing")
         {
-            out.setPrintSpacing(YesNo::parse(a.value()));
+            out.setPrintSpacing(parseValue<YesNo>(a.value(), context, el, "print-spacing"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseNoteContent(out, el);
+    parseNoteContent(out, el, context);
     return out;
 }
 
-void parseNoteContent(Note &out, pugi::xml_node el)
+void parseNoteContent(Note &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "grace") || cursorIs(cursor, "cue") || cursorIs(cursor, "chord") ||
                    cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") || cursorIs(cursor, "rest")))
     {
-        out.setChoice(parseNoteChoice(el, cursor));
+        out.setChoice(parseNoteChoice(el, cursor, context));
     }
     else
     {
@@ -527,56 +528,56 @@ void parseNoteContent(Note &out, pugi::xml_node el)
     }
     while (cursorIs(cursor, "instrument"))
     {
-        out.addInstrument(parseInstrument(cursor));
+        out.addInstrument(parseInstrument(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level") || cursorIs(cursor, "voice")))
     {
-        out.setEditorialVoice(parseEditorialVoiceGroup(el, cursor));
+        out.setEditorialVoice(parseEditorialVoiceGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "type"))
     {
-        out.setType(parseNoteType(cursor));
+        out.setType(parseNoteType(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "dot"))
     {
-        out.addDot(parseEmptyPlacement(cursor));
+        out.addDot(parseEmptyPlacement(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "accidental"))
     {
-        out.setAccidental(parseAccidental(cursor));
+        out.setAccidental(parseAccidental(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "time-modification"))
     {
-        out.setTimeModification(parseTimeModification(cursor));
+        out.setTimeModification(parseTimeModification(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "stem"))
     {
-        out.setStem(parseStem(cursor));
+        out.setStem(parseStem(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "notehead"))
     {
-        out.setNotehead(parseNotehead(cursor));
+        out.setNotehead(parseNotehead(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "notehead-text"))
     {
-        out.setNoteheadText(parseNoteheadText(cursor));
+        out.setNoteheadText(parseNoteheadText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "staff"))
     {
-        out.setStaff(parseInt(childText(cursor)));
+        out.setStaff(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "beam"))
     {
-        if (!out.addBeam(parseBeam(cursor)))
+        if (!out.addBeam(parseBeam(cursor, context)))
         {
             throwTooManyElements(cursor);
         }
@@ -584,22 +585,22 @@ void parseNoteContent(Note &out, pugi::xml_node el)
     }
     while (cursorIs(cursor, "notations"))
     {
-        out.addNotations(parseNotations(cursor));
+        out.addNotations(parseNotations(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "lyric"))
     {
-        out.addLyric(parseLyric(cursor));
+        out.addLyric(parseLyric(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "play"))
     {
-        out.setPlay(parsePlay(cursor));
+        out.setPlay(parsePlay(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "listen"))
     {
-        out.setListen(parseListen(cursor));
+        out.setListen(parseListen(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

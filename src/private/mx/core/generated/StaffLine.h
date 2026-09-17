@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -35,6 +37,9 @@ class StaffLine final
 
     /// Lenient: non-numeric text yields the clamped zero.
     static StaffLine parse(std::string_view text);
+
+    /// Lenient, and says whether the text was non-numeric or clamped.
+    static StaffLine parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const StaffLine &other) const noexcept = default;
 

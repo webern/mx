@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The note-size type indicates the percentage of the regular note size to use for notes with a cue
 /// and large size as defined in the type element. The grace type is used for notes of cue size that
 /// that include a grace element. The cue type is used for all other notes with cue size, whether
@@ -36,9 +38,9 @@ class NoteSize final
     NonNegativeDecimal m_value{};
 };
 
-NoteSize parseNoteSize(pugi::xml_node el);
+NoteSize parseNoteSize(pugi::xml_node el, const ParseContext &context);
 
-void parseNoteSizeContent(NoteSize &out, pugi::xml_node el);
+void parseNoteSizeContent(NoteSize &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNoteSize(const NoteSize &v, pugi::xml_node parent, const char *tag);
 

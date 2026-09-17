@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The listen and listening types, new in Version 4.0, specify different ways that a score following
 /// or machine listening application can interact with a performer. The listening type handles
 /// interactions that change the state of the listening application from the specified point in the
@@ -46,9 +48,9 @@ class Listening final
     std::optional<Offset> m_offset;
 };
 
-Listening parseListening(pugi::xml_node el);
+Listening parseListening(pugi::xml_node el, const ParseContext &context);
 
-void parseListeningContent(Listening &out, pugi::xml_node el);
+void parseListeningContent(Listening &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeListening(const Listening &v, pugi::xml_node parent, const char *tag);
 

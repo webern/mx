@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The tuning group contains the sequence of elements common to the staff-tuning and accord
 /// elements.
 /// A shared content group: transparent on the wire, its
@@ -42,7 +44,7 @@ class TuningGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TuningGroup parseTuningGroup(pugi::xml_node el, pugi::xml_node &cursor);
+TuningGroup parseTuningGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeTuningGroup(const TuningGroup &v, pugi::xml_node el);
 

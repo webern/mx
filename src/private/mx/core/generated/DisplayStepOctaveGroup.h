@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The display-step-octave group contains the sequence of elements used by both the rest and
 /// unpitched elements. This group is used to place rests and unpitched elements on the staff without
 /// implying that these elements have pitch. Positioning follows the current clef. If percussion clef
@@ -41,7 +43,8 @@ class DisplayStepOctaveGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor);
+DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor,
+                                                   const ParseContext &context);
 
 void serializeDisplayStepOctaveGroup(const DisplayStepOctaveGroup &v, pugi::xml_node el);
 

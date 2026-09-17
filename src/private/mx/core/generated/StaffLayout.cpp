@@ -3,6 +3,7 @@
 #include "mx/core/generated/StaffLayout.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void StaffLayout::setStaffDistance(std::optional<Tenths> value)
     m_staffDistance = std::move(value);
 }
 
-StaffLayout parseStaffLayout(pugi::xml_node el)
+StaffLayout parseStaffLayout(pugi::xml_node el, const ParseContext &context)
 {
     StaffLayout out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,23 +43,23 @@ StaffLayout parseStaffLayout(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(StaffNumber::parse(a.value()));
+            out.setNumber(parseValue<StaffNumber>(a.value(), context, el, "number"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseStaffLayoutContent(out, el);
+    parseStaffLayoutContent(out, el, context);
     return out;
 }
 
-void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el)
+void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "staff-distance"))
     {
-        out.setStaffDistance(Tenths::parse(childText(cursor)));
+        out.setStaffDistance(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor)

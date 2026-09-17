@@ -97,15 +97,19 @@ void notationsWriterSetMordentSpecificAttributes(const api::MarkData &mark, core
     }
 }
 
-core::NotationsChoice notationsWriterMakeTupletStop(const api::TupletStop &inTupletStop)
+core::NotationsChoice notationsWriterMakeTupletStop(const api::TupletStop &inTupletStop,
+                                                    const DiagnosticsContext &diagnostics,
+                                                    const api::Location &location)
 {
     core::Tuplet tuplet;
     tuplet.setType(core::StartStop::stop());
-    setId(inTupletStop.id, tuplet);
+    setId(inTupletStop.id, tuplet, diagnostics, location);
 
     if (inTupletStop.numberLevel > 0)
     {
-        tuplet.setNumber(core::NumberLevel{inTupletStop.numberLevel});
+        const core::NumberLevel numberLevel{inTupletStop.numberLevel};
+        reportAdjusted(diagnostics, location, "tuplet number", inTupletStop.numberLevel, numberLevel.value());
+        tuplet.setNumber(numberLevel);
     }
 
     return core::NotationsChoice::tuplet(tuplet);
@@ -130,19 +134,24 @@ core::Notations NotationsWriter::getNotations() const
     {
         if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
         {
+            myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                                  cursorLocation(myCursor),
+                                                  "a curve with an unspecified type is not written");
             continue;
         }
         const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
         if (curve.curveType == api::CurveType::tie)
         {
             core::Tied tied;
-            writeAttributesFromCurveStop(curve, tied, resolvedNumber);
+            writeAttributesFromCurveStop(curve, tied, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                         cursorLocation(myCursor));
             outNotations.addChoice(core::NotationsChoice::tied(tied));
         }
         else if (curve.curveType == api::CurveType::slur)
         {
             core::Slur slur;
-            writeAttributesFromCurveStop(curve, slur, resolvedNumber);
+            writeAttributesFromCurveStop(curve, slur, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                         cursorLocation(myCursor));
             outNotations.addChoice(core::NotationsChoice::slur(slur));
         }
     }
@@ -151,19 +160,24 @@ core::Notations NotationsWriter::getNotations() const
     {
         if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
         {
+            myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                                  cursorLocation(myCursor),
+                                                  "a curve with an unspecified type is not written");
             continue;
         }
         const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
         if (curve.curveType == api::CurveType::tie)
         {
             core::Tied tied;
-            writeAttributesFromCurveContinue(curve, tied, resolvedNumber);
+            writeAttributesFromCurveContinue(curve, tied, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                             cursorLocation(myCursor));
             outNotations.addChoice(core::NotationsChoice::tied(tied));
         }
         else if (curve.curveType == api::CurveType::slur)
         {
             core::Slur slur;
-            writeAttributesFromCurveContinue(curve, slur, resolvedNumber);
+            writeAttributesFromCurveContinue(curve, slur, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                             cursorLocation(myCursor));
             outNotations.addChoice(core::NotationsChoice::slur(slur));
         }
     }
@@ -172,19 +186,24 @@ core::Notations NotationsWriter::getNotations() const
     {
         if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
         {
+            myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                                  cursorLocation(myCursor),
+                                                  "a curve with an unspecified type is not written");
             continue;
         }
         const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
         if (curve.curveType == api::CurveType::tie)
         {
             core::Tied tied;
-            writeAttributesFromCurveStart(curve, tied, resolvedNumber);
+            writeAttributesFromCurveStart(curve, tied, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                          cursorLocation(myCursor));
             outNotations.addChoice(core::NotationsChoice::tied(tied));
         }
         else if (curve.curveType == api::CurveType::slur)
         {
             core::Slur slur;
-            writeAttributesFromCurveStart(curve, slur, resolvedNumber);
+            writeAttributesFromCurveStart(curve, slur, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                          cursorLocation(myCursor));
             outNotations.addChoice(core::NotationsChoice::slur(slur));
         }
     }
@@ -195,7 +214,8 @@ core::Notations NotationsWriter::getNotations() const
     if (myNoteData.tieLetRing.has_value())
     {
         core::Tied tied;
-        writeAttributesFromTieLetRing(*myNoteData.tieLetRing, tied);
+        writeAttributesFromTieLetRing(*myNoteData.tieLetRing, tied, myScoreWriter.getDiagnostics(),
+                                      cursorLocation(myCursor));
         outNotations.addChoice(core::NotationsChoice::tied(tied));
     }
 
@@ -216,7 +236,7 @@ core::Notations NotationsWriter::getNotations() const
     {
         core::Tuplet tuplet;
         tuplet.setType(core::StartStop::start());
-        setId(tupletStart.id, tuplet);
+        setId(tupletStart.id, tuplet, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
 
         core::TupletPortion actual;
         core::TupletNumber tn1;
@@ -246,7 +266,10 @@ core::Notations NotationsWriter::getNotations() const
 
         if (tupletStart.numberLevel > 0)
         {
-            tuplet.setNumber(core::NumberLevel{tupletStart.numberLevel});
+            const core::NumberLevel numberLevel{tupletStart.numberLevel};
+            reportAdjusted(myScoreWriter.getDiagnostics(), cursorLocation(myCursor), "tuplet number",
+                           tupletStart.numberLevel, numberLevel.value());
+            tuplet.setNumber(numberLevel);
         }
 
         if (tupletStart.bracket != api::Bool::unspecified)
@@ -279,7 +302,8 @@ core::Notations NotationsWriter::getNotations() const
         {
             if (!tupletStopWritten[stopIndex] && tupletStops[stopIndex].numberLevel == tupletStart.numberLevel)
             {
-                outNotations.addChoice(notationsWriterMakeTupletStop(tupletStops[stopIndex]));
+                outNotations.addChoice(notationsWriterMakeTupletStop(
+                    tupletStops[stopIndex], myScoreWriter.getDiagnostics(), cursorLocation(myCursor)));
                 tupletStopWritten[stopIndex] = true;
                 break;
             }
@@ -290,7 +314,8 @@ core::Notations NotationsWriter::getNotations() const
     {
         if (!tupletStopWritten[stopIndex])
         {
-            outNotations.addChoice(notationsWriterMakeTupletStop(tupletStops[stopIndex]));
+            outNotations.addChoice(notationsWriterMakeTupletStop(tupletStops[stopIndex], myScoreWriter.getDiagnostics(),
+                                                                 cursorLocation(myCursor)));
         }
     }
 
@@ -317,7 +342,7 @@ core::Notations NotationsWriter::getNotations() const
         }
         else if (isMarkDynamic(mark.markType))
         {
-            DynamicsWriter dynamicsWriter{mark, myCursor};
+            DynamicsWriter dynamicsWriter{mark, myCursor, myScoreWriter.getDiagnostics()};
             outNotations.addChoice(core::NotationsChoice::dynamics(dynamicsWriter.getDynamics()));
         }
         else if (isMarkFermata(mark.markType))
@@ -415,9 +440,12 @@ core::Notations NotationsWriter::getNotations() const
                                       : core::TopBottom::top());
             if (nonArpeggiateData.number.has_value())
             {
-                nonArpeggiate.setNumber(core::NumberLevel{*nonArpeggiateData.number});
+                const core::NumberLevel numberLevel{*nonArpeggiateData.number};
+                reportAdjusted(myScoreWriter.getDiagnostics(), cursorLocation(myCursor), "non-arpeggiate number",
+                               *nonArpeggiateData.number, numberLevel.value());
+                nonArpeggiate.setNumber(numberLevel);
             }
-            setId(nonArpeggiateData.id, nonArpeggiate);
+            setId(nonArpeggiateData.id, nonArpeggiate, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
 
             outNotations.addChoice(core::NotationsChoice::nonArpeggiate(nonArpeggiate));
         }
@@ -442,14 +470,17 @@ core::Notations NotationsWriter::getNotations() const
             const auto arpeggiateData = mark.choice.arpeggiate();
             if (arpeggiateData.number.has_value())
             {
-                arpeggiate.setNumber(core::NumberLevel{*arpeggiateData.number});
+                const core::NumberLevel numberLevel{*arpeggiateData.number};
+                reportAdjusted(myScoreWriter.getDiagnostics(), cursorLocation(myCursor), "arpeggiate number",
+                               *arpeggiateData.number, numberLevel.value());
+                arpeggiate.setNumber(numberLevel);
             }
             if (arpeggiateData.unbroken != api::Bool::unspecified)
             {
                 Converter converter;
                 arpeggiate.setUnbroken(converter.convert(arpeggiateData.unbroken));
             }
-            setId(arpeggiateData.id, arpeggiate);
+            setId(arpeggiateData.id, arpeggiate, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
 
             outNotations.addChoice(core::NotationsChoice::arpeggiate(arpeggiate));
         }
@@ -463,15 +494,24 @@ core::Notations NotationsWriter::getNotations() const
             other.setType(myConverter.convert(payload.type));
             if (payload.number.has_value())
             {
-                other.setNumber(core::NumberLevel{*payload.number});
+                const core::NumberLevel numberLevel{*payload.number};
+                reportAdjusted(myScoreWriter.getDiagnostics(), cursorLocation(myCursor), "other-notation number",
+                               *payload.number, numberLevel.value());
+                other.setNumber(numberLevel);
             }
             if (payload.smufl.has_value())
             {
                 other.setSmufl(core::SmuflGlyphName{*payload.smufl});
             }
-            setId(payload.id, other);
+            setId(payload.id, other, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
 
             outNotations.addChoice(core::NotationsChoice::otherNotation(other));
+        }
+        else if (isMarkPedal(mark.markType))
+        {
+            myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                                  cursorLocation(myCursor),
+                                                  "a pedal mark on a note is not written; write it in a direction");
         }
     }
 
@@ -521,13 +561,15 @@ void NotationsWriter::addGlissandoAndSlide(core::Notations &outNotations) const
         if (glissandoStart.glissandoType == api::GlissandoType::slide)
         {
             core::Slide slide;
-            writeAttributesFromGlissandoStart(glissandoStart, slide, resolvedNumber);
+            writeAttributesFromGlissandoStart(glissandoStart, slide, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                              cursorLocation(myCursor));
             outNotations.addChoice(core::NotationsChoice::slide(slide));
         }
         else
         {
             core::Glissando glissando;
-            writeAttributesFromGlissandoStart(glissandoStart, glissando, resolvedNumber);
+            writeAttributesFromGlissandoStart(glissandoStart, glissando, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                              cursorLocation(myCursor));
             outNotations.addChoice(core::NotationsChoice::glissando(glissando));
         }
 
@@ -553,13 +595,15 @@ void NotationsWriter::addGlissandoStop(const api::GlissandoStop &inGlissandoStop
     if (inGlissandoStop.glissandoType == api::GlissandoType::slide)
     {
         core::Slide slide;
-        writeAttributesFromGlissandoStop(inGlissandoStop, slide, resolvedNumber);
+        writeAttributesFromGlissandoStop(inGlissandoStop, slide, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                         cursorLocation(myCursor));
         outNotations.addChoice(core::NotationsChoice::slide(slide));
     }
     else
     {
         core::Glissando glissando;
-        writeAttributesFromGlissandoStop(inGlissandoStop, glissando, resolvedNumber);
+        writeAttributesFromGlissandoStop(inGlissandoStop, glissando, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                         cursorLocation(myCursor));
         outNotations.addChoice(core::NotationsChoice::glissando(glissando));
     }
 }
@@ -1035,15 +1079,23 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &o
     case core::TechnicalChoice::Kind::fret: {
         core::Fret f;
         int fretValue = 0;
+        std::size_t length = 0;
         if (!mark.name.empty())
         {
             try
             {
-                fretValue = std::stoi(mark.name);
+                fretValue = std::stoi(mark.name, &length);
             }
             catch (...)
             {
             }
+        }
+        // reported outside the try so a throwing diagnostic handler is not swallowed
+        if (length != mark.name.size())
+        {
+            myScoreWriter.getDiagnostics().report(
+                api::Severity::warning, api::DiagnosticCode::invalidValue, cursorLocation(myCursor),
+                "fret \"" + mark.name + "\" is not a number; using " + std::to_string(fretValue));
         }
         f.setValue(fretValue);
         outTechnical.addChoice(core::TechnicalChoice::fret(f));
@@ -1051,7 +1103,15 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &o
     }
     case core::TechnicalChoice::Kind::string: {
         core::String s;
-        s.setValue(core::StringNumber::parse(mark.name));
+        core::ValueParseOutcome outcome = core::ValueParseOutcome::valid;
+        const auto stringNumber = core::StringNumber::parse(mark.name, outcome);
+        if (outcome != core::ValueParseOutcome::valid)
+        {
+            myScoreWriter.getDiagnostics().report(
+                api::Severity::warning, api::DiagnosticCode::invalidValue, cursorLocation(myCursor),
+                "string \"" + mark.name + "\" is not a string number; using " + std::to_string(stringNumber.value()));
+        }
+        s.setValue(stringNumber);
         outTechnical.addChoice(core::TechnicalChoice::string(s));
         break;
     }

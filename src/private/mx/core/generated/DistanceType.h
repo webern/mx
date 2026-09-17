@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -35,6 +37,9 @@ class DistanceType final
     static bool tryParse(std::string_view text, DistanceType &out);
 
     static DistanceType parse(std::string_view text);
+
+    /// Says whether the text had to be repaired.
+    static DistanceType parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const DistanceType &other) const noexcept = default;
 

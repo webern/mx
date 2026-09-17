@@ -57,8 +57,14 @@ bool BreathMarkValue::tryParse(std::string_view text, BreathMarkValue &out) noex
 
 BreathMarkValue BreathMarkValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+BreathMarkValue BreathMarkValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     BreathMarkValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

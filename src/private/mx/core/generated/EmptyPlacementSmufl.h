@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The empty-placement-smufl type represents an empty element with print-style, placement, and smufl
 /// attributes.
 class EmptyPlacementSmufl final
@@ -65,9 +67,9 @@ class EmptyPlacementSmufl final
     std::optional<SmuflGlyphName> m_smufl;
 };
 
-EmptyPlacementSmufl parseEmptyPlacementSmufl(pugi::xml_node el);
+EmptyPlacementSmufl parseEmptyPlacementSmufl(pugi::xml_node el, const ParseContext &context);
 
-void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, pugi::xml_node el);
+void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEmptyPlacementSmufl(const EmptyPlacementSmufl &v, pugi::xml_node parent, const char *tag);
 

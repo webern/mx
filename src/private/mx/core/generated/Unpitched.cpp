@@ -3,6 +3,7 @@
 #include "mx/core/generated/Unpitched.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -20,7 +21,7 @@ void Unpitched::setDisplayStepOctave(std::optional<DisplayStepOctaveGroup> value
     m_displayStepOctave = std::move(value);
 }
 
-Unpitched parseUnpitched(pugi::xml_node el)
+Unpitched parseUnpitched(pugi::xml_node el, const ParseContext &context)
 {
     Unpitched out;
     for (pugi::xml_attribute a : el.attributes())
@@ -32,16 +33,16 @@ Unpitched parseUnpitched(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseUnpitchedContent(out, el);
+    parseUnpitchedContent(out, el, context);
     return out;
 }
 
-void parseUnpitchedContent(Unpitched &out, pugi::xml_node el)
+void parseUnpitchedContent(Unpitched &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "display-step")))
     {
-        out.setDisplayStepOctave(parseDisplayStepOctaveGroup(el, cursor));
+        out.setDisplayStepOctave(parseDisplayStepOctaveGroup(el, cursor, context));
     }
     if (cursor)
     {

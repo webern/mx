@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The other-placement-text type represents a text element with print-style, placement, and smufl
 /// attribute groups. This type is used by MusicXML notation extension elements to allow
 /// specification of specific SMuFL glyphs without needed to add every glyph as a MusicXML element.
@@ -69,9 +71,9 @@ class OtherPlacementText final
     std::string m_value{};
 };
 
-OtherPlacementText parseOtherPlacementText(pugi::xml_node el);
+OtherPlacementText parseOtherPlacementText(pugi::xml_node el, const ParseContext &context);
 
-void parseOtherPlacementTextContent(OtherPlacementText &out, pugi::xml_node el);
+void parseOtherPlacementTextContent(OtherPlacementText &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOtherPlacementText(const OtherPlacementText &v, pugi::xml_node parent, const char *tag);
 

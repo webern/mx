@@ -12,6 +12,7 @@
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/Key.h"
 #include "mx/core/generated/PartwiseMeasure.h"
+#include "mx/impl/DiagnosticsContext.h"
 
 namespace mx
 {
@@ -29,7 +30,9 @@ namespace impl
 class PropertiesWriter
 {
   public:
-    explicit PropertiesWriter(core::PartwiseMeasure &inPartwiseMeasure);
+    // location is the part and measure written, for reports.
+    explicit PropertiesWriter(core::PartwiseMeasure &inPartwiseMeasure, DiagnosticsContext diagnostics = {},
+                              api::Location location = {});
 
     // destroy and reallocate a new properties element
     // without inserting it into the measure
@@ -48,7 +51,7 @@ class PropertiesWriter
     void writeDivisions(int value);
     void writeKey(int staffIndex, const api::KeyData &inKeyData);
     static void writeTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey);
-    static void writeNonTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey);
+    void writeNonTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey) const;
     // staffIndex is INDEX_UNSPECIFIED for the unscoped <time>, else the zero-based staff index of a
     // <time number="N"> override.
     void writeTime(const api::TimeChoice &value, int staffIndex);
@@ -68,6 +71,8 @@ class PropertiesWriter
     core::Attributes myAttributes;
     bool myHasContent;
     core::PartwiseMeasure &myPartwiseMeasure;
+    DiagnosticsContext myDiagnostics;
+    api::Location myLocation;
 };
 
 } // namespace impl

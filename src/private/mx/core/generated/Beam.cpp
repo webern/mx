@@ -3,6 +3,7 @@
 #include "mx/core/generated/Beam.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -70,7 +71,7 @@ void Beam::setValue(BeamValue value)
     m_value = std::move(value);
 }
 
-Beam parseBeam(pugi::xml_node el)
+Beam parseBeam(pugi::xml_node el, const ParseContext &context)
 {
     Beam out;
     for (pugi::xml_attribute a : el.attributes())
@@ -82,36 +83,36 @@ Beam parseBeam(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(BeamLevel::parse(a.value()));
+            out.setNumber(parseValue<BeamLevel>(a.value(), context, el, "number"));
         }
         else if (aname == "repeater")
         {
-            out.setRepeater(YesNo::parse(a.value()));
+            out.setRepeater(parseValue<YesNo>(a.value(), context, el, "repeater"));
         }
         else if (aname == "fan")
         {
-            out.setFan(Fan::parse(a.value()));
+            out.setFan(parseValue<Fan>(a.value(), context, el, "fan"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseBeamContent(out, el);
+    parseBeamContent(out, el, context);
     return out;
 }
 
-void parseBeamContent(Beam &out, pugi::xml_node el)
+void parseBeamContent(Beam &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(BeamValue::parse(childText(el)));
+    out.setValue(parseValue<BeamValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

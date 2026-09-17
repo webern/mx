@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The numeral-root type represents the Roman numeral or Nashville number as a positive integer from
 /// 1 to 7. The text attribute indicates how the numeral should appear in the score. A numeral-root
 /// value of 5 with a kind of major would have a text attribute of "V" if displayed as a Roman
@@ -67,9 +69,9 @@ class NumeralRoot final
     NumeralValue m_value{};
 };
 
-NumeralRoot parseNumeralRoot(pugi::xml_node el);
+NumeralRoot parseNumeralRoot(pugi::xml_node el, const ParseContext &context);
 
-void parseNumeralRootContent(NumeralRoot &out, pugi::xml_node el);
+void parseNumeralRootContent(NumeralRoot &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNumeralRoot(const NumeralRoot &v, pugi::xml_node parent, const char *tag);
 

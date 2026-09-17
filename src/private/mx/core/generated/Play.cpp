@@ -3,6 +3,7 @@
 #include "mx/core/generated/Play.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,7 +36,7 @@ void Play::setChoice(std::vector<PlayChoice> value)
     m_choice = std::move(value);
 }
 
-Play parsePlay(pugi::xml_node el)
+Play parsePlay(pugi::xml_node el, const ParseContext &context)
 {
     Play out;
     for (pugi::xml_attribute a : el.attributes())
@@ -47,24 +48,24 @@ Play parsePlay(pugi::xml_node el)
         }
         if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parsePlayContent(out, el);
+    parsePlayContent(out, el, context);
     return out;
 }
 
-void parsePlayContent(Play &out, pugi::xml_node el)
+void parsePlayContent(Play &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "ipa") || cursorIs(cursor, "mute") || cursorIs(cursor, "semi-pitched") ||
                       cursorIs(cursor, "other-play")))
     {
-        out.addChoice(parsePlayChoice(el, cursor));
+        out.addChoice(parsePlayChoice(el, cursor, context));
     }
     if (cursor)
     {

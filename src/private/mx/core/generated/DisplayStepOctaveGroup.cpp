@@ -3,6 +3,7 @@
 #include "mx/core/generated/DisplayStepOctaveGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,12 +31,13 @@ void DisplayStepOctaveGroup::setDisplayOctave(Octave value)
     m_displayOctave = std::move(value);
 }
 
-DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor)
+DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor,
+                                                   const ParseContext &context)
 {
     DisplayStepOctaveGroup out;
     if (cursorIs(cursor, "display-step"))
     {
-        out.setDisplayStep(Step::parse(childText(cursor)));
+        out.setDisplayStep(parseValue<Step>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -44,7 +46,7 @@ DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_
     }
     if (cursorIs(cursor, "display-octave"))
     {
-        out.setDisplayOctave(Octave::parse(childText(cursor)));
+        out.setDisplayOctave(parseValue<Octave>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

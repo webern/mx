@@ -3,6 +3,7 @@
 #include "mx/core/generated/Distance.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Distance::setValue(Tenths value)
     m_value = std::move(value);
 }
 
-Distance parseDistance(pugi::xml_node el)
+Distance parseDistance(pugi::xml_node el, const ParseContext &context)
 {
     Distance out;
     bool seen_type = false;
@@ -44,7 +45,7 @@ Distance parseDistance(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(DistanceType::parse(a.value()));
+            out.setType(parseValue<DistanceType>(a.value(), context, el, "type"));
         }
         else
         {
@@ -55,13 +56,13 @@ Distance parseDistance(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseDistanceContent(out, el);
+    parseDistanceContent(out, el, context);
     return out;
 }
 
-void parseDistanceContent(Distance &out, pugi::xml_node el)
+void parseDistanceContent(Distance &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(Tenths::parse(childText(el)));
+    out.setValue(parseValue<Tenths>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The layout group specifies the sequence of page, system, and staff layout elements that is common
 /// to both the defaults and print elements.
 /// A shared content group: transparent on the wire, its
@@ -43,7 +45,7 @@ class LayoutGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-LayoutGroup parseLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor);
+LayoutGroup parseLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeLayoutGroup(const LayoutGroup &v, pugi::xml_node el);
 

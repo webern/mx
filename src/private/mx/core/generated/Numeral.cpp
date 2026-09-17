@@ -3,6 +3,7 @@
 #include "mx/core/generated/Numeral.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void Numeral::setNumeralKey(std::optional<NumeralKey> value)
     m_numeralKey = std::move(value);
 }
 
-Numeral parseNumeral(pugi::xml_node el)
+Numeral parseNumeral(pugi::xml_node el, const ParseContext &context)
 {
     Numeral out;
     for (pugi::xml_attribute a : el.attributes())
@@ -52,16 +53,16 @@ Numeral parseNumeral(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseNumeralContent(out, el);
+    parseNumeralContent(out, el, context);
     return out;
 }
 
-void parseNumeralContent(Numeral &out, pugi::xml_node el)
+void parseNumeralContent(Numeral &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "numeral-root"))
     {
-        out.setNumeralRoot(parseNumeralRoot(cursor));
+        out.setNumeralRoot(parseNumeralRoot(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -70,12 +71,12 @@ void parseNumeralContent(Numeral &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "numeral-alter"))
     {
-        out.setNumeralAlter(parseHarmonyAlter(cursor));
+        out.setNumeralAlter(parseHarmonyAlter(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "numeral-key"))
     {
-        out.setNumeralKey(parseNumeralKey(cursor));
+        out.setNumeralKey(parseNumeralKey(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

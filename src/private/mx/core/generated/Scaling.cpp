@@ -3,6 +3,7 @@
 #include "mx/core/generated/Scaling.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Scaling::setTenths(Tenths value)
     m_tenths = std::move(value);
 }
 
-Scaling parseScaling(pugi::xml_node el)
+Scaling parseScaling(pugi::xml_node el, const ParseContext &context)
 {
     Scaling out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,16 +43,16 @@ Scaling parseScaling(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseScalingContent(out, el);
+    parseScalingContent(out, el, context);
     return out;
 }
 
-void parseScalingContent(Scaling &out, pugi::xml_node el)
+void parseScalingContent(Scaling &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "millimeters"))
     {
-        out.setMillimeters(Millimeters::parse(childText(cursor)));
+        out.setMillimeters(parseValue<Millimeters>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -60,7 +61,7 @@ void parseScalingContent(Scaling &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "tenths"))
     {
-        out.setTenths(Tenths::parse(childText(cursor)));
+        out.setTenths(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

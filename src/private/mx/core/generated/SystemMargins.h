@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// System margins are relative to the page margins. Positive values indent and negative values
 /// reduce the margin size.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -32,9 +34,9 @@ class SystemMargins final
     LeftRightMarginsGroup m_leftRightMargins{};
 };
 
-SystemMargins parseSystemMargins(pugi::xml_node el);
+SystemMargins parseSystemMargins(pugi::xml_node el, const ParseContext &context);
 
-void parseSystemMarginsContent(SystemMargins &out, pugi::xml_node el);
+void parseSystemMarginsContent(SystemMargins &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSystemMargins(const SystemMargins &v, pugi::xml_node parent, const char *tag);
 

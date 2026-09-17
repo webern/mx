@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The tuplet-portion type provides optional full control over tuplet specifications. It allows the
 /// number and note type (including dots) to be set for the actual and normal portions of a single
 /// tuplet. If any of these elements are absent, their values are based on the time-modification
@@ -43,9 +45,9 @@ class TupletPortion final
     std::vector<TupletDot> m_tupletDot;
 };
 
-TupletPortion parseTupletPortion(pugi::xml_node el);
+TupletPortion parseTupletPortion(pugi::xml_node el, const ParseContext &context);
 
-void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el);
+void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTupletPortion(const TupletPortion &v, pugi::xml_node parent, const char *tag);
 

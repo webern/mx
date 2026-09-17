@@ -49,8 +49,14 @@ bool HoleClosedValue::tryParse(std::string_view text, HoleClosedValue &out) noex
 
 HoleClosedValue HoleClosedValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+HoleClosedValue HoleClosedValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     HoleClosedValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

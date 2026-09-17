@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The extend type represents lyric word extension / melisma lines as well as figured bass
 /// extensions. The optional type and position attributes are added in Version 3.0 to provide better
 /// formatting control.
@@ -46,9 +48,9 @@ class Extend final
     std::optional<Color> m_color;
 };
 
-Extend parseExtend(pugi::xml_node el);
+Extend parseExtend(pugi::xml_node el, const ParseContext &context);
 
-void parseExtendContent(Extend &out, pugi::xml_node el);
+void parseExtendContent(Extend &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeExtend(const Extend &v, pugi::xml_node parent, const char *tag);
 

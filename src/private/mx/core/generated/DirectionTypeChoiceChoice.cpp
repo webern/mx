@@ -3,6 +3,7 @@
 #include "mx/core/generated/DirectionTypeChoiceChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,17 +26,18 @@ DirectionTypeChoiceChoice DirectionTypeChoiceChoice::symbol(FormattedSymbolID va
     return DirectionTypeChoiceChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(pugi::xml_node el, pugi::xml_node &cursor)
+DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(pugi::xml_node el, pugi::xml_node &cursor,
+                                                         const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "words")))
     {
-        FormattedTextID value = parseFormattedTextID(cursor);
+        FormattedTextID value = parseFormattedTextID(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoiceChoice::words(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "symbol")))
     {
-        FormattedSymbolID value = parseFormattedSymbolID(cursor);
+        FormattedSymbolID value = parseFormattedSymbolID(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoiceChoice::symbol(std::move(value));
     }

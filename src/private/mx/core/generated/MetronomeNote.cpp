@@ -3,6 +3,7 @@
 #include "mx/core/generated/MetronomeNote.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -70,7 +71,7 @@ void MetronomeNote::setMetronomeTuplet(std::optional<MetronomeTuplet> value)
     m_metronomeTuplet = std::move(value);
 }
 
-MetronomeNote parseMetronomeNote(pugi::xml_node el)
+MetronomeNote parseMetronomeNote(pugi::xml_node el, const ParseContext &context)
 {
     MetronomeNote out;
     for (pugi::xml_attribute a : el.attributes())
@@ -82,16 +83,16 @@ MetronomeNote parseMetronomeNote(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseMetronomeNoteContent(out, el);
+    parseMetronomeNoteContent(out, el, context);
     return out;
 }
 
-void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el)
+void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "metronome-type"))
     {
-        out.setMetronomeType(NoteTypeValue::parse(childText(cursor)));
+        out.setMetronomeType(parseValue<NoteTypeValue>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -100,22 +101,22 @@ void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el)
     }
     while (cursorIs(cursor, "metronome-dot"))
     {
-        out.addMetronomeDot(parseEmpty(cursor));
+        out.addMetronomeDot(parseEmpty(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "metronome-beam"))
     {
-        out.addMetronomeBeam(parseMetronomeBeam(cursor));
+        out.addMetronomeBeam(parseMetronomeBeam(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "metronome-tied"))
     {
-        out.setMetronomeTied(parseMetronomeTied(cursor));
+        out.setMetronomeTied(parseMetronomeTied(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "metronome-tuplet"))
     {
-        out.setMetronomeTuplet(parseMetronomeTuplet(cursor));
+        out.setMetronomeTuplet(parseMetronomeTuplet(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string_view>
 
 namespace mx::core
@@ -42,6 +44,9 @@ class ValignImage final
     /// Lenient: an unrecognized literal falls back to the first variant
     /// (the import leniency policy; never produces an invalid value).
     static ValignImage parse(std::string_view text) noexcept;
+
+    /// Lenient, and says whether the literal was recognized.
+    static ValignImage parse(std::string_view text, ValueParseOutcome &outcome) noexcept;
 
     bool operator==(const ValignImage &other) const noexcept = default;
 

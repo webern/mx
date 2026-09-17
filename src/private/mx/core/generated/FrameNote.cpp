@@ -3,6 +3,7 @@
 #include "mx/core/generated/FrameNote.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void FrameNote::setBarre(std::optional<Barre> value)
     m_barre = std::move(value);
 }
 
-FrameNote parseFrameNote(pugi::xml_node el)
+FrameNote parseFrameNote(pugi::xml_node el, const ParseContext &context)
 {
     FrameNote out;
     for (pugi::xml_attribute a : el.attributes())
@@ -62,16 +63,16 @@ FrameNote parseFrameNote(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseFrameNoteContent(out, el);
+    parseFrameNoteContent(out, el, context);
     return out;
 }
 
-void parseFrameNoteContent(FrameNote &out, pugi::xml_node el)
+void parseFrameNoteContent(FrameNote &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "string"))
     {
-        out.setString(parseString(cursor));
+        out.setString(parseString(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -80,7 +81,7 @@ void parseFrameNoteContent(FrameNote &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "fret"))
     {
-        out.setFret(parseFret(cursor));
+        out.setFret(parseFret(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -89,12 +90,12 @@ void parseFrameNoteContent(FrameNote &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "fingering"))
     {
-        out.setFingering(parseFingering(cursor));
+        out.setFingering(parseFingering(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "barre"))
     {
-        out.setBarre(parseBarre(cursor));
+        out.setBarre(parseBarre(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

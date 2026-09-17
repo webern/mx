@@ -3,6 +3,7 @@
 #include "mx/core/generated/Technical.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,7 +36,7 @@ void Technical::setChoice(std::vector<TechnicalChoice> value)
     m_choice = std::move(value);
 }
 
-Technical parseTechnical(pugi::xml_node el)
+Technical parseTechnical(pugi::xml_node el, const ParseContext &context)
 {
     Technical out;
     for (pugi::xml_attribute a : el.attributes())
@@ -47,18 +48,18 @@ Technical parseTechnical(pugi::xml_node el)
         }
         if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseTechnicalContent(out, el);
+    parseTechnicalContent(out, el, context);
     return out;
 }
 
-void parseTechnicalContent(Technical &out, pugi::xml_node el)
+void parseTechnicalContent(Technical &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursor &&
@@ -74,7 +75,7 @@ void parseTechnicalContent(Technical &out, pugi::xml_node el)
             cursorIs(cursor, "half-muted") || cursorIs(cursor, "harmon-mute") || cursorIs(cursor, "golpe") ||
             cursorIs(cursor, "other-technical")))
     {
-        out.addChoice(parseTechnicalChoice(el, cursor));
+        out.addChoice(parseTechnicalChoice(el, cursor, context));
     }
     if (cursor)
     {

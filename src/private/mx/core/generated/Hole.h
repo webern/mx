@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The hole type represents the symbols used for woodwind and brass fingerings as well as other
 /// notations.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -75,9 +77,9 @@ class Hole final
     std::optional<std::string> m_holeShape;
 };
 
-Hole parseHole(pugi::xml_node el);
+Hole parseHole(pugi::xml_node el, const ParseContext &context);
 
-void parseHoleContent(Hole &out, pugi::xml_node el);
+void parseHoleContent(Hole &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHole(const Hole &v, pugi::xml_node parent, const char *tag);
 

@@ -2,12 +2,13 @@
 
 #include "mx/core/generated/Empty.h"
 
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 namespace mx::core
 {
 
-Empty parseEmpty(pugi::xml_node el)
+Empty parseEmpty(pugi::xml_node el, const ParseContext &context)
 {
     Empty out;
     for (pugi::xml_attribute a : el.attributes())
@@ -19,13 +20,14 @@ Empty parseEmpty(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseEmptyContent(out, el);
+    parseEmptyContent(out, el, context);
     return out;
 }
 
-void parseEmptyContent(Empty &out, pugi::xml_node el)
+void parseEmptyContent(Empty &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

@@ -3,6 +3,7 @@
 #include "mx/core/generated/TimewiseMeasure.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -85,7 +86,7 @@ void TimewiseMeasure::setPart(OneOrMore<TimewisePart> value)
     m_part = std::move(value);
 }
 
-TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el)
+TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el, const ParseContext &context)
 {
     TimewiseMeasure out;
     bool seen_number = false;
@@ -103,23 +104,23 @@ TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el)
         }
         else if (aname == "text")
         {
-            out.setText(MeasureText::parse(a.value()));
+            out.setText(parseValue<MeasureText>(a.value(), context, el, "text"));
         }
         else if (aname == "implicit")
         {
-            out.setImplicit(YesNo::parse(a.value()));
+            out.setImplicit(parseValue<YesNo>(a.value(), context, el, "implicit"));
         }
         else if (aname == "non-controlling")
         {
-            out.setNonControlling(YesNo::parse(a.value()));
+            out.setNonControlling(parseValue<YesNo>(a.value(), context, el, "non-controlling"));
         }
         else if (aname == "width")
         {
-            out.setWidth(Tenths::parse(a.value()));
+            out.setWidth(parseValue<Tenths>(a.value(), context, el, "width"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -130,22 +131,22 @@ TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el)
     {
         throwMissingAttribute(el, "number");
     }
-    parseTimewiseMeasureContent(out, el);
+    parseTimewiseMeasureContent(out, el, context);
     return out;
 }
 
-void parseTimewiseMeasureContent(TimewiseMeasure &out, pugi::xml_node el)
+void parseTimewiseMeasureContent(TimewiseMeasure &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (!cursorIs(cursor, "part"))
     {
         throwMissingOrMisplaced(el, cursor, "part");
     }
-    out.setPart(OneOrMore<TimewisePart>{parseTimewisePart(cursor)});
+    out.setPart(OneOrMore<TimewisePart>{parseTimewisePart(cursor, context)});
     cursor = nextElement(cursor);
     while (cursorIs(cursor, "part"))
     {
-        out.addPart(parseTimewisePart(cursor));
+        out.addPart(parseTimewisePart(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

@@ -32,8 +32,7 @@ class PartReader
 {
   public:
     PartReader(const core::ScorePart &inScorePart, const core::PartwisePart &inPartwisePartRef,
-               int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue,
-               DiagnosticsContext diagnostics = {});
+               int globalTicksPerMeasure, int partIndex, int inDivisionsValue, DiagnosticsContext diagnostics = {});
 
     api::PartData getPartData();
     impl::MeasureCursor getCursor() const;
@@ -48,7 +47,6 @@ class PartReader
     int myNumStaves;
     bool myIsStavesElementPresent;
     const int myGlobalTicksPerMeasure;
-    const core::ScorePartwise &myScore;
     int myPartIndex;
     const int myConstructedDivisionsValue;
     DiagnosticsContext myDiagnostics;
@@ -67,7 +65,6 @@ class PartReader
     void parseVirtualInstrument(const core::VirtualInstrument &virtualInstrument) const;
     void parseMidiDeviceInstrumentGroup(const core::ScorePartMIDIGroup &grp) const;
     void parseMidiInstrument(const core::MIDIInstrument &inst) const;
-    int findPartIndex(const std::string &inPartId) const;
 
     template <typename ELEMENT_TYPE> void updateNumStaves(const ELEMENT_TYPE &element, int &outNumStaves) const
     {

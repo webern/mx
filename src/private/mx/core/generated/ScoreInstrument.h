@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The score-instrument type represents a single instrument within a score-part. As with the
 /// score-part type, each score-instrument has a required ID attribute, a name, and an optional
 /// abbreviation. A score-instrument type is also required if the score specifies MIDI 1.0 channels,
@@ -49,9 +51,9 @@ class ScoreInstrument final
     VirtualInstrumentDataGroup m_virtualInstrumentData{};
 };
 
-ScoreInstrument parseScoreInstrument(pugi::xml_node el);
+ScoreInstrument parseScoreInstrument(pugi::xml_node el, const ParseContext &context);
 
-void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el);
+void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeScoreInstrument(const ScoreInstrument &v, pugi::xml_node parent, const char *tag);
 

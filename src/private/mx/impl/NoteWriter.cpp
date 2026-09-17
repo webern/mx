@@ -106,7 +106,7 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     setNotehead();
     setStemDirection();
     setMiscData();
-    impl::setId(myNoteData.id, myOutNote);
+    impl::setId(myNoteData.id, myOutNote, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
     NotationsWriter notationsWriter{myNoteData, myCursor, myScoreWriter};
     impl::setAttributesFromPositionData(myNoteData.positionData, myOutNote);
     if (myNoteData.printData.printObject != api::Bool::unspecified)
@@ -170,6 +170,11 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     {
         core::Beam mxBeam;
         mxBeam.setNumber(core::BeamLevel{beamIndex + 1});
+        if (beam == api::Beam::unspecified)
+        {
+            myScoreWriter.getDiagnostics().report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted,
+                                                  cursorLocation(myCursor), "beam type is unspecified; using begin");
+        }
         mxBeam.setValue(myConverter.convert(beam));
         const auto added = myOutNote.addBeam(std::move(mxBeam));
         if (!added)
@@ -281,6 +286,11 @@ void NoteWriter::assembleNoteChoice() const
 {
     const auto duration =
         core::PositiveDivisions{core::Decimal{static_cast<double>(myNoteData.durationData.durationTimeTicks)}};
+    if (!myNoteData.isGrace)
+    {
+        reportAdjusted(myScoreWriter.getDiagnostics(), cursorLocation(myCursor), "note duration",
+                       static_cast<double>(myNoteData.durationData.durationTimeTicks), duration.value().value());
+    }
 
     if (myNoteData.isGrace)
     {
@@ -340,6 +350,19 @@ void NoteWriter::assembleNoteChoice() const
     }
 }
 
+core::Octave NoteWriter::writtenOctave() const
+{
+    const auto &diagnostics = myScoreWriter.getDiagnostics();
+    if (myNoteData.pitchData.step == api::Step::unspecified)
+    {
+        diagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted, cursorLocation(myCursor),
+                           "note step is unspecified; using C");
+    }
+    const core::Octave octave{myNoteData.pitchData.octave};
+    reportAdjusted(diagnostics, cursorLocation(myCursor), "note octave", myNoteData.pitchData.octave, octave.value());
+    return octave;
+}
+
 void NoteWriter::setFullNoteTypeChoice() const
 {
     if (myNoteData.isRest)
@@ -349,7 +372,7 @@ void NoteWriter::setFullNoteTypeChoice() const
         {
             core::DisplayStepOctaveGroup pitch;
             pitch.setDisplayStep(myConverter.convert(myNoteData.pitchData.step));
-            pitch.setDisplayOctave(core::Octave{myNoteData.pitchData.octave});
+            pitch.setDisplayOctave(writtenOctave());
             rest.setDisplayStepOctave(std::move(pitch));
         }
 
@@ -367,7 +390,7 @@ void NoteWriter::setFullNoteTypeChoice() const
         {
             core::DisplayStepOctaveGroup pitch;
             pitch.setDisplayStep(myConverter.convert(myNoteData.pitchData.step));
-            pitch.setDisplayOctave(core::Octave{myNoteData.pitchData.octave});
+            pitch.setDisplayOctave(writtenOctave());
             unpitched.setDisplayStepOctave(std::move(pitch));
         }
 
@@ -382,7 +405,7 @@ void NoteWriter::setFullNoteTypeChoice() const
             const auto alter = Converter::convertToAlter(myNoteData.pitchData.alter, myNoteData.pitchData.cents);
             pitch.setAlter(core::Semitones{core::Decimal{alter}});
         }
-        pitch.setOctave(core::Octave{myNoteData.pitchData.octave});
+        pitch.setOctave(writtenOctave());
         myOutFullNoteGroup.setChoice(core::FullNoteGroupChoice::pitch(std::move(pitch)));
     }
 }
@@ -445,6 +468,11 @@ void NoteWriter::setDurationNameAndDots() const
     const bool isMeasureRest = myNoteData.isRest && myNoteData.isMeasureRest;
     if (myNoteData.durationData.isDurationNameSpecified && !isMeasureRest)
     {
+        if (myNoteData.durationData.durationName == api::DurationName::unspecified)
+        {
+            myScoreWriter.getDiagnostics().report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted,
+                                                  cursorLocation(myCursor), "note type is unspecified; using maxima");
+        }
         core::NoteType noteType;
         noteType.setValue(myConverter.convert(myNoteData.durationData.durationName));
         myOutNote.setType(std::move(noteType));
@@ -505,7 +533,16 @@ void NoteWriter::setLyrics() const
         core::Lyric lyric;
         if (!lyricData.verseNumber.empty())
         {
-            lyric.setNumber(core::NameToken{lyricData.verseNumber});
+            core::ValueParseOutcome outcome = core::ValueParseOutcome::valid;
+            const auto number = core::NameToken::parse(lyricData.verseNumber, outcome);
+            if (outcome != core::ValueParseOutcome::valid)
+            {
+                myScoreWriter.getDiagnostics().report(
+                    api::Severity::warning, api::DiagnosticCode::invalidValue, cursorLocation(myCursor),
+                    "lyric number \"" + lyricData.verseNumber + "\" is not a valid name token; using \"" +
+                        number.value() + "\"");
+            }
+            lyric.setNumber(number);
         }
 
         if (!lyricData.verseName.empty())
@@ -514,7 +551,7 @@ void NoteWriter::setLyrics() const
         }
 
         impl::setAttributesFromPositionData(lyricData.positionData, lyric);
-        impl::setId(lyricData.id, lyric);
+        impl::setId(lyricData.id, lyric, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
         if (lyricData.positionData.horizontalAlignment != api::HorizontalAlignment::unspecified)
         {
             lyric.setJustify(myConverter.convert(lyricData.positionData.horizontalAlignment));
@@ -631,11 +668,18 @@ void NoteWriter::setMiscData() const
     {
         // Comma is the item separator in the miscellaneous-field wire encoding, so commas
         // inside user misc-data are irreversibly replaced with underscores.
-        std::string::size_type position = 0;
-        while ((position = s.find(comma, position)) != std::string::npos)
+        if (s.find(comma) != std::string::npos)
         {
-            s.replace(position, comma.size(), underscore);
-            position++;
+            const auto original = s;
+            std::string::size_type position = 0;
+            while ((position = s.find(comma, position)) != std::string::npos)
+            {
+                s.replace(position, comma.size(), underscore);
+                position++;
+            }
+            myScoreWriter.getDiagnostics().report(
+                api::Severity::warning, api::DiagnosticCode::valueAdjusted, cursorLocation(myCursor),
+                "note misc data \"" + original + "\" contains a comma; using \"" + s + "\"");
         }
 
         if (isFirst)

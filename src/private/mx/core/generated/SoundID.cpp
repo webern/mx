@@ -5395,8 +5395,14 @@ bool SoundID::tryParse(std::string_view text, SoundID &out) noexcept
 
 SoundID SoundID::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+SoundID SoundID::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     SoundID v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

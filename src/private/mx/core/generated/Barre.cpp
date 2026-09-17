@@ -3,6 +3,7 @@
 #include "mx/core/generated/Barre.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Barre::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-Barre parseBarre(pugi::xml_node el)
+Barre parseBarre(pugi::xml_node el, const ParseContext &context)
 {
     Barre out;
     bool seen_type = false;
@@ -44,11 +45,11 @@ Barre parseBarre(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else
         {
@@ -59,13 +60,14 @@ Barre parseBarre(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseBarreContent(out, el);
+    parseBarreContent(out, el, context);
     return out;
 }
 
-void parseBarreContent(Barre &out, pugi::xml_node el)
+void parseBarreContent(Barre &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

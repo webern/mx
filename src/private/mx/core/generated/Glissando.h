@@ -25,6 +25,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Glissando and slide types both indicate rapidly moving from one pitch to the other so that
 /// individual notes are not discerned. A glissando sounds the distinct notes in between the two
 /// pitches and defaults to a wavy line. The optional text is printed alongside the line.
@@ -84,9 +86,9 @@ class Glissando final
     std::string m_value{};
 };
 
-Glissando parseGlissando(pugi::xml_node el);
+Glissando parseGlissando(pugi::xml_node el, const ParseContext &context);
 
-void parseGlissandoContent(Glissando &out, pugi::xml_node el);
+void parseGlissandoContent(Glissando &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeGlissando(const Glissando &v, pugi::xml_node parent, const char *tag);
 

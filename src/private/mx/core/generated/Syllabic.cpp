@@ -55,8 +55,14 @@ bool Syllabic::tryParse(std::string_view text, Syllabic &out) noexcept
 
 Syllabic Syllabic::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Syllabic Syllabic::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     Syllabic v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

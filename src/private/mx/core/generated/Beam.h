@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Beam values include begin, continue, end, forward hook, and backward hook. Up to eight concurrent
 /// beams are available to cover up to 1024th notes. Each beam in a note is represented with a
 /// separate beam element, starting with the eighth note beam using a number attribute of 1. Note
@@ -57,9 +59,9 @@ class Beam final
     BeamValue m_value{};
 };
 
-Beam parseBeam(pugi::xml_node el);
+Beam parseBeam(pugi::xml_node el, const ParseContext &context);
 
-void parseBeamContent(Beam &out, pugi::xml_node el);
+void parseBeamContent(Beam &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBeam(const Beam &v, pugi::xml_node parent, const char *tag);
 

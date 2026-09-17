@@ -44,15 +44,19 @@ int Cursor::convertDurationToGlobalTickScale(const core::PositiveDivisions &dura
 
 int Cursor::convertDurationToGlobalTickScale(double durationValue) const
 {
+    return static_cast<int>(std::ceil(convertDurationToExactGlobalTicks(durationValue) - 0.5));
+}
+
+double Cursor::convertDurationToExactGlobalTicks(double durationValue) const
+{
     if (this->ticksPerQuarter == this->getGlobalTicksPerQuarter())
     {
-        return static_cast<int>(std::ceil(durationValue - 0.5));
+        return durationValue;
     }
 
     const double currentTicksPerQuarter = static_cast<double>(this->ticksPerQuarter);
     const double globalTicksPerQuarter = static_cast<double>(this->getGlobalTicksPerQuarter());
-    const double convertedVal = durationValue * (globalTicksPerQuarter / currentTicksPerQuarter);
-    return static_cast<int>(std::ceil(convertedVal - 0.5));
+    return durationValue * (globalTicksPerQuarter / currentTicksPerQuarter);
 }
 
 int Cursor::convertDurationToGlobalTickScale(int durationValue) const

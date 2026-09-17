@@ -25,6 +25,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The score-part type collects part-wide information for each part in a score. Often, each MusicXML
 /// part corresponds to a track in a Standard MIDI Format 1 file. In this case, the midi-device
 /// element is used to make a MIDI device or port assignment for the given track or specific MIDI
@@ -78,9 +80,9 @@ class ScorePart final
     std::vector<ScorePartMIDIGroup> m_midiGroup;
 };
 
-ScorePart parseScorePart(pugi::xml_node el);
+ScorePart parseScorePart(pugi::xml_node el, const ParseContext &context);
 
-void parseScorePartContent(ScorePart &out, pugi::xml_node el);
+void parseScorePartContent(ScorePart &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeScorePart(const ScorePart &v, pugi::xml_node parent, const char *tag);
 

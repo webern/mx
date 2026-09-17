@@ -3,6 +3,7 @@
 #include "mx/core/generated/Scordatura.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,7 +36,7 @@ void Scordatura::setAccord(OneOrMore<Accord> value)
     m_accord = std::move(value);
 }
 
-Scordatura parseScordatura(pugi::xml_node el)
+Scordatura parseScordatura(pugi::xml_node el, const ParseContext &context)
 {
     Scordatura out;
     for (pugi::xml_attribute a : el.attributes())
@@ -47,29 +48,29 @@ Scordatura parseScordatura(pugi::xml_node el)
         }
         if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseScordaturaContent(out, el);
+    parseScordaturaContent(out, el, context);
     return out;
 }
 
-void parseScordaturaContent(Scordatura &out, pugi::xml_node el)
+void parseScordaturaContent(Scordatura &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (!cursorIs(cursor, "accord"))
     {
         throwMissingOrMisplaced(el, cursor, "accord");
     }
-    out.setAccord(OneOrMore<Accord>{parseAccord(cursor)});
+    out.setAccord(OneOrMore<Accord>{parseAccord(cursor, context)});
     cursor = nextElement(cursor);
     while (cursorIs(cursor, "accord"))
     {
-        out.addAccord(parseAccord(cursor));
+        out.addAccord(parseAccord(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

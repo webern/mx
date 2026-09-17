@@ -3,6 +3,7 @@
 #include "mx/core/generated/SlashGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,12 +36,12 @@ void SlashGroup::setExceptVoice(std::vector<std::string> value)
     m_exceptVoice = std::move(value);
 }
 
-SlashGroup parseSlashGroup(pugi::xml_node el, pugi::xml_node &cursor)
+SlashGroup parseSlashGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     SlashGroup out;
     if (cursor && (cursorIs(cursor, "slash-type")))
     {
-        out.setGroup(parseSlashGroupGroup(el, cursor));
+        out.setGroup(parseSlashGroupGroup(el, cursor, context));
     }
     while (cursorIs(cursor, "except-voice"))
     {

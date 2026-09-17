@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The group-name type describes the name or abbreviation of a part-group element. Formatting
 /// attributes in the group-name type are deprecated in Version 2.0 in favor of the new
 /// group-name-display and group-abbreviation-display elements.
@@ -65,9 +67,9 @@ class GroupName final
     std::string m_value{};
 };
 
-GroupName parseGroupName(pugi::xml_node el);
+GroupName parseGroupName(pugi::xml_node el, const ParseContext &context);
 
-void parseGroupNameContent(GroupName &out, pugi::xml_node el);
+void parseGroupNameContent(GroupName &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeGroupName(const GroupName &v, pugi::xml_node parent, const char *tag);
 

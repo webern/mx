@@ -3,6 +3,7 @@
 #include "mx/core/generated/SwingChoiceGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,12 +41,12 @@ void SwingChoiceGroup::setSwingType(std::optional<SwingTypeValue> value)
     m_swingType = std::move(value);
 }
 
-SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor)
+SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     SwingChoiceGroup out;
     if (cursorIs(cursor, "first"))
     {
-        out.setFirst(parseInt(childText(cursor)));
+        out.setFirst(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -54,7 +55,7 @@ SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor
     }
     if (cursorIs(cursor, "second"))
     {
-        out.setSecond(parseInt(childText(cursor)));
+        out.setSecond(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -63,7 +64,7 @@ SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor
     }
     if (cursorIs(cursor, "swing-type"))
     {
-        out.setSwingType(SwingTypeValue::parse(childText(cursor)));
+        out.setSwingType(parseValue<SwingTypeValue>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     return out;

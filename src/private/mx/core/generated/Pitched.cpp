@@ -3,6 +3,7 @@
 #include "mx/core/generated/Pitched.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Pitched::setValue(PitchedValue value)
     m_value = std::move(value);
 }
 
-Pitched parsePitched(pugi::xml_node el)
+Pitched parsePitched(pugi::xml_node el, const ParseContext &context)
 {
     Pitched out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,20 +43,20 @@ Pitched parsePitched(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflPictogramGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflPictogramGlyphName>(a.value(), context, el, "smufl"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parsePitchedContent(out, el);
+    parsePitchedContent(out, el, context);
     return out;
 }
 
-void parsePitchedContent(Pitched &out, pugi::xml_node el)
+void parsePitchedContent(Pitched &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(PitchedValue::parse(childText(el)));
+    out.setValue(parseValue<PitchedValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

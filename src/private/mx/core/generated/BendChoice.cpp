@@ -3,6 +3,7 @@
 #include "mx/core/generated/BendChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,17 +26,17 @@ BendChoice BendChoice::release(Release value)
     return BendChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-BendChoice parseBendChoice(pugi::xml_node el, pugi::xml_node &cursor)
+BendChoice parseBendChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "pre-bend")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return BendChoice::preBend(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "release")))
     {
-        Release value = parseRelease(cursor);
+        Release value = parseRelease(cursor, context);
         cursor = nextElement(cursor);
         return BendChoice::release(std::move(value));
     }

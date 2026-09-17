@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <span>
 #include <string>
 #include <string_view>
@@ -43,6 +45,9 @@ class EndingNumber final
 
     /// Lenient: repairs into the nearest valid value.
     static EndingNumber parse(std::string_view text);
+
+    /// Lenient, and says whether the text had to be repaired.
+    static EndingNumber parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const EndingNumber &other) const noexcept
     {

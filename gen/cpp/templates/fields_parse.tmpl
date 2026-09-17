@@ -15,7 +15,7 @@
     if (cursorIs(cursor, {{tag_q}}))
     {
 {{#presence}}
-        parse{{type_ref.ident}}(cursor);
+        parse{{type_ref.ident}}(cursor, context);
         out.set{{name.pascal}}(true);
 {{/presence}}
 {{^presence}}
@@ -59,7 +59,7 @@
 {{#is_required}}
     if ({{>field_first_match}})
     {
-        out.set{{name.pascal}}(parse{{type_ref.ident}}(el, cursor));
+        out.set{{name.pascal}}(parse{{type_ref.ident}}(el, cursor, context));
     }
 {{^nullable}}
     else
@@ -71,7 +71,7 @@
 {{#is_optional}}
     if ({{>field_first_match}})
     {
-        out.set{{name.pascal}}(parse{{type_ref.ident}}(el, cursor));
+        out.set{{name.pascal}}(parse{{type_ref.ident}}(el, cursor, context));
     }
 {{/is_optional}}
 {{#is_vector}}
@@ -80,16 +80,16 @@
     {
         throwMissingElement(el, {{#first}}{{#is_first}}{{value_q}}{{/is_first}}{{/first}});
     }
-    out.set{{name.pascal}}(OneOrMore<{{type_ref.ident}}>{parse{{type_ref.ident}}(el, cursor)});
+    out.set{{name.pascal}}(OneOrMore<{{type_ref.ident}}>{parse{{type_ref.ident}}(el, cursor, context)});
     while ({{>field_first_match}})
     {
-        out.add{{name.pascal}}(parse{{type_ref.ident}}(el, cursor));
+        out.add{{name.pascal}}(parse{{type_ref.ident}}(el, cursor, context));
     }
 {{/min1}}
 {{^min1}}
     while ({{>field_first_match}})
     {
-        out.add{{name.pascal}}(parse{{type_ref.ident}}(el, cursor));
+        out.add{{name.pascal}}(parse{{type_ref.ident}}(el, cursor, context));
     }
 {{/min1}}
 {{/is_vector}}

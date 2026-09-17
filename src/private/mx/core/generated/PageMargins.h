@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Page margins are specified either for both even and odd pages, or via separate odd and even page
 /// number values. The type attribute is not needed when used as part of a print element. If omitted
 /// when the page-margins type is used in the defaults element, "both" is the default value.
@@ -37,9 +39,9 @@ class PageMargins final
     AllMarginsGroup m_allMargins{};
 };
 
-PageMargins parsePageMargins(pugi::xml_node el);
+PageMargins parsePageMargins(pugi::xml_node el, const ParseContext &context);
 
-void parsePageMarginsContent(PageMargins &out, pugi::xml_node el);
+void parsePageMarginsContent(PageMargins &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePageMargins(const PageMargins &v, pugi::xml_node parent, const char *tag);
 

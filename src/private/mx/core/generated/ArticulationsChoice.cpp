@@ -3,6 +3,7 @@
 #include "mx/core/generated/ArticulationsChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -100,107 +101,107 @@ ArticulationsChoice ArticulationsChoice::otherArticulation(OtherPlacementText va
     return ArticulationsChoice{Storage{std::in_place_index<16>, std::move(value)}};
 }
 
-ArticulationsChoice parseArticulationsChoice(pugi::xml_node el, pugi::xml_node &cursor)
+ArticulationsChoice parseArticulationsChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "accent")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::accent(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "strong-accent")))
     {
-        StrongAccent value = parseStrongAccent(cursor);
+        StrongAccent value = parseStrongAccent(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::strongAccent(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "staccato")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::staccato(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "tenuto")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::tenuto(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "detached-legato")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::detachedLegato(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "staccatissimo")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::staccatissimo(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "spiccato")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::spiccato(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "scoop")))
     {
-        EmptyLine value = parseEmptyLine(cursor);
+        EmptyLine value = parseEmptyLine(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::scoop(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "plop")))
     {
-        EmptyLine value = parseEmptyLine(cursor);
+        EmptyLine value = parseEmptyLine(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::plop(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "doit")))
     {
-        EmptyLine value = parseEmptyLine(cursor);
+        EmptyLine value = parseEmptyLine(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::doit(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "falloff")))
     {
-        EmptyLine value = parseEmptyLine(cursor);
+        EmptyLine value = parseEmptyLine(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::falloff(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "breath-mark")))
     {
-        BreathMark value = parseBreathMark(cursor);
+        BreathMark value = parseBreathMark(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::breathMark(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "caesura")))
     {
-        Caesura value = parseCaesura(cursor);
+        Caesura value = parseCaesura(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::caesura(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "stress")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::stress(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "unstress")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::unstress(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "soft-accent")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::softAccent(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "other-articulation")))
     {
-        OtherPlacementText value = parseOtherPlacementText(cursor);
+        OtherPlacementText value = parseOtherPlacementText(cursor, context);
         cursor = nextElement(cursor);
         return ArticulationsChoice::otherArticulation(std::move(value));
     }

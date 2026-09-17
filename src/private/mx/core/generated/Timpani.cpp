@@ -3,6 +3,7 @@
 #include "mx/core/generated/Timpani.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -20,7 +21,7 @@ void Timpani::setSmufl(std::optional<SmuflPictogramGlyphName> value)
     m_smufl = std::move(value);
 }
 
-Timpani parseTimpani(pugi::xml_node el)
+Timpani parseTimpani(pugi::xml_node el, const ParseContext &context)
 {
     Timpani out;
     for (pugi::xml_attribute a : el.attributes())
@@ -32,20 +33,21 @@ Timpani parseTimpani(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflPictogramGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflPictogramGlyphName>(a.value(), context, el, "smufl"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseTimpaniContent(out, el);
+    parseTimpaniContent(out, el, context);
     return out;
 }
 
-void parseTimpaniContent(Timpani &out, pugi::xml_node el)
+void parseTimpaniContent(Timpani &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

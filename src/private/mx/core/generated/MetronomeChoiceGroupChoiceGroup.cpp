@@ -3,6 +3,7 @@
 #include "mx/core/generated/MetronomeChoiceGroupChoiceGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,12 +36,13 @@ void MetronomeChoiceGroupChoiceGroup::setBeatUnitTied(std::vector<BeatUnitTied> 
     m_beatUnitTied = std::move(value);
 }
 
-MetronomeChoiceGroupChoiceGroup parseMetronomeChoiceGroupChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor)
+MetronomeChoiceGroupChoiceGroup parseMetronomeChoiceGroupChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor,
+                                                                     const ParseContext &context)
 {
     MetronomeChoiceGroupChoiceGroup out;
     if (cursor && (cursorIs(cursor, "beat-unit")))
     {
-        out.setBeatUnit(parseBeatUnitGroup(el, cursor));
+        out.setBeatUnit(parseBeatUnitGroup(el, cursor, context));
     }
     else
     {
@@ -48,7 +50,7 @@ MetronomeChoiceGroupChoiceGroup parseMetronomeChoiceGroupChoiceGroup(pugi::xml_n
     }
     while (cursorIs(cursor, "beat-unit-tied"))
     {
-        out.addBeatUnitTied(parseBeatUnitTied(cursor));
+        out.addBeatUnitTied(parseBeatUnitTied(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

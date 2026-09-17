@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The all-margins group specifies both horizontal and vertical margins in tenths.
 /// A shared content group: transparent on the wire, its
 /// fields serialize directly into the referencing element (plan §2.3).
@@ -40,7 +42,7 @@ class AllMarginsGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor);
+AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeAllMarginsGroup(const AllMarginsGroup &v, pugi::xml_node el);
 

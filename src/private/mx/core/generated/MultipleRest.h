@@ -15,6 +15,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The text of the multiple-rest type indicates the number of measures in the multiple rest.
 /// Multiple rests may use the 1-bar / 2-bar / 4-bar rest symbols, or a single shape. The use-symbols
 /// attribute indicates which to use; it is no if not specified.
@@ -32,9 +34,9 @@ class MultipleRest final
     int m_value{};
 };
 
-MultipleRest parseMultipleRest(pugi::xml_node el);
+MultipleRest parseMultipleRest(pugi::xml_node el, const ParseContext &context);
 
-void parseMultipleRestContent(MultipleRest &out, pugi::xml_node el);
+void parseMultipleRestContent(MultipleRest &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMultipleRest(const MultipleRest &v, pugi::xml_node parent, const char *tag);
 

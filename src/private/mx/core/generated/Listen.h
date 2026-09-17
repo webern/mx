@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The listen and listening types, new in Version 4.0, specify different ways that a score following
 /// or machine listening application can interact with a performer. The listen type handles
 /// interactions that are specific to a note. If multiple child elements of the same type are
@@ -36,9 +38,9 @@ class Listen final
     OneOrMore<ListenChoice> m_choice;
 };
 
-Listen parseListen(pugi::xml_node el);
+Listen parseListen(pugi::xml_node el, const ParseContext &context);
 
-void parseListenContent(Listen &out, pugi::xml_node el);
+void parseListenContent(Listen &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeListen(const Listen &v, pugi::xml_node parent, const char *tag);
 

@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The child elements of the part-transpose type have the same meaning as for the transpose type.
 /// However that meaning applies to a transposed part created from the existing score file.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -32,9 +34,9 @@ class PartTranspose final
     TransposeGroup m_transpose{};
 };
 
-PartTranspose parsePartTranspose(pugi::xml_node el);
+PartTranspose parsePartTranspose(pugi::xml_node el, const ParseContext &context);
 
-void parsePartTransposeContent(PartTranspose &out, pugi::xml_node el);
+void parsePartTransposeContent(PartTranspose &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePartTranspose(const PartTranspose &v, pugi::xml_node parent, const char *tag);
 

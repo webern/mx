@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -42,6 +44,10 @@ class Token final
 
     /// Lenient: repairs into the nearest valid NCName.
     static Token parse(std::string_view text);
+
+    /// Lenient, and says whether the text had to be repaired. Surrounding
+    /// XML whitespace is not a repair.
+    static Token parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const Token &other) const noexcept = default;
 

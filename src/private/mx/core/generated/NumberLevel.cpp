@@ -42,20 +42,33 @@ std::string NumberLevel::toString() const
 
 bool NumberLevel::tryParse(std::string_view text, NumberLevel &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    NumberLevel parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = NumberLevel{v};
+    out = std::move(parsed);
     return true;
 }
 
 NumberLevel NumberLevel::parse(std::string_view text)
 {
-    NumberLevel v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+NumberLevel NumberLevel::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return NumberLevel{};
+    }
+    NumberLevel out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

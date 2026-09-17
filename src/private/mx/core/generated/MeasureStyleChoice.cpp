@@ -3,6 +3,7 @@
 #include "mx/core/generated/MeasureStyleChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,29 +36,29 @@ MeasureStyleChoice MeasureStyleChoice::slash(Slash value)
     return MeasureStyleChoice{Storage{std::in_place_index<3>, std::move(value)}};
 }
 
-MeasureStyleChoice parseMeasureStyleChoice(pugi::xml_node el, pugi::xml_node &cursor)
+MeasureStyleChoice parseMeasureStyleChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "multiple-rest")))
     {
-        MultipleRest value = parseMultipleRest(cursor);
+        MultipleRest value = parseMultipleRest(cursor, context);
         cursor = nextElement(cursor);
         return MeasureStyleChoice::multipleRest(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "measure-repeat")))
     {
-        MeasureRepeat value = parseMeasureRepeat(cursor);
+        MeasureRepeat value = parseMeasureRepeat(cursor, context);
         cursor = nextElement(cursor);
         return MeasureStyleChoice::measureRepeat(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "beat-repeat")))
     {
-        BeatRepeat value = parseBeatRepeat(cursor);
+        BeatRepeat value = parseBeatRepeat(cursor, context);
         cursor = nextElement(cursor);
         return MeasureStyleChoice::beatRepeat(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "slash")))
     {
-        Slash value = parseSlash(cursor);
+        Slash value = parseSlash(cursor, context);
         cursor = nextElement(cursor);
         return MeasureStyleChoice::slash(std::move(value));
     }

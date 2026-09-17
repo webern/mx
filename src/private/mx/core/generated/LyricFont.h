@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The lyric-font type specifies the default font for a particular name and number of lyric.
 class LyricFont final
 {
@@ -47,9 +49,9 @@ class LyricFont final
     std::optional<FontWeight> m_fontWeight;
 };
 
-LyricFont parseLyricFont(pugi::xml_node el);
+LyricFont parseLyricFont(pugi::xml_node el, const ParseContext &context);
 
-void parseLyricFontContent(LyricFont &out, pugi::xml_node el);
+void parseLyricFontContent(LyricFont &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeLyricFont(const LyricFont &v, pugi::xml_node parent, const char *tag);
 

@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The empty-print-style-align-id type represents an empty element with print-style-align and
 /// optional-unique-id attribute groups.
 class EmptyPrintStyleAlignID final
@@ -70,9 +72,9 @@ class EmptyPrintStyleAlignID final
     std::optional<Token> m_id;
 };
 
-EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(pugi::xml_node el);
+EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(pugi::xml_node el, const ParseContext &context);
 
-void parseEmptyPrintStyleAlignIDContent(EmptyPrintStyleAlignID &out, pugi::xml_node el);
+void parseEmptyPrintStyleAlignIDContent(EmptyPrintStyleAlignID &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEmptyPrintStyleAlignID(const EmptyPrintStyleAlignID &v, pugi::xml_node parent, const char *tag);
 

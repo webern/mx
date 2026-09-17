@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The release type indicates that a bend is a release rather than a normal bend or pre-bend. The
 /// offset attribute specifies where the release starts in terms of divisions relative to the current
 /// note. The first-beat and last-beat attributes of the parent bend element are relative to the
@@ -33,7 +35,7 @@ class Release : public Empty
     std::optional<Divisions> m_offset;
 };
 
-Release parseRelease(pugi::xml_node el);
+Release parseRelease(pugi::xml_node el, const ParseContext &context);
 
 void serializeRelease(const Release &v, pugi::xml_node parent, const char *tag);
 

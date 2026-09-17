@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The line-width type indicates the width of a line type in tenths. The type attribute defines what
 /// type of line is being defined. Values include beam, bracket, dashes, enclosure, ending, extend,
 /// heavy barline, leger, light barline, octave shift, pedal, slur middle, slur tip, staff, stem, tie
@@ -34,9 +36,9 @@ class LineWidth final
     Tenths m_value{};
 };
 
-LineWidth parseLineWidth(pugi::xml_node el);
+LineWidth parseLineWidth(pugi::xml_node el, const ParseContext &context);
 
-void parseLineWidthContent(LineWidth &out, pugi::xml_node el);
+void parseLineWidthContent(LineWidth &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeLineWidth(const LineWidth &v, pugi::xml_node parent, const char *tag);
 

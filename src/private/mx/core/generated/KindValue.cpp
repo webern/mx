@@ -229,8 +229,14 @@ bool KindValue::tryParse(std::string_view text, KindValue &out) noexcept
 
 KindValue KindValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+KindValue KindValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     KindValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

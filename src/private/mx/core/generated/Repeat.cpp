@@ -3,6 +3,7 @@
 #include "mx/core/generated/Repeat.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void Repeat::setWinged(std::optional<Winged> value)
     m_winged = std::move(value);
 }
 
-Repeat parseRepeat(pugi::xml_node el)
+Repeat parseRepeat(pugi::xml_node el, const ParseContext &context)
 {
     Repeat out;
     bool seen_direction = false;
@@ -64,19 +65,19 @@ Repeat parseRepeat(pugi::xml_node el)
         if (aname == "direction")
         {
             seen_direction = true;
-            out.setDirection(BackwardForward::parse(a.value()));
+            out.setDirection(parseValue<BackwardForward>(a.value(), context, el, "direction"));
         }
         else if (aname == "times")
         {
-            out.setTimes(parseInt(a.value()));
+            out.setTimes(parseIntegerValue(a.value(), context, el, "times"));
         }
         else if (aname == "after-jump")
         {
-            out.setAfterJump(YesNo::parse(a.value()));
+            out.setAfterJump(parseValue<YesNo>(a.value(), context, el, "after-jump"));
         }
         else if (aname == "winged")
         {
-            out.setWinged(Winged::parse(a.value()));
+            out.setWinged(parseValue<Winged>(a.value(), context, el, "winged"));
         }
         else
         {
@@ -87,13 +88,14 @@ Repeat parseRepeat(pugi::xml_node el)
     {
         throwMissingAttribute(el, "direction");
     }
-    parseRepeatContent(out, el);
+    parseRepeatContent(out, el, context);
     return out;
 }
 
-void parseRepeatContent(Repeat &out, pugi::xml_node el)
+void parseRepeatContent(Repeat &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

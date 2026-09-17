@@ -3,6 +3,7 @@
 #include "mx/core/generated/LineDetail.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -60,7 +61,7 @@ void LineDetail::setPrintObject(std::optional<YesNo> value)
     m_printObject = std::move(value);
 }
 
-LineDetail parseLineDetail(pugi::xml_node el)
+LineDetail parseLineDetail(pugi::xml_node el, const ParseContext &context)
 {
     LineDetail out;
     bool seen_line = false;
@@ -74,23 +75,23 @@ LineDetail parseLineDetail(pugi::xml_node el)
         if (aname == "line")
         {
             seen_line = true;
-            out.setLine(StaffLine::parse(a.value()));
+            out.setLine(parseValue<StaffLine>(a.value(), context, el, "line"));
         }
         else if (aname == "width")
         {
-            out.setWidth(Tenths::parse(a.value()));
+            out.setWidth(parseValue<Tenths>(a.value(), context, el, "width"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "line-type")
         {
-            out.setLineType(LineType::parse(a.value()));
+            out.setLineType(parseValue<LineType>(a.value(), context, el, "line-type"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else
         {
@@ -101,13 +102,14 @@ LineDetail parseLineDetail(pugi::xml_node el)
     {
         throwMissingAttribute(el, "line");
     }
-    parseLineDetailContent(out, el);
+    parseLineDetailContent(out, el, context);
     return out;
 }
 
-void parseLineDetailContent(LineDetail &out, pugi::xml_node el)
+void parseLineDetailContent(LineDetail &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

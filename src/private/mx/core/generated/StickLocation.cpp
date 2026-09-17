@@ -55,8 +55,14 @@ bool StickLocation::tryParse(std::string_view text, StickLocation &out) noexcept
 
 StickLocation StickLocation::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+StickLocation StickLocation::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     StickLocation v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

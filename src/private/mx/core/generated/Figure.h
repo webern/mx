@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The figure type represents a single figure within a figured-bass element.
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
@@ -45,9 +47,9 @@ class Figure final
     EditorialGroup m_editorial{};
 };
 
-Figure parseFigure(pugi::xml_node el);
+Figure parseFigure(pugi::xml_node el, const ParseContext &context);
 
-void parseFigureContent(Figure &out, pugi::xml_node el);
+void parseFigureContent(Figure &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFigure(const Figure &v, pugi::xml_node parent, const char *tag);
 

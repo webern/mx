@@ -32,7 +32,6 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
-#include "mx/impl/LcmGcd.h"
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
@@ -40,10 +39,29 @@
 #include "mx/utility/StringToInt.h"
 #include "mx/utility/Throw.h"
 
+#include <algorithm>
+#include <limits>
+#include <numeric>
+#include <set>
+
 namespace mx
 {
 namespace impl
 {
+namespace
+{
+std::string partGroupNumberText(int number)
+{
+    return number == api::NUMBER_LEVEL_UNSPECIFIED ? std::string{} : " number " + std::to_string(number);
+}
+
+// A part-group without a number is number 1.
+int effectivePartGroupNumber(int number)
+{
+    return number == api::NUMBER_LEVEL_UNSPECIFIED ? 1 : number;
+}
+} // namespace
+
 ScoreReader::ScoreReader(const core::ScorePartwise &inScorePartwise, DiagnosticsContext diagnostics)
     : myScorePartwise{inScorePartwise}, myPartSet{inScorePartwise.part()}, myHeaderGroup{inScorePartwise.scoreHeader()},
       myDiagnostics{diagnostics}, myMutex{}, myOutScoreData{}, myPartGroupStack{}
@@ -74,37 +92,67 @@ ScoreReader::ReconciledParts ScoreReader::reconcileParts(const core::ScorePartwi
     const auto &partList = inScorePartwise.scoreHeader().partList();
     const auto partwiseParts = inScorePartwise.part();
 
+    // partIndex counts the parts that are read, so part groups index ScoreData::parts.
+    const auto reconcile = [&](const core::ScorePart &scorePart) {
+        const auto *partwisePart = findPartwisePart(scorePart, partwiseParts);
+        if (!partwisePart)
+        {
+            myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, api::Location{},
+                                 "score-part \"" + scorePart.id().value() +
+                                     "\" has no part with the same id; it is not read");
+            return;
+        }
+        outParts.emplace_back(ReconciledPart{&scorePart, partwisePart});
+        ++partIndex;
+    };
+
     for (const auto &preliminaryGroup : partList.partGroup())
     {
         handlePartGroup(partIndex, preliminaryGroup);
     }
 
-    const auto *scorePart = &partList.scorePart();
-    const auto *partwisePart = findPartwisePart(*scorePart, partwiseParts);
-    if (scorePart && partwisePart)
-    {
-        outParts.emplace_back(ReconciledPart{scorePart, partwisePart});
-    }
-
-    ++partIndex;
+    reconcile(partList.scorePart());
 
     for (const auto &pgosp : partList.choice())
     {
         if (pgosp.isScorePart())
         {
-            scorePart = &pgosp.asScorePart();
-            partwisePart = findPartwisePart(*scorePart, partwiseParts);
-
-            if (scorePart && partwisePart)
-            {
-                outParts.emplace_back(ReconciledPart{scorePart, partwisePart});
-            }
-            ++partIndex;
+            reconcile(pgosp.asScorePart());
         }
         else if (pgosp.isPartGroup())
         {
             handlePartGroup(partIndex, pgosp.asPartGroup());
         }
+    }
+
+    // the stack holds the most recent start first
+    for (auto iter = myPartGroupStack.crbegin(); iter != myPartGroupStack.crend(); ++iter)
+    {
+        api::Location location;
+        if (iter->firstPartIndex < partIndex)
+        {
+            location.partIndex = iter->firstPartIndex;
+        }
+        myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, std::move(location),
+                             "part-group start" + partGroupNumberText(iter->number) + " has no stop; it is not read");
+    }
+    myPartGroupStack.clear();
+
+    for (const auto &part : partwiseParts)
+    {
+        const auto isPart = [&part](const ReconciledPart &reconciled) { return reconciled.second == &part; };
+        if (std::any_of(outParts.cbegin(), outParts.cend(), isPart))
+        {
+            continue;
+        }
+        const auto isSameId = [&part](const ReconciledPart &reconciled) {
+            return reconciled.second->id().value() == part.id().value();
+        };
+        const bool isDuplicate = std::any_of(outParts.cbegin(), outParts.cend(), isSameId);
+        myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, api::Location{},
+                             "part \"" + part.id().value() + "\"" +
+                                 (isDuplicate ? " has the same id as an earlier part; it is not read"
+                                              : " matches no score-part; it is not read"));
     }
 
     auto sortingCompare = [&](api::PartGroupData &a, api::PartGroupData b) {
@@ -258,7 +306,7 @@ api::ScoreData ScoreReader::getScoreData() const
 
     if (myHeaderGroup.defaults().has_value())
     {
-        myOutScoreData.defaults = createDefaults(myHeaderGroup);
+        myOutScoreData.defaults = createDefaults(myHeaderGroup, myDiagnostics);
     }
 
     createCredits(myHeaderGroup, myOutScoreData);
@@ -270,7 +318,8 @@ api::ScoreData ScoreReader::getScoreData() const
         const auto &scorePart = *reconciledPart.first;
         const auto &partwisePart = *reconciledPart.second;
         const auto ticksPerQuarter = myOutScoreData.ticksPerQuarter;
-        PartReader reader{scorePart, partwisePart, ticksPerQuarter, myScorePartwise, divisionsValue, myDiagnostics};
+        const auto partIndex = static_cast<int>(myOutScoreData.parts.size());
+        PartReader reader{scorePart, partwisePart, ticksPerQuarter, partIndex, divisionsValue, myDiagnostics};
         myOutScoreData.parts.emplace_back(reader.getPartData());
         const auto cursorReturn = reader.getCursor();
         divisionsValue = cursorReturn.ticksPerQuarter;
@@ -344,11 +393,15 @@ void ScoreReader::startPartGroup(int partIndex, const core::PartGroup &inPartGro
 
 void ScoreReader::stopPartGroup(int partIndex, const core::PartGroup &inPartGroup) const
 {
+    const int partGroupNumber = parsePartGroupNumber(inPartGroup);
+
     if (myPartGroupStack.empty())
     {
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::unmatchedSpanner, api::Location{},
+                             "part-group stop" + partGroupNumberText(partGroupNumber) +
+                                 " has no matching start; it is ignored");
         return;
     }
-    const int partGroupNumber = parsePartGroupNumber(inPartGroup);
 
     api::PartGroupData grpData;
 
@@ -359,12 +412,27 @@ void ScoreReader::stopPartGroup(int partIndex, const core::PartGroup &inPartGrou
     else
     {
         grpData = popMostRecentGroupFromStack();
+        if (effectivePartGroupNumber(partGroupNumber) != effectivePartGroupNumber(grpData.number))
+        {
+            api::Location location;
+            location.partIndex = grpData.firstPartIndex;
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, std::move(location),
+                                 "part-group stop" + partGroupNumberText(partGroupNumber) +
+                                     " matches no open group; closing the most recent part-group" +
+                                     partGroupNumberText(grpData.number));
+        }
     }
 
     // A part-group stop arrives before the *next* score-part in the part-list walk, so the
-    // group's last member is the previously indexed part; partIndex==0 guards a malformed
-    // stop-before-any-part.
-    grpData.lastPartIndex = partIndex > 0 ? partIndex - 1 : partIndex;
+    // group's last member is the previously read part.
+    if (partIndex == grpData.firstPartIndex)
+    {
+        myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, api::Location{},
+                             "part-group" + partGroupNumberText(grpData.number) + " contains no parts; it is not read");
+        return;
+    }
+
+    grpData.lastPartIndex = partIndex - 1;
 
     myOutScoreData.partGroups.emplace_back(std::move(grpData));
 }
@@ -416,10 +484,12 @@ int ScoreReader::parsePartGroupNumber(const core::PartGroup &inPartGroup) const
     if (inPartGroup.number().has_value())
     {
         const auto str = *inPartGroup.number();
-        bool isGroupNumberValid = utility::stringToInt(str, num);
-
-        // TODO - support non-numeric group numbers if someone complains
-        MX_ASSERT(isGroupNumberValid);
+        if (!utility::stringToInt(str, num))
+        {
+            num = api::NUMBER_LEVEL_UNSPECIFIED;
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::invalidValue, api::Location{},
+                                 "part-group number \"" + str + "\" is not a number; reading it as unspecified");
+        }
     }
 
     return num;
@@ -496,6 +566,14 @@ void ScoreReader::scanForSystemInfo() const
             if (systemData.isUsed())
             {
                 auto &layout = myOutScoreData.layout[measureIndex];
+                if (layout.system.isUsed())
+                {
+                    api::Location location;
+                    location.partIndex = 0;
+                    location.measureIndex = measureIndex;
+                    myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, std::move(location),
+                                         "a measure has more than one print with system layout; only the last is read");
+                }
                 layout.system = systemData;
             }
         }
@@ -584,8 +662,15 @@ void ScoreReader::scanForPageInfo() const
             if (outPageData.isUsed())
             {
                 auto &layout = myOutScoreData.layout[measureIndex];
+                if (layout.page.isUsed())
+                {
+                    api::Location location;
+                    location.partIndex = 0;
+                    location.measureIndex = measureIndex;
+                    myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, std::move(location),
+                                         "a measure has more than one print with page layout; only the last is read");
+                }
                 layout.page = outPageData;
-                // TODO break?
             }
         } // for each mdc
         ++measureIndex;
@@ -617,16 +702,35 @@ int ScoreReader::findMaxDivisionsPerQuarter() const
                 const auto tempDiv = attrs.divisions()->value().value();
                 // <divisions> is a decimal in MusicXML but api ticksPerQuarter is an int:
                 // round to nearest, halves down (ceil(x - 0.5)).
+                // Divisions that round to 0 read as 1, as MeasureReader reads them.
                 const int tempDivInt = static_cast<int>(std::ceil(tempDiv - 0.5));
-                if (tempDivInt > 0)
-                {
-                    foundDivisions.insert(tempDivInt);
-                }
+                foundDivisions.insert(std::max(tempDivInt, 1));
             }
         }
     }
 
-    return mx::impl::leastCommonMultiple(foundDivisions);
+    if (foundDivisions.empty())
+    {
+        return 0;
+    }
+
+    // When the least common multiple does not fit an int, durations in parts with other divisions
+    // round to the largest divisions' ticks instead.
+    long long multiple = 1;
+    for (const int divisions : foundDivisions)
+    {
+        multiple = std::lcm(multiple, static_cast<long long>(divisions));
+        if (multiple > std::numeric_limits<int>::max())
+        {
+            const int largest = *foundDivisions.crbegin();
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, api::Location{},
+                                 "the least common multiple of the divisions is too large; using the largest, " +
+                                     std::to_string(largest));
+            return largest;
+        }
+    }
+
+    return static_cast<int>(multiple);
 }
 
 } // namespace impl

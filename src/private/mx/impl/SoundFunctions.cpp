@@ -150,9 +150,10 @@ api::SoundData readSoundData(const core::Sound &inSound)
     return out;
 }
 
-void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound)
+void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound, const DiagnosticsContext &diagnostics,
+                    const api::Location &location)
 {
-    setId(inSoundData.id, outSound);
+    setId(inSoundData.id, outSound, diagnostics, location);
 
     if (inSoundData.tempo >= 0.0)
     {

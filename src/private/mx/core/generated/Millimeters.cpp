@@ -34,20 +34,33 @@ std::string Millimeters::toString() const
 
 bool Millimeters::tryParse(std::string_view text, Millimeters &out)
 {
-    Decimal v;
-    if (!Decimal::tryParse(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    Millimeters parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = Millimeters{std::move(v)};
+    out = std::move(parsed);
     return true;
 }
 
 Millimeters Millimeters::parse(std::string_view text)
 {
-    Millimeters v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Millimeters Millimeters::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    Decimal v;
+    if (!Decimal::tryParse(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return Millimeters{};
+    }
+    Millimeters out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

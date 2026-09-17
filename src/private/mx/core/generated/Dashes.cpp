@@ -3,6 +3,7 @@
 #include "mx/core/generated/Dashes.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -110,7 +111,7 @@ void Dashes::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Dashes parseDashes(pugi::xml_node el)
+Dashes parseDashes(pugi::xml_node el, const ParseContext &context)
 {
     Dashes out;
     bool seen_type = false;
@@ -124,43 +125,43 @@ Dashes parseDashes(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStopContinue::parse(a.value()));
+            out.setType(parseValue<StartStopContinue>(a.value(), context, el, "type"));
         }
         else if (aname == "number")
         {
-            out.setNumber(NumberLevel::parse(a.value()));
+            out.setNumber(parseValue<NumberLevel>(a.value(), context, el, "number"));
         }
         else if (aname == "dash-length")
         {
-            out.setDashLength(Tenths::parse(a.value()));
+            out.setDashLength(parseValue<Tenths>(a.value(), context, el, "dash-length"));
         }
         else if (aname == "space-length")
         {
-            out.setSpaceLength(Tenths::parse(a.value()));
+            out.setSpaceLength(parseValue<Tenths>(a.value(), context, el, "space-length"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -171,13 +172,14 @@ Dashes parseDashes(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseDashesContent(out, el);
+    parseDashesContent(out, el, context);
     return out;
 }
 
-void parseDashesContent(Dashes &out, pugi::xml_node el)
+void parseDashesContent(Dashes &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

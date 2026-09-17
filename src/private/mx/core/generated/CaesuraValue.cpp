@@ -62,8 +62,14 @@ bool CaesuraValue::tryParse(std::string_view text, CaesuraValue &out) noexcept
 
 CaesuraValue CaesuraValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+CaesuraValue CaesuraValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     CaesuraValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

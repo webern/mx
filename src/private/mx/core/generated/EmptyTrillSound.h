@@ -27,6 +27,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The empty-trill-sound type represents an empty element with print-style, placement, and
 /// trill-sound attributes.
 class EmptyTrillSound
@@ -88,9 +90,9 @@ class EmptyTrillSound
     std::optional<Percent> m_lastBeat;
 };
 
-EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el);
+EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el, const ParseContext &context);
 
-void parseEmptyTrillSoundContent(EmptyTrillSound &out, pugi::xml_node el);
+void parseEmptyTrillSoundContent(EmptyTrillSound &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEmptyTrillSound(const EmptyTrillSound &v, pugi::xml_node parent, const char *tag);
 

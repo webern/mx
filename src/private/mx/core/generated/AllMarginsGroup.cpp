@@ -3,6 +3,7 @@
 #include "mx/core/generated/AllMarginsGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,12 +41,12 @@ void AllMarginsGroup::setBottomMargin(Tenths value)
     m_bottomMargin = std::move(value);
 }
 
-AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor)
+AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     AllMarginsGroup out;
     if (cursor && (cursorIs(cursor, "left-margin")))
     {
-        out.setLeftRightMargins(parseLeftRightMarginsGroup(el, cursor));
+        out.setLeftRightMargins(parseLeftRightMarginsGroup(el, cursor, context));
     }
     else
     {
@@ -53,7 +54,7 @@ AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursorIs(cursor, "top-margin"))
     {
-        out.setTopMargin(Tenths::parse(childText(cursor)));
+        out.setTopMargin(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -62,7 +63,7 @@ AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursorIs(cursor, "bottom-margin"))
     {
-        out.setBottomMargin(Tenths::parse(childText(cursor)));
+        out.setBottomMargin(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

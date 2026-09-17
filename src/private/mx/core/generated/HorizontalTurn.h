@@ -27,6 +27,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The horizontal-turn type represents turn elements that are horizontal rather than vertical. These
 /// are empty elements with print-style, placement, trill-sound, and slash attributes. If the slash
 /// attribute is yes, then a vertical line is used to slash the turn. It is no if not specified.
@@ -92,9 +94,9 @@ class HorizontalTurn final
     std::optional<Percent> m_lastBeat;
 };
 
-HorizontalTurn parseHorizontalTurn(pugi::xml_node el);
+HorizontalTurn parseHorizontalTurn(pugi::xml_node el, const ParseContext &context);
 
-void parseHorizontalTurnContent(HorizontalTurn &out, pugi::xml_node el);
+void parseHorizontalTurnContent(HorizontalTurn &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHorizontalTurn(const HorizontalTurn &v, pugi::xml_node parent, const char *tag);
 

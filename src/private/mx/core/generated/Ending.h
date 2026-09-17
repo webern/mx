@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The ending type represents multiple (e.g. first and second) endings. Typically, the start type is
 /// associated with the left barline of the first measure in an ending. The stop and discontinue
 /// types are associated with the right barline of the last measure in an ending. Stop is used when
@@ -98,9 +100,9 @@ class Ending final
     std::string m_value{};
 };
 
-Ending parseEnding(pugi::xml_node el);
+Ending parseEnding(pugi::xml_node el, const ParseContext &context);
 
-void parseEndingContent(Ending &out, pugi::xml_node el);
+void parseEndingContent(Ending &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEnding(const Ending &v, pugi::xml_node parent, const char *tag);
 

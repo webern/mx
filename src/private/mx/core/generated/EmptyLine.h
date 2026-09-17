@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The empty-line type represents an empty element with line-shape, line-type, line-length,
 /// dashed-formatting, print-style and placement attributes.
 class EmptyLine final
@@ -79,9 +81,9 @@ class EmptyLine final
     std::optional<AboveBelow> m_placement;
 };
 
-EmptyLine parseEmptyLine(pugi::xml_node el);
+EmptyLine parseEmptyLine(pugi::xml_node el, const ParseContext &context);
 
-void parseEmptyLineContent(EmptyLine &out, pugi::xml_node el);
+void parseEmptyLineContent(EmptyLine &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEmptyLine(const EmptyLine &v, pugi::xml_node parent, const char *tag);
 

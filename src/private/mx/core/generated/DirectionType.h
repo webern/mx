@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Textual direction types may have more than 1 component due to multiple fonts. The dynamics
 /// element may also be used in the notations element. Attribute groups related to print suggestions
 /// apply to the individual direction-type, not to the overall direction.
@@ -38,9 +40,9 @@ class DirectionType final
     DirectionTypeChoice m_choice{};
 };
 
-DirectionType parseDirectionType(pugi::xml_node el);
+DirectionType parseDirectionType(pugi::xml_node el, const ParseContext &context);
 
-void parseDirectionTypeContent(DirectionType &out, pugi::xml_node el);
+void parseDirectionTypeContent(DirectionType &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDirectionType(const DirectionType &v, pugi::xml_node parent, const char *tag);
 

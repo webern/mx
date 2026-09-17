@@ -170,11 +170,35 @@ bool {{ident}}::tryParse(std::string_view text, {{ident}} &out)
 
 {{ident}} {{ident}}::parse(std::string_view text)
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+{{ident}} {{ident}}::parse(std::string_view text, ValueParseOutcome &outcome)
+{
     {{ident}} out;
     if (tryParse(text, out))
     {
+        outcome = ValueParseOutcome::valid;
+{{#cases}}
+{{#has_clamp}}
+{{#is_primitive_integer}}
+        if (int raw{}; out.is{{name.pascal}}() && tryParseInt(text, raw) && out.as{{name.pascal}}() != raw)
+        {
+            outcome = ValueParseOutcome::adjusted;
+        }
+{{/is_primitive_integer}}
+{{#is_primitive_decimal}}
+        if (Decimal raw; out.is{{name.pascal}}() && Decimal::tryParse(text, raw) && out.as{{name.pascal}}() != raw)
+        {
+            outcome = ValueParseOutcome::adjusted;
+        }
+{{/is_primitive_decimal}}
+{{/has_clamp}}
+{{/cases}}
         return out;
     }
+    outcome = ValueParseOutcome::invalid;
 {{#cases}}
 {{#is_first}}
 {{#is_literal}}

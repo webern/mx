@@ -18,6 +18,15 @@ namespace mx::core
 // nothing else). The lenient flavors return 0 on garbage — the import
 // leniency policy (plan §2.4); range clamping happens in the caller.
 
+/// What a lenient value parse did with its input. Import diagnostics are
+/// built from this; the parsed value is the same whatever the outcome says.
+enum class ValueParseOutcome
+{
+    valid,    // the text was already a valid value
+    invalid,  // the text could not be read, so a default was used
+    adjusted, // the text was readable but was changed to a valid value
+};
+
 /// The input minus leading/trailing XML whitespace.
 std::string_view trimWhitespace(std::string_view text);
 

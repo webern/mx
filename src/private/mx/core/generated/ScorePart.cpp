@@ -3,6 +3,7 @@
 #include "mx/core/generated/ScorePart.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -145,7 +146,7 @@ void ScorePart::setMIDIGroup(std::vector<ScorePartMIDIGroup> value)
     m_midiGroup = std::move(value);
 }
 
-ScorePart parseScorePart(pugi::xml_node el)
+ScorePart parseScorePart(pugi::xml_node el, const ParseContext &context)
 {
     ScorePart out;
     bool seen_id = false;
@@ -159,7 +160,7 @@ ScorePart parseScorePart(pugi::xml_node el)
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -170,26 +171,26 @@ ScorePart parseScorePart(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseScorePartContent(out, el);
+    parseScorePartContent(out, el, context);
     return out;
 }
 
-void parseScorePartContent(ScorePart &out, pugi::xml_node el)
+void parseScorePartContent(ScorePart &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "identification"))
     {
-        out.setIdentification(parseIdentification(cursor));
+        out.setIdentification(parseIdentification(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "part-link"))
     {
-        out.addPartLink(parsePartLink(cursor));
+        out.addPartLink(parsePartLink(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "part-name"))
     {
-        out.setPartName(parsePartName(cursor));
+        out.setPartName(parsePartName(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -198,17 +199,17 @@ void parseScorePartContent(ScorePart &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "part-name-display"))
     {
-        out.setPartNameDisplay(parseNameDisplay(cursor));
+        out.setPartNameDisplay(parseNameDisplay(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "part-abbreviation"))
     {
-        out.setPartAbbreviation(parsePartName(cursor));
+        out.setPartAbbreviation(parsePartName(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "part-abbreviation-display"))
     {
-        out.setPartAbbreviationDisplay(parseNameDisplay(cursor));
+        out.setPartAbbreviationDisplay(parseNameDisplay(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "group"))
@@ -218,17 +219,17 @@ void parseScorePartContent(ScorePart &out, pugi::xml_node el)
     }
     while (cursorIs(cursor, "score-instrument"))
     {
-        out.addScoreInstrument(parseScoreInstrument(cursor));
+        out.addScoreInstrument(parseScoreInstrument(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "player"))
     {
-        out.addPlayer(parsePlayer(cursor));
+        out.addPlayer(parsePlayer(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursor && (cursorIs(cursor, "midi-device") || cursorIs(cursor, "midi-instrument")))
     {
-        out.addMIDIGroup(parseScorePartMIDIGroup(el, cursor));
+        out.addMIDIGroup(parseScorePartMIDIGroup(el, cursor, context));
     }
     if (cursor)
     {

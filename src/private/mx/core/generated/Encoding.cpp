@@ -3,6 +3,7 @@
 #include "mx/core/generated/Encoding.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,7 +26,7 @@ void Encoding::setChoice(std::vector<EncodingChoice> value)
     m_choice = std::move(value);
 }
 
-Encoding parseEncoding(pugi::xml_node el)
+Encoding parseEncoding(pugi::xml_node el, const ParseContext &context)
 {
     Encoding out;
     for (pugi::xml_attribute a : el.attributes())
@@ -37,18 +38,18 @@ Encoding parseEncoding(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseEncodingContent(out, el);
+    parseEncodingContent(out, el, context);
     return out;
 }
 
-void parseEncodingContent(Encoding &out, pugi::xml_node el)
+void parseEncodingContent(Encoding &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursor &&
            (cursorIs(cursor, "encoding-date") || cursorIs(cursor, "encoder") || cursorIs(cursor, "software") ||
             cursorIs(cursor, "encoding-description") || cursorIs(cursor, "supports")))
     {
-        out.addChoice(parseEncodingChoice(el, cursor));
+        out.addChoice(parseEncodingChoice(el, cursor, context));
     }
     if (cursor)
     {

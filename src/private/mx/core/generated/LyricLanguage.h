@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The lyric-language type specifies the default language for a particular name and number of lyric.
 class LyricLanguage final
 {
@@ -34,9 +36,9 @@ class LyricLanguage final
     std::string m_xmlLang{};
 };
 
-LyricLanguage parseLyricLanguage(pugi::xml_node el);
+LyricLanguage parseLyricLanguage(pugi::xml_node el, const ParseContext &context);
 
-void parseLyricLanguageContent(LyricLanguage &out, pugi::xml_node el);
+void parseLyricLanguageContent(LyricLanguage &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeLyricLanguage(const LyricLanguage &v, pugi::xml_node parent, const char *tag);
 

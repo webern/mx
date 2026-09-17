@@ -2,6 +2,7 @@
 
 #include "mx/core/generated/DefaultsProbe.h"
 
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 #include "mx/core/generated/Accidental.h"
 #include "mx/core/generated/AccidentalMark.h"
@@ -319,1142 +320,1142 @@ void roundTripDefaults()
     {
         pugi::xml_document doc;
         serializeAccidental(Accidental{}, doc, "probe");
-        parseAccidental(doc.document_element());
+        parseAccidental(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeAccidentalMark(AccidentalMark{}, doc, "probe");
-        parseAccidentalMark(doc.document_element());
+        parseAccidentalMark(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeAccidentalText(AccidentalText{}, doc, "probe");
-        parseAccidentalText(doc.document_element());
+        parseAccidentalText(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeAccord(Accord{}, doc, "probe");
-        parseAccord(doc.document_element());
+        parseAccord(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEmpty(Empty{}, doc, "probe");
-        parseEmpty(doc.document_element());
+        parseEmpty(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeAccordionRegistration(AccordionRegistration{}, doc, "probe");
-        parseAccordionRegistration(doc.document_element());
+        parseAccordionRegistration(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDistance(Distance{}, doc, "probe");
-        parseDistance(doc.document_element());
+        parseDistance(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeGlyph(Glyph{}, doc, "probe");
-        parseGlyph(doc.document_element());
+        parseGlyph(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeLineWidth(LineWidth{}, doc, "probe");
-        parseLineWidth(doc.document_element());
+        parseLineWidth(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNoteSize(NoteSize{}, doc, "probe");
-        parseNoteSize(doc.document_element());
+        parseNoteSize(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOtherAppearance(OtherAppearance{}, doc, "probe");
-        parseOtherAppearance(doc.document_element());
+        parseOtherAppearance(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeAppearance(Appearance{}, doc, "probe");
-        parseAppearance(doc.document_element());
+        parseAppearance(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeArpeggiate(Arpeggiate{}, doc, "probe");
-        parseArpeggiate(doc.document_element());
+        parseArpeggiate(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeArrow(Arrow{}, doc, "probe");
-        parseArrow(doc.document_element());
+        parseArrow(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBreathMark(BreathMark{}, doc, "probe");
-        parseBreathMark(doc.document_element());
+        parseBreathMark(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeCaesura(Caesura{}, doc, "probe");
-        parseCaesura(doc.document_element());
+        parseCaesura(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEmptyLine(EmptyLine{}, doc, "probe");
-        parseEmptyLine(doc.document_element());
+        parseEmptyLine(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEmptyPlacement(EmptyPlacement{}, doc, "probe");
-        parseEmptyPlacement(doc.document_element());
+        parseEmptyPlacement(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOtherPlacementText(OtherPlacementText{}, doc, "probe");
-        parseOtherPlacementText(doc.document_element());
+        parseOtherPlacementText(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStrongAccent(StrongAccent{}, doc, "probe");
-        parseStrongAccent(doc.document_element());
+        parseStrongAccent(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeArticulations(Articulations{}, doc, "probe");
-        parseArticulations(doc.document_element());
+        parseArticulations(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeAssess(Assess{}, doc, "probe");
-        parseAssess(doc.document_element());
+        parseAssess(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeClef(Clef{}, doc, "probe");
-        parseClef(doc.document_element());
+        parseClef(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDirective(Directive{}, doc, "probe");
-        parseDirective(doc.document_element());
+        parseDirective(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePartClef(PartClef{}, doc, "probe");
-        parsePartClef(doc.document_element());
+        parsePartClef(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDouble(Double{}, doc, "probe");
-        parseDouble(doc.document_element());
+        parseDouble(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePartTranspose(PartTranspose{}, doc, "probe");
-        parsePartTranspose(doc.document_element());
+        parsePartTranspose(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeForPart(ForPart{}, doc, "probe");
-        parseForPart(doc.document_element());
+        parseForPart(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFormattedText(FormattedText{}, doc, "probe");
-        parseFormattedText(doc.document_element());
+        parseFormattedText(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeCancel(Cancel{}, doc, "probe");
-        parseCancel(doc.document_element());
+        parseCancel(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeKeyAccidental(KeyAccidental{}, doc, "probe");
-        parseKeyAccidental(doc.document_element());
+        parseKeyAccidental(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeKeyOctave(KeyOctave{}, doc, "probe");
-        parseKeyOctave(doc.document_element());
+        parseKeyOctave(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeKey(Key{}, doc, "probe");
-        parseKey(doc.document_element());
+        parseKey(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeLevel(Level{}, doc, "probe");
-        parseLevel(doc.document_element());
+        parseLevel(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBeatRepeat(BeatRepeat{}, doc, "probe");
-        parseBeatRepeat(doc.document_element());
+        parseBeatRepeat(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMeasureRepeat(MeasureRepeat{}, doc, "probe");
-        parseMeasureRepeat(doc.document_element());
+        parseMeasureRepeat(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMultipleRest(MultipleRest{}, doc, "probe");
-        parseMultipleRest(doc.document_element());
+        parseMultipleRest(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSlash(Slash{}, doc, "probe");
-        parseSlash(doc.document_element());
+        parseSlash(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMeasureStyle(MeasureStyle{}, doc, "probe");
-        parseMeasureStyle(doc.document_element());
+        parseMeasureStyle(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePartSymbol(PartSymbol{}, doc, "probe");
-        parsePartSymbol(doc.document_element());
+        parsePartSymbol(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeLineDetail(LineDetail{}, doc, "probe");
-        parseLineDetail(doc.document_element());
+        parseLineDetail(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStaffSize(StaffSize{}, doc, "probe");
-        parseStaffSize(doc.document_element());
+        parseStaffSize(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStaffTuning(StaffTuning{}, doc, "probe");
-        parseStaffTuning(doc.document_element());
+        parseStaffTuning(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStaffDetails(StaffDetails{}, doc, "probe");
-        parseStaffDetails(doc.document_element());
+        parseStaffDetails(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeInterchangeable(Interchangeable{}, doc, "probe");
-        parseInterchangeable(doc.document_element());
+        parseInterchangeable(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTime(Time{}, doc, "probe");
-        parseTime(doc.document_element());
+        parseTime(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTranspose(Transpose{}, doc, "probe");
-        parseTranspose(doc.document_element());
+        parseTranspose(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeAttributes(Attributes{}, doc, "probe");
-        parseAttributes(doc.document_element());
+        parseAttributes(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBackup(Backup{}, doc, "probe");
-        parseBackup(doc.document_element());
+        parseBackup(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBarStyleColor(BarStyleColor{}, doc, "probe");
-        parseBarStyleColor(doc.document_element());
+        parseBarStyleColor(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeCoda(Coda{}, doc, "probe");
-        parseCoda(doc.document_element());
+        parseCoda(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEnding(Ending{}, doc, "probe");
-        parseEnding(doc.document_element());
+        parseEnding(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFermata(Fermata{}, doc, "probe");
-        parseFermata(doc.document_element());
+        parseFermata(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeRepeat(Repeat{}, doc, "probe");
-        parseRepeat(doc.document_element());
+        parseRepeat(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSegno(Segno{}, doc, "probe");
-        parseSegno(doc.document_element());
+        parseSegno(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeWavyLine(WavyLine{}, doc, "probe");
-        parseWavyLine(doc.document_element());
+        parseWavyLine(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBarline(Barline{}, doc, "probe");
-        parseBarline(doc.document_element());
+        parseBarline(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBarre(Barre{}, doc, "probe");
-        parseBarre(doc.document_element());
+        parseBarre(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBassStep(BassStep{}, doc, "probe");
-        parseBassStep(doc.document_element());
+        parseBassStep(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHarmonyAlter(HarmonyAlter{}, doc, "probe");
-        parseHarmonyAlter(doc.document_element());
+        parseHarmonyAlter(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStyleText(StyleText{}, doc, "probe");
-        parseStyleText(doc.document_element());
+        parseStyleText(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBass(Bass{}, doc, "probe");
-        parseBass(doc.document_element());
+        parseBass(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBeam(Beam{}, doc, "probe");
-        parseBeam(doc.document_element());
+        parseBeam(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBeatUnitTied(BeatUnitTied{}, doc, "probe");
-        parseBeatUnitTied(doc.document_element());
+        parseBeatUnitTied(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBeater(Beater{}, doc, "probe");
-        parseBeater(doc.document_element());
+        parseBeater(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePlacementText(PlacementText{}, doc, "probe");
-        parsePlacementText(doc.document_element());
+        parsePlacementText(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeRelease(Release{}, doc, "probe");
-        parseRelease(doc.document_element());
+        parseRelease(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBend(Bend{}, doc, "probe");
-        parseBend(doc.document_element());
+        parseBend(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBookmark(Bookmark{}, doc, "probe");
-        parseBookmark(doc.document_element());
+        parseBookmark(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeBracket(Bracket{}, doc, "probe");
-        parseBracket(doc.document_element());
+        parseBracket(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFormattedSymbolID(FormattedSymbolID{}, doc, "probe");
-        parseFormattedSymbolID(doc.document_element());
+        parseFormattedSymbolID(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFormattedTextID(FormattedTextID{}, doc, "probe");
-        parseFormattedTextID(doc.document_element());
+        parseFormattedTextID(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeImage(Image{}, doc, "probe");
-        parseImage(doc.document_element());
+        parseImage(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeLink(Link{}, doc, "probe");
-        parseLink(doc.document_element());
+        parseLink(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeCredit(Credit{}, doc, "probe");
-        parseCredit(doc.document_element());
+        parseCredit(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDashes(Dashes{}, doc, "probe");
-        parseDashes(doc.document_element());
+        parseDashes(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEmptyFont(EmptyFont{}, doc, "probe");
-        parseEmptyFont(doc.document_element());
+        parseEmptyFont(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeLyricFont(LyricFont{}, doc, "probe");
-        parseLyricFont(doc.document_element());
+        parseLyricFont(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeLyricLanguage(LyricLanguage{}, doc, "probe");
-        parseLyricLanguage(doc.document_element());
+        parseLyricLanguage(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePageMargins(PageMargins{}, doc, "probe");
-        parsePageMargins(doc.document_element());
+        parsePageMargins(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePageLayout(PageLayout{}, doc, "probe");
-        parsePageLayout(doc.document_element());
+        parsePageLayout(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeScaling(Scaling{}, doc, "probe");
-        parseScaling(doc.document_element());
+        parseScaling(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStaffLayout(StaffLayout{}, doc, "probe");
-        parseStaffLayout(doc.document_element());
+        parseStaffLayout(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEmptyPrintObjectStyleAlign(EmptyPrintObjectStyleAlign{}, doc, "probe");
-        parseEmptyPrintObjectStyleAlign(doc.document_element());
+        parseEmptyPrintObjectStyleAlign(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSystemDividers(SystemDividers{}, doc, "probe");
-        parseSystemDividers(doc.document_element());
+        parseSystemDividers(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSystemMargins(SystemMargins{}, doc, "probe");
-        parseSystemMargins(doc.document_element());
+        parseSystemMargins(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSystemLayout(SystemLayout{}, doc, "probe");
-        parseSystemLayout(doc.document_element());
+        parseSystemLayout(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDefaults(Defaults{}, doc, "probe");
-        parseDefaults(doc.document_element());
+        parseDefaults(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDegreeAlter(DegreeAlter{}, doc, "probe");
-        parseDegreeAlter(doc.document_element());
+        parseDegreeAlter(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDegreeType(DegreeType{}, doc, "probe");
-        parseDegreeType(doc.document_element());
+        parseDegreeType(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDegreeValue(DegreeValue{}, doc, "probe");
-        parseDegreeValue(doc.document_element());
+        parseDegreeValue(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDegree(Degree{}, doc, "probe");
-        parseDegree(doc.document_element());
+        parseDegree(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOtherText(OtherText{}, doc, "probe");
-        parseOtherText(doc.document_element());
+        parseOtherText(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDynamics(Dynamics{}, doc, "probe");
-        parseDynamics(doc.document_element());
+        parseDynamics(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEmptyPrintStyleAlignID(EmptyPrintStyleAlignID{}, doc, "probe");
-        parseEmptyPrintStyleAlignID(doc.document_element());
+        parseEmptyPrintStyleAlignID(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePedalTuning(PedalTuning{}, doc, "probe");
-        parsePedalTuning(doc.document_element());
+        parsePedalTuning(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHarpPedals(HarpPedals{}, doc, "probe");
-        parseHarpPedals(doc.document_element());
+        parseHarpPedals(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMetronomeBeam(MetronomeBeam{}, doc, "probe");
-        parseMetronomeBeam(doc.document_element());
+        parseMetronomeBeam(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMetronomeTied(MetronomeTied{}, doc, "probe");
-        parseMetronomeTied(doc.document_element());
+        parseMetronomeTied(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTimeModification(TimeModification{}, doc, "probe");
-        parseTimeModification(doc.document_element());
+        parseTimeModification(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMetronomeTuplet(MetronomeTuplet{}, doc, "probe");
-        parseMetronomeTuplet(doc.document_element());
+        parseMetronomeTuplet(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMetronomeNote(MetronomeNote{}, doc, "probe");
-        parseMetronomeNote(doc.document_element());
+        parseMetronomeNote(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePerMinute(PerMinute{}, doc, "probe");
-        parsePerMinute(doc.document_element());
+        parsePerMinute(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMetronome(Metronome{}, doc, "probe");
-        parseMetronome(doc.document_element());
+        parseMetronome(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOctaveShift(OctaveShift{}, doc, "probe");
-        parseOctaveShift(doc.document_element());
+        parseOctaveShift(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOtherDirection(OtherDirection{}, doc, "probe");
-        parseOtherDirection(doc.document_element());
+        parseOtherDirection(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePedal(Pedal{}, doc, "probe");
-        parsePedal(doc.document_element());
+        parsePedal(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEffect(Effect{}, doc, "probe");
-        parseEffect(doc.document_element());
+        parseEffect(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeGlass(Glass{}, doc, "probe");
-        parseGlass(doc.document_element());
+        parseGlass(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMembrane(Membrane{}, doc, "probe");
-        parseMembrane(doc.document_element());
+        parseMembrane(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMetal(Metal{}, doc, "probe");
-        parseMetal(doc.document_element());
+        parseMetal(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePitched(Pitched{}, doc, "probe");
-        parsePitched(doc.document_element());
+        parsePitched(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStick(Stick{}, doc, "probe");
-        parseStick(doc.document_element());
+        parseStick(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTimpani(Timpani{}, doc, "probe");
-        parseTimpani(doc.document_element());
+        parseTimpani(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeWood(Wood{}, doc, "probe");
-        parseWood(doc.document_element());
+        parseWood(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePercussion(Percussion{}, doc, "probe");
-        parsePercussion(doc.document_element());
+        parsePercussion(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePrincipalVoice(PrincipalVoice{}, doc, "probe");
-        parsePrincipalVoice(doc.document_element());
+        parsePrincipalVoice(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeScordatura(Scordatura{}, doc, "probe");
-        parseScordatura(doc.document_element());
+        parseScordatura(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStaffDivide(StaffDivide{}, doc, "probe");
-        parseStaffDivide(doc.document_element());
+        parseStaffDivide(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStringMute(StringMute{}, doc, "probe");
-        parseStringMute(doc.document_element());
+        parseStringMute(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeWedge(Wedge{}, doc, "probe");
-        parseWedge(doc.document_element());
+        parseWedge(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDirectionType(DirectionType{}, doc, "probe");
-        parseDirectionType(doc.document_element());
+        parseDirectionType(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOffset(Offset{}, doc, "probe");
-        parseOffset(doc.document_element());
+        parseOffset(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOtherListening(OtherListening{}, doc, "probe");
-        parseOtherListening(doc.document_element());
+        parseOtherListening(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSync(Sync{}, doc, "probe");
-        parseSync(doc.document_element());
+        parseSync(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeListening(Listening{}, doc, "probe");
-        parseListening(doc.document_element());
+        parseListening(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeVirtualInstrument(VirtualInstrument{}, doc, "probe");
-        parseVirtualInstrument(doc.document_element());
+        parseVirtualInstrument(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeInstrumentChange(InstrumentChange{}, doc, "probe");
-        parseInstrumentChange(doc.document_element());
+        parseInstrumentChange(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMIDIDevice(MIDIDevice{}, doc, "probe");
-        parseMIDIDevice(doc.document_element());
+        parseMIDIDevice(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMIDIInstrument(MIDIInstrument{}, doc, "probe");
-        parseMIDIInstrument(doc.document_element());
+        parseMIDIInstrument(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOtherPlay(OtherPlay{}, doc, "probe");
-        parseOtherPlay(doc.document_element());
+        parseOtherPlay(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePlay(Play{}, doc, "probe");
-        parsePlay(doc.document_element());
+        parsePlay(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSwing(Swing{}, doc, "probe");
-        parseSwing(doc.document_element());
+        parseSwing(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSound(Sound{}, doc, "probe");
-        parseSound(doc.document_element());
+        parseSound(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeDirection(Direction{}, doc, "probe");
-        parseDirection(doc.document_element());
+        parseDirection(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeElision(Elision{}, doc, "probe");
-        parseElision(doc.document_element());
+        parseElision(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEmptyPlacementSmufl(EmptyPlacementSmufl{}, doc, "probe");
-        parseEmptyPlacementSmufl(doc.document_element());
+        parseEmptyPlacementSmufl(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEmptyTrillSound(EmptyTrillSound{}, doc, "probe");
-        parseEmptyTrillSound(doc.document_element());
+        parseEmptyTrillSound(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSupports(Supports{}, doc, "probe");
-        parseSupports(doc.document_element());
+        parseSupports(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTypedText(TypedText{}, doc, "probe");
-        parseTypedText(doc.document_element());
+        parseTypedText(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeEncoding(Encoding{}, doc, "probe");
-        parseEncoding(doc.document_element());
+        parseEncoding(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeExtend(Extend{}, doc, "probe");
-        parseExtend(doc.document_element());
+        parseExtend(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFeature(Feature{}, doc, "probe");
-        parseFeature(doc.document_element());
+        parseFeature(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFigure(Figure{}, doc, "probe");
-        parseFigure(doc.document_element());
+        parseFigure(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFiguredBass(FiguredBass{}, doc, "probe");
-        parseFiguredBass(doc.document_element());
+        parseFiguredBass(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFingering(Fingering{}, doc, "probe");
-        parseFingering(doc.document_element());
+        parseFingering(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFirstFret(FirstFret{}, doc, "probe");
-        parseFirstFret(doc.document_element());
+        parseFirstFret(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeForward(Forward{}, doc, "probe");
-        parseForward(doc.document_element());
+        parseForward(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFret(Fret{}, doc, "probe");
-        parseFret(doc.document_element());
+        parseFret(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeString(String{}, doc, "probe");
-        parseString(doc.document_element());
+        parseString(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFrameNote(FrameNote{}, doc, "probe");
-        parseFrameNote(doc.document_element());
+        parseFrameNote(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeFrame(Frame{}, doc, "probe");
-        parseFrame(doc.document_element());
+        parseFrame(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeGlissando(Glissando{}, doc, "probe");
-        parseGlissando(doc.document_element());
+        parseGlissando(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeGrace(Grace{}, doc, "probe");
-        parseGrace(doc.document_element());
+        parseGrace(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeGroupBarline(GroupBarline{}, doc, "probe");
-        parseGroupBarline(doc.document_element());
+        parseGroupBarline(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeGroupName(GroupName{}, doc, "probe");
-        parseGroupName(doc.document_element());
+        parseGroupName(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeGroupSymbol(GroupSymbol{}, doc, "probe");
-        parseGroupSymbol(doc.document_element());
+        parseGroupSymbol(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeGrouping(Grouping{}, doc, "probe");
-        parseGrouping(doc.document_element());
+        parseGrouping(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHammerOnPullOff(HammerOnPullOff{}, doc, "probe");
-        parseHammerOnPullOff(doc.document_element());
+        parseHammerOnPullOff(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHandbell(Handbell{}, doc, "probe");
-        parseHandbell(doc.document_element());
+        parseHandbell(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHarmonClosed(HarmonClosed{}, doc, "probe");
-        parseHarmonClosed(doc.document_element());
+        parseHarmonClosed(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHarmonMute(HarmonMute{}, doc, "probe");
-        parseHarmonMute(doc.document_element());
+        parseHarmonMute(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHarmonic(Harmonic{}, doc, "probe");
-        parseHarmonic(doc.document_element());
+        parseHarmonic(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeInversion(Inversion{}, doc, "probe");
-        parseInversion(doc.document_element());
+        parseInversion(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeKind(Kind{}, doc, "probe");
-        parseKind(doc.document_element());
+        parseKind(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNumeralKey(NumeralKey{}, doc, "probe");
-        parseNumeralKey(doc.document_element());
+        parseNumeralKey(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNumeralRoot(NumeralRoot{}, doc, "probe");
-        parseNumeralRoot(doc.document_element());
+        parseNumeralRoot(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNumeral(Numeral{}, doc, "probe");
-        parseNumeral(doc.document_element());
+        parseNumeral(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeRootStep(RootStep{}, doc, "probe");
-        parseRootStep(doc.document_element());
+        parseRootStep(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeRoot(Root{}, doc, "probe");
-        parseRoot(doc.document_element());
+        parseRoot(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHarmony(Harmony{}, doc, "probe");
-        parseHarmony(doc.document_element());
+        parseHarmony(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHeelToe(HeelToe{}, doc, "probe");
-        parseHeelToe(doc.document_element());
+        parseHeelToe(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHoleClosed(HoleClosed{}, doc, "probe");
-        parseHoleClosed(doc.document_element());
+        parseHoleClosed(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHole(Hole{}, doc, "probe");
-        parseHole(doc.document_element());
+        parseHole(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeHorizontalTurn(HorizontalTurn{}, doc, "probe");
-        parseHorizontalTurn(doc.document_element());
+        parseHorizontalTurn(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMiscellaneousField(MiscellaneousField{}, doc, "probe");
-        parseMiscellaneousField(doc.document_element());
+        parseMiscellaneousField(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMiscellaneous(Miscellaneous{}, doc, "probe");
-        parseMiscellaneous(doc.document_element());
+        parseMiscellaneous(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeIdentification(Identification{}, doc, "probe");
-        parseIdentification(doc.document_element());
+        parseIdentification(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeInstrument(Instrument{}, doc, "probe");
-        parseInstrument(doc.document_element());
+        parseInstrument(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeInstrumentLink(InstrumentLink{}, doc, "probe");
-        parseInstrumentLink(doc.document_element());
+        parseInstrumentLink(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeWait(Wait{}, doc, "probe");
-        parseWait(doc.document_element());
+        parseWait(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeListen(Listen{}, doc, "probe");
-        parseListen(doc.document_element());
+        parseListen(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTextElementData(TextElementData{}, doc, "probe");
-        parseTextElementData(doc.document_element());
+        parseTextElementData(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeLyric(Lyric{}, doc, "probe");
-        parseLyric(doc.document_element());
+        parseLyric(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMeasureLayout(MeasureLayout{}, doc, "probe");
-        parseMeasureLayout(doc.document_element());
+        parseMeasureLayout(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMeasureNumbering(MeasureNumbering{}, doc, "probe");
-        parseMeasureNumbering(doc.document_element());
+        parseMeasureNumbering(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeMordent(Mordent{}, doc, "probe");
-        parseMordent(doc.document_element());
+        parseMordent(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNameDisplay(NameDisplay{}, doc, "probe");
-        parseNameDisplay(doc.document_element());
+        parseNameDisplay(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNonArpeggiate(NonArpeggiate{}, doc, "probe");
-        parseNonArpeggiate(doc.document_element());
+        parseNonArpeggiate(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTremolo(Tremolo{}, doc, "probe");
-        parseTremolo(doc.document_element());
+        parseTremolo(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOrnaments(Ornaments{}, doc, "probe");
-        parseOrnaments(doc.document_element());
+        parseOrnaments(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOtherNotation(OtherNotation{}, doc, "probe");
-        parseOtherNotation(doc.document_element());
+        parseOtherNotation(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSlide(Slide{}, doc, "probe");
-        parseSlide(doc.document_element());
+        parseSlide(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeSlur(Slur{}, doc, "probe");
-        parseSlur(doc.document_element());
+        parseSlur(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTap(Tap{}, doc, "probe");
-        parseTap(doc.document_element());
+        parseTap(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTechnical(Technical{}, doc, "probe");
-        parseTechnical(doc.document_element());
+        parseTechnical(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTied(Tied{}, doc, "probe");
-        parseTied(doc.document_element());
+        parseTied(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTupletDot(TupletDot{}, doc, "probe");
-        parseTupletDot(doc.document_element());
+        parseTupletDot(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTupletNumber(TupletNumber{}, doc, "probe");
-        parseTupletNumber(doc.document_element());
+        parseTupletNumber(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTupletType(TupletType{}, doc, "probe");
-        parseTupletType(doc.document_element());
+        parseTupletType(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTupletPortion(TupletPortion{}, doc, "probe");
-        parseTupletPortion(doc.document_element());
+        parseTupletPortion(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTuplet(Tuplet{}, doc, "probe");
-        parseTuplet(doc.document_element());
+        parseTuplet(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNotations(Notations{}, doc, "probe");
-        parseNotations(doc.document_element());
+        parseNotations(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNoteType(NoteType{}, doc, "probe");
-        parseNoteType(doc.document_element());
+        parseNoteType(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNotehead(Notehead{}, doc, "probe");
-        parseNotehead(doc.document_element());
+        parseNotehead(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNoteheadText(NoteheadText{}, doc, "probe");
-        parseNoteheadText(doc.document_element());
+        parseNoteheadText(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePitch(Pitch{}, doc, "probe");
-        parsePitch(doc.document_element());
+        parsePitch(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeRest(Rest{}, doc, "probe");
-        parseRest(doc.document_element());
+        parseRest(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeStem(Stem{}, doc, "probe");
-        parseStem(doc.document_element());
+        parseStem(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTie(Tie{}, doc, "probe");
-        parseTie(doc.document_element());
+        parseTie(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeUnpitched(Unpitched{}, doc, "probe");
-        parseUnpitched(doc.document_element());
+        parseUnpitched(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeNote(Note{}, doc, "probe");
-        parseNote(doc.document_element());
+        parseNote(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeOpus(Opus{}, doc, "probe");
-        parseOpus(doc.document_element());
+        parseOpus(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePartGroup(PartGroup{}, doc, "probe");
-        parsePartGroup(doc.document_element());
+        parsePartGroup(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePartLink(PartLink{}, doc, "probe");
-        parsePartLink(doc.document_element());
+        parsePartLink(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePartName(PartName{}, doc, "probe");
-        parsePartName(doc.document_element());
+        parsePartName(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePlayer(Player{}, doc, "probe");
-        parsePlayer(doc.document_element());
+        parsePlayer(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeScoreInstrument(ScoreInstrument{}, doc, "probe");
-        parseScoreInstrument(doc.document_element());
+        parseScoreInstrument(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeScorePart(ScorePart{}, doc, "probe");
-        parseScorePart(doc.document_element());
+        parseScorePart(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePartList(PartList{}, doc, "probe");
-        parsePartList(doc.document_element());
+        parsePartList(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePrint(Print{}, doc, "probe");
-        parsePrint(doc.document_element());
+        parsePrint(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePartwiseMeasure(PartwiseMeasure{}, doc, "probe");
-        parsePartwiseMeasure(doc.document_element());
+        parsePartwiseMeasure(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializePartwisePart(PartwisePart{}, doc, "probe");
-        parsePartwisePart(doc.document_element());
+        parsePartwisePart(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeWork(Work{}, doc, "probe");
-        parseWork(doc.document_element());
+        parseWork(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeScorePartwise(ScorePartwise{}, doc, "probe");
-        parseScorePartwise(doc.document_element());
+        parseScorePartwise(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTimewisePart(TimewisePart{}, doc, "probe");
-        parseTimewisePart(doc.document_element());
+        parseTimewisePart(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeTimewiseMeasure(TimewiseMeasure{}, doc, "probe");
-        parseTimewiseMeasure(doc.document_element());
+        parseTimewiseMeasure(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
         serializeScoreTimewise(ScoreTimewise{}, doc, "probe");
-        parseScoreTimewise(doc.document_element());
+        parseScoreTimewise(doc.document_element(), ParseContext{});
     }
     {
         pugi::xml_document doc;
@@ -1462,7 +1463,7 @@ void roundTripDefaults()
         serializeTuningGroup(TuningGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseTuningGroup(el, cursor);
+            parseTuningGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1471,7 +1472,7 @@ void roundTripDefaults()
         serializeClefGroup(ClefGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseClefGroup(el, cursor);
+            parseClefGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1480,7 +1481,7 @@ void roundTripDefaults()
         serializeTransposeGroup(TransposeGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseTransposeGroup(el, cursor);
+            parseTransposeGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1489,7 +1490,7 @@ void roundTripDefaults()
         serializeTraditionalKeyGroup(TraditionalKeyGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseTraditionalKeyGroup(el, cursor);
+            parseTraditionalKeyGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1498,7 +1499,7 @@ void roundTripDefaults()
         serializeNonTraditionalKeyGroup(NonTraditionalKeyGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseNonTraditionalKeyGroup(el, cursor);
+            parseNonTraditionalKeyGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1507,7 +1508,7 @@ void roundTripDefaults()
         serializeSlashGroup(SlashGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseSlashGroup(el, cursor);
+            parseSlashGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1516,7 +1517,7 @@ void roundTripDefaults()
         serializeTimeSignatureGroup(TimeSignatureGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseTimeSignatureGroup(el, cursor);
+            parseTimeSignatureGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1525,7 +1526,7 @@ void roundTripDefaults()
         serializeEditorialGroup(EditorialGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseEditorialGroup(el, cursor);
+            parseEditorialGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1534,7 +1535,7 @@ void roundTripDefaults()
         serializeBeatUnitGroup(BeatUnitGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseBeatUnitGroup(el, cursor);
+            parseBeatUnitGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1543,7 +1544,7 @@ void roundTripDefaults()
         serializeAllMarginsGroup(AllMarginsGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseAllMarginsGroup(el, cursor);
+            parseAllMarginsGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1552,7 +1553,7 @@ void roundTripDefaults()
         serializeLeftRightMarginsGroup(LeftRightMarginsGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseLeftRightMarginsGroup(el, cursor);
+            parseLeftRightMarginsGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1561,7 +1562,7 @@ void roundTripDefaults()
         serializeLayoutGroup(LayoutGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseLayoutGroup(el, cursor);
+            parseLayoutGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1570,7 +1571,7 @@ void roundTripDefaults()
         serializeVirtualInstrumentDataGroup(VirtualInstrumentDataGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseVirtualInstrumentDataGroup(el, cursor);
+            parseVirtualInstrumentDataGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1579,7 +1580,7 @@ void roundTripDefaults()
         serializeEditorialVoiceDirectionGroup(EditorialVoiceDirectionGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseEditorialVoiceDirectionGroup(el, cursor);
+            parseEditorialVoiceDirectionGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1588,7 +1589,7 @@ void roundTripDefaults()
         serializeEditorialVoiceGroup(EditorialVoiceGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseEditorialVoiceGroup(el, cursor);
+            parseEditorialVoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1597,7 +1598,7 @@ void roundTripDefaults()
         serializeHarmonyChordGroup(HarmonyChordGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseHarmonyChordGroup(el, cursor);
+            parseHarmonyChordGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1606,7 +1607,7 @@ void roundTripDefaults()
         serializeDisplayStepOctaveGroup(DisplayStepOctaveGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseDisplayStepOctaveGroup(el, cursor);
+            parseDisplayStepOctaveGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1615,7 +1616,7 @@ void roundTripDefaults()
         serializeFullNoteGroup(FullNoteGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseFullNoteGroup(el, cursor);
+            parseFullNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1624,7 +1625,7 @@ void roundTripDefaults()
         serializeMusicDataChoice(MusicDataChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseMusicDataChoice(el, cursor);
+            parseMusicDataChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1633,7 +1634,7 @@ void roundTripDefaults()
         serializeScoreHeaderGroup(ScoreHeaderGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseScoreHeaderGroup(el, cursor);
+            parseScoreHeaderGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1642,7 +1643,7 @@ void roundTripDefaults()
         serializeArrowChoice(ArrowChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseArrowChoice(el, cursor);
+            parseArrowChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1651,7 +1652,7 @@ void roundTripDefaults()
         serializeArrowChoiceGroup(ArrowChoiceGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseArrowChoiceGroup(el, cursor);
+            parseArrowChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1660,7 +1661,7 @@ void roundTripDefaults()
         serializeArticulationsChoice(ArticulationsChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseArticulationsChoice(el, cursor);
+            parseArticulationsChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1669,7 +1670,7 @@ void roundTripDefaults()
         serializeKeyChoice(KeyChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseKeyChoice(el, cursor);
+            parseKeyChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1678,7 +1679,7 @@ void roundTripDefaults()
         serializeSlashGroupGroup(SlashGroupGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseSlashGroupGroup(el, cursor);
+            parseSlashGroupGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1687,7 +1688,7 @@ void roundTripDefaults()
         serializeMeasureStyleChoice(MeasureStyleChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseMeasureStyleChoice(el, cursor);
+            parseMeasureStyleChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1696,7 +1697,7 @@ void roundTripDefaults()
         serializeStaffDetailsGroup(StaffDetailsGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseStaffDetailsGroup(el, cursor);
+            parseStaffDetailsGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1705,7 +1706,7 @@ void roundTripDefaults()
         serializeTimeChoice(TimeChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseTimeChoice(el, cursor);
+            parseTimeChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1714,7 +1715,7 @@ void roundTripDefaults()
         serializeTimeChoiceGroup(TimeChoiceGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseTimeChoiceGroup(el, cursor);
+            parseTimeChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1723,7 +1724,7 @@ void roundTripDefaults()
         serializeAttributesChoice(AttributesChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseAttributesChoice(el, cursor);
+            parseAttributesChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1732,7 +1733,7 @@ void roundTripDefaults()
         serializeBendChoice(BendChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseBendChoice(el, cursor);
+            parseBendChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1741,7 +1742,7 @@ void roundTripDefaults()
         serializeCreditChoice(CreditChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseCreditChoice(el, cursor);
+            parseCreditChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1750,7 +1751,7 @@ void roundTripDefaults()
         serializeCreditChoiceGroup(CreditChoiceGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseCreditChoiceGroup(el, cursor);
+            parseCreditChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1759,7 +1760,7 @@ void roundTripDefaults()
         serializeCreditChoiceGroupChoice(CreditChoiceGroupChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseCreditChoiceGroupChoice(el, cursor);
+            parseCreditChoiceGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1768,7 +1769,7 @@ void roundTripDefaults()
         serializeCreditChoiceGroupGroup(CreditChoiceGroupGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseCreditChoiceGroupGroup(el, cursor);
+            parseCreditChoiceGroupGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1777,7 +1778,7 @@ void roundTripDefaults()
         serializeCreditChoiceGroupGroupChoice(CreditChoiceGroupGroupChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseCreditChoiceGroupGroupChoice(el, cursor);
+            parseCreditChoiceGroupGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1786,7 +1787,7 @@ void roundTripDefaults()
         serializePageLayoutGroup(PageLayoutGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parsePageLayoutGroup(el, cursor);
+            parsePageLayoutGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1795,7 +1796,7 @@ void roundTripDefaults()
         serializeDynamicsChoice(DynamicsChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseDynamicsChoice(el, cursor);
+            parseDynamicsChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1804,7 +1805,7 @@ void roundTripDefaults()
         serializeTimeModificationGroup(TimeModificationGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseTimeModificationGroup(el, cursor);
+            parseTimeModificationGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1813,7 +1814,7 @@ void roundTripDefaults()
         serializeMetronomeChoice(MetronomeChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseMetronomeChoice(el, cursor);
+            parseMetronomeChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1822,7 +1823,7 @@ void roundTripDefaults()
         serializeMetronomeChoiceGroup(MetronomeChoiceGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseMetronomeChoiceGroup(el, cursor);
+            parseMetronomeChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1831,7 +1832,7 @@ void roundTripDefaults()
         serializeMetronomeChoiceGroupChoice(MetronomeChoiceGroupChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseMetronomeChoiceGroupChoice(el, cursor);
+            parseMetronomeChoiceGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1840,7 +1841,7 @@ void roundTripDefaults()
         serializeMetronomeChoiceGroupChoiceGroup(MetronomeChoiceGroupChoiceGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseMetronomeChoiceGroupChoiceGroup(el, cursor);
+            parseMetronomeChoiceGroupChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1849,7 +1850,7 @@ void roundTripDefaults()
         serializeMetronomeChoiceGroup2(MetronomeChoiceGroup2{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseMetronomeChoiceGroup2(el, cursor);
+            parseMetronomeChoiceGroup2(el, cursor, ParseContext{});
         }
     }
     {
@@ -1858,7 +1859,7 @@ void roundTripDefaults()
         serializeMetronomeChoiceGroup2Group(MetronomeChoiceGroup2Group{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseMetronomeChoiceGroup2Group(el, cursor);
+            parseMetronomeChoiceGroup2Group(el, cursor, ParseContext{});
         }
     }
     {
@@ -1867,7 +1868,7 @@ void roundTripDefaults()
         serializePercussionChoice(PercussionChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parsePercussionChoice(el, cursor);
+            parsePercussionChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1876,7 +1877,7 @@ void roundTripDefaults()
         serializeDirectionTypeChoice(DirectionTypeChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseDirectionTypeChoice(el, cursor);
+            parseDirectionTypeChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1885,7 +1886,7 @@ void roundTripDefaults()
         serializeDirectionTypeChoiceChoice(DirectionTypeChoiceChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseDirectionTypeChoiceChoice(el, cursor);
+            parseDirectionTypeChoiceChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1894,7 +1895,7 @@ void roundTripDefaults()
         serializeListeningChoice(ListeningChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseListeningChoice(el, cursor);
+            parseListeningChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1903,7 +1904,7 @@ void roundTripDefaults()
         serializeVirtualInstrumentDataGroupChoice(VirtualInstrumentDataGroupChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseVirtualInstrumentDataGroupChoice(el, cursor);
+            parseVirtualInstrumentDataGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1912,7 +1913,7 @@ void roundTripDefaults()
         serializePlayChoice(PlayChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parsePlayChoice(el, cursor);
+            parsePlayChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1921,7 +1922,7 @@ void roundTripDefaults()
         serializeSwingChoice(SwingChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseSwingChoice(el, cursor);
+            parseSwingChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1930,7 +1931,7 @@ void roundTripDefaults()
         serializeSwingChoiceGroup(SwingChoiceGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseSwingChoiceGroup(el, cursor);
+            parseSwingChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1939,7 +1940,7 @@ void roundTripDefaults()
         serializeSoundGroup(SoundGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseSoundGroup(el, cursor);
+            parseSoundGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -1948,7 +1949,7 @@ void roundTripDefaults()
         serializeEncodingChoice(EncodingChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseEncodingChoice(el, cursor);
+            parseEncodingChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1957,7 +1958,7 @@ void roundTripDefaults()
         serializeHarmonicChoice(HarmonicChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseHarmonicChoice(el, cursor);
+            parseHarmonicChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1966,7 +1967,7 @@ void roundTripDefaults()
         serializeHarmonicChoice2(HarmonicChoice2{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseHarmonicChoice2(el, cursor);
+            parseHarmonicChoice2(el, cursor, ParseContext{});
         }
     }
     {
@@ -1975,7 +1976,7 @@ void roundTripDefaults()
         serializeHarmonyChordGroupChoice(HarmonyChordGroupChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseHarmonyChordGroupChoice(el, cursor);
+            parseHarmonyChordGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1984,7 +1985,7 @@ void roundTripDefaults()
         serializeListenChoice(ListenChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseListenChoice(el, cursor);
+            parseListenChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -1993,7 +1994,7 @@ void roundTripDefaults()
         serializeLyricChoice(LyricChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseLyricChoice(el, cursor);
+            parseLyricChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -2002,7 +2003,7 @@ void roundTripDefaults()
         serializeLyricTextGroup(LyricTextGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseLyricTextGroup(el, cursor);
+            parseLyricTextGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2011,7 +2012,7 @@ void roundTripDefaults()
         serializeLyricSyllableGroup(LyricSyllableGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseLyricSyllableGroup(el, cursor);
+            parseLyricSyllableGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2020,7 +2021,7 @@ void roundTripDefaults()
         serializeElisionSyllabicGroup(ElisionSyllabicGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseElisionSyllabicGroup(el, cursor);
+            parseElisionSyllabicGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2029,7 +2030,7 @@ void roundTripDefaults()
         serializeNameDisplayChoice(NameDisplayChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseNameDisplayChoice(el, cursor);
+            parseNameDisplayChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -2038,7 +2039,7 @@ void roundTripDefaults()
         serializeOrnamentsGroup(OrnamentsGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseOrnamentsGroup(el, cursor);
+            parseOrnamentsGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2047,7 +2048,7 @@ void roundTripDefaults()
         serializeOrnamentsGroupChoice(OrnamentsGroupChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseOrnamentsGroupChoice(el, cursor);
+            parseOrnamentsGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -2056,7 +2057,7 @@ void roundTripDefaults()
         serializeTechnicalChoice(TechnicalChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseTechnicalChoice(el, cursor);
+            parseTechnicalChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -2065,7 +2066,7 @@ void roundTripDefaults()
         serializeNotationsChoice(NotationsChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseNotationsChoice(el, cursor);
+            parseNotationsChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -2074,7 +2075,7 @@ void roundTripDefaults()
         serializeNoteheadTextChoice(NoteheadTextChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseNoteheadTextChoice(el, cursor);
+            parseNoteheadTextChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -2083,7 +2084,7 @@ void roundTripDefaults()
         serializeNoteChoice(NoteChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseNoteChoice(el, cursor);
+            parseNoteChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -2092,7 +2093,7 @@ void roundTripDefaults()
         serializeGraceNoteGroup(GraceNoteGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseGraceNoteGroup(el, cursor);
+            parseGraceNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2101,7 +2102,7 @@ void roundTripDefaults()
         serializeGraceNoteChoice(GraceNoteChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseGraceNoteChoice(el, cursor);
+            parseGraceNoteChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -2110,7 +2111,7 @@ void roundTripDefaults()
         serializeGraceNormalNoteGroup(GraceNormalNoteGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseGraceNormalNoteGroup(el, cursor);
+            parseGraceNormalNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2119,7 +2120,7 @@ void roundTripDefaults()
         serializeFullNoteGroupChoice(FullNoteGroupChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseFullNoteGroupChoice(el, cursor);
+            parseFullNoteGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
@@ -2128,7 +2129,7 @@ void roundTripDefaults()
         serializeGraceCueNoteGroup(GraceCueNoteGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseGraceCueNoteGroup(el, cursor);
+            parseGraceCueNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2137,7 +2138,7 @@ void roundTripDefaults()
         serializeCueNoteGroup(CueNoteGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseCueNoteGroup(el, cursor);
+            parseCueNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2146,7 +2147,7 @@ void roundTripDefaults()
         serializeNormalNoteGroup(NormalNoteGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseNormalNoteGroup(el, cursor);
+            parseNormalNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2155,7 +2156,7 @@ void roundTripDefaults()
         serializeScorePartMIDIGroup(ScorePartMIDIGroup{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parseScorePartMIDIGroup(el, cursor);
+            parseScorePartMIDIGroup(el, cursor, ParseContext{});
         }
     }
     {
@@ -2164,7 +2165,7 @@ void roundTripDefaults()
         serializePartListChoice(PartListChoice{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parsePartListChoice(el, cursor);
+            parsePartListChoice(el, cursor, ParseContext{});
         }
     }
 }

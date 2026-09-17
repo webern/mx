@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The metronome-beam type works like the beam type in defining metric relationships, but does not
 /// include all the attributes available in the beam type.
 class MetronomeBeam final
@@ -32,9 +34,9 @@ class MetronomeBeam final
     BeamValue m_value{};
 };
 
-MetronomeBeam parseMetronomeBeam(pugi::xml_node el);
+MetronomeBeam parseMetronomeBeam(pugi::xml_node el, const ParseContext &context);
 
-void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el);
+void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMetronomeBeam(const MetronomeBeam &v, pugi::xml_node parent, const char *tag);
 

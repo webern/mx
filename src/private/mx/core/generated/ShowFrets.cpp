@@ -43,8 +43,14 @@ bool ShowFrets::tryParse(std::string_view text, ShowFrets &out) noexcept
 
 ShowFrets ShowFrets::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+ShowFrets ShowFrets::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     ShowFrets v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

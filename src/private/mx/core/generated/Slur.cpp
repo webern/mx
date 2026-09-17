@@ -3,6 +3,7 @@
 #include "mx/core/generated/Slur.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -200,7 +201,7 @@ void Slur::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Slur parseSlur(pugi::xml_node el)
+Slur parseSlur(pugi::xml_node el, const ParseContext &context)
 {
     Slur out;
     bool seen_type = false;
@@ -214,79 +215,79 @@ Slur parseSlur(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStopContinue::parse(a.value()));
+            out.setType(parseValue<StartStopContinue>(a.value(), context, el, "type"));
         }
         else if (aname == "number")
         {
-            out.setNumber(NumberLevel::parse(a.value()));
+            out.setNumber(parseValue<NumberLevel>(a.value(), context, el, "number"));
         }
         else if (aname == "line-type")
         {
-            out.setLineType(LineType::parse(a.value()));
+            out.setLineType(parseValue<LineType>(a.value(), context, el, "line-type"));
         }
         else if (aname == "dash-length")
         {
-            out.setDashLength(Tenths::parse(a.value()));
+            out.setDashLength(parseValue<Tenths>(a.value(), context, el, "dash-length"));
         }
         else if (aname == "space-length")
         {
-            out.setSpaceLength(Tenths::parse(a.value()));
+            out.setSpaceLength(parseValue<Tenths>(a.value(), context, el, "space-length"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "orientation")
         {
-            out.setOrientation(OverUnder::parse(a.value()));
+            out.setOrientation(parseValue<OverUnder>(a.value(), context, el, "orientation"));
         }
         else if (aname == "bezier-x")
         {
-            out.setBezierX(Tenths::parse(a.value()));
+            out.setBezierX(parseValue<Tenths>(a.value(), context, el, "bezier-x"));
         }
         else if (aname == "bezier-y")
         {
-            out.setBezierY(Tenths::parse(a.value()));
+            out.setBezierY(parseValue<Tenths>(a.value(), context, el, "bezier-y"));
         }
         else if (aname == "bezier-x2")
         {
-            out.setBezierX2(Tenths::parse(a.value()));
+            out.setBezierX2(parseValue<Tenths>(a.value(), context, el, "bezier-x2"));
         }
         else if (aname == "bezier-y2")
         {
-            out.setBezierY2(Tenths::parse(a.value()));
+            out.setBezierY2(parseValue<Tenths>(a.value(), context, el, "bezier-y2"));
         }
         else if (aname == "bezier-offset")
         {
-            out.setBezierOffset(Divisions::parse(a.value()));
+            out.setBezierOffset(parseValue<Divisions>(a.value(), context, el, "bezier-offset"));
         }
         else if (aname == "bezier-offset2")
         {
-            out.setBezierOffset2(Divisions::parse(a.value()));
+            out.setBezierOffset2(parseValue<Divisions>(a.value(), context, el, "bezier-offset2"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -297,13 +298,14 @@ Slur parseSlur(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseSlurContent(out, el);
+    parseSlurContent(out, el, context);
     return out;
 }
 
-void parseSlurContent(Slur &out, pugi::xml_node el)
+void parseSlurContent(Slur &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

@@ -3,6 +3,7 @@
 #include "mx/core/generated/PartList.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void PartList::setChoice(std::vector<PartListChoice> value)
     m_choice = std::move(value);
 }
 
-PartList parsePartList(pugi::xml_node el)
+PartList parsePartList(pugi::xml_node el, const ParseContext &context)
 {
     PartList out;
     for (pugi::xml_attribute a : el.attributes())
@@ -62,21 +63,21 @@ PartList parsePartList(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parsePartListContent(out, el);
+    parsePartListContent(out, el, context);
     return out;
 }
 
-void parsePartListContent(PartList &out, pugi::xml_node el)
+void parsePartListContent(PartList &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursorIs(cursor, "part-group"))
     {
-        out.addPartGroup(parsePartGroup(cursor));
+        out.addPartGroup(parsePartGroup(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "score-part"))
     {
-        out.setScorePart(parseScorePart(cursor));
+        out.setScorePart(parseScorePart(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -85,7 +86,7 @@ void parsePartListContent(PartList &out, pugi::xml_node el)
     }
     while (cursor && (cursorIs(cursor, "part-group") || cursorIs(cursor, "score-part")))
     {
-        out.addChoice(parsePartListChoice(el, cursor));
+        out.addChoice(parsePartListChoice(el, cursor, context));
     }
     if (cursor)
     {

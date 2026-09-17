@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The arpeggiate type indicates that this note is part of an arpeggiated chord. The number
 /// attribute can be used to distinguish between two simultaneous chords arpeggiated separately
 /// (different numbers) or together (same number). The direction attribute is used if there is an
@@ -68,9 +70,9 @@ class Arpeggiate final
     std::optional<Token> m_id;
 };
 
-Arpeggiate parseArpeggiate(pugi::xml_node el);
+Arpeggiate parseArpeggiate(pugi::xml_node el, const ParseContext &context);
 
-void parseArpeggiateContent(Arpeggiate &out, pugi::xml_node el);
+void parseArpeggiateContent(Arpeggiate &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeArpeggiate(const Arpeggiate &v, pugi::xml_node parent, const char *tag);
 

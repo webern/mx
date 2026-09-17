@@ -83,8 +83,14 @@ bool StickType::tryParse(std::string_view text, StickType &out) noexcept
 
 StickType StickType::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+StickType StickType::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     StickType v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The system-dividers element indicates the presence or absence of system dividers (also known as
 /// system separation marks) between systems displayed on the same page. Dividers on the left and
 /// right side of the page are controlled by the left-divider and right-divider elements
@@ -40,9 +42,9 @@ class SystemDividers final
     EmptyPrintObjectStyleAlign m_rightDivider{};
 };
 
-SystemDividers parseSystemDividers(pugi::xml_node el);
+SystemDividers parseSystemDividers(pugi::xml_node el, const ParseContext &context);
 
-void parseSystemDividersContent(SystemDividers &out, pugi::xml_node el);
+void parseSystemDividersContent(SystemDividers &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSystemDividers(const SystemDividers &v, pugi::xml_node parent, const char *tag);
 

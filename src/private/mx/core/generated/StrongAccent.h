@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The strong-accent type indicates a vertical accent mark. The type attribute indicates if the
 /// point of the accent is down or up.
 /// The schema's complexContent extension: non-polymorphic public
@@ -31,7 +33,7 @@ class StrongAccent : public EmptyPlacement
     std::optional<UpDown> m_type;
 };
 
-StrongAccent parseStrongAccent(pugi::xml_node el);
+StrongAccent parseStrongAccent(pugi::xml_node el, const ParseContext &context);
 
 void serializeStrongAccent(const StrongAccent &v, pugi::xml_node parent, const char *tag);
 

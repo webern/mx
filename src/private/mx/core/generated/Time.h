@@ -31,6 +31,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Time signatures are represented by the beats element for the numerator and the beat-type element
 /// for the denominator. The symbol attribute is used to indicate common and cut time symbols as well
 /// as a single number display. Multiple pairs of beat and beat-type elements are used for composite
@@ -100,9 +102,9 @@ class Time final
     TimeChoice m_choice{};
 };
 
-Time parseTime(pugi::xml_node el);
+Time parseTime(pugi::xml_node el, const ParseContext &context);
 
-void parseTimeContent(Time &out, pugi::xml_node el);
+void parseTimeContent(Time &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTime(const Time &v, pugi::xml_node parent, const char *tag);
 

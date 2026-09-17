@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The midi-instrument type defines MIDI 1.0 instrument playback. The midi-instrument element can be
 /// a part of either the score-instrument element at the start of a part, or the sound element within
 /// a part. The id attribute refers to the score-instrument affected by the change.
@@ -63,9 +65,9 @@ class MIDIInstrument final
     std::optional<RotationDegrees> m_elevation;
 };
 
-MIDIInstrument parseMIDIInstrument(pugi::xml_node el);
+MIDIInstrument parseMIDIInstrument(pugi::xml_node el, const ParseContext &context);
 
-void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el);
+void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMIDIInstrument(const MIDIInstrument &v, pugi::xml_node parent, const char *tag);
 

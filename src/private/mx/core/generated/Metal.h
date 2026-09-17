@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The metal type represents pictograms for metal percussion instruments. The smufl attribute is
 /// used to distinguish different SMuFL stylistic alternates.
 class Metal final
@@ -32,9 +34,9 @@ class Metal final
     MetalValue m_value{};
 };
 
-Metal parseMetal(pugi::xml_node el);
+Metal parseMetal(pugi::xml_node el, const ParseContext &context);
 
-void parseMetalContent(Metal &out, pugi::xml_node el);
+void parseMetalContent(Metal &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMetal(const Metal &v, pugi::xml_node parent, const char *tag);
 

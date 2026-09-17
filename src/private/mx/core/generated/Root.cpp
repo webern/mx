@@ -3,6 +3,7 @@
 #include "mx/core/generated/Root.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Root::setRootAlter(std::optional<HarmonyAlter> value)
     m_rootAlter = std::move(value);
 }
 
-Root parseRoot(pugi::xml_node el)
+Root parseRoot(pugi::xml_node el, const ParseContext &context)
 {
     Root out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,16 +43,16 @@ Root parseRoot(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseRootContent(out, el);
+    parseRootContent(out, el, context);
     return out;
 }
 
-void parseRootContent(Root &out, pugi::xml_node el)
+void parseRootContent(Root &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "root-step"))
     {
-        out.setRootStep(parseRootStep(cursor));
+        out.setRootStep(parseRootStep(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -60,7 +61,7 @@ void parseRootContent(Root &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "root-alter"))
     {
-        out.setRootAlter(parseHarmonyAlter(cursor));
+        out.setRootAlter(parseHarmonyAlter(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

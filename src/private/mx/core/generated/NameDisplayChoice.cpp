@@ -3,6 +3,7 @@
 #include "mx/core/generated/NameDisplayChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,17 +26,17 @@ NameDisplayChoice NameDisplayChoice::accidentalText(AccidentalText value)
     return NameDisplayChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-NameDisplayChoice parseNameDisplayChoice(pugi::xml_node el, pugi::xml_node &cursor)
+NameDisplayChoice parseNameDisplayChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "display-text")))
     {
-        FormattedText value = parseFormattedText(cursor);
+        FormattedText value = parseFormattedText(cursor, context);
         cursor = nextElement(cursor);
         return NameDisplayChoice::displayText(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "accidental-text")))
     {
-        AccidentalText value = parseAccidentalText(cursor);
+        AccidentalText value = parseAccidentalText(cursor, context);
         cursor = nextElement(cursor);
         return NameDisplayChoice::accidentalText(std::move(value));
     }

@@ -3,6 +3,7 @@
 #include "mx/core/generated/{{name.pascal}}.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -11,17 +12,18 @@ namespace {{vars.namespace}}
 {
 
 {{>attributes_impl}}
-{{ident}} parse{{ident}}(pugi::xml_node el)
+{{ident}} parse{{ident}}(pugi::xml_node el, const ParseContext &context)
 {
     {{ident}} out;
 {{>attributes_parse}}
-    parse{{ident}}Content(out, el);
+    parse{{ident}}Content(out, el, context);
     return out;
 }
 
-void parse{{ident}}Content({{ident}} &out, pugi::xml_node el)
+void parse{{ident}}Content({{ident}} &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

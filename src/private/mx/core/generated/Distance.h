@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The distance element represents standard distances between notation elements in tenths. The type
 /// attribute defines what type of distance is being defined. Valid values include hyphen (for
 /// hyphens in lyrics) and beam.
@@ -33,9 +35,9 @@ class Distance final
     Tenths m_value{};
 };
 
-Distance parseDistance(pugi::xml_node el);
+Distance parseDistance(pugi::xml_node el, const ParseContext &context);
 
-void parseDistanceContent(Distance &out, pugi::xml_node el);
+void parseDistanceContent(Distance &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDistance(const Distance &v, pugi::xml_node parent, const char *tag);
 

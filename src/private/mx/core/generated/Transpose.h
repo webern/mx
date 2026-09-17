@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The transpose type represents what must be added to a written pitch to get a correct sounding
 /// pitch. The optional number attribute refers to staff numbers, from top to bottom on the system.
 /// If absent, the transposition applies to all staves in the part. Per-staff transposition is most
@@ -43,9 +45,9 @@ class Transpose final
     TransposeGroup m_transpose{};
 };
 
-Transpose parseTranspose(pugi::xml_node el);
+Transpose parseTranspose(pugi::xml_node el, const ParseContext &context);
 
-void parseTransposeContent(Transpose &out, pugi::xml_node el);
+void parseTransposeContent(Transpose &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTranspose(const Transpose &v, pugi::xml_node parent, const char *tag);
 

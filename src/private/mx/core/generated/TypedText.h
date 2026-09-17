@@ -13,6 +13,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The typed-text type represents a text element with a type attribute.
 class TypedText final
 {
@@ -28,9 +30,9 @@ class TypedText final
     std::string m_value{};
 };
 
-TypedText parseTypedText(pugi::xml_node el);
+TypedText parseTypedText(pugi::xml_node el, const ParseContext &context);
 
-void parseTypedTextContent(TypedText &out, pugi::xml_node el);
+void parseTypedTextContent(TypedText &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTypedText(const TypedText &v, pugi::xml_node parent, const char *tag);
 

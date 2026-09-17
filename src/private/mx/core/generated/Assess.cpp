@@ -3,6 +3,7 @@
 #include "mx/core/generated/Assess.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void Assess::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Assess parseAssess(pugi::xml_node el)
+Assess parseAssess(pugi::xml_node el, const ParseContext &context)
 {
     Assess out;
     bool seen_type = false;
@@ -54,15 +55,15 @@ Assess parseAssess(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(YesNo::parse(a.value()));
+            out.setType(parseValue<YesNo>(a.value(), context, el, "type"));
         }
         else if (aname == "player")
         {
-            out.setPlayer(Token::parse(a.value()));
+            out.setPlayer(parseValue<Token>(a.value(), context, el, "player"));
         }
         else if (aname == "time-only")
         {
-            out.setTimeOnly(TimeOnly::parse(a.value()));
+            out.setTimeOnly(parseValue<TimeOnly>(a.value(), context, el, "time-only"));
         }
         else
         {
@@ -73,13 +74,14 @@ Assess parseAssess(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseAssessContent(out, el);
+    parseAssessContent(out, el, context);
     return out;
 }
 
-void parseAssessContent(Assess &out, pugi::xml_node el)
+void parseAssessContent(Assess &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

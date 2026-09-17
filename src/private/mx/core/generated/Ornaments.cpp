@@ -3,6 +3,7 @@
 #include "mx/core/generated/Ornaments.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,7 +36,7 @@ void Ornaments::setGroup(std::vector<OrnamentsGroup> value)
     m_group = std::move(value);
 }
 
-Ornaments parseOrnaments(pugi::xml_node el)
+Ornaments parseOrnaments(pugi::xml_node el, const ParseContext &context)
 {
     Ornaments out;
     for (pugi::xml_attribute a : el.attributes())
@@ -47,18 +48,18 @@ Ornaments parseOrnaments(pugi::xml_node el)
         }
         if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseOrnamentsContent(out, el);
+    parseOrnamentsContent(out, el, context);
     return out;
 }
 
-void parseOrnamentsContent(Ornaments &out, pugi::xml_node el)
+void parseOrnamentsContent(Ornaments &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "trill-mark") || cursorIs(cursor, "turn") || cursorIs(cursor, "delayed-turn") ||
@@ -68,7 +69,7 @@ void parseOrnamentsContent(Ornaments &out, pugi::xml_node el)
                       cursorIs(cursor, "inverted-mordent") || cursorIs(cursor, "schleifer") ||
                       cursorIs(cursor, "tremolo") || cursorIs(cursor, "haydn") || cursorIs(cursor, "other-ornament")))
     {
-        out.addGroup(parseOrnamentsGroup(el, cursor));
+        out.addGroup(parseOrnamentsGroup(el, cursor, context));
     }
     if (cursor)
     {

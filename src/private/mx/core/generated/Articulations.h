@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Articulations and accents are grouped together here.
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
@@ -37,9 +39,9 @@ class Articulations final
     std::vector<ArticulationsChoice> m_choice;
 };
 
-Articulations parseArticulations(pugi::xml_node el);
+Articulations parseArticulations(pugi::xml_node el, const ParseContext &context);
 
-void parseArticulationsContent(Articulations &out, pugi::xml_node el);
+void parseArticulationsContent(Articulations &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeArticulations(const Articulations &v, pugi::xml_node parent, const char *tag);
 

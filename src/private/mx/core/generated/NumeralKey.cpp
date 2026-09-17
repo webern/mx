@@ -3,6 +3,7 @@
 #include "mx/core/generated/NumeralKey.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void NumeralKey::setNumeralMode(NumeralMode value)
     m_numeralMode = std::move(value);
 }
 
-NumeralKey parseNumeralKey(pugi::xml_node el)
+NumeralKey parseNumeralKey(pugi::xml_node el, const ParseContext &context)
 {
     NumeralKey out;
     for (pugi::xml_attribute a : el.attributes())
@@ -52,23 +53,23 @@ NumeralKey parseNumeralKey(pugi::xml_node el)
         }
         if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseNumeralKeyContent(out, el);
+    parseNumeralKeyContent(out, el, context);
     return out;
 }
 
-void parseNumeralKeyContent(NumeralKey &out, pugi::xml_node el)
+void parseNumeralKeyContent(NumeralKey &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "numeral-fifths"))
     {
-        out.setNumeralFifths(Fifths::parse(childText(cursor)));
+        out.setNumeralFifths(parseValue<Fifths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -77,7 +78,7 @@ void parseNumeralKeyContent(NumeralKey &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "numeral-mode"))
     {
-        out.setNumeralMode(NumeralMode::parse(childText(cursor)));
+        out.setNumeralMode(parseValue<NumeralMode>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

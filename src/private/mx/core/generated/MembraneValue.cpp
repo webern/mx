@@ -119,8 +119,14 @@ bool MembraneValue::tryParse(std::string_view text, MembraneValue &out) noexcept
 
 MembraneValue MembraneValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+MembraneValue MembraneValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     MembraneValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

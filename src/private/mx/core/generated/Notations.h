@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Notations refer to musical notations, not XML notations. Multiple notations are allowed in order
 /// to represent multiple editorial levels. The print-object attribute, added in Version 3.0, allows
 /// notations to represent details of performance technique, such as fingerings, without having them
@@ -48,9 +50,9 @@ class Notations final
     std::vector<NotationsChoice> m_choice;
 };
 
-Notations parseNotations(pugi::xml_node el);
+Notations parseNotations(pugi::xml_node el, const ParseContext &context);
 
-void parseNotationsContent(Notations &out, pugi::xml_node el);
+void parseNotationsContent(Notations &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNotations(const Notations &v, pugi::xml_node parent, const char *tag);
 

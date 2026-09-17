@@ -54,11 +54,19 @@ bool InstrumentSound::tryParse(std::string_view text, InstrumentSound &out)
 
 InstrumentSound InstrumentSound::parse(std::string_view text)
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+InstrumentSound InstrumentSound::parse(std::string_view text, ValueParseOutcome &outcome)
+{
     InstrumentSound out;
     if (tryParse(text, out))
     {
+        outcome = ValueParseOutcome::valid;
         return out;
     }
+    outcome = ValueParseOutcome::invalid;
     return InstrumentSound::soundID(SoundID::parse(text));
 }
 

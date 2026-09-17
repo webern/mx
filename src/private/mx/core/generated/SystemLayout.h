@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A system is a group of staves that are read and played simultaneously. System layout includes
 /// left and right margins and the vertical distance from the previous system. The system distance is
 /// measured from the bottom line of the previous system to the top line of the current system. It is
@@ -58,9 +60,9 @@ class SystemLayout final
     std::optional<SystemDividers> m_systemDividers;
 };
 
-SystemLayout parseSystemLayout(pugi::xml_node el);
+SystemLayout parseSystemLayout(pugi::xml_node el, const ParseContext &context);
 
-void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el);
+void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSystemLayout(const SystemLayout &v, pugi::xml_node parent, const char *tag);
 

@@ -27,6 +27,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The formatted-text type represents a text element with text-formatting attributes.
 class FormattedText final
 {
@@ -105,9 +107,9 @@ class FormattedText final
     std::string m_value{};
 };
 
-FormattedText parseFormattedText(pugi::xml_node el);
+FormattedText parseFormattedText(pugi::xml_node el, const ParseContext &context);
 
-void parseFormattedTextContent(FormattedText &out, pugi::xml_node el);
+void parseFormattedTextContent(FormattedText &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFormattedText(const FormattedText &v, pugi::xml_node parent, const char *tag);
 

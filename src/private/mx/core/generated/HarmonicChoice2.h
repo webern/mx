@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A schema choice (synthesized from an anonymous particle
 /// of the schema): exactly one alternative by construction.
 /// Alternatives are positional; dispatch is by Kind/index, never by type
@@ -93,7 +95,7 @@ class HarmonicChoice2 final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-HarmonicChoice2 parseHarmonicChoice2(pugi::xml_node el, pugi::xml_node &cursor);
+HarmonicChoice2 parseHarmonicChoice2(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeHarmonicChoice2(const HarmonicChoice2 &v, pugi::xml_node el);
 

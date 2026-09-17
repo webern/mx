@@ -29,6 +29,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// If a barline is other than a normal single barline, it should be represented by a barline type
 /// that describes it. This includes information about repeats and multiple endings, as well as line
 /// style. Barline data is on the same level as the other musical data in a score - a child of a
@@ -96,9 +98,9 @@ class Barline final
     std::optional<Repeat> m_repeat;
 };
 
-Barline parseBarline(pugi::xml_node el);
+Barline parseBarline(pugi::xml_node el, const ParseContext &context);
 
-void parseBarlineContent(Barline &out, pugi::xml_node el);
+void parseBarlineContent(Barline &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBarline(const Barline &v, pugi::xml_node parent, const char *tag);
 

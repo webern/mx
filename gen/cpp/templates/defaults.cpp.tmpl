@@ -8,6 +8,7 @@
 {{#groups}}
 #include "mx/core/generated/{{ident}}.h"
 {{/groups}}
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 namespace {{vars.namespace}}
@@ -19,7 +20,7 @@ void roundTripDefaults()
     {
         pugi::xml_document doc;
         serialize{{ident}}({{ident}}{}, doc, "probe");
-        parse{{ident}}(doc.document_element());
+        parse{{ident}}(doc.document_element(), ParseContext{});
     }
 {{/complex_types}}
 {{#groups}}
@@ -29,7 +30,7 @@ void roundTripDefaults()
         serialize{{ident}}({{ident}}{}, el);
         if (pugi::xml_node cursor = firstElement(el))
         {
-            parse{{ident}}(el, cursor);
+            parse{{ident}}(el, cursor, ParseContext{});
         }
     }
 {{/groups}}

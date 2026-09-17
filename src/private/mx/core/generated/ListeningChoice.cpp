@@ -3,6 +3,7 @@
 #include "mx/core/generated/ListeningChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,17 +26,17 @@ ListeningChoice ListeningChoice::otherListening(OtherListening value)
     return ListeningChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-ListeningChoice parseListeningChoice(pugi::xml_node el, pugi::xml_node &cursor)
+ListeningChoice parseListeningChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "sync")))
     {
-        Sync value = parseSync(cursor);
+        Sync value = parseSync(cursor, context);
         cursor = nextElement(cursor);
         return ListeningChoice::sync(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "other-listening")))
     {
-        OtherListening value = parseOtherListening(cursor);
+        OtherListening value = parseOtherListening(cursor, context);
         cursor = nextElement(cursor);
         return ListeningChoice::otherListening(std::move(value));
     }

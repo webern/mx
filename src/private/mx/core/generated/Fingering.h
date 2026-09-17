@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Fingering is typically indicated 1,2,3,4,5. Multiple fingerings may be given, typically to
 /// substitute fingerings in the middle of a note. The substitution and alternate values are "no" if
 /// the attribute is not present. For guitar and other fretted instruments, the fingering element
@@ -73,9 +75,9 @@ class Fingering final
     std::string m_value{};
 };
 
-Fingering parseFingering(pugi::xml_node el);
+Fingering parseFingering(pugi::xml_node el, const ParseContext &context);
 
-void parseFingeringContent(Fingering &out, pugi::xml_node el);
+void parseFingeringContent(Fingering &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFingering(const Fingering &v, pugi::xml_node parent, const char *tag);
 

@@ -49,8 +49,14 @@ bool HarmonClosedValue::tryParse(std::string_view text, HarmonClosedValue &out) 
 
 HarmonClosedValue HarmonClosedValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+HarmonClosedValue HarmonClosedValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     HarmonClosedValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -25,6 +25,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The segno type is the visual indicator of a segno sign. The exact glyph can be specified with the
 /// smufl attribute. A sound element is also needed to guide playback applications reliably.
 class Segno final
@@ -74,9 +76,9 @@ class Segno final
     std::optional<Token> m_id;
 };
 
-Segno parseSegno(pugi::xml_node el);
+Segno parseSegno(pugi::xml_node el, const ParseContext &context);
 
-void parseSegnoContent(Segno &out, pugi::xml_node el);
+void parseSegnoContent(Segno &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSegno(const Segno &v, pugi::xml_node parent, const char *tag);
 

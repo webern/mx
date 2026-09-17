@@ -3,6 +3,7 @@
 #include "mx/core/generated/OrnamentsGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,7 +36,7 @@ void OrnamentsGroup::setAccidentalMark(std::vector<AccidentalMark> value)
     m_accidentalMark = std::move(value);
 }
 
-OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor)
+OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     OrnamentsGroup out;
     if (cursor && (cursorIs(cursor, "trill-mark") || cursorIs(cursor, "turn") || cursorIs(cursor, "delayed-turn") ||
@@ -45,7 +46,7 @@ OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor)
                    cursorIs(cursor, "inverted-mordent") || cursorIs(cursor, "schleifer") ||
                    cursorIs(cursor, "tremolo") || cursorIs(cursor, "haydn") || cursorIs(cursor, "other-ornament")))
     {
-        out.setChoice(parseOrnamentsGroupChoice(el, cursor));
+        out.setChoice(parseOrnamentsGroupChoice(el, cursor, context));
     }
     else
     {
@@ -53,7 +54,7 @@ OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     while (cursorIs(cursor, "accidental-mark"))
     {
-        out.addAccidentalMark(parseAccidentalMark(cursor));
+        out.addAccidentalMark(parseAccidentalMark(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

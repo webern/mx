@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The bass-step type represents the pitch step of the bass of the current chord within the harmony
 /// element. The text attribute indicates how the bass should appear in a score if not using the
 /// element contents.
@@ -65,9 +67,9 @@ class BassStep final
     Step m_value{};
 };
 
-BassStep parseBassStep(pugi::xml_node el);
+BassStep parseBassStep(pugi::xml_node el, const ParseContext &context);
 
-void parseBassStepContent(BassStep &out, pugi::xml_node el);
+void parseBassStepContent(BassStep &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBassStep(const BassStep &v, pugi::xml_node parent, const char *tag);
 

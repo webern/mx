@@ -34,20 +34,33 @@ std::string Tenths::toString() const
 
 bool Tenths::tryParse(std::string_view text, Tenths &out)
 {
-    Decimal v;
-    if (!Decimal::tryParse(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    Tenths parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = Tenths{std::move(v)};
+    out = std::move(parsed);
     return true;
 }
 
 Tenths Tenths::parse(std::string_view text)
 {
-    Tenths v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Tenths Tenths::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    Decimal v;
+    if (!Decimal::tryParse(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return Tenths{};
+    }
+    Tenths out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

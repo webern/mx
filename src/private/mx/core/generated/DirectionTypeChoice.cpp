@@ -3,6 +3,7 @@
 #include "mx/core/generated/DirectionTypeChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -130,171 +131,171 @@ DirectionTypeChoice DirectionTypeChoice::otherDirection(OtherDirection value)
     return DirectionTypeChoice{Storage{std::in_place_index<22>, std::move(value)}};
 }
 
-DirectionTypeChoice parseDirectionTypeChoice(pugi::xml_node el, pugi::xml_node &cursor)
+DirectionTypeChoice parseDirectionTypeChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "rehearsal")))
     {
-        OneOrMore<FormattedTextID> items{parseFormattedTextID(cursor)};
+        OneOrMore<FormattedTextID> items{parseFormattedTextID(cursor, context)};
         cursor = nextElement(cursor);
         while (cursor && (cursorIs(cursor, "rehearsal")))
         {
-            items.add(parseFormattedTextID(cursor));
+            items.add(parseFormattedTextID(cursor, context));
             cursor = nextElement(cursor);
         }
         return DirectionTypeChoice::rehearsal(std::move(items));
     }
     if (cursor && (cursorIs(cursor, "segno")))
     {
-        OneOrMore<Segno> items{parseSegno(cursor)};
+        OneOrMore<Segno> items{parseSegno(cursor, context)};
         cursor = nextElement(cursor);
         while (cursor && (cursorIs(cursor, "segno")))
         {
-            items.add(parseSegno(cursor));
+            items.add(parseSegno(cursor, context));
             cursor = nextElement(cursor);
         }
         return DirectionTypeChoice::segno(std::move(items));
     }
     if (cursor && (cursorIs(cursor, "coda")))
     {
-        OneOrMore<Coda> items{parseCoda(cursor)};
+        OneOrMore<Coda> items{parseCoda(cursor, context)};
         cursor = nextElement(cursor);
         while (cursor && (cursorIs(cursor, "coda")))
         {
-            items.add(parseCoda(cursor));
+            items.add(parseCoda(cursor, context));
             cursor = nextElement(cursor);
         }
         return DirectionTypeChoice::coda(std::move(items));
     }
     if (cursor && (cursorIs(cursor, "words") || cursorIs(cursor, "symbol")))
     {
-        OneOrMore<DirectionTypeChoiceChoice> items{parseDirectionTypeChoiceChoice(el, cursor)};
+        OneOrMore<DirectionTypeChoiceChoice> items{parseDirectionTypeChoiceChoice(el, cursor, context)};
         while (cursor && (cursorIs(cursor, "words") || cursorIs(cursor, "symbol")))
         {
-            items.add(parseDirectionTypeChoiceChoice(el, cursor));
+            items.add(parseDirectionTypeChoiceChoice(el, cursor, context));
         }
         return DirectionTypeChoice::choice(std::move(items));
     }
     if (cursor && (cursorIs(cursor, "wedge")))
     {
-        Wedge value = parseWedge(cursor);
+        Wedge value = parseWedge(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::wedge(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "dynamics")))
     {
-        OneOrMore<Dynamics> items{parseDynamics(cursor)};
+        OneOrMore<Dynamics> items{parseDynamics(cursor, context)};
         cursor = nextElement(cursor);
         while (cursor && (cursorIs(cursor, "dynamics")))
         {
-            items.add(parseDynamics(cursor));
+            items.add(parseDynamics(cursor, context));
             cursor = nextElement(cursor);
         }
         return DirectionTypeChoice::dynamics(std::move(items));
     }
     if (cursor && (cursorIs(cursor, "dashes")))
     {
-        Dashes value = parseDashes(cursor);
+        Dashes value = parseDashes(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::dashes(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "bracket")))
     {
-        Bracket value = parseBracket(cursor);
+        Bracket value = parseBracket(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::bracket(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "pedal")))
     {
-        Pedal value = parsePedal(cursor);
+        Pedal value = parsePedal(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::pedal(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "metronome")))
     {
-        Metronome value = parseMetronome(cursor);
+        Metronome value = parseMetronome(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::metronome(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "octave-shift")))
     {
-        OctaveShift value = parseOctaveShift(cursor);
+        OctaveShift value = parseOctaveShift(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::octaveShift(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "harp-pedals")))
     {
-        HarpPedals value = parseHarpPedals(cursor);
+        HarpPedals value = parseHarpPedals(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::harpPedals(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "damp")))
     {
-        EmptyPrintStyleAlignID value = parseEmptyPrintStyleAlignID(cursor);
+        EmptyPrintStyleAlignID value = parseEmptyPrintStyleAlignID(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::damp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "damp-all")))
     {
-        EmptyPrintStyleAlignID value = parseEmptyPrintStyleAlignID(cursor);
+        EmptyPrintStyleAlignID value = parseEmptyPrintStyleAlignID(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::dampAll(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "eyeglasses")))
     {
-        EmptyPrintStyleAlignID value = parseEmptyPrintStyleAlignID(cursor);
+        EmptyPrintStyleAlignID value = parseEmptyPrintStyleAlignID(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::eyeglasses(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "string-mute")))
     {
-        StringMute value = parseStringMute(cursor);
+        StringMute value = parseStringMute(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::stringMute(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "scordatura")))
     {
-        Scordatura value = parseScordatura(cursor);
+        Scordatura value = parseScordatura(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::scordatura(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "image")))
     {
-        Image value = parseImage(cursor);
+        Image value = parseImage(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::image(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "principal-voice")))
     {
-        PrincipalVoice value = parsePrincipalVoice(cursor);
+        PrincipalVoice value = parsePrincipalVoice(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::principalVoice(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "percussion")))
     {
-        OneOrMore<Percussion> items{parsePercussion(cursor)};
+        OneOrMore<Percussion> items{parsePercussion(cursor, context)};
         cursor = nextElement(cursor);
         while (cursor && (cursorIs(cursor, "percussion")))
         {
-            items.add(parsePercussion(cursor));
+            items.add(parsePercussion(cursor, context));
             cursor = nextElement(cursor);
         }
         return DirectionTypeChoice::percussion(std::move(items));
     }
     if (cursor && (cursorIs(cursor, "accordion-registration")))
     {
-        AccordionRegistration value = parseAccordionRegistration(cursor);
+        AccordionRegistration value = parseAccordionRegistration(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::accordionRegistration(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "staff-divide")))
     {
-        StaffDivide value = parseStaffDivide(cursor);
+        StaffDivide value = parseStaffDivide(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::staffDivide(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "other-direction")))
     {
-        OtherDirection value = parseOtherDirection(cursor);
+        OtherDirection value = parseOtherDirection(cursor, context);
         cursor = nextElement(cursor);
         return DirectionTypeChoice::otherDirection(std::move(value));
     }

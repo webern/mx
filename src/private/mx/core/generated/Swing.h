@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The swing element specifies whether or not to use swing playback, where consecutive on-beat /
 /// off-beat eighth or 16th notes are played with unequal nominal durations. The straight element
 /// specifies that no swing is present, so consecutive notes have equal durations. The first and
@@ -47,9 +49,9 @@ class Swing final
     std::optional<std::string> m_swingStyle;
 };
 
-Swing parseSwing(pugi::xml_node el);
+Swing parseSwing(pugi::xml_node el, const ParseContext &context);
 
-void parseSwingContent(Swing &out, pugi::xml_node el);
+void parseSwingContent(Swing &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSwing(const Swing &v, pugi::xml_node parent, const char *tag);
 

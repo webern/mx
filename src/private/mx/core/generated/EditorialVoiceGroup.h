@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The editorial-voice group supports the common combination of editorial and voice information for
 /// a musical element.
 /// A shared content group: transparent on the wire, its
@@ -41,7 +43,7 @@ class EditorialVoiceGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-EditorialVoiceGroup parseEditorialVoiceGroup(pugi::xml_node el, pugi::xml_node &cursor);
+EditorialVoiceGroup parseEditorialVoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeEditorialVoiceGroup(const EditorialVoiceGroup &v, pugi::xml_node el);
 

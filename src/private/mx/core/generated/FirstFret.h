@@ -15,6 +15,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The first-fret type indicates which fret is shown in the top space of the frame; it is fret 1 if
 /// the element is not present. The optional text attribute indicates how this is represented in the
 /// fret diagram, while the location attribute indicates whether the text appears to the left or
@@ -36,9 +38,9 @@ class FirstFret final
     int m_value{};
 };
 
-FirstFret parseFirstFret(pugi::xml_node el);
+FirstFret parseFirstFret(pugi::xml_node el, const ParseContext &context);
 
-void parseFirstFretContent(FirstFret &out, pugi::xml_node el);
+void parseFirstFretContent(FirstFret &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFirstFret(const FirstFret &v, pugi::xml_node parent, const char *tag);
 

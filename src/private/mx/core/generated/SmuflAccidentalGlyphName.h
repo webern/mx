@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -56,6 +58,9 @@ class SmuflAccidentalGlyphName final
 
     /// Lenient: repairs into the nearest valid glyph name.
     static SmuflAccidentalGlyphName parse(std::string_view text);
+
+    /// Lenient, and says whether the text had to be repaired.
+    static SmuflAccidentalGlyphName parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const SmuflAccidentalGlyphName &other) const noexcept = default;
 

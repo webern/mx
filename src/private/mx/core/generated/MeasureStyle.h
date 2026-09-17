@@ -25,6 +25,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A measure-style indicates a special way to print partial to multiple measures within a part. This
 /// includes multiple rests over several measures, repeats of beats, single, or multiple measures,
 /// and use of slash notation. The multiple-rest and measure-repeat elements indicate the number of
@@ -66,9 +68,9 @@ class MeasureStyle final
     MeasureStyleChoice m_choice{};
 };
 
-MeasureStyle parseMeasureStyle(pugi::xml_node el);
+MeasureStyle parseMeasureStyle(pugi::xml_node el, const ParseContext &context);
 
-void parseMeasureStyleContent(MeasureStyle &out, pugi::xml_node el);
+void parseMeasureStyleContent(MeasureStyle &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMeasureStyle(const MeasureStyle &v, pugi::xml_node parent, const char *tag);
 

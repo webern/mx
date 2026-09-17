@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The slash group combines elements used for more complete specification of the slash and
 /// beat-repeat measure-style elements. They have the same values as the type and dot elements, and
 /// define what the beat is for the display of repetition marks. If not present, the beat is based on
@@ -40,7 +42,7 @@ class SlashGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-SlashGroup parseSlashGroup(pugi::xml_node el, pugi::xml_node &cursor);
+SlashGroup parseSlashGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeSlashGroup(const SlashGroup &v, pugi::xml_node el);
 

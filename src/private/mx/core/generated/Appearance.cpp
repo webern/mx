@@ -3,6 +3,7 @@
 #include "mx/core/generated/Appearance.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -85,7 +86,7 @@ void Appearance::setOtherAppearance(std::vector<OtherAppearance> value)
     m_otherAppearance = std::move(value);
 }
 
-Appearance parseAppearance(pugi::xml_node el)
+Appearance parseAppearance(pugi::xml_node el, const ParseContext &context)
 {
     Appearance out;
     for (pugi::xml_attribute a : el.attributes())
@@ -97,36 +98,36 @@ Appearance parseAppearance(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseAppearanceContent(out, el);
+    parseAppearanceContent(out, el, context);
     return out;
 }
 
-void parseAppearanceContent(Appearance &out, pugi::xml_node el)
+void parseAppearanceContent(Appearance &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursorIs(cursor, "line-width"))
     {
-        out.addLineWidth(parseLineWidth(cursor));
+        out.addLineWidth(parseLineWidth(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "note-size"))
     {
-        out.addNoteSize(parseNoteSize(cursor));
+        out.addNoteSize(parseNoteSize(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "distance"))
     {
-        out.addDistance(parseDistance(cursor));
+        out.addDistance(parseDistance(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "glyph"))
     {
-        out.addGlyph(parseGlyph(cursor));
+        out.addGlyph(parseGlyph(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "other-appearance"))
     {
-        out.addOtherAppearance(parseOtherAppearance(cursor));
+        out.addOtherAppearance(parseOtherAppearance(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

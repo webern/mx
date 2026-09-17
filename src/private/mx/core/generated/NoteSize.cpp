@@ -3,6 +3,7 @@
 #include "mx/core/generated/NoteSize.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void NoteSize::setValue(NonNegativeDecimal value)
     m_value = std::move(value);
 }
 
-NoteSize parseNoteSize(pugi::xml_node el)
+NoteSize parseNoteSize(pugi::xml_node el, const ParseContext &context)
 {
     NoteSize out;
     bool seen_type = false;
@@ -44,7 +45,7 @@ NoteSize parseNoteSize(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(NoteSizeType::parse(a.value()));
+            out.setType(parseValue<NoteSizeType>(a.value(), context, el, "type"));
         }
         else
         {
@@ -55,13 +56,13 @@ NoteSize parseNoteSize(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseNoteSizeContent(out, el);
+    parseNoteSizeContent(out, el, context);
     return out;
 }
 
-void parseNoteSizeContent(NoteSize &out, pugi::xml_node el)
+void parseNoteSizeContent(NoteSize &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(NonNegativeDecimal::parse(childText(el)));
+    out.setValue(parseValue<NonNegativeDecimal>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

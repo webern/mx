@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The harmon-closed type represents whether the harmon mute is closed, open, or half-open. The
 /// optional location attribute indicates which portion of the symbol is filled in when the element
 /// value is half.
@@ -33,9 +35,9 @@ class HarmonClosed final
     HarmonClosedValue m_value{};
 };
 
-HarmonClosed parseHarmonClosed(pugi::xml_node el);
+HarmonClosed parseHarmonClosed(pugi::xml_node el, const ParseContext &context);
 
-void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el);
+void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHarmonClosed(const HarmonClosed &v, pugi::xml_node parent, const char *tag);
 

@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The instrument-change element type represents a change to the virtual instrument sound for a
 /// given score-instrument. The id attribute refers to the score-instrument affected by the change.
 /// All instrument-change child elements can also be initially specified within the score-instrument
@@ -39,9 +41,9 @@ class InstrumentChange final
     VirtualInstrumentDataGroup m_virtualInstrumentData{};
 };
 
-InstrumentChange parseInstrumentChange(pugi::xml_node el);
+InstrumentChange parseInstrumentChange(pugi::xml_node el, const ParseContext &context);
 
-void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el);
+void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeInstrumentChange(const InstrumentChange &v, pugi::xml_node parent, const char *tag);
 

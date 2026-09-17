@@ -3,6 +3,7 @@
 #include "mx/core/generated/KeyAccidental.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void KeyAccidental::setValue(AccidentalValue value)
     m_value = std::move(value);
 }
 
-KeyAccidental parseKeyAccidental(pugi::xml_node el)
+KeyAccidental parseKeyAccidental(pugi::xml_node el, const ParseContext &context)
 {
     KeyAccidental out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,20 +43,20 @@ KeyAccidental parseKeyAccidental(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflAccidentalGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflAccidentalGlyphName>(a.value(), context, el, "smufl"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseKeyAccidentalContent(out, el);
+    parseKeyAccidentalContent(out, el, context);
     return out;
 }
 
-void parseKeyAccidentalContent(KeyAccidental &out, pugi::xml_node el)
+void parseKeyAccidentalContent(KeyAccidental &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(AccidentalValue::parse(childText(el)));
+    out.setValue(parseValue<AccidentalValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

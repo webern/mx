@@ -3,6 +3,7 @@
 #include "mx/core/generated/PartListChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,17 +26,17 @@ PartListChoice PartListChoice::scorePart(ScorePart value)
     return PartListChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-PartListChoice parsePartListChoice(pugi::xml_node el, pugi::xml_node &cursor)
+PartListChoice parsePartListChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "part-group")))
     {
-        PartGroup value = parsePartGroup(cursor);
+        PartGroup value = parsePartGroup(cursor, context);
         cursor = nextElement(cursor);
         return PartListChoice::partGroup(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "score-part")))
     {
-        ScorePart value = parseScorePart(cursor);
+        ScorePart value = parseScorePart(cursor, context);
         cursor = nextElement(cursor);
         return PartListChoice::scorePart(std::move(value));
     }

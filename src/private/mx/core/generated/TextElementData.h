@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The text-element-data type represents a syllable or portion of a syllable for lyric text
 /// underlay. A hyphen in the string content should only be used for an actual hyphenated word.
 /// Language names for text elements come from ISO 639, with optional country subcodes from ISO 3166.
@@ -73,9 +75,9 @@ class TextElementData final
     std::string m_value{};
 };
 
-TextElementData parseTextElementData(pugi::xml_node el);
+TextElementData parseTextElementData(pugi::xml_node el, const ParseContext &context);
 
-void parseTextElementDataContent(TextElementData &out, pugi::xml_node el);
+void parseTextElementDataContent(TextElementData &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTextElementData(const TextElementData &v, pugi::xml_node parent, const char *tag);
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/Stick.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -60,7 +61,7 @@ void Stick::setStickMaterial(StickMaterial value)
     m_stickMaterial = std::move(value);
 }
 
-Stick parseStick(pugi::xml_node el)
+Stick parseStick(pugi::xml_node el, const ParseContext &context)
 {
     Stick out;
     for (pugi::xml_attribute a : el.attributes())
@@ -72,31 +73,31 @@ Stick parseStick(pugi::xml_node el)
         }
         if (aname == "tip")
         {
-            out.setTip(TipDirection::parse(a.value()));
+            out.setTip(parseValue<TipDirection>(a.value(), context, el, "tip"));
         }
         else if (aname == "parentheses")
         {
-            out.setParentheses(YesNo::parse(a.value()));
+            out.setParentheses(parseValue<YesNo>(a.value(), context, el, "parentheses"));
         }
         else if (aname == "dashed-circle")
         {
-            out.setDashedCircle(YesNo::parse(a.value()));
+            out.setDashedCircle(parseValue<YesNo>(a.value(), context, el, "dashed-circle"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseStickContent(out, el);
+    parseStickContent(out, el, context);
     return out;
 }
 
-void parseStickContent(Stick &out, pugi::xml_node el)
+void parseStickContent(Stick &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "stick-type"))
     {
-        out.setStickType(StickType::parse(childText(cursor)));
+        out.setStickType(parseValue<StickType>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -105,7 +106,7 @@ void parseStickContent(Stick &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "stick-material"))
     {
-        out.setStickMaterial(StickMaterial::parse(childText(cursor)));
+        out.setStickMaterial(parseValue<StickMaterial>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The pitched-value type represents pictograms for pitched percussion instruments. The smufl
 /// attribute is used to distinguish different SMuFL glyphs for a particular pictogram within the
 /// Tuned mallet percussion pictograms range.
@@ -33,9 +35,9 @@ class Pitched final
     PitchedValue m_value{};
 };
 
-Pitched parsePitched(pugi::xml_node el);
+Pitched parsePitched(pugi::xml_node el, const ParseContext &context);
 
-void parsePitchedContent(Pitched &out, pugi::xml_node el);
+void parsePitchedContent(Pitched &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePitched(const Pitched &v, pugi::xml_node parent, const char *tag);
 

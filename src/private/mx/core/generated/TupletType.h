@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The tuplet-type type indicates the graphical note type of the notes for this portion of the
 /// tuplet.
 class TupletType final
@@ -48,9 +50,9 @@ class TupletType final
     NoteTypeValue m_value{};
 };
 
-TupletType parseTupletType(pugi::xml_node el);
+TupletType parseTupletType(pugi::xml_node el, const ParseContext &context);
 
-void parseTupletTypeContent(TupletType &out, pugi::xml_node el);
+void parseTupletTypeContent(TupletType &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTupletType(const TupletType &v, pugi::xml_node parent, const char *tag);
 

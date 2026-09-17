@@ -3,6 +3,7 @@
 #include "mx/core/generated/Pitch.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void Pitch::setOctave(Octave value)
     m_octave = std::move(value);
 }
 
-Pitch parsePitch(pugi::xml_node el)
+Pitch parsePitch(pugi::xml_node el, const ParseContext &context)
 {
     Pitch out;
     for (pugi::xml_attribute a : el.attributes())
@@ -52,16 +53,16 @@ Pitch parsePitch(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parsePitchContent(out, el);
+    parsePitchContent(out, el, context);
     return out;
 }
 
-void parsePitchContent(Pitch &out, pugi::xml_node el)
+void parsePitchContent(Pitch &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "step"))
     {
-        out.setStep(Step::parse(childText(cursor)));
+        out.setStep(parseValue<Step>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -70,12 +71,12 @@ void parsePitchContent(Pitch &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "alter"))
     {
-        out.setAlter(Semitones::parse(childText(cursor)));
+        out.setAlter(parseValue<Semitones>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "octave"))
     {
-        out.setOctave(Octave::parse(childText(cursor)));
+        out.setOctave(parseValue<Octave>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

@@ -32,4 +32,11 @@ GlyphType GlyphType::parse(std::string_view text)
     return GlyphType{std::string{text}};
 }
 
+GlyphType GlyphType::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    GlyphType out{std::string{text}};
+    outcome = out.value() == text ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
+}
+
 } // namespace mx::core

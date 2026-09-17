@@ -3,6 +3,7 @@
 #include "mx/core/generated/HarmonicChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,17 +26,17 @@ HarmonicChoice HarmonicChoice::artificial(Empty value)
     return HarmonicChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-HarmonicChoice parseHarmonicChoice(pugi::xml_node el, pugi::xml_node &cursor)
+HarmonicChoice parseHarmonicChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "natural")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return HarmonicChoice::natural(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "artificial")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return HarmonicChoice::artificial(std::move(value));
     }

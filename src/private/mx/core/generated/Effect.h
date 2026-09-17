@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The effect type represents pictograms for sound effect percussion instruments. The smufl
 /// attribute is used to distinguish different SMuFL stylistic alternates.
 class Effect final
@@ -32,9 +34,9 @@ class Effect final
     EffectValue m_value{};
 };
 
-Effect parseEffect(pugi::xml_node el);
+Effect parseEffect(pugi::xml_node el, const ParseContext &context);
 
-void parseEffectContent(Effect &out, pugi::xml_node el);
+void parseEffectContent(Effect &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEffect(const Effect &v, pugi::xml_node parent, const char *tag);
 

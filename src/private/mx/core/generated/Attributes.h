@@ -26,6 +26,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The attributes element contains musical information that typically changes on measure boundaries.
 /// This includes key and time signatures, clefs, transpositions, and staving. When attributes are
 /// changed mid-measure, it affects the music in score order, not in MusicXML document order.
@@ -81,9 +83,9 @@ class Attributes final
     std::vector<MeasureStyle> m_measureStyle;
 };
 
-Attributes parseAttributes(pugi::xml_node el);
+Attributes parseAttributes(pugi::xml_node el, const ParseContext &context);
 
-void parseAttributesContent(Attributes &out, pugi::xml_node el);
+void parseAttributesContent(Attributes &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeAttributes(const Attributes &v, pugi::xml_node parent, const char *tag);
 

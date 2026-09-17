@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -36,6 +38,9 @@ class MeasureText final
     static bool tryParse(std::string_view text, MeasureText &out);
 
     static MeasureText parse(std::string_view text);
+
+    /// Says whether the text had to be repaired.
+    static MeasureText parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const MeasureText &other) const noexcept = default;
 

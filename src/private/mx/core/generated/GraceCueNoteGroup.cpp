@@ -3,6 +3,7 @@
 #include "mx/core/generated/GraceCueNoteGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,12 +31,12 @@ void GraceCueNoteGroup::setFullNote(FullNoteGroup value)
     m_fullNote = std::move(value);
 }
 
-GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
+GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     GraceCueNoteGroup out;
     if (cursorIs(cursor, "cue"))
     {
-        out.setCue(parseEmpty(cursor));
+        out.setCue(parseEmpty(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -45,7 +46,7 @@ GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &curs
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
                    cursorIs(cursor, "rest")))
     {
-        out.setFullNote(parseFullNoteGroup(el, cursor));
+        out.setFullNote(parseFullNoteGroup(el, cursor, context));
     }
     else
     {

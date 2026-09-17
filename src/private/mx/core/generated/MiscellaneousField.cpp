@@ -3,6 +3,7 @@
 #include "mx/core/generated/MiscellaneousField.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void MiscellaneousField::setValue(std::string value)
     m_value = std::move(value);
 }
 
-MiscellaneousField parseMiscellaneousField(pugi::xml_node el)
+MiscellaneousField parseMiscellaneousField(pugi::xml_node el, const ParseContext &context)
 {
     MiscellaneousField out;
     bool seen_name = false;
@@ -55,11 +56,11 @@ MiscellaneousField parseMiscellaneousField(pugi::xml_node el)
     {
         throwMissingAttribute(el, "name");
     }
-    parseMiscellaneousFieldContent(out, el);
+    parseMiscellaneousFieldContent(out, el, context);
     return out;
 }
 
-void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el)
+void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The print type contains general printing parameters, including layout elements. The
 /// part-name-display and part-abbreviation-display elements may also be used here to change how a
 /// part name or abbreviation is displayed over the course of a piece. They take effect when the
@@ -73,9 +75,9 @@ class Print final
     std::optional<NameDisplay> m_partAbbreviationDisplay;
 };
 
-Print parsePrint(pugi::xml_node el);
+Print parsePrint(pugi::xml_node el, const ParseContext &context);
 
-void parsePrintContent(Print &out, pugi::xml_node el);
+void parsePrintContent(Print &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePrint(const Print &v, pugi::xml_node parent, const char *tag);
 

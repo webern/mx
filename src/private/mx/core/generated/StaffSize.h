@@ -15,6 +15,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The staff-size element indicates how large a staff space is on this staff, expressed as a
 /// percentage of the work's default scaling. Values less than 100 make the staff space smaller while
 /// values over 100 make the staff space larger. A staff-type of cue, ossia, or editorial implies a
@@ -40,9 +42,9 @@ class StaffSize final
     NonNegativeDecimal m_value{};
 };
 
-StaffSize parseStaffSize(pugi::xml_node el);
+StaffSize parseStaffSize(pugi::xml_node el, const ParseContext &context);
 
-void parseStaffSizeContent(StaffSize &out, pugi::xml_node el);
+void parseStaffSizeContent(StaffSize &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeStaffSize(const StaffSize &v, pugi::xml_node parent, const char *tag);
 

@@ -34,20 +34,33 @@ std::string Semitones::toString() const
 
 bool Semitones::tryParse(std::string_view text, Semitones &out)
 {
-    Decimal v;
-    if (!Decimal::tryParse(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    Semitones parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = Semitones{std::move(v)};
+    out = std::move(parsed);
     return true;
 }
 
 Semitones Semitones::parse(std::string_view text)
 {
-    Semitones v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Semitones Semitones::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    Decimal v;
+    if (!Decimal::tryParse(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return Semitones{};
+    }
+    Semitones out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

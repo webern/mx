@@ -3,6 +3,7 @@
 #include "mx/core/generated/Miscellaneous.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,7 +26,7 @@ void Miscellaneous::setMiscellaneousField(std::vector<MiscellaneousField> value)
     m_miscellaneousField = std::move(value);
 }
 
-Miscellaneous parseMiscellaneous(pugi::xml_node el)
+Miscellaneous parseMiscellaneous(pugi::xml_node el, const ParseContext &context)
 {
     Miscellaneous out;
     for (pugi::xml_attribute a : el.attributes())
@@ -37,16 +38,16 @@ Miscellaneous parseMiscellaneous(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseMiscellaneousContent(out, el);
+    parseMiscellaneousContent(out, el, context);
     return out;
 }
 
-void parseMiscellaneousContent(Miscellaneous &out, pugi::xml_node el)
+void parseMiscellaneousContent(Miscellaneous &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursorIs(cursor, "miscellaneous-field"))
     {
-        out.addMiscellaneousField(parseMiscellaneousField(cursor));
+        out.addMiscellaneousField(parseMiscellaneousField(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

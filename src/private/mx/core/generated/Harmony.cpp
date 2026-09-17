@@ -3,6 +3,7 @@
 #include "mx/core/generated/Harmony.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -225,7 +226,7 @@ void Harmony::setStaff(std::optional<int> value)
     m_staff = std::move(value);
 }
 
-Harmony parseHarmony(pugi::xml_node el)
+Harmony parseHarmony(pugi::xml_node el, const ParseContext &context)
 {
     Harmony out;
     for (pugi::xml_attribute a : el.attributes())
@@ -237,106 +238,106 @@ Harmony parseHarmony(pugi::xml_node el)
         }
         if (aname == "type")
         {
-            out.setType(HarmonyType::parse(a.value()));
+            out.setType(parseValue<HarmonyType>(a.value(), context, el, "type"));
         }
         else if (aname == "print-frame")
         {
-            out.setPrintFrame(YesNo::parse(a.value()));
+            out.setPrintFrame(parseValue<YesNo>(a.value(), context, el, "print-frame"));
         }
         else if (aname == "arrangement")
         {
-            out.setArrangement(HarmonyArrangement::parse(a.value()));
+            out.setArrangement(parseValue<HarmonyArrangement>(a.value(), context, el, "arrangement"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "system")
         {
-            out.setSystem(SystemRelation::parse(a.value()));
+            out.setSystem(parseValue<SystemRelation>(a.value(), context, el, "system"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseHarmonyContent(out, el);
+    parseHarmonyContent(out, el, context);
     return out;
 }
 
-void parseHarmonyContent(Harmony &out, pugi::xml_node el)
+void parseHarmonyContent(Harmony &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (!(cursor && (cursorIs(cursor, "root") || cursorIs(cursor, "numeral") || cursorIs(cursor, "function"))))
     {
         throwMissingElement(el, "root");
     }
-    out.setHarmonyChord(OneOrMore<HarmonyChordGroup>{parseHarmonyChordGroup(el, cursor)});
+    out.setHarmonyChord(OneOrMore<HarmonyChordGroup>{parseHarmonyChordGroup(el, cursor, context)});
     while (cursor && (cursorIs(cursor, "root") || cursorIs(cursor, "numeral") || cursorIs(cursor, "function")))
     {
-        out.addHarmonyChord(parseHarmonyChordGroup(el, cursor));
+        out.addHarmonyChord(parseHarmonyChordGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "frame"))
     {
-        out.setFrame(parseFrame(cursor));
+        out.setFrame(parseFrame(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "offset"))
     {
-        out.setOffset(parseOffset(cursor));
+        out.setOffset(parseOffset(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
-        out.setEditorial(parseEditorialGroup(el, cursor));
+        out.setEditorial(parseEditorialGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "staff"))
     {
-        out.setStaff(parseInt(childText(cursor)));
+        out.setStaff(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor)

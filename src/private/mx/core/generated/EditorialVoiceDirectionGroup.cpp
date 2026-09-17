@@ -3,6 +3,7 @@
 #include "mx/core/generated/EditorialVoiceDirectionGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,17 +41,18 @@ void EditorialVoiceDirectionGroup::setVoice(std::optional<std::string> value)
     m_voice = std::move(value);
 }
 
-EditorialVoiceDirectionGroup parseEditorialVoiceDirectionGroup(pugi::xml_node el, pugi::xml_node &cursor)
+EditorialVoiceDirectionGroup parseEditorialVoiceDirectionGroup(pugi::xml_node el, pugi::xml_node &cursor,
+                                                               const ParseContext &context)
 {
     EditorialVoiceDirectionGroup out;
     if (cursorIs(cursor, "footnote"))
     {
-        out.setFootnote(parseFormattedText(cursor));
+        out.setFootnote(parseFormattedText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "level"))
     {
-        out.setLevel(parseLevel(cursor));
+        out.setLevel(parseLevel(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "voice"))

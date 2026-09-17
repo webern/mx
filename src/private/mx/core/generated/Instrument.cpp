@@ -3,6 +3,7 @@
 #include "mx/core/generated/Instrument.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -20,7 +21,7 @@ void Instrument::setID(Token value)
     m_id = std::move(value);
 }
 
-Instrument parseInstrument(pugi::xml_node el)
+Instrument parseInstrument(pugi::xml_node el, const ParseContext &context)
 {
     Instrument out;
     bool seen_id = false;
@@ -34,7 +35,7 @@ Instrument parseInstrument(pugi::xml_node el)
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -45,13 +46,14 @@ Instrument parseInstrument(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseInstrumentContent(out, el);
+    parseInstrumentContent(out, el, context);
     return out;
 }
 
-void parseInstrumentContent(Instrument &out, pugi::xml_node el)
+void parseInstrumentContent(Instrument &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Kind indicates the type of chord. Degree elements can then add, subtract, or alter from these
 /// starting points The attributes are used to indicate the formatting of the symbol. Since the kind
 /// element is the constant in all the harmony-chord groups that can make up a polychord, many
@@ -102,9 +104,9 @@ class Kind final
     KindValue m_value{};
 };
 
-Kind parseKind(pugi::xml_node el);
+Kind parseKind(pugi::xml_node el, const ParseContext &context);
 
-void parseKindContent(Kind &out, pugi::xml_node el);
+void parseKindContent(Kind &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeKind(const Kind &v, pugi::xml_node parent, const char *tag);
 

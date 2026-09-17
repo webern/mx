@@ -3,6 +3,7 @@
 #include "mx/core/generated/LineWidth.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void LineWidth::setValue(Tenths value)
     m_value = std::move(value);
 }
 
-LineWidth parseLineWidth(pugi::xml_node el)
+LineWidth parseLineWidth(pugi::xml_node el, const ParseContext &context)
 {
     LineWidth out;
     bool seen_type = false;
@@ -44,7 +45,7 @@ LineWidth parseLineWidth(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(LineWidthType::parse(a.value()));
+            out.setType(parseValue<LineWidthType>(a.value(), context, el, "type"));
         }
         else
         {
@@ -55,13 +56,13 @@ LineWidth parseLineWidth(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseLineWidthContent(out, el);
+    parseLineWidthContent(out, el, context);
     return out;
 }
 
-void parseLineWidthContent(LineWidth &out, pugi::xml_node el)
+void parseLineWidthContent(LineWidth &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(Tenths::parse(childText(el)));
+    out.setValue(parseValue<Tenths>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

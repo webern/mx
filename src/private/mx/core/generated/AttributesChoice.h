@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A schema choice (synthesized from an anonymous particle
 /// of the schema): exactly one alternative by construction.
 /// Alternatives are positional; dispatch is by Kind/index, never by type
@@ -81,7 +83,7 @@ class AttributesChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor);
+AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeAttributesChoice(const AttributesChoice &v, pugi::xml_node el);
 

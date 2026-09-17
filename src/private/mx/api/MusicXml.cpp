@@ -5,6 +5,7 @@
 #include "mx/api/MusicXml.h"
 #include "mx/core/Attribution.h"
 #include "mx/core/Error.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/generated/Document.h"
 #include "mx/impl/ScoreConversions.h"
 #include "mx/impl/ScoreReader.h"
@@ -73,6 +74,31 @@ ApiError mirrorToApiError(const core::Error &error)
     Location location;
     location.xmlPath = error.path;
     return ApiError{mirrorToApiResultCode(error.code), location, error.message};
+}
+
+DiagnosticCode mirrorToApiDiagnosticCode(core::DiagnosticCode code)
+{
+    switch (code)
+    {
+    case core::DiagnosticCode::invalidValue:
+        return DiagnosticCode::invalidValue;
+    case core::DiagnosticCode::valueAdjusted:
+        return DiagnosticCode::valueAdjusted;
+    case core::DiagnosticCode::missingValueDefaulted:
+        return DiagnosticCode::missingValueDefaulted;
+    }
+    return DiagnosticCode::invalidValue;
+}
+
+// Every import repair leaves a usable document, so each one is a warning.
+core::ParseContext parseContextReportingTo(Diagnostics &diagnostics)
+{
+    return core::ParseContext{[&diagnostics](const core::Diagnostic &diagnostic) {
+        Location location;
+        location.xmlPath = diagnostic.path;
+        diagnostics.add(Diagnostic{Severity::warning, mirrorToApiDiagnosticCode(diagnostic.code), std::move(location),
+                                   diagnostic.message});
+    }};
 }
 
 // Builds the error for a caught exception. Call it inside a catch block only:
@@ -146,6 +172,12 @@ MusicXml::~MusicXml()
 
 Result<MusicXml> MusicXml::fromFile(const std::string &filePath)
 {
+    Diagnostics diagnostics;
+    return fromFile(filePath, diagnostics);
+}
+
+Result<MusicXml> MusicXml::fromFile(const std::string &filePath, Diagnostics &diagnostics)
+{
     try
     {
         pugi::xml_document xdoc;
@@ -171,7 +203,7 @@ Result<MusicXml> MusicXml::fromFile(const std::string &filePath)
             return ApiError{ResultCode::xmlSyntaxError, location, loaded.description()};
         }
 
-        auto parsed = core::parse(xdoc);
+        auto parsed = core::parse(xdoc, parseContextReportingTo(diagnostics));
         if (!parsed)
         {
             return mirrorToApiError(parsed.error());
@@ -195,6 +227,12 @@ Result<MusicXml> MusicXml::fromFile(const std::string &filePath)
 
 Result<MusicXml> MusicXml::fromStream(std::istream &stream)
 {
+    Diagnostics diagnostics;
+    return fromStream(stream, diagnostics);
+}
+
+Result<MusicXml> MusicXml::fromStream(std::istream &stream, Diagnostics &diagnostics)
+{
     try
     {
         pugi::xml_document xdoc;
@@ -206,7 +244,7 @@ Result<MusicXml> MusicXml::fromStream(std::istream &stream)
             return ApiError{ResultCode::xmlSyntaxError, location, loaded.description()};
         }
 
-        auto parsed = core::parse(xdoc);
+        auto parsed = core::parse(xdoc, parseContextReportingTo(diagnostics));
         if (!parsed)
         {
             return mirrorToApiError(parsed.error());
@@ -321,12 +359,14 @@ Result<MusicXml> fromScore(const ScoreData &score, Diagnostics &diagnostics)
 {
     try
     {
-        impl::ScoreWriter writer{score, impl::DiagnosticsContext{diagnostics}};
+        const impl::DiagnosticsContext context{diagnostics};
+        impl::ScoreWriter writer{score, context};
         core::ScorePartwise scorePartwise = writer.getScorePartwise();
 
         if (score.musicXmlType == "timewise")
         {
-            return MusicXml{core::Document{impl::partwiseTimewise(scorePartwise)}, score.encoding.writeMxVersion};
+            return MusicXml{core::Document{impl::partwiseTimewise(scorePartwise, context)},
+                            score.encoding.writeMxVersion};
         }
 
         return MusicXml{core::Document{std::move(scorePartwise)}, score.encoding.writeMxVersion};
@@ -367,8 +407,9 @@ Result<ScoreData> getScore(const MusicXml &document, Diagnostics &diagnostics)
         // that; the owned document is untouched.
         if (coreDocument.isScoreTimewise())
         {
-            const core::ScorePartwise scorePartwise = impl::timewisePartwise(coreDocument.asScoreTimewise());
-            impl::ScoreReader reader{scorePartwise, impl::DiagnosticsContext{diagnostics}};
+            const impl::DiagnosticsContext context{diagnostics};
+            const core::ScorePartwise scorePartwise = impl::timewisePartwise(coreDocument.asScoreTimewise(), context);
+            impl::ScoreReader reader{scorePartwise, context};
             auto score = reader.getScoreData();
             score.musicXmlType = "timewise";
             return score;

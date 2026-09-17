@@ -3,6 +3,7 @@
 #include "mx/core/generated/Grace.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void Grace::setSlash(std::optional<YesNo> value)
     m_slash = std::move(value);
 }
 
-Grace parseGrace(pugi::xml_node el)
+Grace parseGrace(pugi::xml_node el, const ParseContext &context)
 {
     Grace out;
     for (pugi::xml_attribute a : el.attributes())
@@ -62,32 +63,33 @@ Grace parseGrace(pugi::xml_node el)
         }
         if (aname == "steal-time-previous")
         {
-            out.setStealTimePrevious(Percent::parse(a.value()));
+            out.setStealTimePrevious(parseValue<Percent>(a.value(), context, el, "steal-time-previous"));
         }
         else if (aname == "steal-time-following")
         {
-            out.setStealTimeFollowing(Percent::parse(a.value()));
+            out.setStealTimeFollowing(parseValue<Percent>(a.value(), context, el, "steal-time-following"));
         }
         else if (aname == "make-time")
         {
-            out.setMakeTime(Divisions::parse(a.value()));
+            out.setMakeTime(parseValue<Divisions>(a.value(), context, el, "make-time"));
         }
         else if (aname == "slash")
         {
-            out.setSlash(YesNo::parse(a.value()));
+            out.setSlash(parseValue<YesNo>(a.value(), context, el, "slash"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseGraceContent(out, el);
+    parseGraceContent(out, el, context);
     return out;
 }
 
-void parseGraceContent(Grace &out, pugi::xml_node el)
+void parseGraceContent(Grace &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

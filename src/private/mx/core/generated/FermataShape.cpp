@@ -77,8 +77,14 @@ bool FermataShape::tryParse(std::string_view text, FermataShape &out) noexcept
 
 FermataShape FermataShape::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+FermataShape FermataShape::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     FermataShape v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "mx/core/Decimal.h"
+#include "mx/core/Lexical.h"
 #include "mx/core/generated/YesNo.h"
 
 #include <cassert>
@@ -68,6 +69,10 @@ class YesNoNumber final
     /// Lenient: unparseable text falls back to the first member's lenient
     /// parse (never produces an invalid value).
     static YesNoNumber parse(std::string_view text);
+
+    /// Lenient, and says whether no member matched or a matched number was
+    /// clamped.
+    static YesNoNumber parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const YesNoNumber &other) const = default;
 

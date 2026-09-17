@@ -57,8 +57,14 @@ bool StickMaterial::tryParse(std::string_view text, StickMaterial &out) noexcept
 
 StickMaterial StickMaterial::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+StickMaterial StickMaterial::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     StickMaterial v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

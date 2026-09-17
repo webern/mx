@@ -3,6 +3,7 @@
 #include "mx/core/generated/PercussionChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -70,71 +71,71 @@ PercussionChoice PercussionChoice::otherPercussion(OtherText value)
     return PercussionChoice{Storage{std::in_place_index<10>, std::move(value)}};
 }
 
-PercussionChoice parsePercussionChoice(pugi::xml_node el, pugi::xml_node &cursor)
+PercussionChoice parsePercussionChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "glass")))
     {
-        Glass value = parseGlass(cursor);
+        Glass value = parseGlass(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::glass(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "metal")))
     {
-        Metal value = parseMetal(cursor);
+        Metal value = parseMetal(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::metal(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "wood")))
     {
-        Wood value = parseWood(cursor);
+        Wood value = parseWood(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::wood(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "pitched")))
     {
-        Pitched value = parsePitched(cursor);
+        Pitched value = parsePitched(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::pitched(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "membrane")))
     {
-        Membrane value = parseMembrane(cursor);
+        Membrane value = parseMembrane(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::membrane(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "effect")))
     {
-        Effect value = parseEffect(cursor);
+        Effect value = parseEffect(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::effect(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "timpani")))
     {
-        Timpani value = parseTimpani(cursor);
+        Timpani value = parseTimpani(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::timpani(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "beater")))
     {
-        Beater value = parseBeater(cursor);
+        Beater value = parseBeater(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::beater(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "stick")))
     {
-        Stick value = parseStick(cursor);
+        Stick value = parseStick(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::stick(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "stick-location")))
     {
-        StickLocation value = StickLocation::parse(childText(cursor));
+        StickLocation value = parseValue<StickLocation>(childText(cursor), context, cursor, nullptr);
         cursor = nextElement(cursor);
         return PercussionChoice::stickLocation(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "other-percussion")))
     {
-        OtherText value = parseOtherText(cursor);
+        OtherText value = parseOtherText(cursor, context);
         cursor = nextElement(cursor);
         return PercussionChoice::otherPercussion(std::move(value));
     }

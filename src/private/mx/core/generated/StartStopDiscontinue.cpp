@@ -49,8 +49,14 @@ bool StartStopDiscontinue::tryParse(std::string_view text, StartStopDiscontinue 
 
 StartStopDiscontinue StartStopDiscontinue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+StartStopDiscontinue StartStopDiscontinue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     StartStopDiscontinue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

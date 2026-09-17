@@ -27,6 +27,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The lyric type represents text underlays for lyrics. Two text elements that are not separated by
 /// an elision element are part of the same syllable, but may have different text formatting. The
 /// MusicXML XSD is more strict than the DTD in enforcing this by disallowing a second syllabic
@@ -95,9 +97,9 @@ class Lyric final
     EditorialGroup m_editorial{};
 };
 
-Lyric parseLyric(pugi::xml_node el);
+Lyric parseLyric(pugi::xml_node el, const ParseContext &context);
 
-void parseLyricContent(Lyric &out, pugi::xml_node el);
+void parseLyricContent(Lyric &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeLyric(const Lyric &v, pugi::xml_node parent, const char *tag);
 

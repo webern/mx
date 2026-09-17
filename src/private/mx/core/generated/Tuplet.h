@@ -26,6 +26,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A tuplet element is present when a tuplet is to be displayed graphically, in addition to the
 /// sound data provided by the time-modification elements. The number attribute is used to
 /// distinguish nested tuplets. The bracket attribute is used to indicate the presence of a bracket.
@@ -91,9 +93,9 @@ class Tuplet final
     std::optional<TupletPortion> m_tupletNormal;
 };
 
-Tuplet parseTuplet(pugi::xml_node el);
+Tuplet parseTuplet(pugi::xml_node el, const ParseContext &context);
 
-void parseTupletContent(Tuplet &out, pugi::xml_node el);
+void parseTupletContent(Tuplet &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTuplet(const Tuplet &v, pugi::xml_node parent, const char *tag);
 

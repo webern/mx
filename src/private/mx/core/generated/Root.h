@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The root type indicates a pitch like C, D, E vs. a scale degree like 1, 2, 3. It is used with
 /// chord symbols in popular music. The root element has a root-step and optional root-alter element
 /// similar to the step and alter elements, but renamed to distinguish the different musical
@@ -38,9 +40,9 @@ class Root final
     std::optional<HarmonyAlter> m_rootAlter;
 };
 
-Root parseRoot(pugi::xml_node el);
+Root parseRoot(pugi::xml_node el, const ParseContext &context);
 
-void parseRootContent(Root &out, pugi::xml_node el);
+void parseRootContent(Root &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeRoot(const Root &v, pugi::xml_node parent, const char *tag);
 

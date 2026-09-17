@@ -3,6 +3,7 @@
 #include "mx/core/generated/Wait.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Wait::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Wait parseWait(pugi::xml_node el)
+Wait parseWait(pugi::xml_node el, const ParseContext &context)
 {
     Wait out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,24 +43,25 @@ Wait parseWait(pugi::xml_node el)
         }
         if (aname == "player")
         {
-            out.setPlayer(Token::parse(a.value()));
+            out.setPlayer(parseValue<Token>(a.value(), context, el, "player"));
         }
         else if (aname == "time-only")
         {
-            out.setTimeOnly(TimeOnly::parse(a.value()));
+            out.setTimeOnly(parseValue<TimeOnly>(a.value(), context, el, "time-only"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseWaitContent(out, el);
+    parseWaitContent(out, el, context);
     return out;
 }
 
-void parseWaitContent(Wait &out, pugi::xml_node el)
+void parseWaitContent(Wait &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

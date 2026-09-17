@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A cancel element indicates that the old key signature should be cancelled before the new one
 /// appears. This will always happen when changing to C major or A minor and need not be specified
 /// then. The cancel value matches the fifths value of the cancelled key signature (e.g., a cancel of
@@ -35,9 +37,9 @@ class Cancel final
     Fifths m_value{};
 };
 
-Cancel parseCancel(pugi::xml_node el);
+Cancel parseCancel(pugi::xml_node el, const ParseContext &context);
 
-void parseCancelContent(Cancel &out, pugi::xml_node el);
+void parseCancelContent(Cancel &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeCancel(const Cancel &v, pugi::xml_node parent, const char *tag);
 

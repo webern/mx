@@ -3,6 +3,7 @@
 #include "mx/core/generated/Lyric.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -170,7 +171,7 @@ void Lyric::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-Lyric parseLyric(pugi::xml_node el)
+Lyric parseLyric(pugi::xml_node el, const ParseContext &context)
 {
     Lyric out;
     for (pugi::xml_attribute a : el.attributes())
@@ -182,7 +183,7 @@ Lyric parseLyric(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(NameToken::parse(a.value()));
+            out.setNumber(parseValue<NameToken>(a.value(), context, el, "number"));
         }
         else if (aname == "name")
         {
@@ -190,60 +191,60 @@ Lyric parseLyric(pugi::xml_node el)
         }
         else if (aname == "time-only")
         {
-            out.setTimeOnly(TimeOnly::parse(a.value()));
+            out.setTimeOnly(parseValue<TimeOnly>(a.value(), context, el, "time-only"));
         }
         else if (aname == "justify")
         {
-            out.setJustify(LeftCenterRight::parse(a.value()));
+            out.setJustify(parseValue<LeftCenterRight>(a.value(), context, el, "justify"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseLyricContent(out, el);
+    parseLyricContent(out, el, context);
     return out;
 }
 
-void parseLyricContent(Lyric &out, pugi::xml_node el)
+void parseLyricContent(Lyric &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "syllabic") || cursorIs(cursor, "text") || cursorIs(cursor, "extend") ||
                    cursorIs(cursor, "laughing") || cursorIs(cursor, "humming")))
     {
-        out.setChoice(parseLyricChoice(el, cursor));
+        out.setChoice(parseLyricChoice(el, cursor, context));
     }
     else
     {
@@ -251,19 +252,19 @@ void parseLyricContent(Lyric &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "end-line"))
     {
-        parseEmpty(cursor);
+        parseEmpty(cursor, context);
         out.setEndLine(true);
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "end-paragraph"))
     {
-        parseEmpty(cursor);
+        parseEmpty(cursor, context);
         out.setEndParagraph(true);
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
-        out.setEditorial(parseEditorialGroup(el, cursor));
+        out.setEditorial(parseEditorialGroup(el, cursor, context));
     }
     if (cursor)
     {

@@ -3,6 +3,7 @@
 #include "mx/core/generated/FirstFret.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void FirstFret::setValue(int value)
     m_value = std::move(value);
 }
 
-FirstFret parseFirstFret(pugi::xml_node el)
+FirstFret parseFirstFret(pugi::xml_node el, const ParseContext &context)
 {
     FirstFret out;
     for (pugi::xml_attribute a : el.attributes())
@@ -56,20 +57,20 @@ FirstFret parseFirstFret(pugi::xml_node el)
         }
         else if (aname == "location")
         {
-            out.setLocation(LeftRight::parse(a.value()));
+            out.setLocation(parseValue<LeftRight>(a.value(), context, el, "location"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseFirstFretContent(out, el);
+    parseFirstFretContent(out, el, context);
     return out;
 }
 
-void parseFirstFretContent(FirstFret &out, pugi::xml_node el)
+void parseFirstFretContent(FirstFret &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(parseInt(childText(el)));
+    out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

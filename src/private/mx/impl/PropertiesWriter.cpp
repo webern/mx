@@ -47,8 +47,10 @@ namespace mx
 namespace impl
 {
 
-PropertiesWriter::PropertiesWriter(core::PartwiseMeasure &inPartwiseMeasure)
-    : myAttributes{}, myHasContent{false}, myPartwiseMeasure{inPartwiseMeasure}
+PropertiesWriter::PropertiesWriter(core::PartwiseMeasure &inPartwiseMeasure, DiagnosticsContext diagnostics,
+                                   api::Location location)
+    : myAttributes{}, myHasContent{false}, myPartwiseMeasure{inPartwiseMeasure}, myDiagnostics{std::move(diagnostics)},
+      myLocation{std::move(location)}
 {
 }
 
@@ -95,7 +97,7 @@ void PropertiesWriter::writeMultipleRest(int measureCount, api::Bool useSymbols)
 void PropertiesWriter::writeKey(int staffIndex, const api::KeyData &inKeyData)
 {
     core::Key key{};
-    impl::setId(inKeyData.id, key);
+    impl::setId(inKeyData.id, key, myDiagnostics, myLocation);
 
     if (staffIndex >= 0)
     {
@@ -115,7 +117,7 @@ void PropertiesWriter::writeKey(int staffIndex, const api::KeyData &inKeyData)
     myHasContent = true;
 }
 
-void PropertiesWriter::writeNonTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey)
+void PropertiesWriter::writeNonTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey) const
 {
     Converter converter;
     std::vector<core::NonTraditionalKeyGroup> groups;
@@ -129,6 +131,11 @@ void PropertiesWriter::writeNonTraditionalKey(const api::KeyData &inKeyData, cor
             nt.setKeyAccidental(ka);
         }
         const auto isUnknown = keyComponent.step == api::Step::unspecified;
+        if (isUnknown)
+        {
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted, myLocation,
+                                 "key-step is unspecified; using C");
+        }
         const auto step = isUnknown ? api::Step::c : keyComponent.step;
         nt.setKeyStep(converter.convert(step));
         const auto alter = Converter::convertToAlter(keyComponent.alter, keyComponent.cents);
@@ -170,7 +177,8 @@ void PropertiesWriter::writeTraditionalKey(const api::KeyData &inKeyData, core::
 // converts a list of api fractions (a primary or interchangeable meter) to a core OneOrMore;
 // an (invalid) empty meter falls back to a single 4/4 pair
 static core::OneOrMore<core::TimeSignatureGroup> propertiesWriterTimeSignatureGroups(
-    const std::vector<api::TimeFraction> &inFractions)
+    const std::vector<api::TimeFraction> &inFractions, const DiagnosticsContext &diagnostics,
+    const api::Location &location)
 {
     std::vector<core::TimeSignatureGroup> groups;
     for (const auto &fraction : inFractions)
@@ -182,6 +190,8 @@ static core::OneOrMore<core::TimeSignatureGroup> propertiesWriterTimeSignatureGr
     }
     if (groups.empty())
     {
+        diagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted, location,
+                           "time signature has no fractions; using 4/4");
         core::TimeSignatureGroup tsg{};
         tsg.setBeats("4");
         tsg.setBeatType("4");
@@ -195,16 +205,18 @@ static core::OneOrMore<core::TimeSignatureGroup> propertiesWriterTimeSignatureGr
 // builds the metered (group) TimeChoice from an api MeteredTimeSignature, and sets the meter's own
 // symbol/separator on the <time> element
 static void propertiesWriterSetMetered(core::Time &ioTime, const api::MeteredTimeSignature &inMetered,
-                                       const Converter &converter)
+                                       const Converter &converter, const DiagnosticsContext &diagnostics,
+                                       const api::Location &location)
 {
     core::TimeChoiceGroup tcg{};
-    tcg.setTimeSignature(propertiesWriterTimeSignatureGroups(inMetered.fractions));
+    tcg.setTimeSignature(propertiesWriterTimeSignatureGroups(inMetered.fractions, diagnostics, location));
 
     if (inMetered.interchangeable.has_value())
     {
         const auto &alternate = *inMetered.interchangeable;
         core::Interchangeable interchangeable{};
-        interchangeable.setTimeSignature(propertiesWriterTimeSignatureGroups(alternate.fractions));
+        interchangeable.setTimeSignature(
+            propertiesWriterTimeSignatureGroups(alternate.fractions, diagnostics, location));
         if (alternate.relation != api::TimeRelation::unspecified)
         {
             interchangeable.setTimeRelation(converter.convert(alternate.relation));
@@ -236,14 +248,14 @@ void PropertiesWriter::writeTime(const api::TimeChoice &value, int staffIndex)
 {
     Converter converter;
     core::Time time{};
-    impl::setId(value.id, time);
+    impl::setId(value.id, time, myDiagnostics, myLocation);
 
     if (value.isSimple())
     {
         const auto &simple = value.simple();
         core::TimeChoiceGroup tcg{};
         std::vector<api::TimeFraction> fractions{simple.fraction};
-        tcg.setTimeSignature(propertiesWriterTimeSignatureGroups(fractions));
+        tcg.setTimeSignature(propertiesWriterTimeSignatureGroups(fractions, myDiagnostics, myLocation));
         time.setChoice(core::TimeChoice::group(std::move(tcg)));
         if (simple.symbol != api::TimeSignatureSymbol::unspecified)
         {
@@ -260,7 +272,7 @@ void PropertiesWriter::writeTime(const api::TimeChoice &value, int staffIndex)
         }
         else
         {
-            propertiesWriterSetMetered(time, complex.metered(), converter);
+            propertiesWriterSetMetered(time, complex.metered(), converter, myDiagnostics, myLocation);
         }
     }
 
@@ -328,7 +340,7 @@ void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double 
 void PropertiesWriter::writeClef(int staffIndex, const api::ClefData &inClefData)
 {
     core::Clef mxClef{};
-    impl::setId(inClefData.id, mxClef);
+    impl::setId(inClefData.id, mxClef, myDiagnostics, myLocation);
 
     // staffIndex < 0 means a single-staff part (the caller's clefStaffIndex() collapses it), so the
     // auto rule omits the implied 1; staffIndex >= 0 is a multi-staff part, so the auto rule emits
@@ -407,7 +419,7 @@ void PropertiesWriter::writePartSymbol(const api::PartSymbolData &inPartSymbolDa
 void PropertiesWriter::writeTranspose(int staffIndex, const api::TransposeData &inTransposeData)
 {
     auto xpose = Converter::convertToTranspose(inTransposeData);
-    impl::setId(inTransposeData.id, xpose);
+    impl::setId(inTransposeData.id, xpose, myDiagnostics, myLocation);
 
     if (staffIndex >= 0)
     {

@@ -3,6 +3,7 @@
 #include "mx/core/generated/Player.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Player::setPlayerName(std::string value)
     m_playerName = std::move(value);
 }
 
-Player parsePlayer(pugi::xml_node el)
+Player parsePlayer(pugi::xml_node el, const ParseContext &context)
 {
     Player out;
     bool seen_id = false;
@@ -44,7 +45,7 @@ Player parsePlayer(pugi::xml_node el)
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -55,11 +56,11 @@ Player parsePlayer(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parsePlayerContent(out, el);
+    parsePlayerContent(out, el, context);
     return out;
 }
 
-void parsePlayerContent(Player &out, pugi::xml_node el)
+void parsePlayerContent(Player &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "player-name"))

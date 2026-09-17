@@ -43,8 +43,14 @@ bool AboveBelow::tryParse(std::string_view text, AboveBelow &out) noexcept
 
 AboveBelow AboveBelow::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+AboveBelow AboveBelow::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     AboveBelow v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

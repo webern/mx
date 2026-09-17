@@ -49,8 +49,14 @@ bool HarmonyArrangement::tryParse(std::string_view text, HarmonyArrangement &out
 
 HarmonyArrangement HarmonyArrangement::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+HarmonyArrangement HarmonyArrangement::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     HarmonyArrangement v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The caesura element indicates a slight pause. It is notated using a "railroad tracks" symbol or
 /// other variations specified in the element content.
 class Caesura final
@@ -65,9 +67,9 @@ class Caesura final
     CaesuraValue m_value{};
 };
 
-Caesura parseCaesura(pugi::xml_node el);
+Caesura parseCaesura(pugi::xml_node el, const ParseContext &context);
 
-void parseCaesuraContent(Caesura &out, pugi::xml_node el);
+void parseCaesuraContent(Caesura &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeCaesura(const Caesura &v, pugi::xml_node parent, const char *tag);
 

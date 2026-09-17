@@ -49,8 +49,14 @@ bool TrillStep::tryParse(std::string_view text, TrillStep &out) noexcept
 
 TrillStep TrillStep::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+TrillStep TrillStep::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     TrillStep v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

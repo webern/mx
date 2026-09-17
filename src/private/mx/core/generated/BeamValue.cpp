@@ -57,8 +57,14 @@ bool BeamValue::tryParse(std::string_view text, BeamValue &out) noexcept
 
 BeamValue BeamValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+BeamValue BeamValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     BeamValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The root-step type represents the pitch step of the root of the current chord within the harmony
 /// element. The text attribute indicates how the root should appear in a score if not using the
 /// element contents.
@@ -65,9 +67,9 @@ class RootStep final
     Step m_value{};
 };
 
-RootStep parseRootStep(pugi::xml_node el);
+RootStep parseRootStep(pugi::xml_node el, const ParseContext &context);
 
-void parseRootStepContent(RootStep &out, pugi::xml_node el);
+void parseRootStepContent(RootStep &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeRootStep(const RootStep &v, pugi::xml_node parent, const char *tag);
 

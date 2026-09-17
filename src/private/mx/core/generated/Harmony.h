@@ -34,6 +34,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The harmony type represents harmony analysis, including chord symbols in popular music as well as
 /// functional harmony analysis in classical music. If there are alternate harmonies possible, this
 /// can be specified using multiple harmony elements differentiated by type. Explicit harmonies have
@@ -119,9 +121,9 @@ class Harmony final
     std::optional<int> m_staff;
 };
 
-Harmony parseHarmony(pugi::xml_node el);
+Harmony parseHarmony(pugi::xml_node el, const ParseContext &context);
 
-void parseHarmonyContent(Harmony &out, pugi::xml_node el);
+void parseHarmonyContent(Harmony &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHarmony(const Harmony &v, pugi::xml_node parent, const char *tag);
 

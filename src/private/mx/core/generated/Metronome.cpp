@@ -3,6 +3,7 @@
 #include "mx/core/generated/Metronome.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -170,7 +171,7 @@ void Metronome::setChoice(MetronomeChoice value)
     m_choice = std::move(value);
 }
 
-Metronome parseMetronome(pugi::xml_node el)
+Metronome parseMetronome(pugi::xml_node el, const ParseContext &context)
 {
     Metronome out;
     for (pugi::xml_attribute a : el.attributes())
@@ -182,80 +183,80 @@ Metronome parseMetronome(pugi::xml_node el)
         }
         if (aname == "parentheses")
         {
-            out.setParentheses(YesNo::parse(a.value()));
+            out.setParentheses(parseValue<YesNo>(a.value(), context, el, "parentheses"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "halign")
         {
-            out.setHalign(LeftCenterRight::parse(a.value()));
+            out.setHalign(parseValue<LeftCenterRight>(a.value(), context, el, "halign"));
         }
         else if (aname == "valign")
         {
-            out.setValign(Valign::parse(a.value()));
+            out.setValign(parseValue<Valign>(a.value(), context, el, "valign"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else if (aname == "justify")
         {
-            out.setJustify(LeftCenterRight::parse(a.value()));
+            out.setJustify(parseValue<LeftCenterRight>(a.value(), context, el, "justify"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseMetronomeContent(out, el);
+    parseMetronomeContent(out, el, context);
     return out;
 }
 
-void parseMetronomeContent(Metronome &out, pugi::xml_node el)
+void parseMetronomeContent(Metronome &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor &&
         (cursorIs(cursor, "beat-unit") || cursorIs(cursor, "metronome-arrows") || cursorIs(cursor, "metronome-note")))
     {
-        out.setChoice(parseMetronomeChoice(el, cursor));
+        out.setChoice(parseMetronomeChoice(el, cursor, context));
     }
     else
     {

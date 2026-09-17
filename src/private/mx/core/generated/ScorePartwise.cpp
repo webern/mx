@@ -3,6 +3,7 @@
 #include "mx/core/generated/ScorePartwise.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -45,7 +46,7 @@ void ScorePartwise::setPart(OneOrMore<PartwisePart> value)
     m_part = std::move(value);
 }
 
-ScorePartwise parseScorePartwise(pugi::xml_node el)
+ScorePartwise parseScorePartwise(pugi::xml_node el, const ParseContext &context)
 {
     ScorePartwise out;
     for (pugi::xml_attribute a : el.attributes())
@@ -64,18 +65,18 @@ ScorePartwise parseScorePartwise(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseScorePartwiseContent(out, el);
+    parseScorePartwiseContent(out, el, context);
     return out;
 }
 
-void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el)
+void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "work") || cursorIs(cursor, "movement-number") ||
                    cursorIs(cursor, "movement-title") || cursorIs(cursor, "identification") ||
                    cursorIs(cursor, "defaults") || cursorIs(cursor, "credit") || cursorIs(cursor, "part-list")))
     {
-        out.setScoreHeader(parseScoreHeaderGroup(el, cursor));
+        out.setScoreHeader(parseScoreHeaderGroup(el, cursor, context));
     }
     else
     {
@@ -85,11 +86,11 @@ void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el)
     {
         throwMissingOrMisplaced(el, cursor, "part");
     }
-    out.setPart(OneOrMore<PartwisePart>{parsePartwisePart(cursor)});
+    out.setPart(OneOrMore<PartwisePart>{parsePartwisePart(cursor, context)});
     cursor = nextElement(cursor);
     while (cursorIs(cursor, "part"))
     {
-        out.addPart(parsePartwisePart(cursor));
+        out.addPart(parsePartwisePart(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

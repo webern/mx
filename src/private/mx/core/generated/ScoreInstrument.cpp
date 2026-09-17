@@ -3,6 +3,7 @@
 #include "mx/core/generated/ScoreInstrument.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void ScoreInstrument::setVirtualInstrumentData(VirtualInstrumentDataGroup value)
     m_virtualInstrumentData = std::move(value);
 }
 
-ScoreInstrument parseScoreInstrument(pugi::xml_node el)
+ScoreInstrument parseScoreInstrument(pugi::xml_node el, const ParseContext &context)
 {
     ScoreInstrument out;
     bool seen_id = false;
@@ -64,7 +65,7 @@ ScoreInstrument parseScoreInstrument(pugi::xml_node el)
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -75,11 +76,11 @@ ScoreInstrument parseScoreInstrument(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseScoreInstrumentContent(out, el);
+    parseScoreInstrumentContent(out, el, context);
     return out;
 }
 
-void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el)
+void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "instrument-name"))
@@ -99,7 +100,7 @@ void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el)
     if (cursor && (cursorIs(cursor, "instrument-sound") || cursorIs(cursor, "solo") || cursorIs(cursor, "ensemble") ||
                    cursorIs(cursor, "virtual-instrument")))
     {
-        out.setVirtualInstrumentData(parseVirtualInstrumentDataGroup(el, cursor));
+        out.setVirtualInstrumentData(parseVirtualInstrumentDataGroup(el, cursor, context));
     }
     if (cursor)
     {

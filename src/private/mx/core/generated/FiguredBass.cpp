@@ -3,6 +3,7 @@
 #include "mx/core/generated/FiguredBass.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -225,7 +226,7 @@ void FiguredBass::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-FiguredBass parseFiguredBass(pugi::xml_node el)
+FiguredBass parseFiguredBass(pugi::xml_node el, const ParseContext &context)
 {
     FiguredBass out;
     for (pugi::xml_attribute a : el.attributes())
@@ -237,107 +238,107 @@ FiguredBass parseFiguredBass(pugi::xml_node el)
         }
         if (aname == "parentheses")
         {
-            out.setParentheses(YesNo::parse(a.value()));
+            out.setParentheses(parseValue<YesNo>(a.value(), context, el, "parentheses"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "halign")
         {
-            out.setHalign(LeftCenterRight::parse(a.value()));
+            out.setHalign(parseValue<LeftCenterRight>(a.value(), context, el, "halign"));
         }
         else if (aname == "valign")
         {
-            out.setValign(Valign::parse(a.value()));
+            out.setValign(parseValue<Valign>(a.value(), context, el, "valign"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "print-dot")
         {
-            out.setPrintDot(YesNo::parse(a.value()));
+            out.setPrintDot(parseValue<YesNo>(a.value(), context, el, "print-dot"));
         }
         else if (aname == "print-lyric")
         {
-            out.setPrintLyric(YesNo::parse(a.value()));
+            out.setPrintLyric(parseValue<YesNo>(a.value(), context, el, "print-lyric"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else if (aname == "print-spacing")
         {
-            out.setPrintSpacing(YesNo::parse(a.value()));
+            out.setPrintSpacing(parseValue<YesNo>(a.value(), context, el, "print-spacing"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseFiguredBassContent(out, el);
+    parseFiguredBassContent(out, el, context);
     return out;
 }
 
-void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el)
+void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (!cursorIs(cursor, "figure"))
     {
         throwMissingOrMisplaced(el, cursor, "figure");
     }
-    out.setFigure(OneOrMore<Figure>{parseFigure(cursor)});
+    out.setFigure(OneOrMore<Figure>{parseFigure(cursor, context)});
     cursor = nextElement(cursor);
     while (cursorIs(cursor, "figure"))
     {
-        out.addFigure(parseFigure(cursor));
+        out.addFigure(parseFigure(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "duration"))
     {
-        out.setDuration(PositiveDivisions::parse(childText(cursor)));
+        out.setDuration(parseValue<PositiveDivisions>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
-        out.setEditorial(parseEditorialGroup(el, cursor));
+        out.setEditorial(parseEditorialGroup(el, cursor, context));
     }
     if (cursor)
     {

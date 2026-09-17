@@ -3,6 +3,7 @@
 #include "mx/core/generated/Work.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void Work::setOpus(std::optional<Opus> value)
     m_opus = std::move(value);
 }
 
-Work parseWork(pugi::xml_node el)
+Work parseWork(pugi::xml_node el, const ParseContext &context)
 {
     Work out;
     for (pugi::xml_attribute a : el.attributes())
@@ -52,11 +53,11 @@ Work parseWork(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseWorkContent(out, el);
+    parseWorkContent(out, el, context);
     return out;
 }
 
-void parseWorkContent(Work &out, pugi::xml_node el)
+void parseWorkContent(Work &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "work-number"))
@@ -71,7 +72,7 @@ void parseWorkContent(Work &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "opus"))
     {
-        out.setOpus(parseOpus(cursor));
+        out.setOpus(parseOpus(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

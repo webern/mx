@@ -3,6 +3,7 @@
 #include "mx/core/generated/HarmonyChordGroupChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,23 +31,24 @@ HarmonyChordGroupChoice HarmonyChordGroupChoice::function(StyleText value)
     return HarmonyChordGroupChoice{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-HarmonyChordGroupChoice parseHarmonyChordGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
+HarmonyChordGroupChoice parseHarmonyChordGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
+                                                     const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "root")))
     {
-        Root value = parseRoot(cursor);
+        Root value = parseRoot(cursor, context);
         cursor = nextElement(cursor);
         return HarmonyChordGroupChoice::root(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "numeral")))
     {
-        Numeral value = parseNumeral(cursor);
+        Numeral value = parseNumeral(cursor, context);
         cursor = nextElement(cursor);
         return HarmonyChordGroupChoice::numeral(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "function")))
     {
-        StyleText value = parseStyleText(cursor);
+        StyleText value = parseStyleText(cursor, context);
         cursor = nextElement(cursor);
         return HarmonyChordGroupChoice::function(std::move(value));
     }

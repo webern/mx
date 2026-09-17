@@ -3,6 +3,7 @@
 #include "mx/core/generated/TupletPortion.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -45,7 +46,7 @@ void TupletPortion::setTupletDot(std::vector<TupletDot> value)
     m_tupletDot = std::move(value);
 }
 
-TupletPortion parseTupletPortion(pugi::xml_node el)
+TupletPortion parseTupletPortion(pugi::xml_node el, const ParseContext &context)
 {
     TupletPortion out;
     for (pugi::xml_attribute a : el.attributes())
@@ -57,26 +58,26 @@ TupletPortion parseTupletPortion(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseTupletPortionContent(out, el);
+    parseTupletPortionContent(out, el, context);
     return out;
 }
 
-void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el)
+void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "tuplet-number"))
     {
-        out.setTupletNumber(parseTupletNumber(cursor));
+        out.setTupletNumber(parseTupletNumber(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "tuplet-type"))
     {
-        out.setTupletType(parseTupletType(cursor));
+        out.setTupletType(parseTupletType(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "tuplet-dot"))
     {
-        out.addTupletDot(parseTupletDot(cursor));
+        out.addTupletDot(parseTupletDot(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

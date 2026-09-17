@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The style-text type represents a text element with a print-style attribute group.
 class StyleText final
 {
@@ -59,9 +61,9 @@ class StyleText final
     std::string m_value{};
 };
 
-StyleText parseStyleText(pugi::xml_node el);
+StyleText parseStyleText(pugi::xml_node el, const ParseContext &context);
 
-void parseStyleTextContent(StyleText &out, pugi::xml_node el);
+void parseStyleTextContent(StyleText &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeStyleText(const StyleText &v, pugi::xml_node parent, const char *tag);
 

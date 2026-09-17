@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The group-symbol type indicates how the symbol for a group is indicated in the score. It is none
 /// if not specified.
 class GroupSymbol final
@@ -45,9 +47,9 @@ class GroupSymbol final
     GroupSymbolValue m_value{};
 };
 
-GroupSymbol parseGroupSymbol(pugi::xml_node el);
+GroupSymbol parseGroupSymbol(pugi::xml_node el, const ParseContext &context);
 
-void parseGroupSymbolContent(GroupSymbol &out, pugi::xml_node el);
+void parseGroupSymbolContent(GroupSymbol &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeGroupSymbol(const GroupSymbol &v, pugi::xml_node parent, const char *tag);
 

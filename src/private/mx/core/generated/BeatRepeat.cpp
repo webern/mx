@@ -3,6 +3,7 @@
 #include "mx/core/generated/BeatRepeat.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void BeatRepeat::setSlash(std::optional<SlashGroup> value)
     m_slash = std::move(value);
 }
 
-BeatRepeat parseBeatRepeat(pugi::xml_node el)
+BeatRepeat parseBeatRepeat(pugi::xml_node el, const ParseContext &context)
 {
     BeatRepeat out;
     bool seen_type = false;
@@ -64,15 +65,15 @@ BeatRepeat parseBeatRepeat(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else if (aname == "slashes")
         {
-            out.setSlashes(parseInt(a.value()));
+            out.setSlashes(parseIntegerValue(a.value(), context, el, "slashes"));
         }
         else if (aname == "use-dots")
         {
-            out.setUseDots(YesNo::parse(a.value()));
+            out.setUseDots(parseValue<YesNo>(a.value(), context, el, "use-dots"));
         }
         else
         {
@@ -83,16 +84,16 @@ BeatRepeat parseBeatRepeat(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseBeatRepeatContent(out, el);
+    parseBeatRepeatContent(out, el, context);
     return out;
 }
 
-void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el)
+void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "slash-type") || cursorIs(cursor, "except-voice")))
     {
-        out.setSlash(parseSlashGroup(el, cursor));
+        out.setSlash(parseSlashGroup(el, cursor, context));
     }
     if (cursor)
     {

@@ -3,6 +3,7 @@
 #include "mx/core/generated/EmptyTrillSound.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -180,7 +181,7 @@ void EmptyTrillSound::setLastBeat(std::optional<Percent> value)
     m_lastBeat = std::move(value);
 }
 
-EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el)
+EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el, const ParseContext &context)
 {
     EmptyTrillSound out;
     for (pugi::xml_attribute a : el.attributes())
@@ -192,84 +193,85 @@ EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el)
         }
         if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "start-note")
         {
-            out.setStartNote(StartNote::parse(a.value()));
+            out.setStartNote(parseValue<StartNote>(a.value(), context, el, "start-note"));
         }
         else if (aname == "trill-step")
         {
-            out.setTrillStep(TrillStep::parse(a.value()));
+            out.setTrillStep(parseValue<TrillStep>(a.value(), context, el, "trill-step"));
         }
         else if (aname == "two-note-turn")
         {
-            out.setTwoNoteTurn(TwoNoteTurn::parse(a.value()));
+            out.setTwoNoteTurn(parseValue<TwoNoteTurn>(a.value(), context, el, "two-note-turn"));
         }
         else if (aname == "accelerate")
         {
-            out.setAccelerate(YesNo::parse(a.value()));
+            out.setAccelerate(parseValue<YesNo>(a.value(), context, el, "accelerate"));
         }
         else if (aname == "beats")
         {
-            out.setBeats(TrillBeats::parse(a.value()));
+            out.setBeats(parseValue<TrillBeats>(a.value(), context, el, "beats"));
         }
         else if (aname == "second-beat")
         {
-            out.setSecondBeat(Percent::parse(a.value()));
+            out.setSecondBeat(parseValue<Percent>(a.value(), context, el, "second-beat"));
         }
         else if (aname == "last-beat")
         {
-            out.setLastBeat(Percent::parse(a.value()));
+            out.setLastBeat(parseValue<Percent>(a.value(), context, el, "last-beat"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseEmptyTrillSoundContent(out, el);
+    parseEmptyTrillSoundContent(out, el, context);
     return out;
 }
 
-void parseEmptyTrillSoundContent(EmptyTrillSound &out, pugi::xml_node el)
+void parseEmptyTrillSoundContent(EmptyTrillSound &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

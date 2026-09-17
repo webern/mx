@@ -3,6 +3,7 @@
 #include "mx/core/generated/MultipleRest.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void MultipleRest::setValue(int value)
     m_value = std::move(value);
 }
 
-MultipleRest parseMultipleRest(pugi::xml_node el)
+MultipleRest parseMultipleRest(pugi::xml_node el, const ParseContext &context)
 {
     MultipleRest out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,20 +43,20 @@ MultipleRest parseMultipleRest(pugi::xml_node el)
         }
         if (aname == "use-symbols")
         {
-            out.setUseSymbols(YesNo::parse(a.value()));
+            out.setUseSymbols(parseValue<YesNo>(a.value(), context, el, "use-symbols"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseMultipleRestContent(out, el);
+    parseMultipleRestContent(out, el, context);
     return out;
 }
 
-void parseMultipleRestContent(MultipleRest &out, pugi::xml_node el)
+void parseMultipleRestContent(MultipleRest &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(parseInt(childText(el)));
+    out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

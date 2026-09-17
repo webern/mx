@@ -42,20 +42,33 @@ std::string TremoloMarks::toString() const
 
 bool TremoloMarks::tryParse(std::string_view text, TremoloMarks &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    TremoloMarks parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = TremoloMarks{v};
+    out = std::move(parsed);
     return true;
 }
 
 TremoloMarks TremoloMarks::parse(std::string_view text)
 {
-    TremoloMarks v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+TremoloMarks TremoloMarks::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return TremoloMarks{};
+    }
+    TremoloMarks out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

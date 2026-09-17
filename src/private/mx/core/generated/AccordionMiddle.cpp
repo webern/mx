@@ -42,20 +42,33 @@ std::string AccordionMiddle::toString() const
 
 bool AccordionMiddle::tryParse(std::string_view text, AccordionMiddle &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    AccordionMiddle parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = AccordionMiddle{v};
+    out = std::move(parsed);
     return true;
 }
 
 AccordionMiddle AccordionMiddle::parse(std::string_view text)
 {
-    AccordionMiddle v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+AccordionMiddle AccordionMiddle::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return AccordionMiddle{};
+    }
+    AccordionMiddle out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

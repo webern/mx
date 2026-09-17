@@ -3,6 +3,7 @@
 #include "mx/core/generated/EmptyFont.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void EmptyFont::setFontWeight(std::optional<FontWeight> value)
     m_fontWeight = std::move(value);
 }
 
-EmptyFont parseEmptyFont(pugi::xml_node el)
+EmptyFont parseEmptyFont(pugi::xml_node el, const ParseContext &context)
 {
     EmptyFont out;
     for (pugi::xml_attribute a : el.attributes())
@@ -62,32 +63,33 @@ EmptyFont parseEmptyFont(pugi::xml_node el)
         }
         if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseEmptyFontContent(out, el);
+    parseEmptyFontContent(out, el, context);
     return out;
 }
 
-void parseEmptyFontContent(EmptyFont &out, pugi::xml_node el)
+void parseEmptyFontContent(EmptyFont &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

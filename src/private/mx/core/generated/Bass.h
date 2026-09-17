@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The bass type is used to indicate a bass note in popular music chord symbols, e.g. G/C. It is
 /// generally not used in functional harmony, as inversion is generally not used in pop chord
 /// symbols. As with root, it is divided into step and alter elements, similar to pitches. The
@@ -46,9 +48,9 @@ class Bass final
     std::optional<HarmonyAlter> m_bassAlter;
 };
 
-Bass parseBass(pugi::xml_node el);
+Bass parseBass(pugi::xml_node el, const ParseContext &context);
 
-void parseBassContent(Bass &out, pugi::xml_node el);
+void parseBassContent(Bass &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBass(const Bass &v, pugi::xml_node parent, const char *tag);
 

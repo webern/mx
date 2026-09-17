@@ -57,11 +57,19 @@ bool NumberOrNormal::tryParse(std::string_view text, NumberOrNormal &out)
 
 NumberOrNormal NumberOrNormal::parse(std::string_view text)
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+NumberOrNormal NumberOrNormal::parse(std::string_view text, ValueParseOutcome &outcome)
+{
     NumberOrNormal out;
     if (tryParse(text, out))
     {
+        outcome = ValueParseOutcome::valid;
         return out;
     }
+    outcome = ValueParseOutcome::invalid;
     return NumberOrNormal::decimal(Decimal::parse(text));
 }
 

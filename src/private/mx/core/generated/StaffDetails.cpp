@@ -3,6 +3,7 @@
 #include "mx/core/generated/StaffDetails.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -105,7 +106,7 @@ void StaffDetails::setStaffSize(std::optional<StaffSize> value)
     m_staffSize = std::move(value);
 }
 
-StaffDetails parseStaffDetails(pugi::xml_node el)
+StaffDetails parseStaffDetails(pugi::xml_node el, const ParseContext &context)
 {
     StaffDetails out;
     for (pugi::xml_attribute a : el.attributes())
@@ -117,54 +118,54 @@ StaffDetails parseStaffDetails(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(StaffNumber::parse(a.value()));
+            out.setNumber(parseValue<StaffNumber>(a.value(), context, el, "number"));
         }
         else if (aname == "show-frets")
         {
-            out.setShowFrets(ShowFrets::parse(a.value()));
+            out.setShowFrets(parseValue<ShowFrets>(a.value(), context, el, "show-frets"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else if (aname == "print-spacing")
         {
-            out.setPrintSpacing(YesNo::parse(a.value()));
+            out.setPrintSpacing(parseValue<YesNo>(a.value(), context, el, "print-spacing"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseStaffDetailsContent(out, el);
+    parseStaffDetailsContent(out, el, context);
     return out;
 }
 
-void parseStaffDetailsContent(StaffDetails &out, pugi::xml_node el)
+void parseStaffDetailsContent(StaffDetails &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "staff-type"))
     {
-        out.setStaffType(StaffType::parse(childText(cursor)));
+        out.setStaffType(parseValue<StaffType>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "staff-lines")))
     {
-        out.setGroup(parseStaffDetailsGroup(el, cursor));
+        out.setGroup(parseStaffDetailsGroup(el, cursor, context));
     }
     while (cursorIs(cursor, "staff-tuning"))
     {
-        out.addStaffTuning(parseStaffTuning(cursor));
+        out.addStaffTuning(parseStaffTuning(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "capo"))
     {
-        out.setCapo(parseInt(childText(cursor)));
+        out.setCapo(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "staff-size"))
     {
-        out.setStaffSize(parseStaffSize(cursor));
+        out.setStaffSize(parseStaffSize(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

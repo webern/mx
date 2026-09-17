@@ -49,8 +49,14 @@ bool DegreeTypeValue::tryParse(std::string_view text, DegreeTypeValue &out) noex
 
 DegreeTypeValue DegreeTypeValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+DegreeTypeValue DegreeTypeValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     DegreeTypeValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

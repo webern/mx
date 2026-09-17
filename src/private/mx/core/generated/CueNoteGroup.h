@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A shared content group (synthesized from an anonymous
 /// particle of the schema): transparent on the wire, its
 /// fields serialize directly into the referencing element (plan §2.3).
@@ -41,7 +43,7 @@ class CueNoteGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor);
+CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeCueNoteGroup(const CueNoteGroup &v, pugi::xml_node el);
 

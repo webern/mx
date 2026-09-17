@@ -71,4 +71,11 @@ NameToken NameToken::parse(std::string_view text)
     return NameToken{std::string{text}};
 }
 
+NameToken NameToken::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    NameToken strict;
+    outcome = tryParse(trimWhitespace(text), strict) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
+    return parse(text);
+}
+
 } // namespace mx::core

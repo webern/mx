@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The fermata text content represents the shape of the fermata sign. An empty fermata element
 /// represents a normal fermata. The fermata type is upright if not specified.
 class Fermata final
@@ -70,9 +72,9 @@ class Fermata final
     FermataShape m_value{};
 };
 
-Fermata parseFermata(pugi::xml_node el);
+Fermata parseFermata(pugi::xml_node el, const ParseContext &context);
 
-void parseFermataContent(Fermata &out, pugi::xml_node el);
+void parseFermataContent(Fermata &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFermata(const Fermata &v, pugi::xml_node parent, const char *tag);
 

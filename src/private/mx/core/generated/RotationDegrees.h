@@ -3,6 +3,7 @@
 #pragma once
 
 #include "mx/core/Decimal.h"
+#include "mx/core/Lexical.h"
 
 #include <string>
 #include <string_view>
@@ -37,6 +38,9 @@ class RotationDegrees final
 
     /// Lenient: non-numeric text yields the clamped zero.
     static RotationDegrees parse(std::string_view text);
+
+    /// Lenient, and says whether the text was non-numeric or clamped.
+    static RotationDegrees parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const RotationDegrees &other) const noexcept = default;
 

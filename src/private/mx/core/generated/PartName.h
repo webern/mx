@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The part-name type describes the name or abbreviation of a score-part element. Formatting
 /// attributes for the part-name element are deprecated in Version 2.0 in favor of the new
 /// part-name-display and part-abbreviation-display elements.
@@ -69,9 +71,9 @@ class PartName final
     std::string m_value{};
 };
 
-PartName parsePartName(pugi::xml_node el);
+PartName parsePartName(pugi::xml_node el, const ParseContext &context);
 
-void parsePartNameContent(PartName &out, pugi::xml_node el);
+void parsePartNameContent(PartName &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePartName(const PartName &v, pugi::xml_node parent, const char *tag);
 

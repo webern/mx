@@ -3,6 +3,7 @@
 #include "mx/core/generated/MetronomeTuplet.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void MetronomeTuplet::setShowNumber(std::optional<ShowTuplet> value)
     m_showNumber = std::move(value);
 }
 
-MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el)
+MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el, const ParseContext &context)
 {
     MetronomeTuplet out;
     bool seen_type = false;
@@ -54,15 +55,15 @@ MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else if (aname == "bracket")
         {
-            out.setBracket(YesNo::parse(a.value()));
+            out.setBracket(parseValue<YesNo>(a.value(), context, el, "bracket"));
         }
         else if (aname == "show-number")
         {
-            out.setShowNumber(ShowTuplet::parse(a.value()));
+            out.setShowNumber(parseValue<ShowTuplet>(a.value(), context, el, "show-number"));
         }
         else
         {
@@ -73,7 +74,7 @@ MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseTimeModificationContent(out, el);
+    parseTimeModificationContent(out, el, context);
     return out;
 }
 

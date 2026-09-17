@@ -3,6 +3,7 @@
 #include "mx/core/generated/Wood.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Wood::setValue(WoodValue value)
     m_value = std::move(value);
 }
 
-Wood parseWood(pugi::xml_node el)
+Wood parseWood(pugi::xml_node el, const ParseContext &context)
 {
     Wood out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,20 +43,20 @@ Wood parseWood(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflPictogramGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflPictogramGlyphName>(a.value(), context, el, "smufl"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseWoodContent(out, el);
+    parseWoodContent(out, el, context);
     return out;
 }
 
-void parseWoodContent(Wood &out, pugi::xml_node el)
+void parseWoodContent(Wood &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(WoodValue::parse(childText(el)));
+    out.setValue(parseValue<WoodValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

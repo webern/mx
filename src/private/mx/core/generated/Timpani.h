@@ -15,6 +15,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The timpani type represents the timpani pictogram. The smufl attribute is used to distinguish
 /// different SMuFL stylistic alternates.
 class Timpani final
@@ -28,9 +30,9 @@ class Timpani final
     std::optional<SmuflPictogramGlyphName> m_smufl;
 };
 
-Timpani parseTimpani(pugi::xml_node el);
+Timpani parseTimpani(pugi::xml_node el, const ParseContext &context);
 
-void parseTimpaniContent(Timpani &out, pugi::xml_node el);
+void parseTimpaniContent(Timpani &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTimpani(const Timpani &v, pugi::xml_node parent, const char *tag);
 

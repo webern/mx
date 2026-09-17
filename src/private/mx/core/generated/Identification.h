@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Identification contains basic metadata about the score. It includes information that may apply at
 /// a score-wide, movement-wide, or part-wide level. The creator, rights, source, and relation
 /// elements are based on Dublin Core.
@@ -53,9 +55,9 @@ class Identification final
     std::optional<Miscellaneous> m_miscellaneous;
 };
 
-Identification parseIdentification(pugi::xml_node el);
+Identification parseIdentification(pugi::xml_node el, const ParseContext &context);
 
-void parseIdentificationContent(Identification &out, pugi::xml_node el);
+void parseIdentificationContent(Identification &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeIdentification(const Identification &v, pugi::xml_node parent, const char *tag);
 

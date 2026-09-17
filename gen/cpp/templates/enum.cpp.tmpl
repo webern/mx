@@ -41,8 +41,14 @@ bool {{ident}}::tryParse(std::string_view text, {{ident}} &out) noexcept
 
 {{ident}} {{ident}}::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+{{ident}} {{ident}}::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     {{ident}} v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

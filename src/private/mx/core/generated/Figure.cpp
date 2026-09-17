@@ -3,6 +3,7 @@
 #include "mx/core/generated/Figure.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -60,7 +61,7 @@ void Figure::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-Figure parseFigure(pugi::xml_node el)
+Figure parseFigure(pugi::xml_node el, const ParseContext &context)
 {
     Figure out;
     for (pugi::xml_attribute a : el.attributes())
@@ -72,36 +73,36 @@ Figure parseFigure(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseFigureContent(out, el);
+    parseFigureContent(out, el, context);
     return out;
 }
 
-void parseFigureContent(Figure &out, pugi::xml_node el)
+void parseFigureContent(Figure &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "prefix"))
     {
-        out.setPrefix(parseStyleText(cursor));
+        out.setPrefix(parseStyleText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "figure-number"))
     {
-        out.setFigureNumber(parseStyleText(cursor));
+        out.setFigureNumber(parseStyleText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "suffix"))
     {
-        out.setSuffix(parseStyleText(cursor));
+        out.setSuffix(parseStyleText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "extend"))
     {
-        out.setExtend(parseExtend(cursor));
+        out.setExtend(parseExtend(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
-        out.setEditorial(parseEditorialGroup(el, cursor));
+        out.setEditorial(parseEditorialGroup(el, cursor, context));
     }
     if (cursor)
     {

@@ -277,8 +277,14 @@ bool AccidentalValue::tryParse(std::string_view text, AccidentalValue &out) noex
 
 AccidentalValue AccidentalValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+AccidentalValue AccidentalValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     AccidentalValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

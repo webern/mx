@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
 class PartwisePart final
@@ -37,9 +39,9 @@ class PartwisePart final
     OneOrMore<PartwiseMeasure> m_measure;
 };
 
-PartwisePart parsePartwisePart(pugi::xml_node el);
+PartwisePart parsePartwisePart(pugi::xml_node el, const ParseContext &context);
 
-void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el);
+void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePartwisePart(const PartwisePart &v, pugi::xml_node parent, const char *tag);
 

@@ -16,7 +16,8 @@ namespace mx
 {
 namespace impl
 {
-void createEncoding(const api::EncodingData &inEncoding, core::ScoreHeaderGroup &header)
+void createEncoding(const api::EncodingData &inEncoding, core::ScoreHeaderGroup &header,
+                    const DiagnosticsContext &diagnostics)
 {
     // The old code mutated co-allocated identification/encoding through
     // shared pointers; under value semantics we build local copies and
@@ -52,6 +53,15 @@ void createEncoding(const api::EncodingData &inEncoding, core::ScoreHeaderGroup 
     const bool isDayValid = inEncoding.encodingDate.day == tryDate.day();
     if (isYearValid || isMonthValid || isDayValid)
     {
+        if (!isYearValid || !isMonthValid || !isDayValid)
+        {
+            const auto &date = inEncoding.encodingDate;
+            diagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, api::Location{},
+                               "encoding-date " + std::to_string(date.year) + "-" + std::to_string(date.month) + "-" +
+                                   std::to_string(date.day) + " is not a valid date; using " +
+                                   std::to_string(tryDate.year()) + "-" + std::to_string(tryDate.month()) + "-" +
+                                   std::to_string(tryDate.day()));
+        }
         hasIdentification = true;
         hasEncoding = true;
         encoding.addChoice(core::EncodingChoice::encodingDate(tryDate));

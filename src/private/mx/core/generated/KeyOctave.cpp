@@ -3,6 +3,7 @@
 #include "mx/core/generated/KeyOctave.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void KeyOctave::setValue(Octave value)
     m_value = std::move(value);
 }
 
-KeyOctave parseKeyOctave(pugi::xml_node el)
+KeyOctave parseKeyOctave(pugi::xml_node el, const ParseContext &context)
 {
     KeyOctave out;
     bool seen_number = false;
@@ -54,11 +55,11 @@ KeyOctave parseKeyOctave(pugi::xml_node el)
         if (aname == "number")
         {
             seen_number = true;
-            out.setNumber(parseInt(a.value()));
+            out.setNumber(parseIntegerValue(a.value(), context, el, "number"));
         }
         else if (aname == "cancel")
         {
-            out.setCancel(YesNo::parse(a.value()));
+            out.setCancel(parseValue<YesNo>(a.value(), context, el, "cancel"));
         }
         else
         {
@@ -69,13 +70,13 @@ KeyOctave parseKeyOctave(pugi::xml_node el)
     {
         throwMissingAttribute(el, "number");
     }
-    parseKeyOctaveContent(out, el);
+    parseKeyOctaveContent(out, el, context);
     return out;
 }
 
-void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el)
+void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(Octave::parse(childText(el)));
+    out.setValue(parseValue<Octave>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

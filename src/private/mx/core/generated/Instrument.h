@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The instrument type distinguishes between score-instrument elements in a score-part. The id
 /// attribute is an IDREF back to the score-instrument ID. If multiple score-instruments are
 /// specified in a score-part, there should be an instrument element for each note in the part. Notes
@@ -31,9 +33,9 @@ class Instrument final
     Token m_id{};
 };
 
-Instrument parseInstrument(pugi::xml_node el);
+Instrument parseInstrument(pugi::xml_node el, const ParseContext &context);
 
-void parseInstrumentContent(Instrument &out, pugi::xml_node el);
+void parseInstrumentContent(Instrument &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeInstrument(const Instrument &v, pugi::xml_node parent, const char *tag);
 

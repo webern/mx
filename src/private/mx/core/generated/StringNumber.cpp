@@ -38,20 +38,33 @@ std::string StringNumber::toString() const
 
 bool StringNumber::tryParse(std::string_view text, StringNumber &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    StringNumber parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = StringNumber{v};
+    out = std::move(parsed);
     return true;
 }
 
 StringNumber StringNumber::parse(std::string_view text)
 {
-    StringNumber v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+StringNumber StringNumber::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return StringNumber{};
+    }
+    StringNumber out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

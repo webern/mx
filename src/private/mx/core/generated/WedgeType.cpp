@@ -55,8 +55,14 @@ bool WedgeType::tryParse(std::string_view text, WedgeType &out) noexcept
 
 WedgeType WedgeType::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+WedgeType WedgeType::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     WedgeType v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

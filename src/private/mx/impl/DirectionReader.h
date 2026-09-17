@@ -12,7 +12,8 @@
 #include "mx/core/generated/HarmonyChordGroup.h"
 #include "mx/core/generated/PercussionChoice.h"
 #include "mx/impl/Converter.h"
-#include "mx/impl/Cursor.h"
+#include "mx/impl/DiagnosticsContext.h"
+#include "mx/impl/MeasureCursor.h"
 #include "mx/impl/PositionFunctions.h"
 
 #include <mutex>
@@ -25,19 +26,22 @@ namespace impl
 class DirectionReader
 {
   public:
-    DirectionReader(const core::Direction &inDirection, Cursor inCursor);
-    DirectionReader(const core::Harmony &inHarmony, Cursor inCursor);
+    DirectionReader(const core::Direction &inDirection, MeasureCursor inCursor, DiagnosticsContext diagnostics = {});
+    DirectionReader(const core::Harmony &inHarmony, MeasureCursor inCursor, DiagnosticsContext diagnostics = {});
     api::DirectionData getDirectionData();
 
   private:
     const core::Direction *const myDirection;
     const core::Harmony *const myHarmony;
-    const Cursor myCursor;
+    const MeasureCursor myCursor;
     const Converter myConverter;
+    DiagnosticsContext myDiagnostics;
     api::DirectionData myOutDirectionData;
 
   private:
     mx::api::DirectionData initializeData();
+    void report(api::Severity severity, api::DiagnosticCode code, std::string message) const;
+    void reportRounded(const char *name, double value, int rounded) const;
     void parseOffset();
     void parsePlacement();
     void parseSystemRelation();

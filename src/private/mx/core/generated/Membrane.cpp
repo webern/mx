@@ -3,6 +3,7 @@
 #include "mx/core/generated/Membrane.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Membrane::setValue(MembraneValue value)
     m_value = std::move(value);
 }
 
-Membrane parseMembrane(pugi::xml_node el)
+Membrane parseMembrane(pugi::xml_node el, const ParseContext &context)
 {
     Membrane out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,20 +43,20 @@ Membrane parseMembrane(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflPictogramGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflPictogramGlyphName>(a.value(), context, el, "smufl"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseMembraneContent(out, el);
+    parseMembraneContent(out, el, context);
     return out;
 }
 
-void parseMembraneContent(Membrane &out, pugi::xml_node el)
+void parseMembraneContent(Membrane &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(MembraneValue::parse(childText(el)));
+    out.setValue(parseValue<MembraneValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

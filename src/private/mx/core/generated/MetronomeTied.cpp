@@ -3,6 +3,7 @@
 #include "mx/core/generated/MetronomeTied.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -20,7 +21,7 @@ void MetronomeTied::setType(StartStop value)
     m_type = std::move(value);
 }
 
-MetronomeTied parseMetronomeTied(pugi::xml_node el)
+MetronomeTied parseMetronomeTied(pugi::xml_node el, const ParseContext &context)
 {
     MetronomeTied out;
     bool seen_type = false;
@@ -34,7 +35,7 @@ MetronomeTied parseMetronomeTied(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else
         {
@@ -45,13 +46,14 @@ MetronomeTied parseMetronomeTied(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseMetronomeTiedContent(out, el);
+    parseMetronomeTiedContent(out, el, context);
     return out;
 }
 
-void parseMetronomeTiedContent(MetronomeTied &out, pugi::xml_node el)
+void parseMetronomeTiedContent(MetronomeTied &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

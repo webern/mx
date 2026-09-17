@@ -16,6 +16,7 @@ namespace mx
 namespace api
 {
 
+// TODO: document the unique ID exception
 // The id attribute of a MusicXML element. An id is a name that identifies one element within the
 // document. Software uses it to point at a particular note, measure, or marking -- to line playback
 // up with the score, to hang an annotation on a note, or to link one file to another.
@@ -26,8 +27,9 @@ namespace api
 // becomes "X". Building the Id is the only place this happens: mx writes the id exactly as the Id
 // holds it.
 //
-// Scrubbing is silent. To find out whether your text was already a legal id, compare it with the
-// id you built:
+// Writing the score with fromScore reports each id that building scrubbed, in the Diagnostics you
+// pass it. To find out sooner whether your text was already a legal id, compare it with the id you
+// built:
 //
 //     const auto id = Id{myText};
 //     if (id.value() != myText)

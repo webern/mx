@@ -3,6 +3,7 @@
 #include "mx/core/generated/Metal.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Metal::setValue(MetalValue value)
     m_value = std::move(value);
 }
 
-Metal parseMetal(pugi::xml_node el)
+Metal parseMetal(pugi::xml_node el, const ParseContext &context)
 {
     Metal out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,20 +43,20 @@ Metal parseMetal(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflPictogramGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflPictogramGlyphName>(a.value(), context, el, "smufl"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseMetalContent(out, el);
+    parseMetalContent(out, el, context);
     return out;
 }
 
-void parseMetalContent(Metal &out, pugi::xml_node el)
+void parseMetalContent(Metal &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(MetalValue::parse(childText(el)));
+    out.setValue(parseValue<MetalValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// An offset is represented in terms of divisions, and indicates where the direction will appear
 /// relative to the current musical location. The current musical location is always within the
 /// current measure, even at the end of a measure. The offset affects the visual appearance of the
@@ -38,9 +40,9 @@ class Offset final
     Divisions m_value{};
 };
 
-Offset parseOffset(pugi::xml_node el);
+Offset parseOffset(pugi::xml_node el, const ParseContext &context);
 
-void parseOffsetContent(Offset &out, pugi::xml_node el);
+void parseOffsetContent(Offset &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOffset(const Offset &v, pugi::xml_node parent, const char *tag);
 

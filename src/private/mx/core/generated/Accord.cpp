@@ -3,6 +3,7 @@
 #include "mx/core/generated/Accord.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Accord::setTuning(TuningGroup value)
     m_tuning = std::move(value);
 }
 
-Accord parseAccord(pugi::xml_node el)
+Accord parseAccord(pugi::xml_node el, const ParseContext &context)
 {
     Accord out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,23 +43,23 @@ Accord parseAccord(pugi::xml_node el)
         }
         if (aname == "string")
         {
-            out.setString(StringNumber::parse(a.value()));
+            out.setString(parseValue<StringNumber>(a.value(), context, el, "string"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseAccordContent(out, el);
+    parseAccordContent(out, el, context);
     return out;
 }
 
-void parseAccordContent(Accord &out, pugi::xml_node el)
+void parseAccordContent(Accord &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "tuning-step")))
     {
-        out.setTuning(parseTuningGroup(el, cursor));
+        out.setTuning(parseTuningGroup(el, cursor, context));
     }
     else
     {

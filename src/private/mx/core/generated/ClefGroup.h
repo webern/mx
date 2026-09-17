@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Clefs are represented by a combination of sign, line, and clef-octave-change elements.
 /// A shared content group: transparent on the wire, its
 /// fields serialize directly into the referencing element (plan §2.3).
@@ -40,7 +42,7 @@ class ClefGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor);
+ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeClefGroup(const ClefGroup &v, pugi::xml_node el);
 

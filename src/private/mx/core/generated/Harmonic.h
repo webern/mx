@@ -26,6 +26,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The harmonic type indicates natural and artificial harmonics. Allowing the type of pitch to be
 /// specified, combined with controls for appearance/playback differences, allows both the notation
 /// and the sound to be represented. Artificial harmonics can add a notated touching pitch;
@@ -81,9 +83,9 @@ class Harmonic final
     std::optional<HarmonicChoice2> m_choice2;
 };
 
-Harmonic parseHarmonic(pugi::xml_node el);
+Harmonic parseHarmonic(pugi::xml_node el, const ParseContext &context);
 
-void parseHarmonicContent(Harmonic &out, pugi::xml_node el);
+void parseHarmonicContent(Harmonic &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHarmonic(const Harmonic &v, pugi::xml_node parent, const char *tag);
 

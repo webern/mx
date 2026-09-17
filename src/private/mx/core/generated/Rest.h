@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The rest element indicates notated rests or silences. Rest elements are usually empty, but
 /// placement on the staff can be specified using display-step and display-octave elements. If the
 /// measure attribute is set to yes, this indicates this is a complete measure rest.
@@ -37,9 +39,9 @@ class Rest final
     std::optional<DisplayStepOctaveGroup> m_displayStepOctave;
 };
 
-Rest parseRest(pugi::xml_node el);
+Rest parseRest(pugi::xml_node el, const ParseContext &context);
 
-void parseRestContent(Rest &out, pugi::xml_node el);
+void parseRestContent(Rest &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeRest(const Rest &v, pugi::xml_node parent, const char *tag);
 

@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The measure-layout type includes the horizontal distance from the previous measure. It applies to
 /// the current measure only.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -32,9 +34,9 @@ class MeasureLayout final
     std::optional<Tenths> m_measureDistance;
 };
 
-MeasureLayout parseMeasureLayout(pugi::xml_node el);
+MeasureLayout parseMeasureLayout(pugi::xml_node el, const ParseContext &context);
 
-void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el);
+void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMeasureLayout(const MeasureLayout &v, pugi::xml_node parent, const char *tag);
 

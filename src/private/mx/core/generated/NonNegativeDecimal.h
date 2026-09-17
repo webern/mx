@@ -3,6 +3,7 @@
 #pragma once
 
 #include "mx/core/Decimal.h"
+#include "mx/core/Lexical.h"
 
 #include <string>
 #include <string_view>
@@ -36,6 +37,9 @@ class NonNegativeDecimal final
 
     /// Lenient: non-numeric text yields the clamped zero.
     static NonNegativeDecimal parse(std::string_view text);
+
+    /// Lenient, and says whether the text was non-numeric or clamped.
+    static NonNegativeDecimal parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const NonNegativeDecimal &other) const noexcept = default;
 

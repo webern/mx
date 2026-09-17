@@ -7,6 +7,7 @@
 #include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/NoteData.h"
+#include "mx/core/Lexical.h"
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/AttributesChoice.h"
 #include "mx/core/generated/Backup.h"
@@ -242,6 +243,10 @@ void MeasureReader::parseTimeSignature() const
         entry.second.id.reset();
     }
 
+    // the api holds one time signature per measure for all staves and one per staff
+    bool isAllStavesTimeFound = false;
+    std::set<int> staffTimesFound;
+
     TimeReader timeReader{myPartwiseMeasure.musicData()};
     for (const auto &found : timeReader.getTimeSignatures()) // isImplicit == false on each
     {
@@ -250,11 +255,8 @@ void MeasureReader::parseTimeSignature() const
         // clamp an out-of-range staff number to "all staves", mirroring the keys pattern
         if (staffIndex != api::INDEX_UNSPECIFIED && staffIndex > myCurrentCursor.getNumStaves() - 1)
         {
-            api::Location location;
-            location.partIndex = myCurrentCursor.partIndex;
-            location.measureIndex = myCurrentCursor.measureIndex;
-            location.tickTimePosition = myCurrentCursor.tickTimePosition;
-            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, std::move(location),
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+                                 measureLocation(myCurrentCursor),
                                  "time signature staff number " + std::to_string(staffIndex + 1) +
                                      " is out of range; applying it to all staves");
             staffIndex = api::INDEX_UNSPECIFIED;
@@ -262,6 +264,14 @@ void MeasureReader::parseTimeSignature() const
 
         if (staffIndex == api::INDEX_UNSPECIFIED)
         {
+            if (isAllStavesTimeFound)
+            {
+                myDiagnostics.report(
+                    api::Severity::error, api::DiagnosticCode::droppedData, measureLocation(myCurrentCursor),
+                    "a measure has more than one time signature for all staves; only the last is read");
+            }
+            isAllStavesTimeFound = true;
+
             // a restated unscoped time governs all staves: it supersedes carried-forward per-staff
             // overrides (but not overrides stated explicitly in this same measure)
             timeSignature = found.timeChoice;
@@ -272,6 +282,13 @@ void MeasureReader::parseTimeSignature() const
         }
         else
         {
+            if (!staffTimesFound.insert(staffIndex).second)
+            {
+                myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                     measureLocation(myCurrentCursor),
+                                     "a measure has more than one time signature for staff " +
+                                         std::to_string(staffIndex + 1) + "; only the last is read");
+            }
             staffTimeSignatures[staffIndex] = found.timeChoice;
         }
     }
@@ -382,10 +399,9 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
 
     myCurrentCursor.isBackupInProgress = false;
     impl::NoteReader noteReader{inMxNote};
-    impl::NoteFunctions noteFunc{inMxNote, myCurrentCursor};
-    auto noteData = noteFunc.parseNote();
 
     int noteDataStaffIndex = noteReader.getStaffNumber() - 1;
+    const bool isStaffNumberOutOfRange = noteReader.getIsStaffSpecified() && noteDataStaffIndex < 0;
 
     if (noteDataStaffIndex < 0)
     {
@@ -417,12 +433,30 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
     {
         bucketStaffIndex = noteDataStaffIndex;
     }
-    else if (bucketStaffIndex != noteDataStaffIndex)
+
+    myCurrentCursor.staffIndex = bucketStaffIndex;
+
+    // the cursor has the note's staff before the note is parsed, so the note's reports carry it
+    impl::NoteFunctions noteFunc{inMxNote, myCurrentCursor, myDiagnostics};
+    auto noteData = noteFunc.parseNote();
+
+    if (bucketStaffIndex != noteDataStaffIndex)
     {
         noteData.crossStaffIndex = noteDataStaffIndex;
     }
 
-    myCurrentCursor.staffIndex = bucketStaffIndex;
+    auto location = measureLocation(myCurrentCursor);
+    location.staffIndex = bucketStaffIndex;
+
+    if (isStaffNumberOutOfRange)
+    {
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, location,
+                             "note staff number " + std::to_string(noteReader.getStaffNumber()) +
+                                 " is out of range; using staff 1");
+    }
+
+    reportBeamRepairs(inMxNote, noteReader, location);
+    reportRoundedDuration("note", noteReader.getDurationValue(), location);
 
     bool isThisNotePartOfAChord = noteData.isChord || isNextNotePartOfAChord;
     noteData.isChord = isThisNotePartOfAChord;
@@ -580,6 +614,8 @@ void MeasureReader::parseBackup(const core::Backup &inMxBackup) const
 
     // a chord cannot straddle a timeline jump
     myPreviousNoteBucketStaffIndex = -1;
+    reportRoundedDuration("backup", static_cast<double>(inMxBackup.duration().value().value()),
+                          measureLocation(myCurrentCursor));
     const int backupAmount = myCurrentCursor.convertDurationToGlobalTickScale(inMxBackup.duration());
     advanceTickTimePosition(-1 * backupAmount, "backup");
 
@@ -587,6 +623,9 @@ void MeasureReader::parseBackup(const core::Backup &inMxBackup) const
     {
         auto problemAmount = myCurrentCursor.tickTimePosition * -1;
         advanceTickTimePosition(problemAmount, "correct backup negative error");
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+                             measureLocation(myCurrentCursor),
+                             "backup moves before the start of the measure; using the measure start");
     }
 }
 
@@ -599,13 +638,15 @@ void MeasureReader::parseForward(const core::Forward &inMxForward) const
     // forward from, so a source's <forward>/<backup> voice/staff is expected to not round-trip.
     // a chord cannot straddle a timeline jump
     myPreviousNoteBucketStaffIndex = -1;
+    reportRoundedDuration("forward", static_cast<double>(inMxForward.duration().value().value()),
+                          measureLocation(myCurrentCursor));
     const int forwardAmount = myCurrentCursor.convertDurationToGlobalTickScale(inMxForward.duration());
     advanceTickTimePosition(forwardAmount, "forward");
 }
 
 void MeasureReader::parseDirection(const core::Direction &inDirection) const
 {
-    DirectionReader reader{inDirection, myCurrentCursor};
+    DirectionReader reader{inDirection, myCurrentCursor, myDiagnostics};
     auto directionData = reader.getDirectionData();
 
     // make an adjustment if the directionData refers to a non-existent staff
@@ -619,6 +660,13 @@ void MeasureReader::parseDirection(const core::Direction &inDirection) const
     }
 
     isStaffIndexInsane = staffIndex >= myOutMeasureData.staves.size();
+
+    if (isStaffIndexSpecified && isStaffIndexInsane)
+    {
+        myDiagnostics.report(
+            api::Severity::warning, api::DiagnosticCode::valueAdjusted, measureLocation(myCurrentCursor),
+            "direction staff number " + std::to_string(*inDirection.staff()) + " is out of range; using staff 1");
+    }
 
     if (!isStaffIndexSpecified || isStaffIndexInsane)
     {
@@ -644,8 +692,20 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
 
     if (inMxAttributes.divisions().has_value())
     {
-        const auto newDivisionsValueDecimal = inMxAttributes.divisions()->value().value();
-        myCurrentCursor.ticksPerQuarter = static_cast<int>(std::ceil(newDivisionsValueDecimal - 0.5));
+        const auto newDivisionsValueDecimal = static_cast<double>(inMxAttributes.divisions()->value().value());
+
+        // divisions that round to 0 read as 1 rather than dividing durations by 0
+        const int ticksPerQuarter = std::max(static_cast<int>(std::ceil(newDivisionsValueDecimal - 0.5)), 1);
+
+        if (static_cast<double>(ticksPerQuarter) != newDivisionsValueDecimal)
+        {
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+                                 measureLocation(myCurrentCursor),
+                                 "divisions " + core::formatDouble(newDivisionsValueDecimal) + " rounded to " +
+                                     std::to_string(ticksPerQuarter));
+        }
+
+        myCurrentCursor.ticksPerQuarter = ticksPerQuarter;
     }
 
     // TODO - continue work on measure numbering and style etc
@@ -708,6 +768,10 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
             keyData.staffIndex = key.number()->value() - 1;
             if (keyData.staffIndex > myCurrentCursor.getNumStaves() - 1)
             {
+                myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+                                     measureLocation(myCurrentCursor),
+                                     "key staff number " + std::to_string(keyData.staffIndex + 1) +
+                                         " is out of range; applying it to all staves");
                 keyData.staffIndex = api::INDEX_UNSPECIFIED;
             }
         }
@@ -773,6 +837,10 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
                 transposeData.staffIndex = coreTranspose.number()->value() - 1;
                 if (transposeData.staffIndex > myCurrentCursor.getNumStaves() - 1)
                 {
+                    myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+                                         measureLocation(myCurrentCursor),
+                                         "transpose staff number " + std::to_string(transposeData.staffIndex + 1) +
+                                             " is out of range; applying it to all staves");
                     transposeData.staffIndex = api::INDEX_UNSPECIFIED;
                 }
             }
@@ -787,7 +855,7 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
 
 void MeasureReader::parseHarmony(const core::Harmony &inHarmony) const
 {
-    DirectionReader reader{inHarmony, myCurrentCursor};
+    DirectionReader reader{inHarmony, myCurrentCursor, myDiagnostics};
     auto directionData = reader.getDirectionData();
 
     // make an adjustment if the directionData refers to a non-existent staff
@@ -801,6 +869,13 @@ void MeasureReader::parseHarmony(const core::Harmony &inHarmony) const
     }
 
     isStaffIndexInsane = staffIndex >= myOutMeasureData.staves.size();
+
+    if (isStaffIndexSpecified && isStaffIndexInsane)
+    {
+        myDiagnostics.report(
+            api::Severity::warning, api::DiagnosticCode::valueAdjusted, measureLocation(myCurrentCursor),
+            "harmony staff number " + std::to_string(*inHarmony.staff()) + " is out of range; using staff 1");
+    }
 
     if (!isStaffIndexSpecified || isStaffIndexInsane)
     {
@@ -839,6 +914,8 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
 
     if (inMxFiguredBass.duration().has_value())
     {
+        reportRoundedDuration("figured-bass", static_cast<double>(inMxFiguredBass.duration()->value().value()),
+                              measureLocation(myCurrentCursor));
         figuredBass.durationTimeTicks = myCurrentCursor.convertDurationToGlobalTickScale(*inMxFiguredBass.duration());
     }
 
@@ -1032,6 +1109,9 @@ void MeasureReader::importStaffDetails(const core::Attributes &inMxAttributes) c
 
         if (staffIndex < 0 || staffIndex >= static_cast<int>(myOutMeasureData.staves.size()))
         {
+            myDiagnostics.report(
+                api::Severity::error, api::DiagnosticCode::droppedData, measureLocation(myCurrentCursor),
+                "staff-details staff number " + std::to_string(staffIndex + 1) + " is out of range; it is not read");
             continue;
         }
 
@@ -1124,6 +1204,15 @@ void MeasureReader::importClef(const core::Clef &inClef) const
 
     const bool sourceHasNumber = inClef.number().has_value();
     int celfStaffIndex = sourceHasNumber ? inClef.number()->value() - 1 : 0;
+
+    // PartReader counts clef numbers toward the staff count, so only a number below 1 is out of range
+    if (celfStaffIndex < 0)
+    {
+        myDiagnostics.report(
+            api::Severity::warning, api::DiagnosticCode::valueAdjusted, measureLocation(myCurrentCursor),
+            "clef staff number " + std::to_string(celfStaffIndex + 1) + " is out of range; using staff 1");
+        celfStaffIndex = 0;
+    }
 
     // Auto rule (see ClefData::writeStaffNumber): include the number unless this is a single-staff
     // part carrying the implied 1 (staff index 0). Record an explicit override only when the source
@@ -1318,6 +1407,58 @@ void MeasureReader::advanceTickTimePosition(int amount, std::string reason) cons
 
     myHistory.push_back(record);
     //            std::cout << record.reason << std::endl;
+}
+
+void MeasureReader::reportRoundedDuration(const char *element, double duration, api::Location location) const
+{
+    const double exactTicks = myCurrentCursor.convertDurationToExactGlobalTicks(duration);
+    const int ticks = myCurrentCursor.convertDurationToGlobalTickScale(duration);
+
+    if (std::abs(exactTicks - static_cast<double>(ticks)) > 1e-6)
+    {
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, std::move(location),
+                             std::string{element} + " duration " + core::formatDouble(duration) + " is " +
+                                 core::formatDouble(exactTicks) + " ticks; using " + std::to_string(ticks));
+    }
+}
+
+void MeasureReader::reportBeamRepairs(const core::Note &inMxNote, const NoteReader &noteReader,
+                                      const api::Location &location) const
+{
+    const auto beams = inMxNote.beam();
+    std::set<int> numbers;
+    int duplicateNumber = 0;
+
+    for (const auto &beam : beams)
+    {
+        const int number = beam.number().has_value() ? beam.number()->value() : core::BeamLevel{}.value();
+        if (!numbers.insert(number).second && duplicateNumber == 0)
+        {
+            duplicateNumber = number;
+        }
+    }
+
+    if (duplicateNumber != 0)
+    {
+        const std::string duplicate = "a note has more than one beam number " + std::to_string(duplicateNumber);
+        const auto droppedCount = beams.size() - noteReader.getBeams().size();
+
+        if (droppedCount > 0)
+        {
+            myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, location,
+                                 duplicate + "; " + std::to_string(droppedCount) + " of its beams are not read");
+        }
+        else
+        {
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, location,
+                                 duplicate + "; renumbering its beams");
+        }
+    }
+    else if (!numbers.empty() && *numbers.crbegin() != static_cast<int>(numbers.size()))
+    {
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, location,
+                             "a note's beam numbers do not count up from 1; renumbering its beams");
+    }
 }
 } // namespace impl
 } // namespace mx

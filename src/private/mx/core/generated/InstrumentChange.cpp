@@ -3,6 +3,7 @@
 #include "mx/core/generated/InstrumentChange.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void InstrumentChange::setVirtualInstrumentData(VirtualInstrumentDataGroup value
     m_virtualInstrumentData = std::move(value);
 }
 
-InstrumentChange parseInstrumentChange(pugi::xml_node el)
+InstrumentChange parseInstrumentChange(pugi::xml_node el, const ParseContext &context)
 {
     InstrumentChange out;
     bool seen_id = false;
@@ -44,7 +45,7 @@ InstrumentChange parseInstrumentChange(pugi::xml_node el)
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -55,17 +56,17 @@ InstrumentChange parseInstrumentChange(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseInstrumentChangeContent(out, el);
+    parseInstrumentChangeContent(out, el, context);
     return out;
 }
 
-void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el)
+void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "instrument-sound") || cursorIs(cursor, "solo") || cursorIs(cursor, "ensemble") ||
                    cursorIs(cursor, "virtual-instrument")))
     {
-        out.setVirtualInstrumentData(parseVirtualInstrumentDataGroup(el, cursor));
+        out.setVirtualInstrumentData(parseVirtualInstrumentDataGroup(el, cursor, context));
     }
     if (cursor)
     {

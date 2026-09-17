@@ -58,10 +58,10 @@ if(NOT TARGET pugixml)
 endif()
 
 # mx_core: the generated C++ typed model plus its hand-written runtime
-# (Decimal, Result, Error, Lexical, Token, NameToken, OneOrMore, Xml). The
-# generated per-type sources live in src/private/mx/core/generated/ (their
-# own directory, so generator-owned code is recognizable at a glance) and
-# arrive via sources.cmake (emitted by `python3 -m gen gen/cpp/config.toml`).
+# (Decimal, Result, Error, Lexical, ParseContext, Token, NameToken, OneOrMore,
+# Xml). The generated per-type sources live in src/private/mx/core/generated/
+# (their own directory, so generator-owned code is recognizable at a glance)
+# and arrive via sources.cmake (emitted by `python3 -m gen gen/cpp/config.toml`).
 set(MX_CORE_RUNTIME_SOURCES
     ${PRIVATE_DIR}/mx/core/Attribution.cpp
     ${PRIVATE_DIR}/mx/core/Attribution.h
@@ -73,6 +73,8 @@ set(MX_CORE_RUNTIME_SOURCES
     ${PRIVATE_DIR}/mx/core/NameToken.cpp
     ${PRIVATE_DIR}/mx/core/NameToken.h
     ${PRIVATE_DIR}/mx/core/OneOrMore.h
+    ${PRIVATE_DIR}/mx/core/ParseContext.cpp
+    ${PRIVATE_DIR}/mx/core/ParseContext.h
     ${PRIVATE_DIR}/mx/core/Result.h
     ${PRIVATE_DIR}/mx/core/Token.cpp
     ${PRIVATE_DIR}/mx/core/Token.h

@@ -30,6 +30,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Dynamics can be associated either with a note or a general musical direction. To avoid
 /// inconsistencies between and amongst the letter abbreviations for dynamics (what is sf vs. sfz,
 /// standing alone or with a trailing dynamic that is not always piano), we use the actual letters as
@@ -107,9 +109,9 @@ class Dynamics final
     std::vector<DynamicsChoice> m_choice;
 };
 
-Dynamics parseDynamics(pugi::xml_node el);
+Dynamics parseDynamics(pugi::xml_node el, const ParseContext &context);
 
-void parseDynamicsContent(Dynamics &out, pugi::xml_node el);
+void parseDynamicsContent(Dynamics &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDynamics(const Dynamics &v, pugi::xml_node parent, const char *tag);
 

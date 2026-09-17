@@ -3,6 +3,7 @@
 #include "mx/core/generated/Slash.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void Slash::setSlash(std::optional<SlashGroup> value)
     m_slash = std::move(value);
 }
 
-Slash parseSlash(pugi::xml_node el)
+Slash parseSlash(pugi::xml_node el, const ParseContext &context)
 {
     Slash out;
     bool seen_type = false;
@@ -64,15 +65,15 @@ Slash parseSlash(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else if (aname == "use-dots")
         {
-            out.setUseDots(YesNo::parse(a.value()));
+            out.setUseDots(parseValue<YesNo>(a.value(), context, el, "use-dots"));
         }
         else if (aname == "use-stems")
         {
-            out.setUseStems(YesNo::parse(a.value()));
+            out.setUseStems(parseValue<YesNo>(a.value(), context, el, "use-stems"));
         }
         else
         {
@@ -83,16 +84,16 @@ Slash parseSlash(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseSlashContent(out, el);
+    parseSlashContent(out, el, context);
     return out;
 }
 
-void parseSlashContent(Slash &out, pugi::xml_node el)
+void parseSlashContent(Slash &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "slash-type") || cursorIs(cursor, "except-voice")))
     {
-        out.setSlash(parseSlashGroup(el, cursor));
+        out.setSlash(parseSlashGroup(el, cursor, context));
     }
     if (cursor)
     {

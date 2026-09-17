@@ -3,6 +3,7 @@
 #include "mx/core/generated/DynamicsChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -150,167 +151,167 @@ DynamicsChoice DynamicsChoice::otherDynamics(OtherText value)
     return DynamicsChoice{Storage{std::in_place_index<26>, std::move(value)}};
 }
 
-DynamicsChoice parseDynamicsChoice(pugi::xml_node el, pugi::xml_node &cursor)
+DynamicsChoice parseDynamicsChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "p")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::p(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "pp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::pp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "ppp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::ppp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "pppp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::pppp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "ppppp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::ppppp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "pppppp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::pppppp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "f")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::f(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "ff")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::ff(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "fff")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::fff(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "ffff")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::ffff(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "fffff")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::fffff(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "ffffff")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::ffffff(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "mp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::mp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "mf")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::mf(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "sf")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::sf(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "sfp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::sfp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "sfpp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::sfpp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "fp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::fp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "rf")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::rf(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "rfz")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::rfz(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "sfz")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::sfz(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "sffz")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::sffz(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "fz")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::fz(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "n")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::n(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "pf")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::pf(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "sfzp")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::sfzp(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "other-dynamics")))
     {
-        OtherText value = parseOtherText(cursor);
+        OtherText value = parseOtherText(cursor, context);
         cursor = nextElement(cursor);
         return DynamicsChoice::otherDynamics(std::move(value));
     }

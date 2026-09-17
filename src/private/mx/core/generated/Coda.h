@@ -25,6 +25,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The coda type is the visual indicator of a coda sign. The exact glyph can be specified with the
 /// smufl attribute. A sound element is also needed to guide playback applications reliably.
 class Coda final
@@ -74,9 +76,9 @@ class Coda final
     std::optional<Token> m_id;
 };
 
-Coda parseCoda(pugi::xml_node el);
+Coda parseCoda(pugi::xml_node el, const ParseContext &context);
 
-void parseCodaContent(Coda &out, pugi::xml_node el);
+void parseCodaContent(Coda &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeCoda(const Coda &v, pugi::xml_node parent, const char *tag);
 

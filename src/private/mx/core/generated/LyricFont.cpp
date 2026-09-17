@@ -3,6 +3,7 @@
 #include "mx/core/generated/LyricFont.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -70,7 +71,7 @@ void LyricFont::setFontWeight(std::optional<FontWeight> value)
     m_fontWeight = std::move(value);
 }
 
-LyricFont parseLyricFont(pugi::xml_node el)
+LyricFont parseLyricFont(pugi::xml_node el, const ParseContext &context)
 {
     LyricFont out;
     for (pugi::xml_attribute a : el.attributes())
@@ -82,7 +83,7 @@ LyricFont parseLyricFont(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(NameToken::parse(a.value()));
+            out.setNumber(parseValue<NameToken>(a.value(), context, el, "number"));
         }
         else if (aname == "name")
         {
@@ -90,32 +91,33 @@ LyricFont parseLyricFont(pugi::xml_node el)
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseLyricFontContent(out, el);
+    parseLyricFontContent(out, el, context);
     return out;
 }
 
-void parseLyricFontContent(LyricFont &out, pugi::xml_node el)
+void parseLyricFontContent(LyricFont &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

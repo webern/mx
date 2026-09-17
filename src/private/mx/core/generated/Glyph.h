@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The glyph element represents what SMuFL glyph should be used for different variations of symbols
 /// that are semantically identical. The type attribute specifies what type of glyph is being
 /// defined. The element value specifies what SMuFL glyph to use, including recommended stylistic
@@ -37,9 +39,9 @@ class Glyph final
     SmuflGlyphName m_value{};
 };
 
-Glyph parseGlyph(pugi::xml_node el);
+Glyph parseGlyph(pugi::xml_node el, const ParseContext &context);
 
-void parseGlyphContent(Glyph &out, pugi::xml_node el);
+void parseGlyphContent(Glyph &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeGlyph(const Glyph &v, pugi::xml_node parent, const char *tag);
 

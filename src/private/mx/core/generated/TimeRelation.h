@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string_view>
 
 namespace mx::core
@@ -48,6 +50,9 @@ class TimeRelation final
     /// Lenient: an unrecognized literal falls back to the first variant
     /// (the import leniency policy; never produces an invalid value).
     static TimeRelation parse(std::string_view text) noexcept;
+
+    /// Lenient, and says whether the literal was recognized.
+    static TimeRelation parse(std::string_view text, ValueParseOutcome &outcome) noexcept;
 
     bool operator==(const TimeRelation &other) const noexcept = default;
 

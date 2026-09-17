@@ -3,6 +3,7 @@
 #include "mx/core/generated/GraceNoteChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,16 +26,16 @@ GraceNoteChoice GraceNoteChoice::graceCueNoteGroup(GraceCueNoteGroup value)
     return GraceNoteChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-GraceNoteChoice parseGraceNoteChoice(pugi::xml_node el, pugi::xml_node &cursor)
+GraceNoteChoice parseGraceNoteChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
                    cursorIs(cursor, "rest")))
     {
-        return GraceNoteChoice::graceNormalNoteGroup(parseGraceNormalNoteGroup(el, cursor));
+        return GraceNoteChoice::graceNormalNoteGroup(parseGraceNormalNoteGroup(el, cursor, context));
     }
     if (cursor && (cursorIs(cursor, "cue")))
     {
-        return GraceNoteChoice::graceCueNoteGroup(parseGraceCueNoteGroup(el, cursor));
+        return GraceNoteChoice::graceCueNoteGroup(parseGraceCueNoteGroup(el, cursor, context));
     }
     if (cursor)
     {

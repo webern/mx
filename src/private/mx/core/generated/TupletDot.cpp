@@ -3,6 +3,7 @@
 #include "mx/core/generated/TupletDot.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -60,7 +61,7 @@ void TupletDot::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-TupletDot parseTupletDot(pugi::xml_node el)
+TupletDot parseTupletDot(pugi::xml_node el, const ParseContext &context)
 {
     TupletDot out;
     for (pugi::xml_attribute a : el.attributes())
@@ -72,36 +73,37 @@ TupletDot parseTupletDot(pugi::xml_node el)
         }
         if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseTupletDotContent(out, el);
+    parseTupletDotContent(out, el, context);
     return out;
 }
 
-void parseTupletDotContent(TupletDot &out, pugi::xml_node el)
+void parseTupletDotContent(TupletDot &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

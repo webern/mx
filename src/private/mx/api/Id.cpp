@@ -6,6 +6,8 @@
 
 #include "mx/api/IdAccess.h"
 
+#include <optional>
+#include <string>
 #include <utility>
 
 namespace mx
@@ -25,11 +27,24 @@ class Id::Impl
     {
     }
 
+    explicit Impl(const std::string &text)
+    {
+        core::ValueParseOutcome outcome = core::ValueParseOutcome::valid;
+        token = core::Token::parse(text, outcome);
+        if (outcome != core::ValueParseOutcome::valid)
+        {
+            scrubbedText = text;
+        }
+    }
+
     // What a moved-from Id is left holding. An Id always holds an Impl, so reading one that has
     // been moved from is harmless rather than undefined.
     static const std::shared_ptr<const Impl> &movedFrom();
 
     core::Token token;
+
+    // The text the Id was built from, when building it scrubbed the text.
+    std::optional<std::string> scrubbedText;
 };
 
 const std::shared_ptr<const Id::Impl> &Id::Impl::movedFrom()
@@ -38,7 +53,7 @@ const std::shared_ptr<const Id::Impl> &Id::Impl::movedFrom()
     return value;
 }
 
-Id::Id(std::string text) : myImpl{std::make_shared<const Impl>(core::Token{std::move(text)})}
+Id::Id(std::string text) : myImpl{std::make_shared<const Impl>(text)}
 {
 }
 
@@ -89,6 +104,11 @@ bool Id::operator<(const Id &other) const
 const core::Token &IdAccess::token(const Id &inId)
 {
     return inId.myImpl->token;
+}
+
+const std::optional<std::string> &IdAccess::scrubbedText(const Id &inId)
+{
+    return inId.myImpl->scrubbedText;
 }
 
 Id IdAccess::make(core::Token inToken)

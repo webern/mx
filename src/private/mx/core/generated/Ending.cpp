@@ -3,6 +3,7 @@
 #include "mx/core/generated/Ending.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -180,7 +181,7 @@ void Ending::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Ending parseEnding(pugi::xml_node el)
+Ending parseEnding(pugi::xml_node el, const ParseContext &context)
 {
     Ending out;
     bool seen_number = false;
@@ -195,68 +196,68 @@ Ending parseEnding(pugi::xml_node el)
         if (aname == "number")
         {
             seen_number = true;
-            out.setNumber(EndingNumber::parse(a.value()));
+            out.setNumber(parseValue<EndingNumber>(a.value(), context, el, "number"));
         }
         else if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStopDiscontinue::parse(a.value()));
+            out.setType(parseValue<StartStopDiscontinue>(a.value(), context, el, "type"));
         }
         else if (aname == "end-length")
         {
-            out.setEndLength(Tenths::parse(a.value()));
+            out.setEndLength(parseValue<Tenths>(a.value(), context, el, "end-length"));
         }
         else if (aname == "text-x")
         {
-            out.setTextX(Tenths::parse(a.value()));
+            out.setTextX(parseValue<Tenths>(a.value(), context, el, "text-x"));
         }
         else if (aname == "text-y")
         {
-            out.setTextY(Tenths::parse(a.value()));
+            out.setTextY(parseValue<Tenths>(a.value(), context, el, "text-y"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "system")
         {
-            out.setSystem(SystemRelation::parse(a.value()));
+            out.setSystem(parseValue<SystemRelation>(a.value(), context, el, "system"));
         }
         else
         {
@@ -271,11 +272,11 @@ Ending parseEnding(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseEndingContent(out, el);
+    parseEndingContent(out, el, context);
     return out;
 }
 
-void parseEndingContent(Ending &out, pugi::xml_node el)
+void parseEndingContent(Ending &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

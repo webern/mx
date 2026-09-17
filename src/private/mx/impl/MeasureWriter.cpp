@@ -60,7 +60,8 @@ MeasureWriter::MeasureWriter(const api::MeasureData &inMeasureData, const Measur
 core::PartwiseMeasure MeasureWriter::getPartwiseMeasure()
 {
     myOutMeasure = core::PartwiseMeasure{};
-    myPropertiesWriter = std::unique_ptr<PropertiesWriter>{new PropertiesWriter{myOutMeasure}};
+    myPropertiesWriter = std::unique_ptr<PropertiesWriter>{
+        new PropertiesWriter{myOutMeasure, myScoreWriter.getDiagnostics(), measureOnlyLocation(myHistory.getCursor())}};
     auto cursor = myHistory.getCursor();
     cursor.reset();
     myHistory = History{cursor};
@@ -71,10 +72,31 @@ core::PartwiseMeasure MeasureWriter::getPartwiseMeasure()
 
     writeMeasureGlobals();
     writeStaves();
+
+    for (; myMeasureKeysIter != myMeasureKeysEnd; ++myMeasureKeysIter)
+    {
+        auto location = measureOnlyLocation(myHistory.getCursor());
+        location.tickTimePosition = myMeasureKeysIter->tickTimePosition;
+        myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                              std::move(location), "a key in the middle of the measure is not written");
+    }
     myPropertiesWriter->flushBuffer();
     writeBarlines(api::TICK_TIME_INFINITY);
     myPropertiesWriter = nullptr;
     return myOutMeasure;
+}
+
+void MeasureWriter::reportMidMeasureKeyStaff() const
+{
+    if (myMeasureKeysIter->staffIndex >= 0)
+    {
+        auto location = measureOnlyLocation(myHistory.getCursor());
+        location.tickTimePosition = myMeasureKeysIter->tickTimePosition;
+        myScoreWriter.getDiagnostics().report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+                                              std::move(location),
+                                              "a key for staff " + std::to_string(myMeasureKeysIter->staffIndex + 1) +
+                                                  " in the middle of the measure is written for all staves");
+    }
 }
 
 void MeasureWriter::writeMeasureGlobals()
@@ -101,7 +123,7 @@ void MeasureWriter::writeMeasureGlobals()
         myOutMeasure.setWidth(core::Tenths{core::Decimal{static_cast<double>(myMeasureData.width)}});
     }
 
-    impl::setId(myMeasureData.id, myOutMeasure);
+    impl::setId(myMeasureData.id, myOutMeasure, myScoreWriter.getDiagnostics(), cursorLocation(myHistory.getCursor()));
 
     Converter converter;
 
@@ -293,7 +315,10 @@ void MeasureWriter::writeSystemInfo()
         for (const auto &[staffIndex, staffDistance] : inSystemLayout.staffDistances)
         {
             core::StaffLayout outStaffLayout{};
-            outStaffLayout.setNumber(core::StaffNumber{staffIndex + 1});
+            const core::StaffNumber staffNumber{staffIndex + 1};
+            reportAdjusted(myScoreWriter.getDiagnostics(), measureOnlyLocation(myHistory.getCursor()),
+                           "staff-layout number", staffIndex + 1, staffNumber.value());
+            outStaffLayout.setNumber(staffNumber);
             outStaffLayout.setStaffDistance(core::Tenths{core::Decimal{staffDistance}});
             outLayoutGroup.addStaffLayout(outStaffLayout);
             outPrint.setLayout(outLayoutGroup);
@@ -469,7 +494,10 @@ void MeasureWriter::writeMeasureNumbering()
     if (myMeasureData.measureNumberingStaffIndex.has_value())
     {
         // the api index is zero-based; core staff numbers are one-based.
-        outMeasureNumbering.setStaff(core::StaffNumber{*myMeasureData.measureNumberingStaffIndex + 1});
+        const core::StaffNumber staffNumber{*myMeasureData.measureNumberingStaffIndex + 1};
+        reportAdjusted(myScoreWriter.getDiagnostics(), measureOnlyLocation(myHistory.getCursor()),
+                       "measure-numbering staff", *myMeasureData.measureNumberingStaffIndex + 1, staffNumber.value());
+        outMeasureNumbering.setStaff(staffNumber);
     }
 
     outPrint.setMeasureNumbering(std::move(outMeasureNumbering));
@@ -567,6 +595,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
             {
                 if (myMeasureKeysIter->tickTimePosition <= myHistory.getCursor().tickTimePosition)
                 {
+                    reportMidMeasureKeyStaff();
                     myPropertiesWriter->writeKey(api::INDEX_UNSPECIFIED, *myMeasureKeysIter);
                     ++myMeasureKeysIter;
                 }
@@ -635,6 +664,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
         {
             if (myMeasureKeysIter->tickTimePosition)
             {
+                reportMidMeasureKeyStaff();
                 myPropertiesWriter->writeKey(api::INDEX_UNSPECIFIED, *myMeasureKeysIter);
                 ++myMeasureKeysIter;
             }
@@ -824,7 +854,8 @@ void MeasureWriter::writeDirection(const api::DirectionData &inDirectionData)
         myPropertiesWriter->flushBuffer();
     }
 
-    DirectionWriter directionWriter{inDirectionData, myHistory.getCursor(), myScoreWriter.getSpannerResolver()};
+    DirectionWriter directionWriter{inDirectionData, myHistory.getCursor(), myScoreWriter.getSpannerResolver(),
+                                    myScoreWriter.getDiagnostics()};
     auto mdcSet = directionWriter.getDirectionLikeThings();
     for (const auto &mdc : mdcSet)
     {
@@ -856,6 +887,11 @@ void MeasureWriter::writeBarlines(int tickTimePosition)
 
             // number is a required attribute; an empty list serializes as number="", which is
             // MusicXML's blank ending.
+            for (const int number : endingData.numbers)
+            {
+                reportAdjusted(myScoreWriter.getDiagnostics(), measureOnlyLocation(myHistory.getCursor()),
+                               "ending number", number, std::max(number, 1));
+            }
             ending.setNumber(core::EndingNumber{endingData.numbers});
 
             // The text is written only when the author supplied one. Left empty, the ending
@@ -917,7 +953,8 @@ void MeasureWriter::writeBarlines(int tickTimePosition)
             barlineElement.setRepeat(repeatElement);
         }
 
-        impl::setId(myBarlinesIter->id, barlineElement);
+        impl::setId(myBarlinesIter->id, barlineElement, myScoreWriter.getDiagnostics(),
+                    cursorLocation(myHistory.getCursor()));
         myOutMeasure.addMusicData(core::MusicDataChoice::barline(barlineElement));
         myHistory.log("writeBarline");
     }

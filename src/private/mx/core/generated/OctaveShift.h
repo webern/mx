@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The octave shift type indicates where notes are shifted up or down from their true pitched values
 /// because of printing difficulty. Thus a treble clef line noted with 8va will be indicated with an
 /// octave-shift down from the pitch data indicated in the notes. A size of 8 indicates one octave; a
@@ -81,9 +83,9 @@ class OctaveShift final
     std::optional<Token> m_id;
 };
 
-OctaveShift parseOctaveShift(pugi::xml_node el);
+OctaveShift parseOctaveShift(pugi::xml_node el, const ParseContext &context);
 
-void parseOctaveShiftContent(OctaveShift &out, pugi::xml_node el);
+void parseOctaveShiftContent(OctaveShift &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOctaveShift(const OctaveShift &v, pugi::xml_node parent, const char *tag);
 

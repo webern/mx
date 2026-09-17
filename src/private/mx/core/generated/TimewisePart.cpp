@@ -3,6 +3,7 @@
 #include "mx/core/generated/TimewisePart.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,7 +36,7 @@ void TimewisePart::setMusicData(std::vector<MusicDataChoice> value)
     m_musicData = std::move(value);
 }
 
-TimewisePart parseTimewisePart(pugi::xml_node el)
+TimewisePart parseTimewisePart(pugi::xml_node el, const ParseContext &context)
 {
     TimewisePart out;
     bool seen_id = false;
@@ -49,7 +50,7 @@ TimewisePart parseTimewisePart(pugi::xml_node el)
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -60,11 +61,11 @@ TimewisePart parseTimewisePart(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseTimewisePartContent(out, el);
+    parseTimewisePartContent(out, el, context);
     return out;
 }
 
-void parseTimewisePartContent(TimewisePart &out, pugi::xml_node el)
+void parseTimewisePartContent(TimewisePart &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "note") || cursorIs(cursor, "backup") || cursorIs(cursor, "forward") ||
@@ -73,7 +74,7 @@ void parseTimewisePartContent(TimewisePart &out, pugi::xml_node el)
                       cursorIs(cursor, "listening") || cursorIs(cursor, "barline") || cursorIs(cursor, "grouping") ||
                       cursorIs(cursor, "link") || cursorIs(cursor, "bookmark")))
     {
-        out.addMusicData(parseMusicDataChoice(el, cursor));
+        out.addMusicData(parseMusicDataChoice(el, cursor, context));
     }
     if (cursor)
     {

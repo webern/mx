@@ -13,6 +13,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The other-play element represents other types of playback. The required type attribute indicates
 /// the type of playback to which the element content applies.
 class OtherPlay final
@@ -29,9 +31,9 @@ class OtherPlay final
     std::string m_value{};
 };
 
-OtherPlay parseOtherPlay(pugi::xml_node el);
+OtherPlay parseOtherPlay(pugi::xml_node el, const ParseContext &context);
 
-void parseOtherPlayContent(OtherPlay &out, pugi::xml_node el);
+void parseOtherPlayContent(OtherPlay &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOtherPlay(const OtherPlay &v, pugi::xml_node parent, const char *tag);
 

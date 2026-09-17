@@ -33,6 +33,12 @@ class ScoreWriter
         return myScoreData;
     }
 
+    // Where the writers report what they change, default or leave out.
+    inline const DiagnosticsContext &getDiagnostics() const
+    {
+        return myDiagnostics;
+    }
+
     /// Finds the part in ScoreData and returns it. Throws if out-of-range.
     const api::PartData &getPart(int inPartIndex) const;
 

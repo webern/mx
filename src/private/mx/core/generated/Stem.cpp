@@ -3,6 +3,7 @@
 #include "mx/core/generated/Stem.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -70,7 +71,7 @@ void Stem::setValue(StemValue value)
     m_value = std::move(value);
 }
 
-Stem parseStem(pugi::xml_node el)
+Stem parseStem(pugi::xml_node el, const ParseContext &context)
 {
     Stem out;
     for (pugi::xml_attribute a : el.attributes())
@@ -82,36 +83,36 @@ Stem parseStem(pugi::xml_node el)
         }
         if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseStemContent(out, el);
+    parseStemContent(out, el, context);
     return out;
 }
 
-void parseStemContent(Stem &out, pugi::xml_node el)
+void parseStemContent(Stem &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(StemValue::parse(childText(el)));
+    out.setValue(parseValue<StemValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

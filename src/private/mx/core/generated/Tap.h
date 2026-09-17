@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The tap type indicates a tap on the fretboard. The text content allows specification of the
 /// notation; + and T are common choices. If the element is empty, the hand attribute is used to
 /// specify the symbol to use. The hand attribute is ignored if the tap glyph is already specified by
@@ -71,9 +73,9 @@ class Tap final
     std::string m_value{};
 };
 
-Tap parseTap(pugi::xml_node el);
+Tap parseTap(pugi::xml_node el, const ParseContext &context);
 
-void parseTapContent(Tap &out, pugi::xml_node el);
+void parseTapContent(Tap &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTap(const Tap &v, pugi::xml_node parent, const char *tag);
 

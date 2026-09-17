@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The beat-repeat type is used to indicate that a single beat (but possibly many notes) is
 /// repeated. The slashes attribute specifies the number of slashes to use in the symbol. The
 /// use-dots attribute indicates whether or not to use dots as well (for instance, with mixed rhythm
@@ -50,9 +52,9 @@ class BeatRepeat final
     std::optional<SlashGroup> m_slash;
 };
 
-BeatRepeat parseBeatRepeat(pugi::xml_node el);
+BeatRepeat parseBeatRepeat(pugi::xml_node el, const ParseContext &context);
 
-void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el);
+void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBeatRepeat(const BeatRepeat &v, pugi::xml_node parent, const char *tag);
 

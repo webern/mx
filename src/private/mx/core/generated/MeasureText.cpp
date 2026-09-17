@@ -42,4 +42,11 @@ MeasureText MeasureText::parse(std::string_view text)
     return MeasureText{std::string{text}};
 }
 
+MeasureText MeasureText::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    MeasureText out{std::string{text}};
+    outcome = out.value() == text ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
+}
+
 } // namespace mx::core

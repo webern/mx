@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The for-part type is used in a concert score to indicate the transposition for a transposed part
 /// created from that score. It is only used in score files that contain a concert-score element in
 /// the defaults. This allows concert scores with transposed parts to be represented in a single
@@ -48,9 +50,9 @@ class ForPart final
     PartTranspose m_partTranspose{};
 };
 
-ForPart parseForPart(pugi::xml_node el);
+ForPart parseForPart(pugi::xml_node el, const ParseContext &context);
 
-void parseForPartContent(ForPart &out, pugi::xml_node el);
+void parseForPartContent(ForPart &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeForPart(const ForPart &v, pugi::xml_node parent, const char *tag);
 

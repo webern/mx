@@ -3,6 +3,7 @@
 #include "mx/core/generated/SystemDividers.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void SystemDividers::setRightDivider(EmptyPrintObjectStyleAlign value)
     m_rightDivider = std::move(value);
 }
 
-SystemDividers parseSystemDividers(pugi::xml_node el)
+SystemDividers parseSystemDividers(pugi::xml_node el, const ParseContext &context)
 {
     SystemDividers out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,16 +43,16 @@ SystemDividers parseSystemDividers(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseSystemDividersContent(out, el);
+    parseSystemDividersContent(out, el, context);
     return out;
 }
 
-void parseSystemDividersContent(SystemDividers &out, pugi::xml_node el)
+void parseSystemDividersContent(SystemDividers &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "left-divider"))
     {
-        out.setLeftDivider(parseEmptyPrintObjectStyleAlign(cursor));
+        out.setLeftDivider(parseEmptyPrintObjectStyleAlign(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -60,7 +61,7 @@ void parseSystemDividersContent(SystemDividers &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "right-divider"))
     {
-        out.setRightDivider(parseEmptyPrintObjectStyleAlign(cursor));
+        out.setRightDivider(parseEmptyPrintObjectStyleAlign(cursor, context));
         cursor = nextElement(cursor);
     }
     else

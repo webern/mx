@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The measure-repeat type is used for both single and multiple measure repeats. The text of the
 /// element indicates the number of measures to be repeated in a single pattern. The slashes
 /// attribute specifies the number of slashes to use in the repeat sign. It is 1 if not specified.
@@ -42,9 +44,9 @@ class MeasureRepeat final
     PositiveIntegerOrEmpty m_value{};
 };
 
-MeasureRepeat parseMeasureRepeat(pugi::xml_node el);
+MeasureRepeat parseMeasureRepeat(pugi::xml_node el, const ParseContext &context);
 
-void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el);
+void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMeasureRepeat(const MeasureRepeat &v, pugi::xml_node parent, const char *tag);
 

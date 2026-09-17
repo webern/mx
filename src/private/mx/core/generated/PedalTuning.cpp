@@ -3,6 +3,7 @@
 #include "mx/core/generated/PedalTuning.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void PedalTuning::setPedalAlter(Semitones value)
     m_pedalAlter = std::move(value);
 }
 
-PedalTuning parsePedalTuning(pugi::xml_node el)
+PedalTuning parsePedalTuning(pugi::xml_node el, const ParseContext &context)
 {
     PedalTuning out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,16 +43,16 @@ PedalTuning parsePedalTuning(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parsePedalTuningContent(out, el);
+    parsePedalTuningContent(out, el, context);
     return out;
 }
 
-void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el)
+void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "pedal-step"))
     {
-        out.setPedalStep(Step::parse(childText(cursor)));
+        out.setPedalStep(parseValue<Step>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -60,7 +61,7 @@ void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "pedal-alter"))
     {
-        out.setPedalAlter(Semitones::parse(childText(cursor)));
+        out.setPedalAlter(parseValue<Semitones>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

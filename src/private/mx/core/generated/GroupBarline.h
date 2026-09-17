@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The group-barline type indicates if the group should have common barlines.
 class GroupBarline final
 {
@@ -31,9 +33,9 @@ class GroupBarline final
     GroupBarlineValue m_value{};
 };
 
-GroupBarline parseGroupBarline(pugi::xml_node el);
+GroupBarline parseGroupBarline(pugi::xml_node el, const ParseContext &context);
 
-void parseGroupBarlineContent(GroupBarline &out, pugi::xml_node el);
+void parseGroupBarlineContent(GroupBarline &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeGroupBarline(const GroupBarline &v, pugi::xml_node parent, const char *tag);
 

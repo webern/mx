@@ -89,15 +89,8 @@ core::DynamicsChoice dynamicsWriterMakeChoice(core::DynamicsChoice::Kind kind, c
     }
 }
 
-DynamicsWriter::DynamicsWriter(const api::MarkData &inMark, impl::Cursor inCursor)
-    : myMarkData{inMark}, myCursor{inCursor}, myConverter{}
-{
-    MX_ASSERT(isMarkDynamic(inMark.markType));
-}
-
-DynamicsWriter::DynamicsWriter(const api::MarkData &inMark, impl::Cursor inCursor,
-                               api::Placement /*directionPlacement*/)
-    : myMarkData{inMark}, myCursor{inCursor}, myConverter{}
+DynamicsWriter::DynamicsWriter(const api::MarkData &inMark, MeasureCursor inCursor, DiagnosticsContext diagnostics)
+    : myMarkData{inMark}, myCursor{inCursor}, myConverter{}, myDiagnostics{std::move(diagnostics)}
 {
     MX_ASSERT(isMarkDynamic(inMark.markType));
 }

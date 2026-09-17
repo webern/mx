@@ -3,6 +3,7 @@
 #include "mx/core/generated/Frame.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -165,7 +166,7 @@ void Frame::setFrameNote(OneOrMore<FrameNote> value)
     m_frameNote = std::move(value);
 }
 
-Frame parseFrame(pugi::xml_node el)
+Frame parseFrame(pugi::xml_node el, const ParseContext &context)
 {
     Frame out;
     for (pugi::xml_attribute a : el.attributes())
@@ -177,11 +178,11 @@ Frame parseFrame(pugi::xml_node el)
         }
         if (aname == "height")
         {
-            out.setHeight(Tenths::parse(a.value()));
+            out.setHeight(parseValue<Tenths>(a.value(), context, el, "height"));
         }
         else if (aname == "width")
         {
-            out.setWidth(Tenths::parse(a.value()));
+            out.setWidth(parseValue<Tenths>(a.value(), context, el, "width"));
         }
         else if (aname == "unplayed")
         {
@@ -189,51 +190,51 @@ Frame parseFrame(pugi::xml_node el)
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "halign")
         {
-            out.setHalign(LeftCenterRight::parse(a.value()));
+            out.setHalign(parseValue<LeftCenterRight>(a.value(), context, el, "halign"));
         }
         else if (aname == "valign")
         {
-            out.setValign(ValignImage::parse(a.value()));
+            out.setValign(parseValue<ValignImage>(a.value(), context, el, "valign"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseFrameContent(out, el);
+    parseFrameContent(out, el, context);
     return out;
 }
 
-void parseFrameContent(Frame &out, pugi::xml_node el)
+void parseFrameContent(Frame &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "frame-strings"))
     {
-        out.setFrameStrings(parseInt(childText(cursor)));
+        out.setFrameStrings(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -242,7 +243,7 @@ void parseFrameContent(Frame &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "frame-frets"))
     {
-        out.setFrameFrets(parseInt(childText(cursor)));
+        out.setFrameFrets(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -251,18 +252,18 @@ void parseFrameContent(Frame &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "first-fret"))
     {
-        out.setFirstFret(parseFirstFret(cursor));
+        out.setFirstFret(parseFirstFret(cursor, context));
         cursor = nextElement(cursor);
     }
     if (!cursorIs(cursor, "frame-note"))
     {
         throwMissingOrMisplaced(el, cursor, "frame-note");
     }
-    out.setFrameNote(OneOrMore<FrameNote>{parseFrameNote(cursor)});
+    out.setFrameNote(OneOrMore<FrameNote>{parseFrameNote(cursor, context)});
     cursor = nextElement(cursor);
     while (cursorIs(cursor, "frame-note"))
     {
-        out.addFrameNote(parseFrameNote(cursor));
+        out.addFrameNote(parseFrameNote(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

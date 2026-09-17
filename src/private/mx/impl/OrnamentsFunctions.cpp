@@ -40,8 +40,9 @@ void ornamentsFunctionsParseMordentSpecificAttributes(const core::Mordent &m, ap
     }
 }
 
-OrnamentsFunctions::OrnamentsFunctions(const core::Ornaments &inOrnaments, impl::Cursor inCursor)
-    : myOrnaments{inOrnaments}, myCursor{inCursor}
+OrnamentsFunctions::OrnamentsFunctions(const core::Ornaments &inOrnaments, MeasureCursor inCursor,
+                                       DiagnosticsContext diagnostics)
+    : myOrnaments{inOrnaments}, myCursor{inCursor}, myDiagnostics{diagnostics}
 {
 }
 
@@ -212,17 +213,19 @@ void OrnamentsFunctions::parseOrnament(const core::OrnamentsGroupChoice &choiceO
         case 8:
             outMark.markType = api::MarkType::tremoloSingleEight;
             break;
-        default:
+        default: {
             // Three slashes, the customary one-note tremolo. Reached by a count of 0, which is a
             // legal but degenerate single-type tremolo that would draw nothing -- an unmeasured
             // tremolo is also written with a count of 0, but says so with type="unmeasured" and is
             // handled above.
-            //
-            // TODO: the remap is silent and lossy -- a count of 0 reads back as 3 and is written
-            // out that way. mx has no warning channel, so there is nowhere to report it. Log the
-            // downgrade here if a logging framework is ever added.
             outMark.markType = api::MarkType::tremoloSingleThree;
+            auto location = measureLocation(myCursor);
+            location.staffIndex = myCursor.staffIndex;
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, std::move(location),
+                                 "tremolo with " + std::to_string(tremolo.value().value()) +
+                                     " marks is not supported; using 3");
             break;
+        }
         }
 
         break;

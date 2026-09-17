@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The backup and forward elements are required to coordinate multiple voices in one part, including
 /// music on multiple staves. The forward element is generally used within voices and staves.
 /// Duration values should always be positive, and should not cross measure boundaries or mid-measure
@@ -41,9 +43,9 @@ class Forward final
     std::optional<int> m_staff;
 };
 
-Forward parseForward(pugi::xml_node el);
+Forward parseForward(pugi::xml_node el, const ParseContext &context);
 
-void parseForwardContent(Forward &out, pugi::xml_node el);
+void parseForwardContent(Forward &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeForward(const Forward &v, pugi::xml_node parent, const char *tag);
 

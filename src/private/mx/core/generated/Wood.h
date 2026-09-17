@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The wood type represents pictograms for wood percussion instruments. The smufl attribute is used
 /// to distinguish different SMuFL stylistic alternates.
 class Wood final
@@ -32,9 +34,9 @@ class Wood final
     WoodValue m_value{};
 };
 
-Wood parseWood(pugi::xml_node el);
+Wood parseWood(pugi::xml_node el, const ParseContext &context);
 
-void parseWoodContent(Wood &out, pugi::xml_node el);
+void parseWoodContent(Wood &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeWood(const Wood &v, pugi::xml_node parent, const char *tag);
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/PlayChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,7 +36,7 @@ PlayChoice PlayChoice::otherPlay(OtherPlay value)
     return PlayChoice{Storage{std::in_place_index<3>, std::move(value)}};
 }
 
-PlayChoice parsePlayChoice(pugi::xml_node el, pugi::xml_node &cursor)
+PlayChoice parsePlayChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "ipa")))
     {
@@ -45,19 +46,19 @@ PlayChoice parsePlayChoice(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursor && (cursorIs(cursor, "mute")))
     {
-        Mute value = Mute::parse(childText(cursor));
+        Mute value = parseValue<Mute>(childText(cursor), context, cursor, nullptr);
         cursor = nextElement(cursor);
         return PlayChoice::mute(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "semi-pitched")))
     {
-        SemiPitched value = SemiPitched::parse(childText(cursor));
+        SemiPitched value = parseValue<SemiPitched>(childText(cursor), context, cursor, nullptr);
         cursor = nextElement(cursor);
         return PlayChoice::semiPitched(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "other-play")))
     {
-        OtherPlay value = parseOtherPlay(cursor);
+        OtherPlay value = parseOtherPlay(cursor, context);
         cursor = nextElement(cursor);
         return PlayChoice::otherPlay(std::move(value));
     }

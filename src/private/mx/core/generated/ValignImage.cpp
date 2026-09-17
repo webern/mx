@@ -49,8 +49,14 @@ bool ValignImage::tryParse(std::string_view text, ValignImage &out) noexcept
 
 ValignImage ValignImage::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+ValignImage ValignImage::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     ValignImage v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

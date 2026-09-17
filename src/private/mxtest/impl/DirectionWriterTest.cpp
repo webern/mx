@@ -23,7 +23,7 @@ using namespace mx::impl;
 
 TEST(ottavaStartStop, DirectionWriter)
 {
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     cursor.isFirstMeasureInPart = false;
     api::DirectionData directionData;
 
@@ -91,7 +91,7 @@ TEST(ottava22maAnd22mb, DirectionWriter)
     down.ottavaType = api::OttavaType::o22mb;
     directionData.directionTypes.emplace_back(api::DirectionChoice{down});
 
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     SpannerResolver spannerResolver;
     DirectionWriter writer{directionData, cursor, spannerResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
@@ -165,7 +165,7 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     directionData.directionTypes.emplace_back(api::DirectionChoice{segno});
     directionData.directionTypes.emplace_back(api::DirectionChoice{coda});
 
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     SpannerResolver spannerResolver;
     DirectionWriter writer{directionData, cursor, spannerResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
@@ -218,7 +218,7 @@ TEST(rehearsalRoundTrip, DirectionWriter)
     api::DirectionData directionData;
     directionData.directionTypes.emplace_back(api::DirectionChoice{rehearsal});
 
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     SpannerResolver spannerResolver;
     DirectionWriter writer{directionData, cursor, spannerResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
@@ -247,7 +247,7 @@ TEST(directiveRoundTrip, DirectionWriter)
     directionData.directionTypes.emplace_back(api::DirectionChoice{rehearsal});
     directionData.directive = api::Bool::yes;
 
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     SpannerResolver spannerResolver;
     DirectionWriter writer{directionData, cursor, spannerResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
@@ -273,7 +273,7 @@ TEST(directiveUnspecifiedWritesNoAttribute, DirectionWriter)
     api::DirectionData directionData;
     directionData.directionTypes.emplace_back(api::DirectionChoice{rehearsal});
 
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     SpannerResolver spannerResolver;
     DirectionWriter writer{directionData, cursor, spannerResolver};
     const auto mdcSet = writer.getDirectionLikeThings();

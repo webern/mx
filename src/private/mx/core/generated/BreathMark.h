@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The breath-mark element indicates a place to take a breath.
 class BreathMark final
 {
@@ -64,9 +66,9 @@ class BreathMark final
     BreathMarkValue m_value{};
 };
 
-BreathMark parseBreathMark(pugi::xml_node el);
+BreathMark parseBreathMark(pugi::xml_node el, const ParseContext &context);
 
-void parseBreathMarkContent(BreathMark &out, pugi::xml_node el);
+void parseBreathMarkContent(BreathMark &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBreathMark(const BreathMark &v, pugi::xml_node parent, const char *tag);
 

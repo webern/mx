@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The staff-details element is used to indicate different types of staves. The optional number
 /// attribute specifies the staff number from top to bottom on the system, as with clef. The
 /// print-object attribute is used to indicate when a staff is not printed in a part, usually in
@@ -67,9 +69,9 @@ class StaffDetails final
     std::optional<StaffSize> m_staffSize;
 };
 
-StaffDetails parseStaffDetails(pugi::xml_node el);
+StaffDetails parseStaffDetails(pugi::xml_node el, const ParseContext &context);
 
-void parseStaffDetailsContent(StaffDetails &out, pugi::xml_node el);
+void parseStaffDetailsContent(StaffDetails &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeStaffDetails(const StaffDetails &v, pugi::xml_node parent, const char *tag);
 

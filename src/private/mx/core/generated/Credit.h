@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The credit type represents the appearance of the title, composer, arranger, lyricist, copyright,
 /// dedication, and other text, symbols, and graphics that commonly appear on the first page of a
 /// score. The credit-words, credit-symbol, and credit-image elements are similar to the words,
@@ -67,9 +69,9 @@ class Credit final
     CreditChoice m_choice{};
 };
 
-Credit parseCredit(pugi::xml_node el);
+Credit parseCredit(pugi::xml_node el, const ParseContext &context);
 
-void parseCreditContent(Credit &out, pugi::xml_node el);
+void parseCreditContent(Credit &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeCredit(const Credit &v, pugi::xml_node parent, const char *tag);
 

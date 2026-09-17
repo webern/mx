@@ -193,6 +193,9 @@ class MeasureWriter
     core::PartwiseMeasure myOutMeasure;
     MeasureCursor myPreviousCursor;
     const ScoreWriter &myScoreWriter;
+
+    // Reports a mid-measure key whose staff is dropped because it is written for all staves.
+    void reportMidMeasureKeyStaff() const;
     std::unique_ptr<PropertiesWriter> myPropertiesWriter;
     const Converter myConverter;
     std::vector<api::BarlineData>::const_iterator myBarlinesIter;

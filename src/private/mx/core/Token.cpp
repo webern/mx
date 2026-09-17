@@ -85,4 +85,11 @@ Token Token::parse(std::string_view text)
     return Token{std::string{text}};
 }
 
+Token Token::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    Token strict;
+    outcome = tryParse(trimWhitespace(text), strict) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
+    return parse(text);
+}
+
 } // namespace mx::core

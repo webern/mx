@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Pitch is represented as a combination of the step of the diatonic scale, the chromatic
 /// alteration, and the octave.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -40,9 +42,9 @@ class Pitch final
     Octave m_octave{};
 };
 
-Pitch parsePitch(pugi::xml_node el);
+Pitch parsePitch(pugi::xml_node el, const ParseContext &context);
 
-void parsePitchContent(Pitch &out, pugi::xml_node el);
+void parsePitchContent(Pitch &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePitch(const Pitch &v, pugi::xml_node parent, const char *tag);
 

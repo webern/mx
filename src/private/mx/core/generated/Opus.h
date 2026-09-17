@@ -13,6 +13,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The opus type represents a link to a MusicXML opus document that composes multiple MusicXML
 /// scores into a collection.
 class Opus final
@@ -41,9 +43,9 @@ class Opus final
     std::optional<std::string> m_xlinkActuate;
 };
 
-Opus parseOpus(pugi::xml_node el);
+Opus parseOpus(pugi::xml_node el, const ParseContext &context);
 
-void parseOpusContent(Opus &out, pugi::xml_node el);
+void parseOpusContent(Opus &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOpus(const Opus &v, pugi::xml_node parent, const char *tag);
 

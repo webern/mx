@@ -3,6 +3,7 @@
 #include "mx/core/generated/Transpose.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -40,7 +41,7 @@ void Transpose::setTranspose(TransposeGroup value)
     m_transpose = std::move(value);
 }
 
-Transpose parseTranspose(pugi::xml_node el)
+Transpose parseTranspose(pugi::xml_node el, const ParseContext &context)
 {
     Transpose out;
     for (pugi::xml_attribute a : el.attributes())
@@ -52,27 +53,27 @@ Transpose parseTranspose(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(StaffNumber::parse(a.value()));
+            out.setNumber(parseValue<StaffNumber>(a.value(), context, el, "number"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseTransposeContent(out, el);
+    parseTransposeContent(out, el, context);
     return out;
 }
 
-void parseTransposeContent(Transpose &out, pugi::xml_node el)
+void parseTransposeContent(Transpose &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "diatonic") || cursorIs(cursor, "chromatic")))
     {
-        out.setTranspose(parseTransposeGroup(el, cursor));
+        out.setTranspose(parseTransposeGroup(el, cursor, context));
     }
     else
     {

@@ -26,6 +26,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Wavy lines are one way to indicate trills and vibrato. When used with a barline element, they
 /// should always have type="continue" set. The smufl attribute specifies a particular wavy line
 /// glyph from the SMuFL Multi-segment lines range.
@@ -85,9 +87,9 @@ class WavyLine final
     std::optional<Percent> m_lastBeat;
 };
 
-WavyLine parseWavyLine(pugi::xml_node el);
+WavyLine parseWavyLine(pugi::xml_node el, const ParseContext &context);
 
-void parseWavyLineContent(WavyLine &out, pugi::xml_node el);
+void parseWavyLineContent(WavyLine &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeWavyLine(const WavyLine &v, pugi::xml_node parent, const char *tag);
 

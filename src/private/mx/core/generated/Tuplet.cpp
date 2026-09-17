@@ -3,6 +3,7 @@
 #include "mx/core/generated/Tuplet.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -150,7 +151,7 @@ void Tuplet::setTupletNormal(std::optional<TupletPortion> value)
     m_tupletNormal = std::move(value);
 }
 
-Tuplet parseTuplet(pugi::xml_node el)
+Tuplet parseTuplet(pugi::xml_node el, const ParseContext &context)
 {
     Tuplet out;
     bool seen_type = false;
@@ -164,51 +165,51 @@ Tuplet parseTuplet(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else if (aname == "number")
         {
-            out.setNumber(NumberLevel::parse(a.value()));
+            out.setNumber(parseValue<NumberLevel>(a.value(), context, el, "number"));
         }
         else if (aname == "bracket")
         {
-            out.setBracket(YesNo::parse(a.value()));
+            out.setBracket(parseValue<YesNo>(a.value(), context, el, "bracket"));
         }
         else if (aname == "show-number")
         {
-            out.setShowNumber(ShowTuplet::parse(a.value()));
+            out.setShowNumber(parseValue<ShowTuplet>(a.value(), context, el, "show-number"));
         }
         else if (aname == "show-type")
         {
-            out.setShowType(ShowTuplet::parse(a.value()));
+            out.setShowType(parseValue<ShowTuplet>(a.value(), context, el, "show-type"));
         }
         else if (aname == "line-shape")
         {
-            out.setLineShape(LineShape::parse(a.value()));
+            out.setLineShape(parseValue<LineShape>(a.value(), context, el, "line-shape"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
@@ -219,21 +220,21 @@ Tuplet parseTuplet(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseTupletContent(out, el);
+    parseTupletContent(out, el, context);
     return out;
 }
 
-void parseTupletContent(Tuplet &out, pugi::xml_node el)
+void parseTupletContent(Tuplet &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "tuplet-actual"))
     {
-        out.setTupletActual(parseTupletPortion(cursor));
+        out.setTupletActual(parseTupletPortion(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "tuplet-normal"))
     {
-        out.setTupletNormal(parseTupletPortion(cursor));
+        out.setTupletNormal(parseTupletPortion(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

@@ -3,6 +3,7 @@
 #include "mx/core/generated/TextElementData.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -140,7 +141,7 @@ void TextElementData::setValue(std::string value)
     m_value = std::move(value);
 }
 
-TextElementData parseTextElementData(pugi::xml_node el)
+TextElementData parseTextElementData(pugi::xml_node el, const ParseContext &context)
 {
     TextElementData out;
     for (pugi::xml_attribute a : el.attributes())
@@ -156,58 +157,58 @@ TextElementData parseTextElementData(pugi::xml_node el)
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "underline")
         {
-            out.setUnderline(NumberOfLines::parse(a.value()));
+            out.setUnderline(parseValue<NumberOfLines>(a.value(), context, el, "underline"));
         }
         else if (aname == "overline")
         {
-            out.setOverline(NumberOfLines::parse(a.value()));
+            out.setOverline(parseValue<NumberOfLines>(a.value(), context, el, "overline"));
         }
         else if (aname == "line-through")
         {
-            out.setLineThrough(NumberOfLines::parse(a.value()));
+            out.setLineThrough(parseValue<NumberOfLines>(a.value(), context, el, "line-through"));
         }
         else if (aname == "rotation")
         {
-            out.setRotation(RotationDegrees::parse(a.value()));
+            out.setRotation(parseValue<RotationDegrees>(a.value(), context, el, "rotation"));
         }
         else if (aname == "letter-spacing")
         {
-            out.setLetterSpacing(NumberOrNormal::parse(a.value()));
+            out.setLetterSpacing(parseValue<NumberOrNormal>(a.value(), context, el, "letter-spacing"));
         }
         else if (aname == "dir")
         {
-            out.setDir(TextDirection::parse(a.value()));
+            out.setDir(parseValue<TextDirection>(a.value(), context, el, "dir"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseTextElementDataContent(out, el);
+    parseTextElementDataContent(out, el, context);
     return out;
 }
 
-void parseTextElementDataContent(TextElementData &out, pugi::xml_node el)
+void parseTextElementDataContent(TextElementData &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

@@ -3,6 +3,7 @@
 #include "mx/core/generated/Offset.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Offset::setValue(Divisions value)
     m_value = std::move(value);
 }
 
-Offset parseOffset(pugi::xml_node el)
+Offset parseOffset(pugi::xml_node el, const ParseContext &context)
 {
     Offset out;
     for (pugi::xml_attribute a : el.attributes())
@@ -42,20 +43,20 @@ Offset parseOffset(pugi::xml_node el)
         }
         if (aname == "sound")
         {
-            out.setSound(YesNo::parse(a.value()));
+            out.setSound(parseValue<YesNo>(a.value(), context, el, "sound"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseOffsetContent(out, el);
+    parseOffsetContent(out, el, context);
     return out;
 }
 
-void parseOffsetContent(Offset &out, pugi::xml_node el)
+void parseOffsetContent(Offset &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(Divisions::parse(childText(el)));
+    out.setValue(parseValue<Divisions>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

@@ -3,6 +3,7 @@
 #include "mx/core/generated/Glyph.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Glyph::setValue(SmuflGlyphName value)
     m_value = std::move(value);
 }
 
-Glyph parseGlyph(pugi::xml_node el)
+Glyph parseGlyph(pugi::xml_node el, const ParseContext &context)
 {
     Glyph out;
     bool seen_type = false;
@@ -44,7 +45,7 @@ Glyph parseGlyph(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(GlyphType::parse(a.value()));
+            out.setType(parseValue<GlyphType>(a.value(), context, el, "type"));
         }
         else
         {
@@ -55,13 +56,13 @@ Glyph parseGlyph(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseGlyphContent(out, el);
+    parseGlyphContent(out, el, context);
     return out;
 }
 
-void parseGlyphContent(Glyph &out, pugi::xml_node el)
+void parseGlyphContent(Glyph &out, pugi::xml_node el, const ParseContext &context)
 {
-    out.setValue(SmuflGlyphName::parse(childText(el)));
+    out.setValue(parseValue<SmuflGlyphName>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

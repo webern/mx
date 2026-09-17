@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The bookmark type serves as a well-defined target for an incoming simple XLink.
 class Bookmark final
 {
@@ -37,9 +39,9 @@ class Bookmark final
     std::optional<int> m_position;
 };
 
-Bookmark parseBookmark(pugi::xml_node el);
+Bookmark parseBookmark(pugi::xml_node el, const ParseContext &context);
 
-void parseBookmarkContent(Bookmark &out, pugi::xml_node el);
+void parseBookmarkContent(Bookmark &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBookmark(const Bookmark &v, pugi::xml_node parent, const char *tag);
 

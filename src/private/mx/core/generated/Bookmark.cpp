@@ -3,6 +3,7 @@
 #include "mx/core/generated/Bookmark.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void Bookmark::setPosition(std::optional<int> value)
     m_position = std::move(value);
 }
 
-Bookmark parseBookmark(pugi::xml_node el)
+Bookmark parseBookmark(pugi::xml_node el, const ParseContext &context)
 {
     Bookmark out;
     bool seen_id = false;
@@ -64,7 +65,7 @@ Bookmark parseBookmark(pugi::xml_node el)
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else if (aname == "name")
         {
@@ -72,11 +73,11 @@ Bookmark parseBookmark(pugi::xml_node el)
         }
         else if (aname == "element")
         {
-            out.setElement(NameToken::parse(a.value()));
+            out.setElement(parseValue<NameToken>(a.value(), context, el, "element"));
         }
         else if (aname == "position")
         {
-            out.setPosition(parseInt(a.value()));
+            out.setPosition(parseIntegerValue(a.value(), context, el, "position"));
         }
         else
         {
@@ -87,13 +88,14 @@ Bookmark parseBookmark(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseBookmarkContent(out, el);
+    parseBookmarkContent(out, el, context);
     return out;
 }
 
-void parseBookmarkContent(Bookmark &out, pugi::xml_node el)
+void parseBookmarkContent(Bookmark &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

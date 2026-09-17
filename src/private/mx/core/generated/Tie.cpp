@@ -3,6 +3,7 @@
 #include "mx/core/generated/Tie.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -30,7 +31,7 @@ void Tie::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Tie parseTie(pugi::xml_node el)
+Tie parseTie(pugi::xml_node el, const ParseContext &context)
 {
     Tie out;
     bool seen_type = false;
@@ -44,11 +45,11 @@ Tie parseTie(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else if (aname == "time-only")
         {
-            out.setTimeOnly(TimeOnly::parse(a.value()));
+            out.setTimeOnly(parseValue<TimeOnly>(a.value(), context, el, "time-only"));
         }
         else
         {
@@ -59,13 +60,14 @@ Tie parseTie(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseTieContent(out, el);
+    parseTieContent(out, el, context);
     return out;
 }
 
-void parseTieContent(Tie &out, pugi::xml_node el)
+void parseTieContent(Tie &out, pugi::xml_node el, const ParseContext &context)
 {
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

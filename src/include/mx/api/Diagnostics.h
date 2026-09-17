@@ -26,8 +26,11 @@ enum class Severity
 // The recoverable decision reported by a diagnostic.
 enum class DiagnosticCode
 {
-    valueAdjusted,   // a value was changed to one that MusicXML can represent
-    unmatchedSpanner // a spanner endpoint had no matching endpoint
+    valueAdjusted,         // a value was changed to one that MusicXML can represent
+    unmatchedSpanner,      // a spanner endpoint had no matching endpoint
+    invalidValue,          // a value could not be read, so a default was used
+    missingValueDefaulted, // a required value was missing, so a default was used
+    droppedData            // data could not be read or written, so it was left out
 };
 
 // A non-fatal problem noticed while producing a score or MusicXML document.

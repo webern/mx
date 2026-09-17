@@ -3,6 +3,7 @@
 #include "mx/core/generated/Credit.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -85,7 +86,7 @@ void Credit::setChoice(CreditChoice value)
     m_choice = std::move(value);
 }
 
-Credit parseCredit(pugi::xml_node el)
+Credit parseCredit(pugi::xml_node el, const ParseContext &context)
 {
     Credit out;
     for (pugi::xml_attribute a : el.attributes())
@@ -97,22 +98,22 @@ Credit parseCredit(pugi::xml_node el)
         }
         if (aname == "page")
         {
-            out.setPage(parseInt(a.value()));
+            out.setPage(parseIntegerValue(a.value(), context, el, "page"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseCreditContent(out, el);
+    parseCreditContent(out, el, context);
     return out;
 }
 
-void parseCreditContent(Credit &out, pugi::xml_node el)
+void parseCreditContent(Credit &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursorIs(cursor, "credit-type"))
@@ -122,18 +123,18 @@ void parseCreditContent(Credit &out, pugi::xml_node el)
     }
     while (cursorIs(cursor, "link"))
     {
-        out.addLink(parseLink(cursor));
+        out.addLink(parseLink(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "bookmark"))
     {
-        out.addBookmark(parseBookmark(cursor));
+        out.addBookmark(parseBookmark(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor &&
         (cursorIs(cursor, "credit-image") || cursorIs(cursor, "credit-words") || cursorIs(cursor, "credit-symbol")))
     {
-        out.setChoice(parseCreditChoice(el, cursor));
+        out.setChoice(parseCreditChoice(el, cursor, context));
     }
     else
     {

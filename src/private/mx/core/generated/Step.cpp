@@ -67,8 +67,14 @@ bool Step::tryParse(std::string_view text, Step &out) noexcept
 
 Step Step::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Step Step::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     Step v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -38,20 +38,33 @@ std::string TrillBeats::toString() const
 
 bool TrillBeats::tryParse(std::string_view text, TrillBeats &out)
 {
-    Decimal v;
-    if (!Decimal::tryParse(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    TrillBeats parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = TrillBeats{std::move(v)};
+    out = std::move(parsed);
     return true;
 }
 
 TrillBeats TrillBeats::parse(std::string_view text)
 {
-    TrillBeats v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+TrillBeats TrillBeats::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    Decimal v;
+    if (!Decimal::tryParse(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return TrillBeats{};
+    }
+    TrillBeats out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

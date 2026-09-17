@@ -108,8 +108,14 @@ bool Mute::tryParse(std::string_view text, Mute &out) noexcept
 
 Mute Mute::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Mute Mute::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     Mute v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

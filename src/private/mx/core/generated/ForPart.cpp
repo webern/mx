@@ -3,6 +3,7 @@
 #include "mx/core/generated/ForPart.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -50,7 +51,7 @@ void ForPart::setPartTranspose(PartTranspose value)
     m_partTranspose = std::move(value);
 }
 
-ForPart parseForPart(pugi::xml_node el)
+ForPart parseForPart(pugi::xml_node el, const ParseContext &context)
 {
     ForPart out;
     for (pugi::xml_attribute a : el.attributes())
@@ -62,32 +63,32 @@ ForPart parseForPart(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(StaffNumber::parse(a.value()));
+            out.setNumber(parseValue<StaffNumber>(a.value(), context, el, "number"));
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseForPartContent(out, el);
+    parseForPartContent(out, el, context);
     return out;
 }
 
-void parseForPartContent(ForPart &out, pugi::xml_node el)
+void parseForPartContent(ForPart &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "part-clef"))
     {
-        out.setPartClef(parsePartClef(cursor));
+        out.setPartClef(parsePartClef(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "part-transpose"))
     {
-        out.setPartTranspose(parsePartTranspose(cursor));
+        out.setPartTranspose(parsePartTranspose(cursor, context));
         cursor = nextElement(cursor);
     }
     else

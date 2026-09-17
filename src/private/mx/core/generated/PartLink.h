@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The part-link type allows MusicXML data for both score and parts to be contained within a single
 /// compressed MusicXML file. It links a score-part from a score document to MusicXML documents that
 /// contain parts data. In the case of a single compressed MusicXML file, the link href values are
@@ -57,9 +59,9 @@ class PartLink final
     std::vector<std::string> m_groupLink;
 };
 
-PartLink parsePartLink(pugi::xml_node el);
+PartLink parsePartLink(pugi::xml_node el, const ParseContext &context);
 
-void parsePartLinkContent(PartLink &out, pugi::xml_node el);
+void parsePartLinkContent(PartLink &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePartLink(const PartLink &v, pugi::xml_node parent, const char *tag);
 

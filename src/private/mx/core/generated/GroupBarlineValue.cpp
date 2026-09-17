@@ -49,8 +49,14 @@ bool GroupBarlineValue::tryParse(std::string_view text, GroupBarlineValue &out) 
 
 GroupBarlineValue GroupBarlineValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+GroupBarlineValue GroupBarlineValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     GroupBarlineValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

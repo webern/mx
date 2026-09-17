@@ -199,8 +199,14 @@ bool NoteheadValue::tryParse(std::string_view text, NoteheadValue &out) noexcept
 
 NoteheadValue NoteheadValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+NoteheadValue NoteheadValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     NoteheadValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

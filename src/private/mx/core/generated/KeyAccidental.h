@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The key-accidental type indicates the accidental to be displayed in a non-traditional key
 /// signature, represented in the same manner as the accidental type without the formatting
 /// attributes.
@@ -33,9 +35,9 @@ class KeyAccidental final
     AccidentalValue m_value{};
 };
 
-KeyAccidental parseKeyAccidental(pugi::xml_node el);
+KeyAccidental parseKeyAccidental(pugi::xml_node el, const ParseContext &context);
 
-void parseKeyAccidentalContent(KeyAccidental &out, pugi::xml_node el);
+void parseKeyAccidentalContent(KeyAccidental &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeKeyAccidental(const KeyAccidental &v, pugi::xml_node parent, const char *tag);
 

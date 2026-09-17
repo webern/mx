@@ -119,4 +119,16 @@ SmuflWavyLineGlyphName SmuflWavyLineGlyphName::parse(std::string_view text)
     return SmuflWavyLineGlyphName{Kind::wiggle, std::string{text}};
 }
 
+SmuflWavyLineGlyphName SmuflWavyLineGlyphName::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    SmuflWavyLineGlyphName out;
+    if (tryParse(text, out))
+    {
+        outcome = ValueParseOutcome::valid;
+        return out;
+    }
+    outcome = ValueParseOutcome::invalid;
+    return parse(text);
+}
+
 } // namespace mx::core

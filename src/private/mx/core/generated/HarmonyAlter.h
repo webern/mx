@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The harmony-alter type represents the chromatic alteration of the root, numeral, or bass of the
 /// current harmony-chord group within the harmony element. In some chord styles, the text of the
 /// preceding element may include alteration information. In that case, the print-object attribute of
@@ -72,9 +74,9 @@ class HarmonyAlter final
     Semitones m_value{};
 };
 
-HarmonyAlter parseHarmonyAlter(pugi::xml_node el);
+HarmonyAlter parseHarmonyAlter(pugi::xml_node el, const ParseContext &context);
 
-void parseHarmonyAlterContent(HarmonyAlter &out, pugi::xml_node el);
+void parseHarmonyAlterContent(HarmonyAlter &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHarmonyAlter(const HarmonyAlter &v, pugi::xml_node parent, const char *tag);
 

@@ -13,6 +13,8 @@
 #include "mx/core/generated/TimewisePart.h"
 
 #include <algorithm>
+#include <set>
+#include <string>
 #include <vector>
 
 namespace mx
@@ -40,8 +42,22 @@ std::vector<const core::ScorePart *> headerPartList(const core::ScoreHeaderGroup
 
 } // namespace
 
-core::ScoreTimewise partwiseTimewise(const core::ScorePartwise &inScore)
+core::ScoreTimewise partwiseTimewise(const core::ScorePartwise &inScore, const DiagnosticsContext &diagnostics)
 {
+    // Each score-part below takes the first part with its id.
+    std::set<std::string> partIds;
+    int partIndex = 0;
+    for (const auto &part : inScore.part())
+    {
+        if (!partIds.insert(part.id().value()).second)
+        {
+            diagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, partLocation(partIndex),
+                               "part id \"" + part.id().value() +
+                                   "\" is used by an earlier part; writing the earlier part in its place");
+        }
+        ++partIndex;
+    }
+
     core::ScoreTimewise outScore;
     outScore.setScoreHeader(inScore.scoreHeader());
     outScore.setVersion(inScore.version());
@@ -117,11 +133,37 @@ core::ScoreTimewise partwiseTimewise(const core::ScorePartwise &inScore)
     return outScore;
 }
 
-core::ScorePartwise timewisePartwise(const core::ScoreTimewise &inScore)
+core::ScorePartwise timewisePartwise(const core::ScoreTimewise &inScore, const DiagnosticsContext &diagnostics)
 {
     core::ScorePartwise outScore;
     outScore.setScoreHeader(inScore.scoreHeader());
     outScore.setVersion(inScore.version());
+
+    // Only the first part in a measure with each score-part id is regrouped below.
+    const auto scoreParts = headerPartList(inScore.scoreHeader());
+    int measureIndex = 0;
+    for (const auto &m : inScore.measure())
+    {
+        std::set<std::string> ids;
+        for (const auto &part : m.part())
+        {
+            const auto &id = part.id().value();
+            const auto isScorePart = [&id](const core::ScorePart *sp) { return sp->id().value() == id; };
+            api::Location location;
+            location.measureIndex = measureIndex;
+            if (std::none_of(scoreParts.cbegin(), scoreParts.cend(), isScorePart))
+            {
+                diagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, std::move(location),
+                                   "part \"" + id + "\" matches no score-part; it is not read");
+            }
+            else if (!ids.insert(id).second)
+            {
+                diagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, std::move(location),
+                                   "a measure has more than one part \"" + id + "\"; only the first is read");
+            }
+        }
+        ++measureIndex;
+    }
 
     /* Create a PartwisePart for each part in the main list */
     std::vector<core::PartwisePart> outParts;

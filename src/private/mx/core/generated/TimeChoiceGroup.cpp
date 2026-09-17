@@ -3,6 +3,7 @@
 #include "mx/core/generated/TimeChoiceGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -35,21 +36,21 @@ void TimeChoiceGroup::setInterchangeable(std::optional<Interchangeable> value)
     m_interchangeable = std::move(value);
 }
 
-TimeChoiceGroup parseTimeChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor)
+TimeChoiceGroup parseTimeChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     TimeChoiceGroup out;
     if (!(cursor && (cursorIs(cursor, "beats"))))
     {
         throwMissingElement(el, "beats");
     }
-    out.setTimeSignature(OneOrMore<TimeSignatureGroup>{parseTimeSignatureGroup(el, cursor)});
+    out.setTimeSignature(OneOrMore<TimeSignatureGroup>{parseTimeSignatureGroup(el, cursor, context)});
     while (cursor && (cursorIs(cursor, "beats")))
     {
-        out.addTimeSignature(parseTimeSignatureGroup(el, cursor));
+        out.addTimeSignature(parseTimeSignatureGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "interchangeable"))
     {
-        out.setInterchangeable(parseInterchangeable(cursor));
+        out.setInterchangeable(parseInterchangeable(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

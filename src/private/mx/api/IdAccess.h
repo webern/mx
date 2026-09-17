@@ -7,6 +7,9 @@
 #include "mx/api/Id.h"
 #include "mx/core/Token.h"
 
+#include <optional>
+#include <string>
+
 namespace mx
 {
 namespace api
@@ -19,6 +22,9 @@ struct IdAccess
 {
     // The token an Id holds. Pass it straight to a core element's setID.
     static const core::Token &token(const Id &inId);
+
+    // The text an Id was built from, when building the Id scrubbed it; otherwise empty.
+    static const std::optional<std::string> &scrubbedText(const Id &inId);
 
     // An Id holding a token that mx::core already read from a file.
     static Id make(core::Token inToken);

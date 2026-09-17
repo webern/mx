@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The note-type type indicates the graphic note type. Values range from 1024th to maxima. The size
 /// attribute indicates full, cue, grace-cue, or large size. The default is full for regular notes,
 /// grace-cue for notes that contain both grace and cue elements, and cue for notes that contain
@@ -34,9 +36,9 @@ class NoteType final
     NoteTypeValue m_value{};
 };
 
-NoteType parseNoteType(pugi::xml_node el);
+NoteType parseNoteType(pugi::xml_node el, const ParseContext &context);
 
-void parseNoteTypeContent(NoteType &out, pugi::xml_node el);
+void parseNoteTypeContent(NoteType &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNoteType(const NoteType &v, pugi::xml_node parent, const char *tag);
 

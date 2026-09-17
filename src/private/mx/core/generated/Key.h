@@ -28,6 +28,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The key type represents a key signature. Both traditional and non-traditional key signatures are
 /// supported. The optional number attribute refers to staff numbers. If absent, the key signature
 /// applies to all staves in the part. Key signatures appear at the start of each system unless the
@@ -85,9 +87,9 @@ class Key final
     std::vector<KeyOctave> m_keyOctave;
 };
 
-Key parseKey(pugi::xml_node el);
+Key parseKey(pugi::xml_node el, const ParseContext &context);
 
-void parseKeyContent(Key &out, pugi::xml_node el);
+void parseKeyContent(Key &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeKey(const Key &v, pugi::xml_node parent, const char *tag);
 
