@@ -65,7 +65,7 @@ ScoreInstrument parseScoreInstrument(pugi::xml_node el, const ParseContext &cont
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {

@@ -161,7 +161,7 @@ Dashes parseDashes(pugi::xml_node el, const ParseContext &context)
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {

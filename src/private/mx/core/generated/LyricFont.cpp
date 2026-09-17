@@ -83,7 +83,7 @@ LyricFont parseLyricFont(pugi::xml_node el, const ParseContext &context)
         }
         if (aname == "number")
         {
-            out.setNumber(NameToken::parse(a.value()));
+            out.setNumber(parseValue<NameToken>(a.value(), context, el, "number"));
         }
         else if (aname == "name")
         {

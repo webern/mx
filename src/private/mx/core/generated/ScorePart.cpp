@@ -160,7 +160,7 @@ ScorePart parseScorePart(pugi::xml_node el, const ParseContext &context)
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {

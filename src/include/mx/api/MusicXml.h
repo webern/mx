@@ -58,6 +58,8 @@ class MusicXml
     // Writes the document to a character stream.
     Result<void> writeToStream(std::ostream &stream) const;
 
+    // TODO: document ID validity loophole
+    //
     // This is an escape hatch in case mx::api does not do what you need and
     // you want to edit the core DOM directly. You will need to include the
     // private mx::core headers in your header search paths to do so. Not

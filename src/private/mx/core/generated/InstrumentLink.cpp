@@ -35,7 +35,7 @@ InstrumentLink parseInstrumentLink(pugi::xml_node el, const ParseContext &contex
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseValue<Token>(a.value(), context, el, "id"));
         }
         else
         {

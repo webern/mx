@@ -71,11 +71,11 @@ Supports parseSupports(pugi::xml_node el, const ParseContext &context)
         else if (aname == "element")
         {
             seen_element = true;
-            out.setElement(NameToken::parse(a.value()));
+            out.setElement(parseValue<NameToken>(a.value(), context, el, "element"));
         }
         else if (aname == "attribute")
         {
-            out.setAttribute(NameToken::parse(a.value()));
+            out.setAttribute(parseValue<NameToken>(a.value(), context, el, "attribute"));
         }
         else if (aname == "value")
         {

@@ -105,6 +105,7 @@ class Document final
 /// SupportedMusicXMLVersion is rejected with unsupportedVersion.
 Result<Document> parse(const pugi::xml_document &doc, const ParseContext &context);
 
+// TODO: document the unique ID exception
 /// Total for every Document (§1.1 guarantees validity): writes the XML
 /// declaration, the matching DOCTYPE, the preserved root namespace
 /// declarations, and the typed tree.

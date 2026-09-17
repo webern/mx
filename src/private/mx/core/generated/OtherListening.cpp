@@ -69,7 +69,7 @@ OtherListening parseOtherListening(pugi::xml_node el, const ParseContext &contex
         }
         else if (aname == "player")
         {
-            out.setPlayer(Token::parse(a.value()));
+            out.setPlayer(parseValue<Token>(a.value(), context, el, "player"));
         }
         else if (aname == "time-only")
         {

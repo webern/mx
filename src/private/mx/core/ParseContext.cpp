@@ -23,8 +23,11 @@ void ParseContext::report(Diagnostic diagnostic) const
     }
 }
 
-void reportValueRepair(const ParseContext &context, ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
-                       std::string_view text, std::string_view replacement)
+namespace
+{
+
+Diagnostic valueRepairDiagnostic(ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
+                                 std::string_view text, std::string_view replacement)
 {
     const bool invalid = outcome == ValueParseOutcome::invalid;
     std::string message = invalid ? "invalid value \"" : "value \"";
@@ -39,8 +42,24 @@ void reportValueRepair(const ParseContext &context, ValueParseOutcome outcome, p
     message += invalid ? "; using \"" : " adjusted to \"";
     message += replacement;
     message += "\"";
-    context.report(Diagnostic{invalid ? DiagnosticCode::invalidValue : DiagnosticCode::valueAdjusted, nodePath(el),
-                              std::move(message)});
+    return Diagnostic{invalid ? DiagnosticCode::invalidValue : DiagnosticCode::valueAdjusted, nodePath(el),
+                      std::move(message)};
+}
+
+} // namespace
+
+void reportValueRepair(const ParseContext &context, ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
+                       std::string_view text, std::string_view replacement)
+{
+    context.report(valueRepairDiagnostic(outcome, el, attribute, text, replacement));
+}
+
+void reportIdRepair(const ParseContext &context, ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
+                    std::string_view text, std::string_view replacement)
+{
+    Diagnostic diagnostic = valueRepairDiagnostic(outcome, el, attribute, text, replacement);
+    diagnostic.message += "; the repaired ID may duplicate another ID in the document";
+    context.report(std::move(diagnostic));
 }
 
 void reportAttributeDefaulted(const ParseContext &context, pugi::xml_node el, const char *attribute,

@@ -489,6 +489,7 @@ attributes. `mx::core` is generated from the MusicXML 4.0 XSD by the generator i
 hand-written runtime lives in `src/private/mx/core/`, the generated model in
 `src/private/mx/core/generated/` -- the directory is the generated/hand-written boundary).
 
+<!-- TODO: document the unique ID exception -->
 The generated model is valid-by-construction: enum wrappers whose named factories are the only
 constructors, clamp-on-construct number wrappers, composites with named fields in schema order
 (the serializer walks declaration order, so wrong element order is unrepresentable),

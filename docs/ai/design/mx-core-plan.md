@@ -19,6 +19,7 @@ named groups onto the Plates is *neutral schema fact* work that serves all targe
 
 ## 1. The non-negotiables (owner's cardinal requirements)
 
+<!-- TODO: document the unique ID exception -->
 1. **Valid by construction.** It must be impossible to use the public C++ API to produce a
    document that is invalid against the MusicXML 4.0 spec. Invalid states are made
    *unrepresentable* by the type system wherever possible — including bespoke structural

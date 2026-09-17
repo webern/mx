@@ -16,6 +16,7 @@ namespace mx
 namespace api
 {
 
+// TODO: document the unique ID exception
 // The id attribute of a MusicXML element. An id is a name that identifies one element within the
 // document. Software uses it to point at a particular note, measure, or marking -- to line playback
 // up with the score, to hang an annotation on a note, or to link one file to another.

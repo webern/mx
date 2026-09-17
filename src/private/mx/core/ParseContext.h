@@ -55,6 +55,11 @@ class ParseContext
 void reportValueRepair(const ParseContext &context, ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
                        std::string_view text, std::string_view replacement);
 
+/// Reports a repaired xs:ID attribute, warning that the repair may have made
+/// it the same as another ID in the document.
+void reportIdRepair(const ParseContext &context, ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
+                    std::string_view text, std::string_view replacement);
+
 void reportAttributeDefaulted(const ParseContext &context, pugi::xml_node el, const char *attribute,
                               std::string_view value);
 
@@ -77,6 +82,19 @@ T parseValue(std::string_view text, const ParseContext &context, pugi::xml_node 
     {
         return T::parse(text);
     }
+}
+
+/// The lenient parse of an xs:ID attribute, reporting any repair it made.
+template <typename T>
+T parseIdValue(std::string_view text, const ParseContext &context, pugi::xml_node el, const char *attribute)
+{
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    T value = T::parse(text, outcome);
+    if (outcome != ValueParseOutcome::valid)
+    {
+        reportIdRepair(context, outcome, el, attribute, text, std::string{value.toString()});
+    }
+    return value;
 }
 
 int parseIntegerValue(std::string_view text, const ParseContext &context, pugi::xml_node el, const char *attribute);

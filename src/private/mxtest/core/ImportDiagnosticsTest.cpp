@@ -128,11 +128,42 @@ TEST(RepairsAccumulateInDocumentOrder, ImportDiagnostics)
     CHECK_EQUAL(std::string{"/score-partwise/part/measure/note[2]"}, parsed.diagnostics[3].path);
 }
 
-TEST(ValidAlternateSpellingsReportNothing, ImportDiagnostics)
+TEST(RepairedIdWarnsThatItMayDuplicateAnother, ImportDiagnostics)
+{
+    const auto parsed =
+        importDiagnosticsParse(importDiagnosticsScore("", "<note id=\"1\"><rest/><duration>1</duration></note>"));
+    REQUIRE(parsed.ok);
+    REQUIRE(parsed.diagnostics.size() == 1);
+    const Diagnostic &diagnostic = parsed.diagnostics.front();
+    CHECK(DiagnosticCode::invalidValue == diagnostic.code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note"}, diagnostic.path);
+    CHECK_EQUAL(std::string{"invalid value \"1\" in attribute \"id\"; using \"X\"; "
+                            "the repaired ID may duplicate another ID in the document"},
+                diagnostic.message);
+}
+
+TEST(RepairedReferencesAndNameTokensOmitTheIdWarning, ImportDiagnostics)
 {
     const auto parsed = importDiagnosticsParse(
-        importDiagnosticsScore("", "<note default-x=\"+01.50\"><pitch><step>C</step><octave>+04</octave></pitch>"
-                                   "<duration> 1 </duration><type>quarter</type></note>"));
+        "<score-partwise version=\"4.0\"><part-list><score-part id=\"P1\"><part-name>Music</part-name></score-part>"
+        "</part-list><part id=\"P 1\"><measure number=\"1\"><note><rest/><duration>1</duration>"
+        "<lyric number=\"1 2\"><text>la</text></lyric></note></measure></part></score-partwise>");
+    REQUIRE(parsed.ok);
+    REQUIRE(parsed.diagnostics.size() == 2);
+    CHECK(DiagnosticCode::invalidValue == parsed.diagnostics[0].code);
+    CHECK_EQUAL(std::string{"/score-partwise/part"}, parsed.diagnostics[0].path);
+    CHECK_EQUAL(std::string{"invalid value \"P 1\" in attribute \"id\"; using \"P1\""}, parsed.diagnostics[0].message);
+    CHECK(DiagnosticCode::invalidValue == parsed.diagnostics[1].code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note/lyric"}, parsed.diagnostics[1].path);
+    CHECK_EQUAL(std::string{"invalid value \"1 2\" in attribute \"number\"; using \"12\""},
+                parsed.diagnostics[1].message);
+}
+
+TEST(ValidAlternateSpellingsReportNothing, ImportDiagnostics)
+{
+    const auto parsed = importDiagnosticsParse(importDiagnosticsScore(
+        "", "<note id=\" n1 \" default-x=\"+01.50\"><pitch><step>C</step><octave>+04</octave></pitch>"
+            "<duration> 1 </duration><type>quarter</type></note>"));
     REQUIRE(parsed.ok);
     CHECK(parsed.diagnostics.empty());
 }

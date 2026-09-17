@@ -65,7 +65,7 @@ Bookmark parseBookmark(pugi::xml_node el, const ParseContext &context)
         if (aname == "id")
         {
             seen_id = true;
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else if (aname == "name")
         {
@@ -73,7 +73,7 @@ Bookmark parseBookmark(pugi::xml_node el, const ParseContext &context)
         }
         else if (aname == "element")
         {
-            out.setElement(NameToken::parse(a.value()));
+            out.setElement(parseValue<NameToken>(a.value(), context, el, "element"));
         }
         else if (aname == "position")
         {

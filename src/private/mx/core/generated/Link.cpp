@@ -183,7 +183,7 @@ Link parseLink(pugi::xml_node el, const ParseContext &context)
         }
         else if (aname == "element")
         {
-            out.setElement(NameToken::parse(a.value()));
+            out.setElement(parseValue<NameToken>(a.value(), context, el, "element"));
         }
         else if (aname == "position")
         {

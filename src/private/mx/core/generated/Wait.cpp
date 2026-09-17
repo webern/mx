@@ -43,7 +43,7 @@ Wait parseWait(pugi::xml_node el, const ParseContext &context)
         }
         if (aname == "player")
         {
-            out.setPlayer(Token::parse(a.value()));
+            out.setPlayer(parseValue<Token>(a.value(), context, el, "player"));
         }
         else if (aname == "time-only")
         {

@@ -183,7 +183,7 @@ Lyric parseLyric(pugi::xml_node el, const ParseContext &context)
         }
         if (aname == "number")
         {
-            out.setNumber(NameToken::parse(a.value()));
+            out.setNumber(parseValue<NameToken>(a.value(), context, el, "number"));
         }
         else if (aname == "name")
         {
@@ -227,7 +227,7 @@ Lyric parseLyric(pugi::xml_node el, const ParseContext &context)
         }
         else if (aname == "id")
         {
-            out.setID(Token::parse(a.value()));
+            out.setID(parseIdValue<Token>(a.value(), context, el, "id"));
         }
         else
         {
