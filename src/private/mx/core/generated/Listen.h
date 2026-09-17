@@ -38,11 +38,7 @@ class Listen final
     OneOrMore<ListenChoice> m_choice;
 };
 
-Listen parseListen(pugi::xml_node el);
-
 Listen parseListen(pugi::xml_node el, const ParseContext &context);
-
-void parseListenContent(Listen &out, pugi::xml_node el);
 
 void parseListenContent(Listen &out, pugi::xml_node el, const ParseContext &context);
 

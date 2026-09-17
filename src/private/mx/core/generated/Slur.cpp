@@ -201,11 +201,6 @@ void Slur::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Slur parseSlur(pugi::xml_node el)
-{
-    return parseSlur(el, ParseContext{});
-}
-
 Slur parseSlur(pugi::xml_node el, const ParseContext &context)
 {
     Slur out;
@@ -305,11 +300,6 @@ Slur parseSlur(pugi::xml_node el, const ParseContext &context)
     }
     parseSlurContent(out, el, context);
     return out;
-}
-
-void parseSlurContent(Slur &out, pugi::xml_node el)
-{
-    parseSlurContent(out, el, ParseContext{});
 }
 
 void parseSlurContent(Slur &out, pugi::xml_node el, const ParseContext &context)

@@ -171,11 +171,6 @@ void Accidental::setValue(AccidentalValue value)
     m_value = std::move(value);
 }
 
-Accidental parseAccidental(pugi::xml_node el)
-{
-    return parseAccidental(el, ParseContext{});
-}
-
 Accidental parseAccidental(pugi::xml_node el, const ParseContext &context)
 {
     Accidental out;
@@ -253,11 +248,6 @@ Accidental parseAccidental(pugi::xml_node el, const ParseContext &context)
     }
     parseAccidentalContent(out, el, context);
     return out;
-}
-
-void parseAccidentalContent(Accidental &out, pugi::xml_node el)
-{
-    parseAccidentalContent(out, el, ParseContext{});
 }
 
 void parseAccidentalContent(Accidental &out, pugi::xml_node el, const ParseContext &context)

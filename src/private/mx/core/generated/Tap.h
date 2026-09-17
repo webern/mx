@@ -73,11 +73,7 @@ class Tap final
     std::string m_value{};
 };
 
-Tap parseTap(pugi::xml_node el);
-
 Tap parseTap(pugi::xml_node el, const ParseContext &context);
-
-void parseTapContent(Tap &out, pugi::xml_node el);
 
 void parseTapContent(Tap &out, pugi::xml_node el, const ParseContext &context);
 

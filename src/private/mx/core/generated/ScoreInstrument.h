@@ -51,11 +51,7 @@ class ScoreInstrument final
     VirtualInstrumentDataGroup m_virtualInstrumentData{};
 };
 
-ScoreInstrument parseScoreInstrument(pugi::xml_node el);
-
 ScoreInstrument parseScoreInstrument(pugi::xml_node el, const ParseContext &context);
-
-void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el);
 
 void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el, const ParseContext &context);
 

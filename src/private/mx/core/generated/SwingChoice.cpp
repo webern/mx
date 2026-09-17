@@ -26,11 +26,6 @@ SwingChoice SwingChoice::group(SwingChoiceGroup value)
     return SwingChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-SwingChoice parseSwingChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseSwingChoice(el, cursor, ParseContext{});
-}
-
 SwingChoice parseSwingChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "straight")))

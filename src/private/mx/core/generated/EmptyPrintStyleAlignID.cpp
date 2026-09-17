@@ -131,11 +131,6 @@ void EmptyPrintStyleAlignID::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(pugi::xml_node el)
-{
-    return parseEmptyPrintStyleAlignID(el, ParseContext{});
-}
-
 EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(pugi::xml_node el, const ParseContext &context)
 {
     EmptyPrintStyleAlignID out;
@@ -201,11 +196,6 @@ EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(pugi::xml_node el, const Pars
     }
     parseEmptyPrintStyleAlignIDContent(out, el, context);
     return out;
-}
-
-void parseEmptyPrintStyleAlignIDContent(EmptyPrintStyleAlignID &out, pugi::xml_node el)
-{
-    parseEmptyPrintStyleAlignIDContent(out, el, ParseContext{});
 }
 
 void parseEmptyPrintStyleAlignIDContent(EmptyPrintStyleAlignID &out, pugi::xml_node el, const ParseContext &context)

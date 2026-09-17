@@ -26,11 +26,6 @@ VirtualInstrumentDataGroupChoice VirtualInstrumentDataGroupChoice::ensemble(Posi
     return VirtualInstrumentDataGroupChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-VirtualInstrumentDataGroupChoice parseVirtualInstrumentDataGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseVirtualInstrumentDataGroupChoice(el, cursor, ParseContext{});
-}
-
 VirtualInstrumentDataGroupChoice parseVirtualInstrumentDataGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                                        const ParseContext &context)
 {

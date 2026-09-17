@@ -97,8 +97,6 @@ class FullNoteGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-FullNoteGroupChoice parseFullNoteGroupChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 FullNoteGroupChoice parseFullNoteGroupChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeFullNoteGroupChoice(const FullNoteGroupChoice &v, pugi::xml_node el);

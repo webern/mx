@@ -26,11 +26,6 @@ NoteheadTextChoice NoteheadTextChoice::accidentalText(AccidentalText value)
     return NoteheadTextChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-NoteheadTextChoice parseNoteheadTextChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseNoteheadTextChoice(el, cursor, ParseContext{});
-}
-
 NoteheadTextChoice parseNoteheadTextChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "display-text")))

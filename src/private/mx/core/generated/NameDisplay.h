@@ -41,11 +41,7 @@ class NameDisplay final
     std::vector<NameDisplayChoice> m_choice;
 };
 
-NameDisplay parseNameDisplay(pugi::xml_node el);
-
 NameDisplay parseNameDisplay(pugi::xml_node el, const ParseContext &context);
-
-void parseNameDisplayContent(NameDisplay &out, pugi::xml_node el);
 
 void parseNameDisplayContent(NameDisplay &out, pugi::xml_node el, const ParseContext &context);
 

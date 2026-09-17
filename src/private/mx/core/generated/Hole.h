@@ -77,11 +77,7 @@ class Hole final
     std::optional<std::string> m_holeShape;
 };
 
-Hole parseHole(pugi::xml_node el);
-
 Hole parseHole(pugi::xml_node el, const ParseContext &context);
-
-void parseHoleContent(Hole &out, pugi::xml_node el);
 
 void parseHoleContent(Hole &out, pugi::xml_node el, const ParseContext &context);
 

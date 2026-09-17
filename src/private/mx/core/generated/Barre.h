@@ -35,11 +35,7 @@ class Barre final
     std::optional<Color> m_color;
 };
 
-Barre parseBarre(pugi::xml_node el);
-
 Barre parseBarre(pugi::xml_node el, const ParseContext &context);
-
-void parseBarreContent(Barre &out, pugi::xml_node el);
 
 void parseBarreContent(Barre &out, pugi::xml_node el, const ParseContext &context);
 

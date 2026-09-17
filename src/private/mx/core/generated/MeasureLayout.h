@@ -34,11 +34,7 @@ class MeasureLayout final
     std::optional<Tenths> m_measureDistance;
 };
 
-MeasureLayout parseMeasureLayout(pugi::xml_node el);
-
 MeasureLayout parseMeasureLayout(pugi::xml_node el, const ParseContext &context);
-
-void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el);
 
 void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el, const ParseContext &context);
 

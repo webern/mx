@@ -61,11 +61,7 @@ class NonArpeggiate final
     std::optional<Token> m_id;
 };
 
-NonArpeggiate parseNonArpeggiate(pugi::xml_node el);
-
 NonArpeggiate parseNonArpeggiate(pugi::xml_node el, const ParseContext &context);
-
-void parseNonArpeggiateContent(NonArpeggiate &out, pugi::xml_node el);
 
 void parseNonArpeggiateContent(NonArpeggiate &out, pugi::xml_node el, const ParseContext &context);
 

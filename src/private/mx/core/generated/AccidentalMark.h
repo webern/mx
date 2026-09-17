@@ -87,11 +87,7 @@ class AccidentalMark final
     AccidentalValue m_value{};
 };
 
-AccidentalMark parseAccidentalMark(pugi::xml_node el);
-
 AccidentalMark parseAccidentalMark(pugi::xml_node el, const ParseContext &context);
-
-void parseAccidentalMarkContent(AccidentalMark &out, pugi::xml_node el);
 
 void parseAccidentalMarkContent(AccidentalMark &out, pugi::xml_node el, const ParseContext &context);
 

@@ -41,11 +41,6 @@ void AllMarginsGroup::setBottomMargin(Tenths value)
     m_bottomMargin = std::move(value);
 }
 
-AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseAllMarginsGroup(el, cursor, ParseContext{});
-}
-
 AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     AllMarginsGroup out;

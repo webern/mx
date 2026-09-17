@@ -41,8 +41,6 @@ class MetronomeTuplet : public TimeModification
     std::optional<ShowTuplet> m_showNumber;
 };
 
-MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el);
-
 MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el, const ParseContext &context);
 
 void serializeMetronomeTuplet(const MetronomeTuplet &v, pugi::xml_node parent, const char *tag);

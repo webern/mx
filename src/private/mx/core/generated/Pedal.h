@@ -96,11 +96,7 @@ class Pedal final
     std::optional<Token> m_id;
 };
 
-Pedal parsePedal(pugi::xml_node el);
-
 Pedal parsePedal(pugi::xml_node el, const ParseContext &context);
-
-void parsePedalContent(Pedal &out, pugi::xml_node el);
 
 void parsePedalContent(Pedal &out, pugi::xml_node el, const ParseContext &context);
 

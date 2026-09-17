@@ -251,11 +251,6 @@ void FormattedTextID::setValue(std::string value)
     m_value = std::move(value);
 }
 
-FormattedTextID parseFormattedTextID(pugi::xml_node el)
-{
-    return parseFormattedTextID(el, ParseContext{});
-}
-
 FormattedTextID parseFormattedTextID(pugi::xml_node el, const ParseContext &context)
 {
     FormattedTextID out;
@@ -365,11 +360,6 @@ FormattedTextID parseFormattedTextID(pugi::xml_node el, const ParseContext &cont
     }
     parseFormattedTextIDContent(out, el, context);
     return out;
-}
-
-void parseFormattedTextIDContent(FormattedTextID &out, pugi::xml_node el)
-{
-    parseFormattedTextIDContent(out, el, ParseContext{});
 }
 
 void parseFormattedTextIDContent(FormattedTextID &out, pugi::xml_node el, const ParseContext &context)

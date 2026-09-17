@@ -181,11 +181,6 @@ void Ending::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Ending parseEnding(pugi::xml_node el)
-{
-    return parseEnding(el, ParseContext{});
-}
-
 Ending parseEnding(pugi::xml_node el, const ParseContext &context)
 {
     Ending out;
@@ -279,11 +274,6 @@ Ending parseEnding(pugi::xml_node el, const ParseContext &context)
     }
     parseEndingContent(out, el, context);
     return out;
-}
-
-void parseEndingContent(Ending &out, pugi::xml_node el)
-{
-    parseEndingContent(out, el, ParseContext{});
 }
 
 void parseEndingContent(Ending &out, pugi::xml_node el, const ParseContext &context)

@@ -181,11 +181,6 @@ void Kind::setValue(KindValue value)
     m_value = std::move(value);
 }
 
-Kind parseKind(pugi::xml_node el)
-{
-    return parseKind(el, ParseContext{});
-}
-
 Kind parseKind(pugi::xml_node el, const ParseContext &context)
 {
     Kind out;
@@ -267,11 +262,6 @@ Kind parseKind(pugi::xml_node el, const ParseContext &context)
     }
     parseKindContent(out, el, context);
     return out;
-}
-
-void parseKindContent(Kind &out, pugi::xml_node el)
-{
-    parseKindContent(out, el, ParseContext{});
 }
 
 void parseKindContent(Kind &out, pugi::xml_node el, const ParseContext &context)

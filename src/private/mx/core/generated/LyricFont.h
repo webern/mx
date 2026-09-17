@@ -49,11 +49,7 @@ class LyricFont final
     std::optional<FontWeight> m_fontWeight;
 };
 
-LyricFont parseLyricFont(pugi::xml_node el);
-
 LyricFont parseLyricFont(pugi::xml_node el, const ParseContext &context);
-
-void parseLyricFontContent(LyricFont &out, pugi::xml_node el);
 
 void parseLyricFontContent(LyricFont &out, pugi::xml_node el, const ParseContext &context);
 

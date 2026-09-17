@@ -86,11 +86,6 @@ NotationsChoice NotationsChoice::otherNotation(OtherNotation value)
     return NotationsChoice{Storage{std::in_place_index<13>, std::move(value)}};
 }
 
-NotationsChoice parseNotationsChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseNotationsChoice(el, cursor, ParseContext{});
-}
-
 NotationsChoice parseNotationsChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "tied")))

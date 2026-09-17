@@ -91,11 +91,7 @@ class OtherNotation final
     std::string m_value{};
 };
 
-OtherNotation parseOtherNotation(pugi::xml_node el);
-
 OtherNotation parseOtherNotation(pugi::xml_node el, const ParseContext &context);
-
-void parseOtherNotationContent(OtherNotation &out, pugi::xml_node el);
 
 void parseOtherNotationContent(OtherNotation &out, pugi::xml_node el, const ParseContext &context);
 

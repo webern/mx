@@ -46,8 +46,6 @@ class TransposeGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TransposeGroup parseTransposeGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 TransposeGroup parseTransposeGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeTransposeGroup(const TransposeGroup &v, pugi::xml_node el);

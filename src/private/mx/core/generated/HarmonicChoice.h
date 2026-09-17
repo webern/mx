@@ -81,8 +81,6 @@ class HarmonicChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-HarmonicChoice parseHarmonicChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 HarmonicChoice parseHarmonicChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeHarmonicChoice(const HarmonicChoice &v, pugi::xml_node el);

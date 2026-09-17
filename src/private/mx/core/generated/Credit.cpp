@@ -86,11 +86,6 @@ void Credit::setChoice(CreditChoice value)
     m_choice = std::move(value);
 }
 
-Credit parseCredit(pugi::xml_node el)
-{
-    return parseCredit(el, ParseContext{});
-}
-
 Credit parseCredit(pugi::xml_node el, const ParseContext &context)
 {
     Credit out;
@@ -116,11 +111,6 @@ Credit parseCredit(pugi::xml_node el, const ParseContext &context)
     }
     parseCreditContent(out, el, context);
     return out;
-}
-
-void parseCreditContent(Credit &out, pugi::xml_node el)
-{
-    parseCreditContent(out, el, ParseContext{});
 }
 
 void parseCreditContent(Credit &out, pugi::xml_node el, const ParseContext &context)

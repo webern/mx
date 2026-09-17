@@ -111,8 +111,6 @@ class PlayChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-PlayChoice parsePlayChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 PlayChoice parsePlayChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializePlayChoice(const PlayChoice &v, pugi::xml_node el);

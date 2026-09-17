@@ -146,11 +146,6 @@ void ScorePart::setMIDIGroup(std::vector<ScorePartMIDIGroup> value)
     m_midiGroup = std::move(value);
 }
 
-ScorePart parseScorePart(pugi::xml_node el)
-{
-    return parseScorePart(el, ParseContext{});
-}
-
 ScorePart parseScorePart(pugi::xml_node el, const ParseContext &context)
 {
     ScorePart out;
@@ -178,11 +173,6 @@ ScorePart parseScorePart(pugi::xml_node el, const ParseContext &context)
     }
     parseScorePartContent(out, el, context);
     return out;
-}
-
-void parseScorePartContent(ScorePart &out, pugi::xml_node el)
-{
-    parseScorePartContent(out, el, ParseContext{});
 }
 
 void parseScorePartContent(ScorePart &out, pugi::xml_node el, const ParseContext &context)

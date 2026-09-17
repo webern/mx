@@ -31,11 +31,6 @@ void SystemDividers::setRightDivider(EmptyPrintObjectStyleAlign value)
     m_rightDivider = std::move(value);
 }
 
-SystemDividers parseSystemDividers(pugi::xml_node el)
-{
-    return parseSystemDividers(el, ParseContext{});
-}
-
 SystemDividers parseSystemDividers(pugi::xml_node el, const ParseContext &context)
 {
     SystemDividers out;
@@ -50,11 +45,6 @@ SystemDividers parseSystemDividers(pugi::xml_node el, const ParseContext &contex
     }
     parseSystemDividersContent(out, el, context);
     return out;
-}
-
-void parseSystemDividersContent(SystemDividers &out, pugi::xml_node el)
-{
-    parseSystemDividersContent(out, el, ParseContext{});
 }
 
 void parseSystemDividersContent(SystemDividers &out, pugi::xml_node el, const ParseContext &context)

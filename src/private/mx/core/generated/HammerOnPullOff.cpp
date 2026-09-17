@@ -141,11 +141,6 @@ void HammerOnPullOff::setValue(std::string value)
     m_value = std::move(value);
 }
 
-HammerOnPullOff parseHammerOnPullOff(pugi::xml_node el)
-{
-    return parseHammerOnPullOff(el, ParseContext{});
-}
-
 HammerOnPullOff parseHammerOnPullOff(pugi::xml_node el, const ParseContext &context)
 {
     HammerOnPullOff out;
@@ -217,11 +212,6 @@ HammerOnPullOff parseHammerOnPullOff(pugi::xml_node el, const ParseContext &cont
     }
     parseHammerOnPullOffContent(out, el, context);
     return out;
-}
-
-void parseHammerOnPullOffContent(HammerOnPullOff &out, pugi::xml_node el)
-{
-    parseHammerOnPullOffContent(out, el, ParseContext{});
 }
 
 void parseHammerOnPullOffContent(HammerOnPullOff &out, pugi::xml_node el, const ParseContext &context)

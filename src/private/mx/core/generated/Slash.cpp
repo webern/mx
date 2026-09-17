@@ -51,11 +51,6 @@ void Slash::setSlash(std::optional<SlashGroup> value)
     m_slash = std::move(value);
 }
 
-Slash parseSlash(pugi::xml_node el)
-{
-    return parseSlash(el, ParseContext{});
-}
-
 Slash parseSlash(pugi::xml_node el, const ParseContext &context)
 {
     Slash out;
@@ -91,11 +86,6 @@ Slash parseSlash(pugi::xml_node el, const ParseContext &context)
     }
     parseSlashContent(out, el, context);
     return out;
-}
-
-void parseSlashContent(Slash &out, pugi::xml_node el)
-{
-    parseSlashContent(out, el, ParseContext{});
 }
 
 void parseSlashContent(Slash &out, pugi::xml_node el, const ParseContext &context)

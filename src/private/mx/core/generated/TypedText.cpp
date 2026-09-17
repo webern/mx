@@ -31,11 +31,6 @@ void TypedText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-TypedText parseTypedText(pugi::xml_node el)
-{
-    return parseTypedText(el, ParseContext{});
-}
-
 TypedText parseTypedText(pugi::xml_node el, const ParseContext &context)
 {
     TypedText out;
@@ -57,11 +52,6 @@ TypedText parseTypedText(pugi::xml_node el, const ParseContext &context)
     }
     parseTypedTextContent(out, el, context);
     return out;
-}
-
-void parseTypedTextContent(TypedText &out, pugi::xml_node el)
-{
-    parseTypedTextContent(out, el, ParseContext{});
 }
 
 void parseTypedTextContent(TypedText &out, pugi::xml_node el, const ParseContext &context)

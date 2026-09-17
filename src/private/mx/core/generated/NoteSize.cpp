@@ -31,11 +31,6 @@ void NoteSize::setValue(NonNegativeDecimal value)
     m_value = std::move(value);
 }
 
-NoteSize parseNoteSize(pugi::xml_node el)
-{
-    return parseNoteSize(el, ParseContext{});
-}
-
 NoteSize parseNoteSize(pugi::xml_node el, const ParseContext &context)
 {
     NoteSize out;
@@ -63,11 +58,6 @@ NoteSize parseNoteSize(pugi::xml_node el, const ParseContext &context)
     }
     parseNoteSizeContent(out, el, context);
     return out;
-}
-
-void parseNoteSizeContent(NoteSize &out, pugi::xml_node el)
-{
-    parseNoteSizeContent(out, el, ParseContext{});
 }
 
 void parseNoteSizeContent(NoteSize &out, pugi::xml_node el, const ParseContext &context)

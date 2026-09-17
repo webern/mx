@@ -97,11 +97,7 @@ class Bend final
     std::optional<PlacementText> m_withBar;
 };
 
-Bend parseBend(pugi::xml_node el);
-
 Bend parseBend(pugi::xml_node el, const ParseContext &context);
-
-void parseBendContent(Bend &out, pugi::xml_node el);
 
 void parseBendContent(Bend &out, pugi::xml_node el, const ParseContext &context);
 

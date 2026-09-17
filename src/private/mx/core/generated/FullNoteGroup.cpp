@@ -31,11 +31,6 @@ void FullNoteGroup::setChoice(FullNoteGroupChoice value)
     m_choice = std::move(value);
 }
 
-FullNoteGroup parseFullNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseFullNoteGroup(el, cursor, ParseContext{});
-}
-
 FullNoteGroup parseFullNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     FullNoteGroup out;

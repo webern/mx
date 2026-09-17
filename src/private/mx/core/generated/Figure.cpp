@@ -61,11 +61,6 @@ void Figure::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-Figure parseFigure(pugi::xml_node el)
-{
-    return parseFigure(el, ParseContext{});
-}
-
 Figure parseFigure(pugi::xml_node el, const ParseContext &context)
 {
     Figure out;
@@ -80,11 +75,6 @@ Figure parseFigure(pugi::xml_node el, const ParseContext &context)
     }
     parseFigureContent(out, el, context);
     return out;
-}
-
-void parseFigureContent(Figure &out, pugi::xml_node el)
-{
-    parseFigureContent(out, el, ParseContext{});
 }
 
 void parseFigureContent(Figure &out, pugi::xml_node el, const ParseContext &context)

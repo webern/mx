@@ -41,11 +41,6 @@ void Work::setOpus(std::optional<Opus> value)
     m_opus = std::move(value);
 }
 
-Work parseWork(pugi::xml_node el)
-{
-    return parseWork(el, ParseContext{});
-}
-
 Work parseWork(pugi::xml_node el, const ParseContext &context)
 {
     Work out;
@@ -60,11 +55,6 @@ Work parseWork(pugi::xml_node el, const ParseContext &context)
     }
     parseWorkContent(out, el, context);
     return out;
-}
-
-void parseWorkContent(Work &out, pugi::xml_node el)
-{
-    parseWorkContent(out, el, ParseContext{});
 }
 
 void parseWorkContent(Work &out, pugi::xml_node el, const ParseContext &context)

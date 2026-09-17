@@ -50,11 +50,7 @@ class ForPart final
     PartTranspose m_partTranspose{};
 };
 
-ForPart parseForPart(pugi::xml_node el);
-
 ForPart parseForPart(pugi::xml_node el, const ParseContext &context);
-
-void parseForPartContent(ForPart &out, pugi::xml_node el);
 
 void parseForPartContent(ForPart &out, pugi::xml_node el, const ParseContext &context);
 

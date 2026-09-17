@@ -41,11 +41,6 @@ void ArrowChoiceGroup::setArrowhead(bool value) noexcept
     m_arrowhead = value;
 }
 
-ArrowChoiceGroup parseArrowChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseArrowChoiceGroup(el, cursor, ParseContext{});
-}
-
 ArrowChoiceGroup parseArrowChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     ArrowChoiceGroup out;

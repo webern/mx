@@ -131,11 +131,6 @@ void Tap::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Tap parseTap(pugi::xml_node el)
-{
-    return parseTap(el, ParseContext{});
-}
-
 Tap parseTap(pugi::xml_node el, const ParseContext &context)
 {
     Tap out;
@@ -197,11 +192,6 @@ Tap parseTap(pugi::xml_node el, const ParseContext &context)
     }
     parseTapContent(out, el, context);
     return out;
-}
-
-void parseTapContent(Tap &out, pugi::xml_node el)
-{
-    parseTapContent(out, el, ParseContext{});
 }
 
 void parseTapContent(Tap &out, pugi::xml_node el, const ParseContext &context)

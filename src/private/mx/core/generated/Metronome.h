@@ -97,11 +97,7 @@ class Metronome final
     MetronomeChoice m_choice{};
 };
 
-Metronome parseMetronome(pugi::xml_node el);
-
 Metronome parseMetronome(pugi::xml_node el, const ParseContext &context);
-
-void parseMetronomeContent(Metronome &out, pugi::xml_node el);
 
 void parseMetronomeContent(Metronome &out, pugi::xml_node el, const ParseContext &context);
 

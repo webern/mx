@@ -91,11 +91,6 @@ void PartSymbol::setValue(GroupSymbolValue value)
     m_value = std::move(value);
 }
 
-PartSymbol parsePartSymbol(pugi::xml_node el)
-{
-    return parsePartSymbol(el, ParseContext{});
-}
-
 PartSymbol parsePartSymbol(pugi::xml_node el, const ParseContext &context)
 {
     PartSymbol out;
@@ -141,11 +136,6 @@ PartSymbol parsePartSymbol(pugi::xml_node el, const ParseContext &context)
     }
     parsePartSymbolContent(out, el, context);
     return out;
-}
-
-void parsePartSymbolContent(PartSymbol &out, pugi::xml_node el)
-{
-    parsePartSymbolContent(out, el, ParseContext{});
 }
 
 void parsePartSymbolContent(PartSymbol &out, pugi::xml_node el, const ParseContext &context)

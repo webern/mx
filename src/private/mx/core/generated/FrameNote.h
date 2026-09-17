@@ -46,11 +46,7 @@ class FrameNote final
     std::optional<Barre> m_barre;
 };
 
-FrameNote parseFrameNote(pugi::xml_node el);
-
 FrameNote parseFrameNote(pugi::xml_node el, const ParseContext &context);
-
-void parseFrameNoteContent(FrameNote &out, pugi::xml_node el);
 
 void parseFrameNoteContent(FrameNote &out, pugi::xml_node el, const ParseContext &context);
 

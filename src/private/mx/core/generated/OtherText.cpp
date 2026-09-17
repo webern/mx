@@ -31,11 +31,6 @@ void OtherText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherText parseOtherText(pugi::xml_node el)
-{
-    return parseOtherText(el, ParseContext{});
-}
-
 OtherText parseOtherText(pugi::xml_node el, const ParseContext &context)
 {
     OtherText out;
@@ -57,11 +52,6 @@ OtherText parseOtherText(pugi::xml_node el, const ParseContext &context)
     }
     parseOtherTextContent(out, el, context);
     return out;
-}
-
-void parseOtherTextContent(OtherText &out, pugi::xml_node el)
-{
-    parseOtherTextContent(out, el, ParseContext{});
 }
 
 void parseOtherTextContent(OtherText &out, pugi::xml_node el, const ParseContext &context)

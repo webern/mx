@@ -81,11 +81,7 @@ class EmptyLine final
     std::optional<AboveBelow> m_placement;
 };
 
-EmptyLine parseEmptyLine(pugi::xml_node el);
-
 EmptyLine parseEmptyLine(pugi::xml_node el, const ParseContext &context);
-
-void parseEmptyLineContent(EmptyLine &out, pugi::xml_node el);
 
 void parseEmptyLineContent(EmptyLine &out, pugi::xml_node el, const ParseContext &context);
 

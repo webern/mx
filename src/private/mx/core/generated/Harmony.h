@@ -121,11 +121,7 @@ class Harmony final
     std::optional<int> m_staff;
 };
 
-Harmony parseHarmony(pugi::xml_node el);
-
 Harmony parseHarmony(pugi::xml_node el, const ParseContext &context);
-
-void parseHarmonyContent(Harmony &out, pugi::xml_node el);
 
 void parseHarmonyContent(Harmony &out, pugi::xml_node el, const ParseContext &context);
 

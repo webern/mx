@@ -51,11 +51,6 @@ void Bass::setBassAlter(std::optional<HarmonyAlter> value)
     m_bassAlter = std::move(value);
 }
 
-Bass parseBass(pugi::xml_node el)
-{
-    return parseBass(el, ParseContext{});
-}
-
 Bass parseBass(pugi::xml_node el, const ParseContext &context)
 {
     Bass out;
@@ -77,11 +72,6 @@ Bass parseBass(pugi::xml_node el, const ParseContext &context)
     }
     parseBassContent(out, el, context);
     return out;
-}
-
-void parseBassContent(Bass &out, pugi::xml_node el)
-{
-    parseBassContent(out, el, ParseContext{});
 }
 
 void parseBassContent(Bass &out, pugi::xml_node el, const ParseContext &context)

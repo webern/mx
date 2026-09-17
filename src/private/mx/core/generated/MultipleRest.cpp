@@ -31,11 +31,6 @@ void MultipleRest::setValue(int value)
     m_value = std::move(value);
 }
 
-MultipleRest parseMultipleRest(pugi::xml_node el)
-{
-    return parseMultipleRest(el, ParseContext{});
-}
-
 MultipleRest parseMultipleRest(pugi::xml_node el, const ParseContext &context)
 {
     MultipleRest out;
@@ -57,11 +52,6 @@ MultipleRest parseMultipleRest(pugi::xml_node el, const ParseContext &context)
     }
     parseMultipleRestContent(out, el, context);
     return out;
-}
-
-void parseMultipleRestContent(MultipleRest &out, pugi::xml_node el)
-{
-    parseMultipleRestContent(out, el, ParseContext{});
 }
 
 void parseMultipleRestContent(MultipleRest &out, pugi::xml_node el, const ParseContext &context)

@@ -31,11 +31,6 @@ void StaffLayout::setStaffDistance(std::optional<Tenths> value)
     m_staffDistance = std::move(value);
 }
 
-StaffLayout parseStaffLayout(pugi::xml_node el)
-{
-    return parseStaffLayout(el, ParseContext{});
-}
-
 StaffLayout parseStaffLayout(pugi::xml_node el, const ParseContext &context)
 {
     StaffLayout out;
@@ -57,11 +52,6 @@ StaffLayout parseStaffLayout(pugi::xml_node el, const ParseContext &context)
     }
     parseStaffLayoutContent(out, el, context);
     return out;
-}
-
-void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el)
-{
-    parseStaffLayoutContent(out, el, ParseContext{});
 }
 
 void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el, const ParseContext &context)

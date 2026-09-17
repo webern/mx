@@ -125,8 +125,6 @@ class EncodingChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-EncodingChoice parseEncodingChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 EncodingChoice parseEncodingChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeEncodingChoice(const EncodingChoice &v, pugi::xml_node el);

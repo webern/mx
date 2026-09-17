@@ -195,11 +195,7 @@ class Note final
     std::optional<Listen> m_listen;
 };
 
-Note parseNote(pugi::xml_node el);
-
 Note parseNote(pugi::xml_node el, const ParseContext &context);
-
-void parseNoteContent(Note &out, pugi::xml_node el);
 
 void parseNoteContent(Note &out, pugi::xml_node el, const ParseContext &context);
 

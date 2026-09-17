@@ -82,8 +82,6 @@ class GraceNoteChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-GraceNoteChoice parseGraceNoteChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 GraceNoteChoice parseGraceNoteChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeGraceNoteChoice(const GraceNoteChoice &v, pugi::xml_node el);

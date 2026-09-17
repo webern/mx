@@ -59,11 +59,7 @@ class Beam final
     BeamValue m_value{};
 };
 
-Beam parseBeam(pugi::xml_node el);
-
 Beam parseBeam(pugi::xml_node el, const ParseContext &context);
-
-void parseBeamContent(Beam &out, pugi::xml_node el);
 
 void parseBeamContent(Beam &out, pugi::xml_node el, const ParseContext &context);
 

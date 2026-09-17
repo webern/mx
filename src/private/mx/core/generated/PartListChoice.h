@@ -82,8 +82,6 @@ class PartListChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-PartListChoice parsePartListChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 PartListChoice parsePartListChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializePartListChoice(const PartListChoice &v, pugi::xml_node el);

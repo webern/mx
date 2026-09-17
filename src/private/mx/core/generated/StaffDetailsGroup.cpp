@@ -36,11 +36,6 @@ void StaffDetailsGroup::setLineDetail(std::vector<LineDetail> value)
     m_lineDetail = std::move(value);
 }
 
-StaffDetailsGroup parseStaffDetailsGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseStaffDetailsGroup(el, cursor, ParseContext{});
-}
-
 StaffDetailsGroup parseStaffDetailsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     StaffDetailsGroup out;

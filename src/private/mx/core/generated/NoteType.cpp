@@ -31,11 +31,6 @@ void NoteType::setValue(NoteTypeValue value)
     m_value = std::move(value);
 }
 
-NoteType parseNoteType(pugi::xml_node el)
-{
-    return parseNoteType(el, ParseContext{});
-}
-
 NoteType parseNoteType(pugi::xml_node el, const ParseContext &context)
 {
     NoteType out;
@@ -57,11 +52,6 @@ NoteType parseNoteType(pugi::xml_node el, const ParseContext &context)
     }
     parseNoteTypeContent(out, el, context);
     return out;
-}
-
-void parseNoteTypeContent(NoteType &out, pugi::xml_node el)
-{
-    parseNoteTypeContent(out, el, ParseContext{});
 }
 
 void parseNoteTypeContent(NoteType &out, pugi::xml_node el, const ParseContext &context)

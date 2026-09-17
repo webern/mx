@@ -51,11 +51,6 @@ void Degree::setDegreeType(DegreeType value)
     m_degreeType = std::move(value);
 }
 
-Degree parseDegree(pugi::xml_node el)
-{
-    return parseDegree(el, ParseContext{});
-}
-
 Degree parseDegree(pugi::xml_node el, const ParseContext &context)
 {
     Degree out;
@@ -77,11 +72,6 @@ Degree parseDegree(pugi::xml_node el, const ParseContext &context)
     }
     parseDegreeContent(out, el, context);
     return out;
-}
-
-void parseDegreeContent(Degree &out, pugi::xml_node el)
-{
-    parseDegreeContent(out, el, ParseContext{});
 }
 
 void parseDegreeContent(Degree &out, pugi::xml_node el, const ParseContext &context)

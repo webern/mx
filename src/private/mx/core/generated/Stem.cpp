@@ -71,11 +71,6 @@ void Stem::setValue(StemValue value)
     m_value = std::move(value);
 }
 
-Stem parseStem(pugi::xml_node el)
-{
-    return parseStem(el, ParseContext{});
-}
-
 Stem parseStem(pugi::xml_node el, const ParseContext &context)
 {
     Stem out;
@@ -113,11 +108,6 @@ Stem parseStem(pugi::xml_node el, const ParseContext &context)
     }
     parseStemContent(out, el, context);
     return out;
-}
-
-void parseStemContent(Stem &out, pugi::xml_node el)
-{
-    parseStemContent(out, el, ParseContext{});
 }
 
 void parseStemContent(Stem &out, pugi::xml_node el, const ParseContext &context)

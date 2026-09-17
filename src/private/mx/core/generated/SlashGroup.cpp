@@ -36,11 +36,6 @@ void SlashGroup::setExceptVoice(std::vector<std::string> value)
     m_exceptVoice = std::move(value);
 }
 
-SlashGroup parseSlashGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseSlashGroup(el, cursor, ParseContext{});
-}
-
 SlashGroup parseSlashGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     SlashGroup out;

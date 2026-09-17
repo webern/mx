@@ -31,11 +31,6 @@ void Swing::setSwingStyle(std::optional<std::string> value)
     m_swingStyle = std::move(value);
 }
 
-Swing parseSwing(pugi::xml_node el)
-{
-    return parseSwing(el, ParseContext{});
-}
-
 Swing parseSwing(pugi::xml_node el, const ParseContext &context)
 {
     Swing out;
@@ -50,11 +45,6 @@ Swing parseSwing(pugi::xml_node el, const ParseContext &context)
     }
     parseSwingContent(out, el, context);
     return out;
-}
-
-void parseSwingContent(Swing &out, pugi::xml_node el)
-{
-    parseSwingContent(out, el, ParseContext{});
 }
 
 void parseSwingContent(Swing &out, pugi::xml_node el, const ParseContext &context)

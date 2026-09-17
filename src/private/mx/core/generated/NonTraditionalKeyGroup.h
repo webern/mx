@@ -44,8 +44,6 @@ class NonTraditionalKeyGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor,
                                                    const ParseContext &context);
 

@@ -51,11 +51,6 @@ void OtherListening::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherListening parseOtherListening(pugi::xml_node el)
-{
-    return parseOtherListening(el, ParseContext{});
-}
-
 OtherListening parseOtherListening(pugi::xml_node el, const ParseContext &context)
 {
     OtherListening out;
@@ -91,11 +86,6 @@ OtherListening parseOtherListening(pugi::xml_node el, const ParseContext &contex
     }
     parseOtherListeningContent(out, el, context);
     return out;
-}
-
-void parseOtherListeningContent(OtherListening &out, pugi::xml_node el)
-{
-    parseOtherListeningContent(out, el, ParseContext{});
 }
 
 void parseOtherListeningContent(OtherListening &out, pugi::xml_node el, const ParseContext &context)

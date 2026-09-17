@@ -144,10 +144,11 @@ TEST(SilentParseProducesTheSameDocument, ImportDiagnostics)
                                                        "<note default-x=\"left\"><rest/><duration>1</duration></note>");
     const auto reported = importDiagnosticsParse(xml);
     REQUIRE(reported.ok);
+    CHECK(!reported.diagnostics.empty());
 
     pugi::xml_document doc;
     REQUIRE(doc.load_string(xml.c_str()));
-    const auto silent = parse(doc);
+    const auto silent = parse(doc, ParseContext{});
     REQUIRE(silent.ok());
     CHECK(silent.value() == reported.document);
 }

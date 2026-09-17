@@ -11,6 +11,7 @@
 
 #include "mx/core/Error.h"
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/generated/DefaultsProbe.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/Version.h"
@@ -28,7 +29,7 @@ Error parseExpectingError(const char *xml)
 {
     pugi::xml_document doc;
     CHECK(doc.load_string(xml));
-    auto result = parse(doc);
+    auto result = parse(doc, ParseContext{});
     CHECK(!result.ok());
     if (result.ok())
     {
@@ -113,7 +114,7 @@ TEST(RejectsNewerVersion, Document)
 {
     pugi::xml_document doc;
     CHECK(doc.load_string("<score-partwise version=\"5.0\"/>"));
-    auto result = parse(doc);
+    auto result = parse(doc, ParseContext{});
     CHECK(!result.ok());
     CHECK(result.error().code == ErrorCode::unsupportedVersion);
 }
@@ -137,12 +138,12 @@ TEST(RoundTripMinimalScore, Document)
 {
     pugi::xml_document doc;
     CHECK(doc.load_string(kMinimalScore));
-    auto parsed = parse(doc);
+    auto parsed = parse(doc, ParseContext{});
     CHECK(parsed.ok());
     CHECK(parsed.value().isScorePartwise());
     pugi::xml_document out;
     serialize(parsed.value(), out);
-    auto reparsed = parse(out);
+    auto reparsed = parse(out, ParseContext{});
     CHECK(reparsed.ok());
     CHECK(parsed.value() == reparsed.value());
 }
@@ -153,7 +154,7 @@ TEST(RootNamespacePreserved, Document)
     CHECK(doc.load_string("<score-partwise xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"3.0\">"
                           "<part-list><score-part id=\"P1\"><part-name>M</part-name></score-part></part-list>"
                           "<part id=\"P1\"><measure number=\"1\"/></part></score-partwise>"));
-    auto parsed = parse(doc);
+    auto parsed = parse(doc, ParseContext{});
     CHECK(parsed.ok());
     CHECK_EQUAL(std::size_t{1}, parsed.value().rootNamespaces().size());
     pugi::xml_document out;

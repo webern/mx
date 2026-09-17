@@ -88,11 +88,7 @@ class Frame final
     OneOrMore<FrameNote> m_frameNote;
 };
 
-Frame parseFrame(pugi::xml_node el);
-
 Frame parseFrame(pugi::xml_node el, const ParseContext &context);
-
-void parseFrameContent(Frame &out, pugi::xml_node el);
 
 void parseFrameContent(Frame &out, pugi::xml_node el, const ParseContext &context);
 

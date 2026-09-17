@@ -51,11 +51,6 @@ void FrameNote::setBarre(std::optional<Barre> value)
     m_barre = std::move(value);
 }
 
-FrameNote parseFrameNote(pugi::xml_node el)
-{
-    return parseFrameNote(el, ParseContext{});
-}
-
 FrameNote parseFrameNote(pugi::xml_node el, const ParseContext &context)
 {
     FrameNote out;
@@ -70,11 +65,6 @@ FrameNote parseFrameNote(pugi::xml_node el, const ParseContext &context)
     }
     parseFrameNoteContent(out, el, context);
     return out;
-}
-
-void parseFrameNoteContent(FrameNote &out, pugi::xml_node el)
-{
-    parseFrameNoteContent(out, el, ParseContext{});
 }
 
 void parseFrameNoteContent(FrameNote &out, pugi::xml_node el, const ParseContext &context)

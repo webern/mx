@@ -36,11 +36,6 @@ void TimeModificationGroup::setNormalDot(std::vector<Empty> value)
     m_normalDot = std::move(value);
 }
 
-TimeModificationGroup parseTimeModificationGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseTimeModificationGroup(el, cursor, ParseContext{});
-}
-
 TimeModificationGroup parseTimeModificationGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     TimeModificationGroup out;

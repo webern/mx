@@ -43,11 +43,7 @@ class OtherListening final
     std::string m_value{};
 };
 
-OtherListening parseOtherListening(pugi::xml_node el);
-
 OtherListening parseOtherListening(pugi::xml_node el, const ParseContext &context);
-
-void parseOtherListeningContent(OtherListening &out, pugi::xml_node el);
 
 void parseOtherListeningContent(OtherListening &out, pugi::xml_node el, const ParseContext &context);
 

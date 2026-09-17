@@ -71,11 +71,7 @@ class DegreeAlter final
     Semitones m_value{};
 };
 
-DegreeAlter parseDegreeAlter(pugi::xml_node el);
-
 DegreeAlter parseDegreeAlter(pugi::xml_node el, const ParseContext &context);
-
-void parseDegreeAlterContent(DegreeAlter &out, pugi::xml_node el);
 
 void parseDegreeAlterContent(DegreeAlter &out, pugi::xml_node el, const ParseContext &context);
 

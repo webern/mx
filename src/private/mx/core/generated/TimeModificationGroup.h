@@ -40,8 +40,6 @@ class TimeModificationGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TimeModificationGroup parseTimeModificationGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 TimeModificationGroup parseTimeModificationGroup(pugi::xml_node el, pugi::xml_node &cursor,
                                                  const ParseContext &context);
 

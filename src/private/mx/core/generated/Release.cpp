@@ -21,11 +21,6 @@ void Release::setOffset(std::optional<Divisions> value)
     m_offset = std::move(value);
 }
 
-Release parseRelease(pugi::xml_node el)
-{
-    return parseRelease(el, ParseContext{});
-}
-
 Release parseRelease(pugi::xml_node el, const ParseContext &context)
 {
     Release out;

@@ -121,11 +121,6 @@ void String::setValue(StringNumber value)
     m_value = std::move(value);
 }
 
-String parseString(pugi::xml_node el)
-{
-    return parseString(el, ParseContext{});
-}
-
 String parseString(pugi::xml_node el, const ParseContext &context)
 {
     String out;
@@ -183,11 +178,6 @@ String parseString(pugi::xml_node el, const ParseContext &context)
     }
     parseStringContent(out, el, context);
     return out;
-}
-
-void parseStringContent(String &out, pugi::xml_node el)
-{
-    parseStringContent(out, el, ParseContext{});
 }
 
 void parseStringContent(String &out, pugi::xml_node el, const ParseContext &context)

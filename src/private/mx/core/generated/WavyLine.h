@@ -87,11 +87,7 @@ class WavyLine final
     std::optional<Percent> m_lastBeat;
 };
 
-WavyLine parseWavyLine(pugi::xml_node el);
-
 WavyLine parseWavyLine(pugi::xml_node el, const ParseContext &context);
-
-void parseWavyLineContent(WavyLine &out, pugi::xml_node el);
 
 void parseWavyLineContent(WavyLine &out, pugi::xml_node el, const ParseContext &context);
 

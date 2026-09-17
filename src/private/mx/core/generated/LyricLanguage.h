@@ -36,11 +36,7 @@ class LyricLanguage final
     std::string m_xmlLang{};
 };
 
-LyricLanguage parseLyricLanguage(pugi::xml_node el);
-
 LyricLanguage parseLyricLanguage(pugi::xml_node el, const ParseContext &context);
-
-void parseLyricLanguageContent(LyricLanguage &out, pugi::xml_node el);
 
 void parseLyricLanguageContent(LyricLanguage &out, pugi::xml_node el, const ParseContext &context);
 

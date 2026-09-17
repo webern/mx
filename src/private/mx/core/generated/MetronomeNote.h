@@ -51,11 +51,7 @@ class MetronomeNote final
     std::optional<MetronomeTuplet> m_metronomeTuplet;
 };
 
-MetronomeNote parseMetronomeNote(pugi::xml_node el);
-
 MetronomeNote parseMetronomeNote(pugi::xml_node el, const ParseContext &context);
-
-void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el);
 
 void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el, const ParseContext &context);
 

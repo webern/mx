@@ -43,11 +43,7 @@ class TimeModification
     std::optional<TimeModificationGroup> m_group;
 };
 
-TimeModification parseTimeModification(pugi::xml_node el);
-
 TimeModification parseTimeModification(pugi::xml_node el, const ParseContext &context);
-
-void parseTimeModificationContent(TimeModification &out, pugi::xml_node el);
 
 void parseTimeModificationContent(TimeModification &out, pugi::xml_node el, const ParseContext &context);
 

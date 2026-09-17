@@ -31,11 +31,6 @@ void Wait::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Wait parseWait(pugi::xml_node el)
-{
-    return parseWait(el, ParseContext{});
-}
-
 Wait parseWait(pugi::xml_node el, const ParseContext &context)
 {
     Wait out;
@@ -61,11 +56,6 @@ Wait parseWait(pugi::xml_node el, const ParseContext &context)
     }
     parseWaitContent(out, el, context);
     return out;
-}
-
-void parseWaitContent(Wait &out, pugi::xml_node el)
-{
-    parseWaitContent(out, el, ParseContext{});
 }
 
 void parseWaitContent(Wait &out, pugi::xml_node el, const ParseContext &context)

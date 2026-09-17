@@ -36,11 +36,6 @@ void Ornaments::setGroup(std::vector<OrnamentsGroup> value)
     m_group = std::move(value);
 }
 
-Ornaments parseOrnaments(pugi::xml_node el)
-{
-    return parseOrnaments(el, ParseContext{});
-}
-
 Ornaments parseOrnaments(pugi::xml_node el, const ParseContext &context)
 {
     Ornaments out;
@@ -62,11 +57,6 @@ Ornaments parseOrnaments(pugi::xml_node el, const ParseContext &context)
     }
     parseOrnamentsContent(out, el, context);
     return out;
-}
-
-void parseOrnamentsContent(Ornaments &out, pugi::xml_node el)
-{
-    parseOrnamentsContent(out, el, ParseContext{});
 }
 
 void parseOrnamentsContent(Ornaments &out, pugi::xml_node el, const ParseContext &context)

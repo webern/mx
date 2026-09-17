@@ -107,11 +107,7 @@ class FormattedText final
     std::string m_value{};
 };
 
-FormattedText parseFormattedText(pugi::xml_node el);
-
 FormattedText parseFormattedText(pugi::xml_node el, const ParseContext &context);
-
-void parseFormattedTextContent(FormattedText &out, pugi::xml_node el);
 
 void parseFormattedTextContent(FormattedText &out, pugi::xml_node el, const ParseContext &context);
 

@@ -26,11 +26,6 @@ PartListChoice PartListChoice::scorePart(ScorePart value)
     return PartListChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-PartListChoice parsePartListChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parsePartListChoice(el, cursor, ParseContext{});
-}
-
 PartListChoice parsePartListChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "part-group")))

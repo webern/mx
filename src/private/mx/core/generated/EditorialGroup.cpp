@@ -31,11 +31,6 @@ void EditorialGroup::setLevel(std::optional<Level> value)
     m_level = std::move(value);
 }
 
-EditorialGroup parseEditorialGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseEditorialGroup(el, cursor, ParseContext{});
-}
-
 EditorialGroup parseEditorialGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     EditorialGroup out;

@@ -65,11 +65,7 @@ class MIDIInstrument final
     std::optional<RotationDegrees> m_elevation;
 };
 
-MIDIInstrument parseMIDIInstrument(pugi::xml_node el);
-
 MIDIInstrument parseMIDIInstrument(pugi::xml_node el, const ParseContext &context);
-
-void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el);
 
 void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el, const ParseContext &context);
 

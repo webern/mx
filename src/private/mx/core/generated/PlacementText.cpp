@@ -121,11 +121,6 @@ void PlacementText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-PlacementText parsePlacementText(pugi::xml_node el)
-{
-    return parsePlacementText(el, ParseContext{});
-}
-
 PlacementText parsePlacementText(pugi::xml_node el, const ParseContext &context)
 {
     PlacementText out;
@@ -183,11 +178,6 @@ PlacementText parsePlacementText(pugi::xml_node el, const ParseContext &context)
     }
     parsePlacementTextContent(out, el, context);
     return out;
-}
-
-void parsePlacementTextContent(PlacementText &out, pugi::xml_node el)
-{
-    parsePlacementTextContent(out, el, ParseContext{});
 }
 
 void parsePlacementTextContent(PlacementText &out, pugi::xml_node el, const ParseContext &context)

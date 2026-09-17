@@ -49,11 +49,7 @@ class Swing final
     std::optional<std::string> m_swingStyle;
 };
 
-Swing parseSwing(pugi::xml_node el);
-
 Swing parseSwing(pugi::xml_node el, const ParseContext &context);
-
-void parseSwingContent(Swing &out, pugi::xml_node el);
 
 void parseSwingContent(Swing &out, pugi::xml_node el, const ParseContext &context);
 

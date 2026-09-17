@@ -67,11 +67,7 @@ class Handbell final
     HandbellValue m_value{};
 };
 
-Handbell parseHandbell(pugi::xml_node el);
-
 Handbell parseHandbell(pugi::xml_node el, const ParseContext &context);
-
-void parseHandbellContent(Handbell &out, pugi::xml_node el);
 
 void parseHandbellContent(Handbell &out, pugi::xml_node el, const ParseContext &context);
 

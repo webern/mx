@@ -67,11 +67,7 @@ class Caesura final
     CaesuraValue m_value{};
 };
 
-Caesura parseCaesura(pugi::xml_node el);
-
 Caesura parseCaesura(pugi::xml_node el, const ParseContext &context);
-
-void parseCaesuraContent(Caesura &out, pugi::xml_node el);
 
 void parseCaesuraContent(Caesura &out, pugi::xml_node el, const ParseContext &context);
 

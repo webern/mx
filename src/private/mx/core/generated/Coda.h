@@ -76,11 +76,7 @@ class Coda final
     std::optional<Token> m_id;
 };
 
-Coda parseCoda(pugi::xml_node el);
-
 Coda parseCoda(pugi::xml_node el, const ParseContext &context);
-
-void parseCodaContent(Coda &out, pugi::xml_node el);
 
 void parseCodaContent(Coda &out, pugi::xml_node el, const ParseContext &context);
 

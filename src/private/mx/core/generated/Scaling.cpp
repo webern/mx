@@ -31,11 +31,6 @@ void Scaling::setTenths(Tenths value)
     m_tenths = std::move(value);
 }
 
-Scaling parseScaling(pugi::xml_node el)
-{
-    return parseScaling(el, ParseContext{});
-}
-
 Scaling parseScaling(pugi::xml_node el, const ParseContext &context)
 {
     Scaling out;
@@ -50,11 +45,6 @@ Scaling parseScaling(pugi::xml_node el, const ParseContext &context)
     }
     parseScalingContent(out, el, context);
     return out;
-}
-
-void parseScalingContent(Scaling &out, pugi::xml_node el)
-{
-    parseScalingContent(out, el, ParseContext{});
 }
 
 void parseScalingContent(Scaling &out, pugi::xml_node el, const ParseContext &context)

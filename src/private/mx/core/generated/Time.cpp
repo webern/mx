@@ -181,11 +181,6 @@ void Time::setChoice(TimeChoice value)
     m_choice = std::move(value);
 }
 
-Time parseTime(pugi::xml_node el)
-{
-    return parseTime(el, ParseContext{});
-}
-
 Time parseTime(pugi::xml_node el, const ParseContext &context)
 {
     Time out;
@@ -267,11 +262,6 @@ Time parseTime(pugi::xml_node el, const ParseContext &context)
     }
     parseTimeContent(out, el, context);
     return out;
-}
-
-void parseTimeContent(Time &out, pugi::xml_node el)
-{
-    parseTimeContent(out, el, ParseContext{});
 }
 
 void parseTimeContent(Time &out, pugi::xml_node el, const ParseContext &context)

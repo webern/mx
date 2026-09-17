@@ -141,11 +141,6 @@ void StaffDivide::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-StaffDivide parseStaffDivide(pugi::xml_node el)
-{
-    return parseStaffDivide(el, ParseContext{});
-}
-
 StaffDivide parseStaffDivide(pugi::xml_node el, const ParseContext &context)
 {
     StaffDivide out;
@@ -221,11 +216,6 @@ StaffDivide parseStaffDivide(pugi::xml_node el, const ParseContext &context)
     }
     parseStaffDivideContent(out, el, context);
     return out;
-}
-
-void parseStaffDivideContent(StaffDivide &out, pugi::xml_node el)
-{
-    parseStaffDivideContent(out, el, ParseContext{});
 }
 
 void parseStaffDivideContent(StaffDivide &out, pugi::xml_node el, const ParseContext &context)

@@ -78,11 +78,7 @@ class Arrow final
     ArrowChoice m_choice{};
 };
 
-Arrow parseArrow(pugi::xml_node el);
-
 Arrow parseArrow(pugi::xml_node el, const ParseContext &context);
-
-void parseArrowContent(Arrow &out, pugi::xml_node el);
 
 void parseArrowContent(Arrow &out, pugi::xml_node el, const ParseContext &context);
 

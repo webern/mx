@@ -43,8 +43,6 @@ class CueNoteGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeCueNoteGroup(const CueNoteGroup &v, pugi::xml_node el);

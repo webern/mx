@@ -35,11 +35,7 @@ class KeyAccidental final
     AccidentalValue m_value{};
 };
 
-KeyAccidental parseKeyAccidental(pugi::xml_node el);
-
 KeyAccidental parseKeyAccidental(pugi::xml_node el, const ParseContext &context);
-
-void parseKeyAccidentalContent(KeyAccidental &out, pugi::xml_node el);
 
 void parseKeyAccidentalContent(KeyAccidental &out, pugi::xml_node el, const ParseContext &context);
 

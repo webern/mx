@@ -131,11 +131,6 @@ DirectionTypeChoice DirectionTypeChoice::otherDirection(OtherDirection value)
     return DirectionTypeChoice{Storage{std::in_place_index<22>, std::move(value)}};
 }
 
-DirectionTypeChoice parseDirectionTypeChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseDirectionTypeChoice(el, cursor, ParseContext{});
-}
-
 DirectionTypeChoice parseDirectionTypeChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "rehearsal")))

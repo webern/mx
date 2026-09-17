@@ -32,11 +32,7 @@ class Double final
     std::optional<YesNo> m_above;
 };
 
-Double parseDouble(pugi::xml_node el);
-
 Double parseDouble(pugi::xml_node el, const ParseContext &context);
-
-void parseDoubleContent(Double &out, pugi::xml_node el);
 
 void parseDoubleContent(Double &out, pugi::xml_node el, const ParseContext &context);
 

@@ -21,11 +21,6 @@ void InstrumentLink::setID(Token value)
     m_id = std::move(value);
 }
 
-InstrumentLink parseInstrumentLink(pugi::xml_node el)
-{
-    return parseInstrumentLink(el, ParseContext{});
-}
-
 InstrumentLink parseInstrumentLink(pugi::xml_node el, const ParseContext &context)
 {
     InstrumentLink out;
@@ -53,11 +48,6 @@ InstrumentLink parseInstrumentLink(pugi::xml_node el, const ParseContext &contex
     }
     parseInstrumentLinkContent(out, el, context);
     return out;
-}
-
-void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el)
-{
-    parseInstrumentLinkContent(out, el, ParseContext{});
 }
 
 void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el, const ParseContext &context)

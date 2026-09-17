@@ -83,11 +83,7 @@ class Harmonic final
     std::optional<HarmonicChoice2> m_choice2;
 };
 
-Harmonic parseHarmonic(pugi::xml_node el);
-
 Harmonic parseHarmonic(pugi::xml_node el, const ParseContext &context);
-
-void parseHarmonicContent(Harmonic &out, pugi::xml_node el);
 
 void parseHarmonicContent(Harmonic &out, pugi::xml_node el, const ParseContext &context);
 

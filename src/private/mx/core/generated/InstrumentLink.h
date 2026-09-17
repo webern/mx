@@ -34,11 +34,7 @@ class InstrumentLink final
     Token m_id{};
 };
 
-InstrumentLink parseInstrumentLink(pugi::xml_node el);
-
 InstrumentLink parseInstrumentLink(pugi::xml_node el, const ParseContext &context);
-
-void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el);
 
 void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el, const ParseContext &context);
 

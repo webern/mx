@@ -121,11 +121,6 @@ void RootStep::setValue(Step value)
     m_value = std::move(value);
 }
 
-RootStep parseRootStep(pugi::xml_node el)
-{
-    return parseRootStep(el, ParseContext{});
-}
-
 RootStep parseRootStep(pugi::xml_node el, const ParseContext &context)
 {
     RootStep out;
@@ -183,11 +178,6 @@ RootStep parseRootStep(pugi::xml_node el, const ParseContext &context)
     }
     parseRootStepContent(out, el, context);
     return out;
-}
-
-void parseRootStepContent(RootStep &out, pugi::xml_node el)
-{
-    parseRootStepContent(out, el, ParseContext{});
 }
 
 void parseRootStepContent(RootStep &out, pugi::xml_node el, const ParseContext &context)

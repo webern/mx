@@ -161,11 +161,6 @@ void Attributes::setMeasureStyle(std::vector<MeasureStyle> value)
     m_measureStyle = std::move(value);
 }
 
-Attributes parseAttributes(pugi::xml_node el)
-{
-    return parseAttributes(el, ParseContext{});
-}
-
 Attributes parseAttributes(pugi::xml_node el, const ParseContext &context)
 {
     Attributes out;
@@ -180,11 +175,6 @@ Attributes parseAttributes(pugi::xml_node el, const ParseContext &context)
     }
     parseAttributesContent(out, el, context);
     return out;
-}
-
-void parseAttributesContent(Attributes &out, pugi::xml_node el)
-{
-    parseAttributesContent(out, el, ParseContext{});
 }
 
 void parseAttributesContent(Attributes &out, pugi::xml_node el, const ParseContext &context)

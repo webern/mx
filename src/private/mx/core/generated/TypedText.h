@@ -30,11 +30,7 @@ class TypedText final
     std::string m_value{};
 };
 
-TypedText parseTypedText(pugi::xml_node el);
-
 TypedText parseTypedText(pugi::xml_node el, const ParseContext &context);
-
-void parseTypedTextContent(TypedText &out, pugi::xml_node el);
 
 void parseTypedTextContent(TypedText &out, pugi::xml_node el, const ParseContext &context);
 

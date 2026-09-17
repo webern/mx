@@ -41,11 +41,6 @@ void GraceNormalNoteGroup::clearTie() noexcept
     m_tie.clear();
 }
 
-GraceNormalNoteGroup parseGraceNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseGraceNormalNoteGroup(el, cursor, ParseContext{});
-}
-
 GraceNormalNoteGroup parseGraceNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     GraceNormalNoteGroup out;

@@ -31,11 +31,7 @@ class MetronomeTied final
     StartStop m_type{};
 };
 
-MetronomeTied parseMetronomeTied(pugi::xml_node el);
-
 MetronomeTied parseMetronomeTied(pugi::xml_node el, const ParseContext &context);
-
-void parseMetronomeTiedContent(MetronomeTied &out, pugi::xml_node el);
 
 void parseMetronomeTiedContent(MetronomeTied &out, pugi::xml_node el, const ParseContext &context);
 

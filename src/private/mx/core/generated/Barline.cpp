@@ -151,11 +151,6 @@ void Barline::setRepeat(std::optional<Repeat> value)
     m_repeat = std::move(value);
 }
 
-Barline parseBarline(pugi::xml_node el)
-{
-    return parseBarline(el, ParseContext{});
-}
-
 Barline parseBarline(pugi::xml_node el, const ParseContext &context)
 {
     Barline out;
@@ -193,11 +188,6 @@ Barline parseBarline(pugi::xml_node el, const ParseContext &context)
     }
     parseBarlineContent(out, el, context);
     return out;
-}
-
-void parseBarlineContent(Barline &out, pugi::xml_node el)
-{
-    parseBarlineContent(out, el, ParseContext{});
 }
 
 void parseBarlineContent(Barline &out, pugi::xml_node el, const ParseContext &context)

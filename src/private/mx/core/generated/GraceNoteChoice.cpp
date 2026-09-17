@@ -26,11 +26,6 @@ GraceNoteChoice GraceNoteChoice::graceCueNoteGroup(GraceCueNoteGroup value)
     return GraceNoteChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-GraceNoteChoice parseGraceNoteChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseGraceNoteChoice(el, cursor, ParseContext{});
-}
-
 GraceNoteChoice parseGraceNoteChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||

@@ -63,11 +63,7 @@ class Image final
     std::optional<Token> m_id;
 };
 
-Image parseImage(pugi::xml_node el);
-
 Image parseImage(pugi::xml_node el, const ParseContext &context);
-
-void parseImageContent(Image &out, pugi::xml_node el);
 
 void parseImageContent(Image &out, pugi::xml_node el, const ParseContext &context);
 

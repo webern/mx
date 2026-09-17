@@ -171,11 +171,6 @@ TechnicalChoice TechnicalChoice::otherTechnical(OtherPlacementText value)
     return TechnicalChoice{Storage{std::in_place_index<30>, std::move(value)}};
 }
 
-TechnicalChoice parseTechnicalChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseTechnicalChoice(el, cursor, ParseContext{});
-}
-
 TechnicalChoice parseTechnicalChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "up-bow")))

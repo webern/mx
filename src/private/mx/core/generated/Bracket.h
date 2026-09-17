@@ -75,11 +75,7 @@ class Bracket final
     std::optional<Token> m_id;
 };
 
-Bracket parseBracket(pugi::xml_node el);
-
 Bracket parseBracket(pugi::xml_node el, const ParseContext &context);
-
-void parseBracketContent(Bracket &out, pugi::xml_node el);
 
 void parseBracketContent(Bracket &out, pugi::xml_node el, const ParseContext &context);
 

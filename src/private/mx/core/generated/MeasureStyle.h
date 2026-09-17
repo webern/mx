@@ -68,11 +68,7 @@ class MeasureStyle final
     MeasureStyleChoice m_choice{};
 };
 
-MeasureStyle parseMeasureStyle(pugi::xml_node el);
-
 MeasureStyle parseMeasureStyle(pugi::xml_node el, const ParseContext &context);
-
-void parseMeasureStyleContent(MeasureStyle &out, pugi::xml_node el);
 
 void parseMeasureStyleContent(MeasureStyle &out, pugi::xml_node el, const ParseContext &context);
 

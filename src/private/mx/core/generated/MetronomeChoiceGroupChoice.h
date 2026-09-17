@@ -82,8 +82,6 @@ class MetronomeChoiceGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-MetronomeChoiceGroupChoice parseMetronomeChoiceGroupChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 MetronomeChoiceGroupChoice parseMetronomeChoiceGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                            const ParseContext &context);
 

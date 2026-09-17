@@ -26,11 +26,6 @@ ListeningChoice ListeningChoice::otherListening(OtherListening value)
     return ListeningChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-ListeningChoice parseListeningChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseListeningChoice(el, cursor, ParseContext{});
-}
-
 ListeningChoice parseListeningChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "sync")))

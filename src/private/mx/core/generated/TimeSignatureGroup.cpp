@@ -31,11 +31,6 @@ void TimeSignatureGroup::setBeatType(std::string value)
     m_beatType = std::move(value);
 }
 
-TimeSignatureGroup parseTimeSignatureGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseTimeSignatureGroup(el, cursor, ParseContext{});
-}
-
 TimeSignatureGroup parseTimeSignatureGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     TimeSignatureGroup out;

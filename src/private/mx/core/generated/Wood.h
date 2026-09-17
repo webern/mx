@@ -34,11 +34,7 @@ class Wood final
     WoodValue m_value{};
 };
 
-Wood parseWood(pugi::xml_node el);
-
 Wood parseWood(pugi::xml_node el, const ParseContext &context);
-
-void parseWoodContent(Wood &out, pugi::xml_node el);
 
 void parseWoodContent(Wood &out, pugi::xml_node el, const ParseContext &context);
 

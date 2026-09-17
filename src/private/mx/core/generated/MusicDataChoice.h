@@ -277,8 +277,6 @@ class MusicDataChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-MusicDataChoice parseMusicDataChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 MusicDataChoice parseMusicDataChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeMusicDataChoice(const MusicDataChoice &v, pugi::xml_node el);

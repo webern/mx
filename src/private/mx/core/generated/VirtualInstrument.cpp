@@ -31,11 +31,6 @@ void VirtualInstrument::setVirtualName(std::optional<std::string> value)
     m_virtualName = std::move(value);
 }
 
-VirtualInstrument parseVirtualInstrument(pugi::xml_node el)
-{
-    return parseVirtualInstrument(el, ParseContext{});
-}
-
 VirtualInstrument parseVirtualInstrument(pugi::xml_node el, const ParseContext &context)
 {
     VirtualInstrument out;
@@ -50,11 +45,6 @@ VirtualInstrument parseVirtualInstrument(pugi::xml_node el, const ParseContext &
     }
     parseVirtualInstrumentContent(out, el, context);
     return out;
-}
-
-void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el)
-{
-    parseVirtualInstrumentContent(out, el, ParseContext{});
 }
 
 void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el, const ParseContext &context)

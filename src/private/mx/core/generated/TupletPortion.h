@@ -45,11 +45,7 @@ class TupletPortion final
     std::vector<TupletDot> m_tupletDot;
 };
 
-TupletPortion parseTupletPortion(pugi::xml_node el);
-
 TupletPortion parseTupletPortion(pugi::xml_node el, const ParseContext &context);
-
-void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el);
 
 void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el, const ParseContext &context);
 

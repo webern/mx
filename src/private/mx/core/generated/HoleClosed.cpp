@@ -31,11 +31,6 @@ void HoleClosed::setValue(HoleClosedValue value)
     m_value = std::move(value);
 }
 
-HoleClosed parseHoleClosed(pugi::xml_node el)
-{
-    return parseHoleClosed(el, ParseContext{});
-}
-
 HoleClosed parseHoleClosed(pugi::xml_node el, const ParseContext &context)
 {
     HoleClosed out;
@@ -57,11 +52,6 @@ HoleClosed parseHoleClosed(pugi::xml_node el, const ParseContext &context)
     }
     parseHoleClosedContent(out, el, context);
     return out;
-}
-
-void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el)
-{
-    parseHoleClosedContent(out, el, ParseContext{});
 }
 
 void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el, const ParseContext &context)

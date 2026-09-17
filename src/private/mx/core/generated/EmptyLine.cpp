@@ -161,11 +161,6 @@ void EmptyLine::setPlacement(std::optional<AboveBelow> value)
     m_placement = std::move(value);
 }
 
-EmptyLine parseEmptyLine(pugi::xml_node el)
-{
-    return parseEmptyLine(el, ParseContext{});
-}
-
 EmptyLine parseEmptyLine(pugi::xml_node el, const ParseContext &context)
 {
     EmptyLine out;
@@ -243,11 +238,6 @@ EmptyLine parseEmptyLine(pugi::xml_node el, const ParseContext &context)
     }
     parseEmptyLineContent(out, el, context);
     return out;
-}
-
-void parseEmptyLineContent(EmptyLine &out, pugi::xml_node el)
-{
-    parseEmptyLineContent(out, el, ParseContext{});
 }
 
 void parseEmptyLineContent(EmptyLine &out, pugi::xml_node el, const ParseContext &context)

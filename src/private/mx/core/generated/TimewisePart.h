@@ -38,11 +38,7 @@ class TimewisePart final
     std::vector<MusicDataChoice> m_musicData;
 };
 
-TimewisePart parseTimewisePart(pugi::xml_node el);
-
 TimewisePart parseTimewisePart(pugi::xml_node el, const ParseContext &context);
-
-void parseTimewisePartContent(TimewisePart &out, pugi::xml_node el);
 
 void parseTimewisePartContent(TimewisePart &out, pugi::xml_node el, const ParseContext &context);
 

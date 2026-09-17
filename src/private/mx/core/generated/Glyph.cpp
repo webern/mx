@@ -31,11 +31,6 @@ void Glyph::setValue(SmuflGlyphName value)
     m_value = std::move(value);
 }
 
-Glyph parseGlyph(pugi::xml_node el)
-{
-    return parseGlyph(el, ParseContext{});
-}
-
 Glyph parseGlyph(pugi::xml_node el, const ParseContext &context)
 {
     Glyph out;
@@ -63,11 +58,6 @@ Glyph parseGlyph(pugi::xml_node el, const ParseContext &context)
     }
     parseGlyphContent(out, el, context);
     return out;
-}
-
-void parseGlyphContent(Glyph &out, pugi::xml_node el)
-{
-    parseGlyphContent(out, el, ParseContext{});
 }
 
 void parseGlyphContent(Glyph &out, pugi::xml_node el, const ParseContext &context)

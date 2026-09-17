@@ -101,11 +101,6 @@ ArticulationsChoice ArticulationsChoice::otherArticulation(OtherPlacementText va
     return ArticulationsChoice{Storage{std::in_place_index<16>, std::move(value)}};
 }
 
-ArticulationsChoice parseArticulationsChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseArticulationsChoice(el, cursor, ParseContext{});
-}
-
 ArticulationsChoice parseArticulationsChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "accent")))

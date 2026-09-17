@@ -31,11 +31,6 @@ void Effect::setValue(EffectValue value)
     m_value = std::move(value);
 }
 
-Effect parseEffect(pugi::xml_node el)
-{
-    return parseEffect(el, ParseContext{});
-}
-
 Effect parseEffect(pugi::xml_node el, const ParseContext &context)
 {
     Effect out;
@@ -57,11 +52,6 @@ Effect parseEffect(pugi::xml_node el, const ParseContext &context)
     }
     parseEffectContent(out, el, context);
     return out;
-}
-
-void parseEffectContent(Effect &out, pugi::xml_node el)
-{
-    parseEffectContent(out, el, ParseContext{});
 }
 
 void parseEffectContent(Effect &out, pugi::xml_node el, const ParseContext &context)

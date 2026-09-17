@@ -91,11 +91,6 @@ void MeasureStyle::setChoice(MeasureStyleChoice value)
     m_choice = std::move(value);
 }
 
-MeasureStyle parseMeasureStyle(pugi::xml_node el)
-{
-    return parseMeasureStyle(el, ParseContext{});
-}
-
 MeasureStyle parseMeasureStyle(pugi::xml_node el, const ParseContext &context)
 {
     MeasureStyle out;
@@ -141,11 +136,6 @@ MeasureStyle parseMeasureStyle(pugi::xml_node el, const ParseContext &context)
     }
     parseMeasureStyleContent(out, el, context);
     return out;
-}
-
-void parseMeasureStyleContent(MeasureStyle &out, pugi::xml_node el)
-{
-    parseMeasureStyleContent(out, el, ParseContext{});
 }
 
 void parseMeasureStyleContent(MeasureStyle &out, pugi::xml_node el, const ParseContext &context)

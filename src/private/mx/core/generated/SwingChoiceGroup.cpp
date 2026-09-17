@@ -41,11 +41,6 @@ void SwingChoiceGroup::setSwingType(std::optional<SwingTypeValue> value)
     m_swingType = std::move(value);
 }
 
-SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseSwingChoiceGroup(el, cursor, ParseContext{});
-}
-
 SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     SwingChoiceGroup out;

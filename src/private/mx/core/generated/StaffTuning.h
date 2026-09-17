@@ -37,11 +37,7 @@ class StaffTuning final
     TuningGroup m_tuning{};
 };
 
-StaffTuning parseStaffTuning(pugi::xml_node el);
-
 StaffTuning parseStaffTuning(pugi::xml_node el, const ParseContext &context);
-
-void parseStaffTuningContent(StaffTuning &out, pugi::xml_node el);
 
 void parseStaffTuningContent(StaffTuning &out, pugi::xml_node el, const ParseContext &context);
 

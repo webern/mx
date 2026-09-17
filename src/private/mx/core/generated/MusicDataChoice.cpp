@@ -179,11 +179,6 @@ MusicDataChoice MusicDataChoice::bookmark(Bookmark value)
     return MusicDataChoice{Storage{std::in_place_index<13>, std::make_unique<Bookmark>(std::move(value))}};
 }
 
-MusicDataChoice parseMusicDataChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseMusicDataChoice(el, cursor, ParseContext{});
-}
-
 MusicDataChoice parseMusicDataChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursorIs(cursor, "note"))

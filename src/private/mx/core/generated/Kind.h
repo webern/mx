@@ -104,11 +104,7 @@ class Kind final
     KindValue m_value{};
 };
 
-Kind parseKind(pugi::xml_node el);
-
 Kind parseKind(pugi::xml_node el, const ParseContext &context);
-
-void parseKindContent(Kind &out, pugi::xml_node el);
 
 void parseKindContent(Kind &out, pugi::xml_node el, const ParseContext &context);
 

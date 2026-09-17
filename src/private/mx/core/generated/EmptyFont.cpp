@@ -51,11 +51,6 @@ void EmptyFont::setFontWeight(std::optional<FontWeight> value)
     m_fontWeight = std::move(value);
 }
 
-EmptyFont parseEmptyFont(pugi::xml_node el)
-{
-    return parseEmptyFont(el, ParseContext{});
-}
-
 EmptyFont parseEmptyFont(pugi::xml_node el, const ParseContext &context)
 {
     EmptyFont out;
@@ -89,11 +84,6 @@ EmptyFont parseEmptyFont(pugi::xml_node el, const ParseContext &context)
     }
     parseEmptyFontContent(out, el, context);
     return out;
-}
-
-void parseEmptyFontContent(EmptyFont &out, pugi::xml_node el)
-{
-    parseEmptyFontContent(out, el, ParseContext{});
 }
 
 void parseEmptyFontContent(EmptyFont &out, pugi::xml_node el, const ParseContext &context)

@@ -31,11 +31,6 @@ void MiscellaneousField::setValue(std::string value)
     m_value = std::move(value);
 }
 
-MiscellaneousField parseMiscellaneousField(pugi::xml_node el)
-{
-    return parseMiscellaneousField(el, ParseContext{});
-}
-
 MiscellaneousField parseMiscellaneousField(pugi::xml_node el, const ParseContext &context)
 {
     MiscellaneousField out;
@@ -63,11 +58,6 @@ MiscellaneousField parseMiscellaneousField(pugi::xml_node el, const ParseContext
     }
     parseMiscellaneousFieldContent(out, el, context);
     return out;
-}
-
-void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el)
-{
-    parseMiscellaneousFieldContent(out, el, ParseContext{});
 }
 
 void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el, const ParseContext &context)

@@ -31,11 +31,6 @@ void PedalTuning::setPedalAlter(Semitones value)
     m_pedalAlter = std::move(value);
 }
 
-PedalTuning parsePedalTuning(pugi::xml_node el)
-{
-    return parsePedalTuning(el, ParseContext{});
-}
-
 PedalTuning parsePedalTuning(pugi::xml_node el, const ParseContext &context)
 {
     PedalTuning out;
@@ -50,11 +45,6 @@ PedalTuning parsePedalTuning(pugi::xml_node el, const ParseContext &context)
     }
     parsePedalTuningContent(out, el, context);
     return out;
-}
-
-void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el)
-{
-    parsePedalTuningContent(out, el, ParseContext{});
 }
 
 void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el, const ParseContext &context)

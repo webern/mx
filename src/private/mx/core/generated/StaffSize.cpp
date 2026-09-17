@@ -31,11 +31,6 @@ void StaffSize::setValue(NonNegativeDecimal value)
     m_value = std::move(value);
 }
 
-StaffSize parseStaffSize(pugi::xml_node el)
-{
-    return parseStaffSize(el, ParseContext{});
-}
-
 StaffSize parseStaffSize(pugi::xml_node el, const ParseContext &context)
 {
     StaffSize out;
@@ -57,11 +52,6 @@ StaffSize parseStaffSize(pugi::xml_node el, const ParseContext &context)
     }
     parseStaffSizeContent(out, el, context);
     return out;
-}
-
-void parseStaffSizeContent(StaffSize &out, pugi::xml_node el)
-{
-    parseStaffSizeContent(out, el, ParseContext{});
 }
 
 void parseStaffSizeContent(StaffSize &out, pugi::xml_node el, const ParseContext &context)

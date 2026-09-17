@@ -86,11 +86,6 @@ void Identification::setMiscellaneous(std::optional<Miscellaneous> value)
     m_miscellaneous = std::move(value);
 }
 
-Identification parseIdentification(pugi::xml_node el)
-{
-    return parseIdentification(el, ParseContext{});
-}
-
 Identification parseIdentification(pugi::xml_node el, const ParseContext &context)
 {
     Identification out;
@@ -105,11 +100,6 @@ Identification parseIdentification(pugi::xml_node el, const ParseContext &contex
     }
     parseIdentificationContent(out, el, context);
     return out;
-}
-
-void parseIdentificationContent(Identification &out, pugi::xml_node el)
-{
-    parseIdentificationContent(out, el, ParseContext{});
 }
 
 void parseIdentificationContent(Identification &out, pugi::xml_node el, const ParseContext &context)

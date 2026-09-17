@@ -92,8 +92,6 @@ private:
 /// The parse error boundary (plan §2.5): strict on names and structure,
 /// lenient on values; a root declaring a version newer than
 /// SupportedMusicXMLVersion is rejected with unsupportedVersion.
-Result<Document> parse(const pugi::xml_document &doc);
-
 Result<Document> parse(const pugi::xml_document &doc, const ParseContext &context);
 
 /// Total for every Document (§1.1 guarantees validity): writes the XML

@@ -37,11 +37,7 @@ class Encoding final
     std::vector<EncodingChoice> m_choice;
 };
 
-Encoding parseEncoding(pugi::xml_node el);
-
 Encoding parseEncoding(pugi::xml_node el, const ParseContext &context);
-
-void parseEncodingContent(Encoding &out, pugi::xml_node el);
 
 void parseEncodingContent(Encoding &out, pugi::xml_node el, const ParseContext &context);
 

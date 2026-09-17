@@ -37,11 +37,7 @@ class Cancel final
     Fifths m_value{};
 };
 
-Cancel parseCancel(pugi::xml_node el);
-
 Cancel parseCancel(pugi::xml_node el, const ParseContext &context);
-
-void parseCancelContent(Cancel &out, pugi::xml_node el);
 
 void parseCancelContent(Cancel &out, pugi::xml_node el, const ParseContext &context);
 

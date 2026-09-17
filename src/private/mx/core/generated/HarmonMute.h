@@ -70,11 +70,7 @@ class HarmonMute final
     HarmonClosed m_harmonClosed{};
 };
 
-HarmonMute parseHarmonMute(pugi::xml_node el);
-
 HarmonMute parseHarmonMute(pugi::xml_node el, const ParseContext &context);
-
-void parseHarmonMuteContent(HarmonMute &out, pugi::xml_node el);
 
 void parseHarmonMuteContent(HarmonMute &out, pugi::xml_node el, const ParseContext &context);
 

@@ -141,11 +141,7 @@ class Sound final
     std::optional<Offset> m_offset;
 };
 
-Sound parseSound(pugi::xml_node el);
-
 Sound parseSound(pugi::xml_node el, const ParseContext &context);
-
-void parseSoundContent(Sound &out, pugi::xml_node el);
 
 void parseSoundContent(Sound &out, pugi::xml_node el, const ParseContext &context);
 

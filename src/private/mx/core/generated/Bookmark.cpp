@@ -51,11 +51,6 @@ void Bookmark::setPosition(std::optional<int> value)
     m_position = std::move(value);
 }
 
-Bookmark parseBookmark(pugi::xml_node el)
-{
-    return parseBookmark(el, ParseContext{});
-}
-
 Bookmark parseBookmark(pugi::xml_node el, const ParseContext &context)
 {
     Bookmark out;
@@ -95,11 +90,6 @@ Bookmark parseBookmark(pugi::xml_node el, const ParseContext &context)
     }
     parseBookmarkContent(out, el, context);
     return out;
-}
-
-void parseBookmarkContent(Bookmark &out, pugi::xml_node el)
-{
-    parseBookmarkContent(out, el, ParseContext{});
 }
 
 void parseBookmarkContent(Bookmark &out, pugi::xml_node el, const ParseContext &context)

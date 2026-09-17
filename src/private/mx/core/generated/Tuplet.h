@@ -93,11 +93,7 @@ class Tuplet final
     std::optional<TupletPortion> m_tupletNormal;
 };
 
-Tuplet parseTuplet(pugi::xml_node el);
-
 Tuplet parseTuplet(pugi::xml_node el, const ParseContext &context);
-
-void parseTupletContent(Tuplet &out, pugi::xml_node el);
 
 void parseTupletContent(Tuplet &out, pugi::xml_node el, const ParseContext &context);
 

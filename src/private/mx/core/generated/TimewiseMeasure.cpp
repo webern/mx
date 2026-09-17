@@ -86,11 +86,6 @@ void TimewiseMeasure::setPart(OneOrMore<TimewisePart> value)
     m_part = std::move(value);
 }
 
-TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el)
-{
-    return parseTimewiseMeasure(el, ParseContext{});
-}
-
 TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el, const ParseContext &context)
 {
     TimewiseMeasure out;
@@ -138,11 +133,6 @@ TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el, const ParseContext &cont
     }
     parseTimewiseMeasureContent(out, el, context);
     return out;
-}
-
-void parseTimewiseMeasureContent(TimewiseMeasure &out, pugi::xml_node el)
-{
-    parseTimewiseMeasureContent(out, el, ParseContext{});
 }
 
 void parseTimewiseMeasureContent(TimewiseMeasure &out, pugi::xml_node el, const ParseContext &context)

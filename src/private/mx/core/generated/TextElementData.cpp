@@ -141,11 +141,6 @@ void TextElementData::setValue(std::string value)
     m_value = std::move(value);
 }
 
-TextElementData parseTextElementData(pugi::xml_node el)
-{
-    return parseTextElementData(el, ParseContext{});
-}
-
 TextElementData parseTextElementData(pugi::xml_node el, const ParseContext &context)
 {
     TextElementData out;
@@ -211,11 +206,6 @@ TextElementData parseTextElementData(pugi::xml_node el, const ParseContext &cont
     }
     parseTextElementDataContent(out, el, context);
     return out;
-}
-
-void parseTextElementDataContent(TextElementData &out, pugi::xml_node el)
-{
-    parseTextElementDataContent(out, el, ParseContext{});
 }
 
 void parseTextElementDataContent(TextElementData &out, pugi::xml_node el, const ParseContext &context)

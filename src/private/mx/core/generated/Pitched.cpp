@@ -31,11 +31,6 @@ void Pitched::setValue(PitchedValue value)
     m_value = std::move(value);
 }
 
-Pitched parsePitched(pugi::xml_node el)
-{
-    return parsePitched(el, ParseContext{});
-}
-
 Pitched parsePitched(pugi::xml_node el, const ParseContext &context)
 {
     Pitched out;
@@ -57,11 +52,6 @@ Pitched parsePitched(pugi::xml_node el, const ParseContext &context)
     }
     parsePitchedContent(out, el, context);
     return out;
-}
-
-void parsePitchedContent(Pitched &out, pugi::xml_node el)
-{
-    parsePitchedContent(out, el, ParseContext{});
 }
 
 void parsePitchedContent(Pitched &out, pugi::xml_node el, const ParseContext &context)

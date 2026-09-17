@@ -241,11 +241,6 @@ void FormattedText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-FormattedText parseFormattedText(pugi::xml_node el)
-{
-    return parseFormattedText(el, ParseContext{});
-}
-
 FormattedText parseFormattedText(pugi::xml_node el, const ParseContext &context)
 {
     FormattedText out;
@@ -351,11 +346,6 @@ FormattedText parseFormattedText(pugi::xml_node el, const ParseContext &context)
     }
     parseFormattedTextContent(out, el, context);
     return out;
-}
-
-void parseFormattedTextContent(FormattedText &out, pugi::xml_node el)
-{
-    parseFormattedTextContent(out, el, ParseContext{});
 }
 
 void parseFormattedTextContent(FormattedText &out, pugi::xml_node el, const ParseContext &context)

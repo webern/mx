@@ -42,11 +42,7 @@ class SystemDividers final
     EmptyPrintObjectStyleAlign m_rightDivider{};
 };
 
-SystemDividers parseSystemDividers(pugi::xml_node el);
-
 SystemDividers parseSystemDividers(pugi::xml_node el, const ParseContext &context);
-
-void parseSystemDividersContent(SystemDividers &out, pugi::xml_node el);
 
 void parseSystemDividersContent(SystemDividers &out, pugi::xml_node el, const ParseContext &context);
 

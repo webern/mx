@@ -121,11 +121,6 @@ void GroupName::setValue(std::string value)
     m_value = std::move(value);
 }
 
-GroupName parseGroupName(pugi::xml_node el)
-{
-    return parseGroupName(el, ParseContext{});
-}
-
 GroupName parseGroupName(pugi::xml_node el, const ParseContext &context)
 {
     GroupName out;
@@ -183,11 +178,6 @@ GroupName parseGroupName(pugi::xml_node el, const ParseContext &context)
     }
     parseGroupNameContent(out, el, context);
     return out;
-}
-
-void parseGroupNameContent(GroupName &out, pugi::xml_node el)
-{
-    parseGroupNameContent(out, el, ParseContext{});
 }
 
 void parseGroupNameContent(GroupName &out, pugi::xml_node el, const ParseContext &context)

@@ -40,11 +40,7 @@ class DirectionType final
     DirectionTypeChoice m_choice{};
 };
 
-DirectionType parseDirectionType(pugi::xml_node el);
-
 DirectionType parseDirectionType(pugi::xml_node el, const ParseContext &context);
-
-void parseDirectionTypeContent(DirectionType &out, pugi::xml_node el);
 
 void parseDirectionTypeContent(DirectionType &out, pugi::xml_node el, const ParseContext &context);
 

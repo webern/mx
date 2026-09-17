@@ -141,11 +141,6 @@ void Hole::setHoleShape(std::optional<std::string> value)
     m_holeShape = std::move(value);
 }
 
-Hole parseHole(pugi::xml_node el)
-{
-    return parseHole(el, ParseContext{});
-}
-
 Hole parseHole(pugi::xml_node el, const ParseContext &context)
 {
     Hole out;
@@ -203,11 +198,6 @@ Hole parseHole(pugi::xml_node el, const ParseContext &context)
     }
     parseHoleContent(out, el, context);
     return out;
-}
-
-void parseHoleContent(Hole &out, pugi::xml_node el)
-{
-    parseHoleContent(out, el, ParseContext{});
 }
 
 void parseHoleContent(Hole &out, pugi::xml_node el, const ParseContext &context)

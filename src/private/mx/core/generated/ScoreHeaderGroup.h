@@ -60,8 +60,6 @@ class ScoreHeaderGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeScoreHeaderGroup(const ScoreHeaderGroup &v, pugi::xml_node el);

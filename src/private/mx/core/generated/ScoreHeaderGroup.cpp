@@ -86,11 +86,6 @@ void ScoreHeaderGroup::setPartList(PartList value)
     m_partList = std::move(value);
 }
 
-ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseScoreHeaderGroup(el, cursor, ParseContext{});
-}
-
 ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     ScoreHeaderGroup out;

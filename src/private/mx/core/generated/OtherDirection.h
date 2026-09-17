@@ -86,11 +86,7 @@ class OtherDirection final
     std::string m_value{};
 };
 
-OtherDirection parseOtherDirection(pugi::xml_node el);
-
 OtherDirection parseOtherDirection(pugi::xml_node el, const ParseContext &context);
-
-void parseOtherDirectionContent(OtherDirection &out, pugi::xml_node el);
 
 void parseOtherDirectionContent(OtherDirection &out, pugi::xml_node el, const ParseContext &context);
 

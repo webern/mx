@@ -35,11 +35,7 @@ class Pitched final
     PitchedValue m_value{};
 };
 
-Pitched parsePitched(pugi::xml_node el);
-
 Pitched parsePitched(pugi::xml_node el, const ParseContext &context);
-
-void parsePitchedContent(Pitched &out, pugi::xml_node el);
 
 void parsePitchedContent(Pitched &out, pugi::xml_node el, const ParseContext &context);
 

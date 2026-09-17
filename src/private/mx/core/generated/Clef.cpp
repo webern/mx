@@ -171,11 +171,6 @@ void Clef::setClef(ClefGroup value)
     m_clef = std::move(value);
 }
 
-Clef parseClef(pugi::xml_node el)
-{
-    return parseClef(el, ParseContext{});
-}
-
 Clef parseClef(pugi::xml_node el, const ParseContext &context)
 {
     Clef out;
@@ -253,11 +248,6 @@ Clef parseClef(pugi::xml_node el, const ParseContext &context)
     }
     parseClefContent(out, el, context);
     return out;
-}
-
-void parseClefContent(Clef &out, pugi::xml_node el)
-{
-    parseClefContent(out, el, ParseContext{});
 }
 
 void parseClefContent(Clef &out, pugi::xml_node el, const ParseContext &context)

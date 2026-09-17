@@ -75,11 +75,7 @@ class PartGroup final
     EditorialGroup m_editorial{};
 };
 
-PartGroup parsePartGroup(pugi::xml_node el);
-
 PartGroup parsePartGroup(pugi::xml_node el, const ParseContext &context);
-
-void parsePartGroupContent(PartGroup &out, pugi::xml_node el);
 
 void parsePartGroupContent(PartGroup &out, pugi::xml_node el, const ParseContext &context);
 

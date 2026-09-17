@@ -34,11 +34,7 @@ class Beater final
     BeaterValue m_value{};
 };
 
-Beater parseBeater(pugi::xml_node el);
-
 Beater parseBeater(pugi::xml_node el, const ParseContext &context);
-
-void parseBeaterContent(Beater &out, pugi::xml_node el);
 
 void parseBeaterContent(Beater &out, pugi::xml_node el, const ParseContext &context);
 

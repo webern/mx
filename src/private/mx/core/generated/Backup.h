@@ -41,11 +41,7 @@ class Backup final
     EditorialGroup m_editorial{};
 };
 
-Backup parseBackup(pugi::xml_node el);
-
 Backup parseBackup(pugi::xml_node el, const ParseContext &context);
-
-void parseBackupContent(Backup &out, pugi::xml_node el);
 
 void parseBackupContent(Backup &out, pugi::xml_node el, const ParseContext &context);
 

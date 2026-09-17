@@ -494,7 +494,8 @@ constructors, clamp-on-construct number wrappers, composites with named fields i
 (the serializer walks declaration order, so wrong element order is unrepresentable),
 `std::variant`-based choice classes, `OneOrMore<T>` for required repeats, and `Result`-returning
 bounded appends (e.g. beam <= 8). Value semantics throughout -- no shared pointers. Errors exist
-in exactly two places: `mx::core::parse(const pugi::xml_document&) -> Result<Document>` (strict on
+in exactly two places:
+`mx::core::parse(const pugi::xml_document&, const ParseContext&) -> Result<Document>` (strict on
 names and structure, lenient on values) and the bounded `add...` methods. Serialization is
 `mx::core::serialize(const Document&, pugi::xml_document&)`. The design and its rationale are
 recorded in `docs/ai/design/mx-core-plan.md`.

@@ -8,11 +8,6 @@
 namespace mx::core
 {
 
-Empty parseEmpty(pugi::xml_node el)
-{
-    return parseEmpty(el, ParseContext{});
-}
-
 Empty parseEmpty(pugi::xml_node el, const ParseContext &context)
 {
     Empty out;
@@ -27,11 +22,6 @@ Empty parseEmpty(pugi::xml_node el, const ParseContext &context)
     }
     parseEmptyContent(out, el, context);
     return out;
-}
-
-void parseEmptyContent(Empty &out, pugi::xml_node el)
-{
-    parseEmptyContent(out, el, ParseContext{});
 }
 
 void parseEmptyContent(Empty &out, pugi::xml_node el, const ParseContext &context)

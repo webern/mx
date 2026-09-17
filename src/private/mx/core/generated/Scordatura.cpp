@@ -36,11 +36,6 @@ void Scordatura::setAccord(OneOrMore<Accord> value)
     m_accord = std::move(value);
 }
 
-Scordatura parseScordatura(pugi::xml_node el)
-{
-    return parseScordatura(el, ParseContext{});
-}
-
 Scordatura parseScordatura(pugi::xml_node el, const ParseContext &context)
 {
     Scordatura out;
@@ -62,11 +57,6 @@ Scordatura parseScordatura(pugi::xml_node el, const ParseContext &context)
     }
     parseScordaturaContent(out, el, context);
     return out;
-}
-
-void parseScordaturaContent(Scordatura &out, pugi::xml_node el)
-{
-    parseScordaturaContent(out, el, ParseContext{});
 }
 
 void parseScordaturaContent(Scordatura &out, pugi::xml_node el, const ParseContext &context)

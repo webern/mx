@@ -39,8 +39,6 @@ class StaffDetailsGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-StaffDetailsGroup parseStaffDetailsGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 StaffDetailsGroup parseStaffDetailsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeStaffDetailsGroup(const StaffDetailsGroup &v, pugi::xml_node el);

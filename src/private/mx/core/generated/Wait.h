@@ -38,11 +38,7 @@ class Wait final
     std::optional<TimeOnly> m_timeOnly;
 };
 
-Wait parseWait(pugi::xml_node el);
-
 Wait parseWait(pugi::xml_node el, const ParseContext &context);
-
-void parseWaitContent(Wait &out, pugi::xml_node el);
 
 void parseWaitContent(Wait &out, pugi::xml_node el, const ParseContext &context);
 

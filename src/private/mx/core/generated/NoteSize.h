@@ -38,11 +38,7 @@ class NoteSize final
     NonNegativeDecimal m_value{};
 };
 
-NoteSize parseNoteSize(pugi::xml_node el);
-
 NoteSize parseNoteSize(pugi::xml_node el, const ParseContext &context);
-
-void parseNoteSizeContent(NoteSize &out, pugi::xml_node el);
 
 void parseNoteSizeContent(NoteSize &out, pugi::xml_node el, const ParseContext &context);
 

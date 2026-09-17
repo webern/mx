@@ -31,11 +31,6 @@ void DisplayStepOctaveGroup::setDisplayOctave(Octave value)
     m_displayOctave = std::move(value);
 }
 
-DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseDisplayStepOctaveGroup(el, cursor, ParseContext{});
-}
-
 DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor,
                                                    const ParseContext &context)
 {

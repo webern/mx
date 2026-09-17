@@ -40,11 +40,7 @@ class Root final
     std::optional<HarmonyAlter> m_rootAlter;
 };
 
-Root parseRoot(pugi::xml_node el);
-
 Root parseRoot(pugi::xml_node el, const ParseContext &context);
-
-void parseRootContent(Root &out, pugi::xml_node el);
 
 void parseRootContent(Root &out, pugi::xml_node el, const ParseContext &context);
 

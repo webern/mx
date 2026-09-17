@@ -41,11 +41,6 @@ void EditorialVoiceDirectionGroup::setVoice(std::optional<std::string> value)
     m_voice = std::move(value);
 }
 
-EditorialVoiceDirectionGroup parseEditorialVoiceDirectionGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseEditorialVoiceDirectionGroup(el, cursor, ParseContext{});
-}
-
 EditorialVoiceDirectionGroup parseEditorialVoiceDirectionGroup(pugi::xml_node el, pugi::xml_node &cursor,
                                                                const ParseContext &context)
 {

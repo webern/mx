@@ -141,11 +141,6 @@ void Harmonic::setChoice2(std::optional<HarmonicChoice2> value)
     m_choice2 = std::move(value);
 }
 
-Harmonic parseHarmonic(pugi::xml_node el)
-{
-    return parseHarmonic(el, ParseContext{});
-}
-
 Harmonic parseHarmonic(pugi::xml_node el, const ParseContext &context)
 {
     Harmonic out;
@@ -207,11 +202,6 @@ Harmonic parseHarmonic(pugi::xml_node el, const ParseContext &context)
     }
     parseHarmonicContent(out, el, context);
     return out;
-}
-
-void parseHarmonicContent(Harmonic &out, pugi::xml_node el)
-{
-    parseHarmonicContent(out, el, ParseContext{});
 }
 
 void parseHarmonicContent(Harmonic &out, pugi::xml_node el, const ParseContext &context)

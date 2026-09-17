@@ -97,11 +97,7 @@ class Lyric final
     EditorialGroup m_editorial{};
 };
 
-Lyric parseLyric(pugi::xml_node el);
-
 Lyric parseLyric(pugi::xml_node el, const ParseContext &context);
-
-void parseLyricContent(Lyric &out, pugi::xml_node el);
 
 void parseLyricContent(Lyric &out, pugi::xml_node el, const ParseContext &context);
 

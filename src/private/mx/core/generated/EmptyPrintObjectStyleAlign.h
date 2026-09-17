@@ -71,11 +71,7 @@ class EmptyPrintObjectStyleAlign final
     std::optional<Valign> m_valign;
 };
 
-EmptyPrintObjectStyleAlign parseEmptyPrintObjectStyleAlign(pugi::xml_node el);
-
 EmptyPrintObjectStyleAlign parseEmptyPrintObjectStyleAlign(pugi::xml_node el, const ParseContext &context);
-
-void parseEmptyPrintObjectStyleAlignContent(EmptyPrintObjectStyleAlign &out, pugi::xml_node el);
 
 void parseEmptyPrintObjectStyleAlignContent(EmptyPrintObjectStyleAlign &out, pugi::xml_node el,
                                             const ParseContext &context);

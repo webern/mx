@@ -21,11 +21,6 @@ void BeatUnitTied::setBeatUnit(BeatUnitGroup value)
     m_beatUnit = std::move(value);
 }
 
-BeatUnitTied parseBeatUnitTied(pugi::xml_node el)
-{
-    return parseBeatUnitTied(el, ParseContext{});
-}
-
 BeatUnitTied parseBeatUnitTied(pugi::xml_node el, const ParseContext &context)
 {
     BeatUnitTied out;
@@ -40,11 +35,6 @@ BeatUnitTied parseBeatUnitTied(pugi::xml_node el, const ParseContext &context)
     }
     parseBeatUnitTiedContent(out, el, context);
     return out;
-}
-
-void parseBeatUnitTiedContent(BeatUnitTied &out, pugi::xml_node el)
-{
-    parseBeatUnitTiedContent(out, el, ParseContext{});
 }
 
 void parseBeatUnitTiedContent(BeatUnitTied &out, pugi::xml_node el, const ParseContext &context)

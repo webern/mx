@@ -65,11 +65,7 @@ class Defaults final
     std::vector<LyricLanguage> m_lyricLanguage;
 };
 
-Defaults parseDefaults(pugi::xml_node el);
-
 Defaults parseDefaults(pugi::xml_node el, const ParseContext &context);
-
-void parseDefaultsContent(Defaults &out, pugi::xml_node el);
 
 void parseDefaultsContent(Defaults &out, pugi::xml_node el, const ParseContext &context);
 

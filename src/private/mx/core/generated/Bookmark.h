@@ -39,11 +39,7 @@ class Bookmark final
     std::optional<int> m_position;
 };
 
-Bookmark parseBookmark(pugi::xml_node el);
-
 Bookmark parseBookmark(pugi::xml_node el, const ParseContext &context);
-
-void parseBookmarkContent(Bookmark &out, pugi::xml_node el);
 
 void parseBookmarkContent(Bookmark &out, pugi::xml_node el, const ParseContext &context);
 

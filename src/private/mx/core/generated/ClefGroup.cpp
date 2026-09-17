@@ -41,11 +41,6 @@ void ClefGroup::setClefOctaveChange(std::optional<int> value)
     m_clefOctaveChange = std::move(value);
 }
 
-ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseClefGroup(el, cursor, ParseContext{});
-}
-
 ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     ClefGroup out;

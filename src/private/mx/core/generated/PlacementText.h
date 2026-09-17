@@ -66,11 +66,7 @@ class PlacementText final
     std::string m_value{};
 };
 
-PlacementText parsePlacementText(pugi::xml_node el);
-
 PlacementText parsePlacementText(pugi::xml_node el, const ParseContext &context);
-
-void parsePlacementTextContent(PlacementText &out, pugi::xml_node el);
 
 void parsePlacementTextContent(PlacementText &out, pugi::xml_node el, const ParseContext &context);
 

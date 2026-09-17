@@ -36,11 +36,6 @@ void BeatUnitGroup::setBeatUnitDot(std::vector<Empty> value)
     m_beatUnitDot = std::move(value);
 }
 
-BeatUnitGroup parseBeatUnitGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseBeatUnitGroup(el, cursor, ParseContext{});
-}
-
 BeatUnitGroup parseBeatUnitGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     BeatUnitGroup out;

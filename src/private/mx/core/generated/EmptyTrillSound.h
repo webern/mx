@@ -90,11 +90,7 @@ class EmptyTrillSound
     std::optional<Percent> m_lastBeat;
 };
 
-EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el);
-
 EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el, const ParseContext &context);
-
-void parseEmptyTrillSoundContent(EmptyTrillSound &out, pugi::xml_node el);
 
 void parseEmptyTrillSoundContent(EmptyTrillSound &out, pugi::xml_node el, const ParseContext &context);
 

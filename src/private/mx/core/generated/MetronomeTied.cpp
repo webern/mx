@@ -21,11 +21,6 @@ void MetronomeTied::setType(StartStop value)
     m_type = std::move(value);
 }
 
-MetronomeTied parseMetronomeTied(pugi::xml_node el)
-{
-    return parseMetronomeTied(el, ParseContext{});
-}
-
 MetronomeTied parseMetronomeTied(pugi::xml_node el, const ParseContext &context)
 {
     MetronomeTied out;
@@ -53,11 +48,6 @@ MetronomeTied parseMetronomeTied(pugi::xml_node el, const ParseContext &context)
     }
     parseMetronomeTiedContent(out, el, context);
     return out;
-}
-
-void parseMetronomeTiedContent(MetronomeTied &out, pugi::xml_node el)
-{
-    parseMetronomeTiedContent(out, el, ParseContext{});
 }
 
 void parseMetronomeTiedContent(MetronomeTied &out, pugi::xml_node el, const ParseContext &context)

@@ -48,11 +48,7 @@ class TupletNumber final
     int m_value{};
 };
 
-TupletNumber parseTupletNumber(pugi::xml_node el);
-
 TupletNumber parseTupletNumber(pugi::xml_node el, const ParseContext &context);
-
-void parseTupletNumberContent(TupletNumber &out, pugi::xml_node el);
 
 void parseTupletNumberContent(TupletNumber &out, pugi::xml_node el, const ParseContext &context);
 

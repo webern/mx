@@ -31,11 +31,6 @@ void ScorePartMIDIGroup::setMIDIInstrument(std::optional<MIDIInstrument> value)
     m_midiInstrument = std::move(value);
 }
 
-ScorePartMIDIGroup parseScorePartMIDIGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseScorePartMIDIGroup(el, cursor, ParseContext{});
-}
-
 ScorePartMIDIGroup parseScorePartMIDIGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     ScorePartMIDIGroup out;

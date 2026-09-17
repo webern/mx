@@ -75,11 +75,7 @@ class Fingering final
     std::string m_value{};
 };
 
-Fingering parseFingering(pugi::xml_node el);
-
 Fingering parseFingering(pugi::xml_node el, const ParseContext &context);
-
-void parseFingeringContent(Fingering &out, pugi::xml_node el);
 
 void parseFingeringContent(Fingering &out, pugi::xml_node el, const ParseContext &context);
 

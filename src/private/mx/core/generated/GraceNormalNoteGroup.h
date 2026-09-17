@@ -43,8 +43,6 @@ class GraceNormalNoteGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-GraceNormalNoteGroup parseGraceNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 GraceNormalNoteGroup parseGraceNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeGraceNormalNoteGroup(const GraceNormalNoteGroup &v, pugi::xml_node el);

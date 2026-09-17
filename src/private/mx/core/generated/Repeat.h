@@ -44,11 +44,7 @@ class Repeat final
     std::optional<Winged> m_winged;
 };
 
-Repeat parseRepeat(pugi::xml_node el);
-
 Repeat parseRepeat(pugi::xml_node el, const ParseContext &context);
-
-void parseRepeatContent(Repeat &out, pugi::xml_node el);
 
 void parseRepeatContent(Repeat &out, pugi::xml_node el, const ParseContext &context);
 

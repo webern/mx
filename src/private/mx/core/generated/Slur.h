@@ -94,11 +94,7 @@ class Slur final
     std::optional<Token> m_id;
 };
 
-Slur parseSlur(pugi::xml_node el);
-
 Slur parseSlur(pugi::xml_node el, const ParseContext &context);
-
-void parseSlurContent(Slur &out, pugi::xml_node el);
 
 void parseSlurContent(Slur &out, pugi::xml_node el, const ParseContext &context);
 

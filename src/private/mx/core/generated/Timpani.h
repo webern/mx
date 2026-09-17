@@ -30,11 +30,7 @@ class Timpani final
     std::optional<SmuflPictogramGlyphName> m_smufl;
 };
 
-Timpani parseTimpani(pugi::xml_node el);
-
 Timpani parseTimpani(pugi::xml_node el, const ParseContext &context);
-
-void parseTimpaniContent(Timpani &out, pugi::xml_node el);
 
 void parseTimpaniContent(Timpani &out, pugi::xml_node el, const ParseContext &context);
 

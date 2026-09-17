@@ -82,8 +82,6 @@ class ArrowChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-ArrowChoice parseArrowChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 ArrowChoice parseArrowChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeArrowChoice(const ArrowChoice &v, pugi::xml_node el);

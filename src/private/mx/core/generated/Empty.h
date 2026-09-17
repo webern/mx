@@ -22,11 +22,7 @@ class Empty
     bool operator==(const Empty &) const noexcept = default;
 };
 
-Empty parseEmpty(pugi::xml_node el);
-
 Empty parseEmpty(pugi::xml_node el, const ParseContext &context);
-
-void parseEmptyContent(Empty &out, pugi::xml_node el);
 
 void parseEmptyContent(Empty &out, pugi::xml_node el, const ParseContext &context);
 

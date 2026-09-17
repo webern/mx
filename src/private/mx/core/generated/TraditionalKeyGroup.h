@@ -43,8 +43,6 @@ class TraditionalKeyGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TraditionalKeyGroup parseTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 TraditionalKeyGroup parseTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeTraditionalKeyGroup(const TraditionalKeyGroup &v, pugi::xml_node el);

@@ -131,11 +131,6 @@ void EmptyPrintObjectStyleAlign::setValign(std::optional<Valign> value)
     m_valign = std::move(value);
 }
 
-EmptyPrintObjectStyleAlign parseEmptyPrintObjectStyleAlign(pugi::xml_node el)
-{
-    return parseEmptyPrintObjectStyleAlign(el, ParseContext{});
-}
-
 EmptyPrintObjectStyleAlign parseEmptyPrintObjectStyleAlign(pugi::xml_node el, const ParseContext &context)
 {
     EmptyPrintObjectStyleAlign out;
@@ -201,11 +196,6 @@ EmptyPrintObjectStyleAlign parseEmptyPrintObjectStyleAlign(pugi::xml_node el, co
     }
     parseEmptyPrintObjectStyleAlignContent(out, el, context);
     return out;
-}
-
-void parseEmptyPrintObjectStyleAlignContent(EmptyPrintObjectStyleAlign &out, pugi::xml_node el)
-{
-    parseEmptyPrintObjectStyleAlignContent(out, el, ParseContext{});
 }
 
 void parseEmptyPrintObjectStyleAlignContent(EmptyPrintObjectStyleAlign &out, pugi::xml_node el,

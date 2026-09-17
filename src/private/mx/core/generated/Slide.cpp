@@ -211,11 +211,6 @@ void Slide::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Slide parseSlide(pugi::xml_node el)
-{
-    return parseSlide(el, ParseContext{});
-}
-
 Slide parseSlide(pugi::xml_node el, const ParseContext &context)
 {
     Slide out;
@@ -315,11 +310,6 @@ Slide parseSlide(pugi::xml_node el, const ParseContext &context)
     }
     parseSlideContent(out, el, context);
     return out;
-}
-
-void parseSlideContent(Slide &out, pugi::xml_node el)
-{
-    parseSlideContent(out, el, ParseContext{});
 }
 
 void parseSlideContent(Slide &out, pugi::xml_node el, const ParseContext &context)

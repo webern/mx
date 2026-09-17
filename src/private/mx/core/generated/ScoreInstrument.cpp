@@ -51,11 +51,6 @@ void ScoreInstrument::setVirtualInstrumentData(VirtualInstrumentDataGroup value)
     m_virtualInstrumentData = std::move(value);
 }
 
-ScoreInstrument parseScoreInstrument(pugi::xml_node el)
-{
-    return parseScoreInstrument(el, ParseContext{});
-}
-
 ScoreInstrument parseScoreInstrument(pugi::xml_node el, const ParseContext &context)
 {
     ScoreInstrument out;
@@ -83,11 +78,6 @@ ScoreInstrument parseScoreInstrument(pugi::xml_node el, const ParseContext &cont
     }
     parseScoreInstrumentContent(out, el, context);
     return out;
-}
-
-void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el)
-{
-    parseScoreInstrumentContent(out, el, ParseContext{});
 }
 
 void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el, const ParseContext &context)

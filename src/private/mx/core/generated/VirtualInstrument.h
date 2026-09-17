@@ -35,11 +35,7 @@ class VirtualInstrument final
     std::optional<std::string> m_virtualName;
 };
 
-VirtualInstrument parseVirtualInstrument(pugi::xml_node el);
-
 VirtualInstrument parseVirtualInstrument(pugi::xml_node el, const ParseContext &context);
-
-void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el);
 
 void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el, const ParseContext &context);
 

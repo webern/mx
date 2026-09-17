@@ -36,11 +36,7 @@ class Miscellaneous final
     std::vector<MiscellaneousField> m_miscellaneousField;
 };
 
-Miscellaneous parseMiscellaneous(pugi::xml_node el);
-
 Miscellaneous parseMiscellaneous(pugi::xml_node el, const ParseContext &context);
-
-void parseMiscellaneousContent(Miscellaneous &out, pugi::xml_node el);
 
 void parseMiscellaneousContent(Miscellaneous &out, pugi::xml_node el, const ParseContext &context);
 

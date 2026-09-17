@@ -36,11 +36,6 @@ void TimeChoiceGroup::setInterchangeable(std::optional<Interchangeable> value)
     m_interchangeable = std::move(value);
 }
 
-TimeChoiceGroup parseTimeChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseTimeChoiceGroup(el, cursor, ParseContext{});
-}
-
 TimeChoiceGroup parseTimeChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     TimeChoiceGroup out;

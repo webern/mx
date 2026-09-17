@@ -39,8 +39,6 @@ class GraceCueNoteGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeGraceCueNoteGroup(const GraceCueNoteGroup &v, pugi::xml_node el);

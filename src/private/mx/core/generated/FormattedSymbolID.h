@@ -108,11 +108,7 @@ class FormattedSymbolID final
     SmuflGlyphName m_value{};
 };
 
-FormattedSymbolID parseFormattedSymbolID(pugi::xml_node el);
-
 FormattedSymbolID parseFormattedSymbolID(pugi::xml_node el, const ParseContext &context);
-
-void parseFormattedSymbolIDContent(FormattedSymbolID &out, pugi::xml_node el);
 
 void parseFormattedSymbolIDContent(FormattedSymbolID &out, pugi::xml_node el, const ParseContext &context);
 

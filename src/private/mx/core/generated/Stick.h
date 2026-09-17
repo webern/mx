@@ -50,11 +50,7 @@ class Stick final
     StickMaterial m_stickMaterial{};
 };
 
-Stick parseStick(pugi::xml_node el);
-
 Stick parseStick(pugi::xml_node el, const ParseContext &context);
-
-void parseStickContent(Stick &out, pugi::xml_node el);
 
 void parseStickContent(Stick &out, pugi::xml_node el, const ParseContext &context);
 

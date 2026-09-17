@@ -141,11 +141,6 @@ void Coda::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Coda parseCoda(pugi::xml_node el)
-{
-    return parseCoda(el, ParseContext{});
-}
-
 Coda parseCoda(pugi::xml_node el, const ParseContext &context)
 {
     Coda out;
@@ -215,11 +210,6 @@ Coda parseCoda(pugi::xml_node el, const ParseContext &context)
     }
     parseCodaContent(out, el, context);
     return out;
-}
-
-void parseCodaContent(Coda &out, pugi::xml_node el)
-{
-    parseCodaContent(out, el, ParseContext{});
 }
 
 void parseCodaContent(Coda &out, pugi::xml_node el, const ParseContext &context)

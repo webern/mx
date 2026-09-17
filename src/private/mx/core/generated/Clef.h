@@ -99,11 +99,7 @@ class Clef final
     ClefGroup m_clef{};
 };
 
-Clef parseClef(pugi::xml_node el);
-
 Clef parseClef(pugi::xml_node el, const ParseContext &context);
-
-void parseClefContent(Clef &out, pugi::xml_node el);
 
 void parseClefContent(Clef &out, pugi::xml_node el, const ParseContext &context);
 

@@ -171,11 +171,6 @@ void WavyLine::setLastBeat(std::optional<Percent> value)
     m_lastBeat = std::move(value);
 }
 
-WavyLine parseWavyLine(pugi::xml_node el)
-{
-    return parseWavyLine(el, ParseContext{});
-}
-
 WavyLine parseWavyLine(pugi::xml_node el, const ParseContext &context)
 {
     WavyLine out;
@@ -263,11 +258,6 @@ WavyLine parseWavyLine(pugi::xml_node el, const ParseContext &context)
     }
     parseWavyLineContent(out, el, context);
     return out;
-}
-
-void parseWavyLineContent(WavyLine &out, pugi::xml_node el)
-{
-    parseWavyLineContent(out, el, ParseContext{});
 }
 
 void parseWavyLineContent(WavyLine &out, pugi::xml_node el, const ParseContext &context)

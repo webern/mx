@@ -101,11 +101,6 @@ void Notehead::setValue(NoteheadValue value)
     m_value = std::move(value);
 }
 
-Notehead parseNotehead(pugi::xml_node el)
-{
-    return parseNotehead(el, ParseContext{});
-}
-
 Notehead parseNotehead(pugi::xml_node el, const ParseContext &context)
 {
     Notehead out;
@@ -155,11 +150,6 @@ Notehead parseNotehead(pugi::xml_node el, const ParseContext &context)
     }
     parseNoteheadContent(out, el, context);
     return out;
-}
-
-void parseNoteheadContent(Notehead &out, pugi::xml_node el)
-{
-    parseNoteheadContent(out, el, ParseContext{});
 }
 
 void parseNoteheadContent(Notehead &out, pugi::xml_node el, const ParseContext &context)

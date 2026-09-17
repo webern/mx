@@ -21,11 +21,6 @@ void SystemMargins::setLeftRightMargins(LeftRightMarginsGroup value)
     m_leftRightMargins = std::move(value);
 }
 
-SystemMargins parseSystemMargins(pugi::xml_node el)
-{
-    return parseSystemMargins(el, ParseContext{});
-}
-
 SystemMargins parseSystemMargins(pugi::xml_node el, const ParseContext &context)
 {
     SystemMargins out;
@@ -40,11 +35,6 @@ SystemMargins parseSystemMargins(pugi::xml_node el, const ParseContext &context)
     }
     parseSystemMarginsContent(out, el, context);
     return out;
-}
-
-void parseSystemMarginsContent(SystemMargins &out, pugi::xml_node el)
-{
-    parseSystemMarginsContent(out, el, ParseContext{});
 }
 
 void parseSystemMarginsContent(SystemMargins &out, pugi::xml_node el, const ParseContext &context)

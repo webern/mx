@@ -34,11 +34,7 @@ class Metal final
     MetalValue m_value{};
 };
 
-Metal parseMetal(pugi::xml_node el);
-
 Metal parseMetal(pugi::xml_node el, const ParseContext &context);
-
-void parseMetalContent(Metal &out, pugi::xml_node el);
 
 void parseMetalContent(Metal &out, pugi::xml_node el, const ParseContext &context);
 

@@ -46,11 +46,6 @@ void TupletPortion::setTupletDot(std::vector<TupletDot> value)
     m_tupletDot = std::move(value);
 }
 
-TupletPortion parseTupletPortion(pugi::xml_node el)
-{
-    return parseTupletPortion(el, ParseContext{});
-}
-
 TupletPortion parseTupletPortion(pugi::xml_node el, const ParseContext &context)
 {
     TupletPortion out;
@@ -65,11 +60,6 @@ TupletPortion parseTupletPortion(pugi::xml_node el, const ParseContext &context)
     }
     parseTupletPortionContent(out, el, context);
     return out;
-}
-
-void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el)
-{
-    parseTupletPortionContent(out, el, ParseContext{});
 }
 
 void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el, const ParseContext &context)

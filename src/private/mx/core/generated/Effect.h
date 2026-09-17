@@ -34,11 +34,7 @@ class Effect final
     EffectValue m_value{};
 };
 
-Effect parseEffect(pugi::xml_node el);
-
 Effect parseEffect(pugi::xml_node el, const ParseContext &context);
-
-void parseEffectContent(Effect &out, pugi::xml_node el);
 
 void parseEffectContent(Effect &out, pugi::xml_node el, const ParseContext &context);
 

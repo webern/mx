@@ -31,11 +31,6 @@ void PageLayoutGroup::setPageWidth(Tenths value)
     m_pageWidth = std::move(value);
 }
 
-PageLayoutGroup parsePageLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parsePageLayoutGroup(el, cursor, ParseContext{});
-}
-
 PageLayoutGroup parsePageLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     PageLayoutGroup out;

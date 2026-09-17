@@ -141,11 +141,6 @@ void Segno::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Segno parseSegno(pugi::xml_node el)
-{
-    return parseSegno(el, ParseContext{});
-}
-
 Segno parseSegno(pugi::xml_node el, const ParseContext &context)
 {
     Segno out;
@@ -215,11 +210,6 @@ Segno parseSegno(pugi::xml_node el, const ParseContext &context)
     }
     parseSegnoContent(out, el, context);
     return out;
-}
-
-void parseSegnoContent(Segno &out, pugi::xml_node el)
-{
-    parseSegnoContent(out, el, ParseContext{});
 }
 
 void parseSegnoContent(Segno &out, pugi::xml_node el, const ParseContext &context)

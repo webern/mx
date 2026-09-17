@@ -226,11 +226,6 @@ void FiguredBass::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-FiguredBass parseFiguredBass(pugi::xml_node el)
-{
-    return parseFiguredBass(el, ParseContext{});
-}
-
 FiguredBass parseFiguredBass(pugi::xml_node el, const ParseContext &context)
 {
     FiguredBass out;
@@ -320,11 +315,6 @@ FiguredBass parseFiguredBass(pugi::xml_node el, const ParseContext &context)
     }
     parseFiguredBassContent(out, el, context);
     return out;
-}
-
-void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el)
-{
-    parseFiguredBassContent(out, el, ParseContext{});
 }
 
 void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el, const ParseContext &context)

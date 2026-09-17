@@ -31,11 +31,6 @@ void Glass::setValue(GlassValue value)
     m_value = std::move(value);
 }
 
-Glass parseGlass(pugi::xml_node el)
-{
-    return parseGlass(el, ParseContext{});
-}
-
 Glass parseGlass(pugi::xml_node el, const ParseContext &context)
 {
     Glass out;
@@ -57,11 +52,6 @@ Glass parseGlass(pugi::xml_node el, const ParseContext &context)
     }
     parseGlassContent(out, el, context);
     return out;
-}
-
-void parseGlassContent(Glass &out, pugi::xml_node el)
-{
-    parseGlassContent(out, el, ParseContext{});
 }
 
 void parseGlassContent(Glass &out, pugi::xml_node el, const ParseContext &context)

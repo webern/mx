@@ -40,11 +40,7 @@ class Work final
     std::optional<Opus> m_opus;
 };
 
-Work parseWork(pugi::xml_node el);
-
 Work parseWork(pugi::xml_node el, const ParseContext &context);
-
-void parseWorkContent(Work &out, pugi::xml_node el);
 
 void parseWorkContent(Work &out, pugi::xml_node el, const ParseContext &context);
 

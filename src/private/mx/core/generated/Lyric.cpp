@@ -171,11 +171,6 @@ void Lyric::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-Lyric parseLyric(pugi::xml_node el)
-{
-    return parseLyric(el, ParseContext{});
-}
-
 Lyric parseLyric(pugi::xml_node el, const ParseContext &context)
 {
     Lyric out;
@@ -241,11 +236,6 @@ Lyric parseLyric(pugi::xml_node el, const ParseContext &context)
     }
     parseLyricContent(out, el, context);
     return out;
-}
-
-void parseLyricContent(Lyric &out, pugi::xml_node el)
-{
-    parseLyricContent(out, el, ParseContext{});
 }
 
 void parseLyricContent(Lyric &out, pugi::xml_node el, const ParseContext &context)

@@ -39,11 +39,7 @@ class PartwisePart final
     OneOrMore<PartwiseMeasure> m_measure;
 };
 
-PartwisePart parsePartwisePart(pugi::xml_node el);
-
 PartwisePart parsePartwisePart(pugi::xml_node el, const ParseContext &context);
-
-void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el);
 
 void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el, const ParseContext &context);
 

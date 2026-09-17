@@ -26,11 +26,6 @@ CreditChoiceGroupChoice CreditChoiceGroupChoice::creditSymbol(FormattedSymbolID 
     return CreditChoiceGroupChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-CreditChoiceGroupChoice parseCreditChoiceGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseCreditChoiceGroupChoice(el, cursor, ParseContext{});
-}
-
 CreditChoiceGroupChoice parseCreditChoiceGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                      const ParseContext &context)
 {

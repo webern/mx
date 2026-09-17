@@ -72,11 +72,7 @@ class Fermata final
     FermataShape m_value{};
 };
 
-Fermata parseFermata(pugi::xml_node el);
-
 Fermata parseFermata(pugi::xml_node el, const ParseContext &context);
-
-void parseFermataContent(Fermata &out, pugi::xml_node el);
 
 void parseFermataContent(Fermata &out, pugi::xml_node el, const ParseContext &context);
 

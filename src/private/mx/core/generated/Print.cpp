@@ -121,11 +121,6 @@ void Print::setPartAbbreviationDisplay(std::optional<NameDisplay> value)
     m_partAbbreviationDisplay = std::move(value);
 }
 
-Print parsePrint(pugi::xml_node el)
-{
-    return parsePrint(el, ParseContext{});
-}
-
 Print parsePrint(pugi::xml_node el, const ParseContext &context)
 {
     Print out;
@@ -167,11 +162,6 @@ Print parsePrint(pugi::xml_node el, const ParseContext &context)
     }
     parsePrintContent(out, el, context);
     return out;
-}
-
-void parsePrintContent(Print &out, pugi::xml_node el)
-{
-    parsePrintContent(out, el, ParseContext{});
 }
 
 void parsePrintContent(Print &out, pugi::xml_node el, const ParseContext &context)

@@ -86,11 +86,7 @@ class PrincipalVoice final
     std::string m_value{};
 };
 
-PrincipalVoice parsePrincipalVoice(pugi::xml_node el);
-
 PrincipalVoice parsePrincipalVoice(pugi::xml_node el, const ParseContext &context);
-
-void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el);
 
 void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el, const ParseContext &context);
 

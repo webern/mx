@@ -21,11 +21,6 @@ void Double::setAbove(std::optional<YesNo> value)
     m_above = std::move(value);
 }
 
-Double parseDouble(pugi::xml_node el)
-{
-    return parseDouble(el, ParseContext{});
-}
-
 Double parseDouble(pugi::xml_node el, const ParseContext &context)
 {
     Double out;
@@ -47,11 +42,6 @@ Double parseDouble(pugi::xml_node el, const ParseContext &context)
     }
     parseDoubleContent(out, el, context);
     return out;
-}
-
-void parseDoubleContent(Double &out, pugi::xml_node el)
-{
-    parseDoubleContent(out, el, ParseContext{});
 }
 
 void parseDoubleContent(Double &out, pugi::xml_node el, const ParseContext &context)

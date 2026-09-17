@@ -53,11 +53,7 @@ class Level final
     std::string m_value{};
 };
 
-Level parseLevel(pugi::xml_node el);
-
 Level parseLevel(pugi::xml_node el, const ParseContext &context);
-
-void parseLevelContent(Level &out, pugi::xml_node el);
 
 void parseLevelContent(Level &out, pugi::xml_node el, const ParseContext &context);
 

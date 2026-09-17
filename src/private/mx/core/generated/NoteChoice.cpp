@@ -31,11 +31,6 @@ NoteChoice NoteChoice::normalNoteGroup(NormalNoteGroup value)
     return NoteChoice{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-NoteChoice parseNoteChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseNoteChoice(el, cursor, ParseContext{});
-}
-
 NoteChoice parseNoteChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "grace")))

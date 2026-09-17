@@ -51,11 +51,6 @@ void SoundGroup::setPlay(std::optional<Play> value)
     m_play = std::move(value);
 }
 
-SoundGroup parseSoundGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseSoundGroup(el, cursor, ParseContext{});
-}
-
 SoundGroup parseSoundGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     SoundGroup out;

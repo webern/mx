@@ -121,11 +121,6 @@ void Caesura::setValue(CaesuraValue value)
     m_value = std::move(value);
 }
 
-Caesura parseCaesura(pugi::xml_node el)
-{
-    return parseCaesura(el, ParseContext{});
-}
-
 Caesura parseCaesura(pugi::xml_node el, const ParseContext &context)
 {
     Caesura out;
@@ -183,11 +178,6 @@ Caesura parseCaesura(pugi::xml_node el, const ParseContext &context)
     }
     parseCaesuraContent(out, el, context);
     return out;
-}
-
-void parseCaesuraContent(Caesura &out, pugi::xml_node el)
-{
-    parseCaesuraContent(out, el, ParseContext{});
 }
 
 void parseCaesuraContent(Caesura &out, pugi::xml_node el, const ParseContext &context)

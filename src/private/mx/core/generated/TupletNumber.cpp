@@ -71,11 +71,6 @@ void TupletNumber::setValue(int value)
     m_value = std::move(value);
 }
 
-TupletNumber parseTupletNumber(pugi::xml_node el)
-{
-    return parseTupletNumber(el, ParseContext{});
-}
-
 TupletNumber parseTupletNumber(pugi::xml_node el, const ParseContext &context)
 {
     TupletNumber out;
@@ -113,11 +108,6 @@ TupletNumber parseTupletNumber(pugi::xml_node el, const ParseContext &context)
     }
     parseTupletNumberContent(out, el, context);
     return out;
-}
-
-void parseTupletNumberContent(TupletNumber &out, pugi::xml_node el)
-{
-    parseTupletNumberContent(out, el, ParseContext{});
 }
 
 void parseTupletNumberContent(TupletNumber &out, pugi::xml_node el, const ParseContext &context)

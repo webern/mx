@@ -411,11 +411,6 @@ void Note::setListen(std::optional<Listen> value)
     m_listen = std::move(value);
 }
 
-Note parseNote(pugi::xml_node el)
-{
-    return parseNote(el, ParseContext{});
-}
-
 Note parseNote(pugi::xml_node el, const ParseContext &context)
 {
     Note out;
@@ -517,11 +512,6 @@ Note parseNote(pugi::xml_node el, const ParseContext &context)
     }
     parseNoteContent(out, el, context);
     return out;
-}
-
-void parseNoteContent(Note &out, pugi::xml_node el)
-{
-    parseNoteContent(out, el, ParseContext{});
 }
 
 void parseNoteContent(Note &out, pugi::xml_node el, const ParseContext &context)

@@ -34,11 +34,7 @@ class MultipleRest final
     int m_value{};
 };
 
-MultipleRest parseMultipleRest(pugi::xml_node el);
-
 MultipleRest parseMultipleRest(pugi::xml_node el, const ParseContext &context);
-
-void parseMultipleRestContent(MultipleRest &out, pugi::xml_node el);
 
 void parseMultipleRestContent(MultipleRest &out, pugi::xml_node el, const ParseContext &context);
 

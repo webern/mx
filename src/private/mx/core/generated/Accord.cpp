@@ -31,11 +31,6 @@ void Accord::setTuning(TuningGroup value)
     m_tuning = std::move(value);
 }
 
-Accord parseAccord(pugi::xml_node el)
-{
-    return parseAccord(el, ParseContext{});
-}
-
 Accord parseAccord(pugi::xml_node el, const ParseContext &context)
 {
     Accord out;
@@ -57,11 +52,6 @@ Accord parseAccord(pugi::xml_node el, const ParseContext &context)
     }
     parseAccordContent(out, el, context);
     return out;
-}
-
-void parseAccordContent(Accord &out, pugi::xml_node el)
-{
-    parseAccordContent(out, el, ParseContext{});
 }
 
 void parseAccordContent(Accord &out, pugi::xml_node el, const ParseContext &context)

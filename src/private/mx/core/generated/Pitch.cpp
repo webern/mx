@@ -41,11 +41,6 @@ void Pitch::setOctave(Octave value)
     m_octave = std::move(value);
 }
 
-Pitch parsePitch(pugi::xml_node el)
-{
-    return parsePitch(el, ParseContext{});
-}
-
 Pitch parsePitch(pugi::xml_node el, const ParseContext &context)
 {
     Pitch out;
@@ -60,11 +55,6 @@ Pitch parsePitch(pugi::xml_node el, const ParseContext &context)
     }
     parsePitchContent(out, el, context);
     return out;
-}
-
-void parsePitchContent(Pitch &out, pugi::xml_node el)
-{
-    parsePitchContent(out, el, ParseContext{});
 }
 
 void parsePitchContent(Pitch &out, pugi::xml_node el, const ParseContext &context)

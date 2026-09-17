@@ -42,11 +42,7 @@ class Pitch final
     Octave m_octave{};
 };
 
-Pitch parsePitch(pugi::xml_node el);
-
 Pitch parsePitch(pugi::xml_node el, const ParseContext &context);
-
-void parsePitchContent(Pitch &out, pugi::xml_node el);
 
 void parsePitchContent(Pitch &out, pugi::xml_node el, const ParseContext &context);
 

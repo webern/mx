@@ -36,11 +36,6 @@ void MetronomeChoiceGroup2Group::setMetronomeNote(OneOrMore<MetronomeNote> value
     m_metronomeNote = std::move(value);
 }
 
-MetronomeChoiceGroup2Group parseMetronomeChoiceGroup2Group(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseMetronomeChoiceGroup2Group(el, cursor, ParseContext{});
-}
-
 MetronomeChoiceGroup2Group parseMetronomeChoiceGroup2Group(pugi::xml_node el, pugi::xml_node &cursor,
                                                            const ParseContext &context)
 {

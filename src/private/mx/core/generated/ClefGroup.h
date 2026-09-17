@@ -42,8 +42,6 @@ class ClefGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeClefGroup(const ClefGroup &v, pugi::xml_node el);

@@ -41,11 +41,6 @@ void MeasureRepeat::setValue(PositiveIntegerOrEmpty value)
     m_value = std::move(value);
 }
 
-MeasureRepeat parseMeasureRepeat(pugi::xml_node el)
-{
-    return parseMeasureRepeat(el, ParseContext{});
-}
-
 MeasureRepeat parseMeasureRepeat(pugi::xml_node el, const ParseContext &context)
 {
     MeasureRepeat out;
@@ -77,11 +72,6 @@ MeasureRepeat parseMeasureRepeat(pugi::xml_node el, const ParseContext &context)
     }
     parseMeasureRepeatContent(out, el, context);
     return out;
-}
-
-void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el)
-{
-    parseMeasureRepeatContent(out, el, ParseContext{});
 }
 
 void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el, const ParseContext &context)

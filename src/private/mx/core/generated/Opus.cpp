@@ -71,11 +71,6 @@ void Opus::setXlinkActuate(std::optional<std::string> value)
     m_xlinkActuate = std::move(value);
 }
 
-Opus parseOpus(pugi::xml_node el)
-{
-    return parseOpus(el, ParseContext{});
-}
-
 Opus parseOpus(pugi::xml_node el, const ParseContext &context)
 {
     Opus out;
@@ -123,11 +118,6 @@ Opus parseOpus(pugi::xml_node el, const ParseContext &context)
     }
     parseOpusContent(out, el, context);
     return out;
-}
-
-void parseOpusContent(Opus &out, pugi::xml_node el)
-{
-    parseOpusContent(out, el, ParseContext{});
 }
 
 void parseOpusContent(Opus &out, pugi::xml_node el, const ParseContext &context)

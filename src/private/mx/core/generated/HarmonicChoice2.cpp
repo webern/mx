@@ -31,11 +31,6 @@ HarmonicChoice2 HarmonicChoice2::soundingPitch(Empty value)
     return HarmonicChoice2{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-HarmonicChoice2 parseHarmonicChoice2(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseHarmonicChoice2(el, cursor, ParseContext{});
-}
-
 HarmonicChoice2 parseHarmonicChoice2(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "base-pitch")))

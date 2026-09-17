@@ -31,11 +31,6 @@ HarmonyChordGroupChoice HarmonyChordGroupChoice::function(StyleText value)
     return HarmonyChordGroupChoice{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-HarmonyChordGroupChoice parseHarmonyChordGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseHarmonyChordGroupChoice(el, cursor, ParseContext{});
-}
-
 HarmonyChordGroupChoice parseHarmonyChordGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                      const ParseContext &context)
 {

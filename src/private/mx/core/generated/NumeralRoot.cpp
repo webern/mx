@@ -121,11 +121,6 @@ void NumeralRoot::setValue(NumeralValue value)
     m_value = std::move(value);
 }
 
-NumeralRoot parseNumeralRoot(pugi::xml_node el)
-{
-    return parseNumeralRoot(el, ParseContext{});
-}
-
 NumeralRoot parseNumeralRoot(pugi::xml_node el, const ParseContext &context)
 {
     NumeralRoot out;
@@ -183,11 +178,6 @@ NumeralRoot parseNumeralRoot(pugi::xml_node el, const ParseContext &context)
     }
     parseNumeralRootContent(out, el, context);
     return out;
-}
-
-void parseNumeralRootContent(NumeralRoot &out, pugi::xml_node el)
-{
-    parseNumeralRootContent(out, el, ParseContext{});
 }
 
 void parseNumeralRootContent(NumeralRoot &out, pugi::xml_node el, const ParseContext &context)

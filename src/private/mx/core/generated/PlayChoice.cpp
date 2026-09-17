@@ -36,11 +36,6 @@ PlayChoice PlayChoice::otherPlay(OtherPlay value)
     return PlayChoice{Storage{std::in_place_index<3>, std::move(value)}};
 }
 
-PlayChoice parsePlayChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parsePlayChoice(el, cursor, ParseContext{});
-}
-
 PlayChoice parsePlayChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "ipa")))

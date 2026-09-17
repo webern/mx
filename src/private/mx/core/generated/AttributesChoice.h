@@ -83,8 +83,6 @@ class AttributesChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeAttributesChoice(const AttributesChoice &v, pugi::xml_node el);

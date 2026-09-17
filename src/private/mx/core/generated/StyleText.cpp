@@ -111,11 +111,6 @@ void StyleText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-StyleText parseStyleText(pugi::xml_node el)
-{
-    return parseStyleText(el, ParseContext{});
-}
-
 StyleText parseStyleText(pugi::xml_node el, const ParseContext &context)
 {
     StyleText out;
@@ -169,11 +164,6 @@ StyleText parseStyleText(pugi::xml_node el, const ParseContext &context)
     }
     parseStyleTextContent(out, el, context);
     return out;
-}
-
-void parseStyleTextContent(StyleText &out, pugi::xml_node el)
-{
-    parseStyleTextContent(out, el, ParseContext{});
 }
 
 void parseStyleTextContent(StyleText &out, pugi::xml_node el, const ParseContext &context)

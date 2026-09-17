@@ -112,8 +112,6 @@ class MeasureStyleChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-MeasureStyleChoice parseMeasureStyleChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 MeasureStyleChoice parseMeasureStyleChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeMeasureStyleChoice(const MeasureStyleChoice &v, pugi::xml_node el);

@@ -151,11 +151,6 @@ void Tuplet::setTupletNormal(std::optional<TupletPortion> value)
     m_tupletNormal = std::move(value);
 }
 
-Tuplet parseTuplet(pugi::xml_node el)
-{
-    return parseTuplet(el, ParseContext{});
-}
-
 Tuplet parseTuplet(pugi::xml_node el, const ParseContext &context)
 {
     Tuplet out;
@@ -227,11 +222,6 @@ Tuplet parseTuplet(pugi::xml_node el, const ParseContext &context)
     }
     parseTupletContent(out, el, context);
     return out;
-}
-
-void parseTupletContent(Tuplet &out, pugi::xml_node el)
-{
-    parseTupletContent(out, el, ParseContext{});
 }
 
 void parseTupletContent(Tuplet &out, pugi::xml_node el, const ParseContext &context)

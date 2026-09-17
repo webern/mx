@@ -48,8 +48,6 @@ class LyricTextGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeLyricTextGroup(const LyricTextGroup &v, pugi::xml_node el);

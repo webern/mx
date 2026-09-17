@@ -44,11 +44,7 @@ class MeasureRepeat final
     PositiveIntegerOrEmpty m_value{};
 };
 
-MeasureRepeat parseMeasureRepeat(pugi::xml_node el);
-
 MeasureRepeat parseMeasureRepeat(pugi::xml_node el, const ParseContext &context);
-
-void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el);
 
 void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el, const ParseContext &context);
 

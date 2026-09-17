@@ -39,11 +39,7 @@ class Articulations final
     std::vector<ArticulationsChoice> m_choice;
 };
 
-Articulations parseArticulations(pugi::xml_node el);
-
 Articulations parseArticulations(pugi::xml_node el, const ParseContext &context);
-
-void parseArticulationsContent(Articulations &out, pugi::xml_node el);
 
 void parseArticulationsContent(Articulations &out, pugi::xml_node el, const ParseContext &context);
 

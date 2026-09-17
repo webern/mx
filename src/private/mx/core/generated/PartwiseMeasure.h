@@ -56,11 +56,7 @@ class PartwiseMeasure final
     std::vector<MusicDataChoice> m_musicData;
 };
 
-PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el);
-
 PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el, const ParseContext &context);
-
-void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el);
 
 void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el, const ParseContext &context);
 

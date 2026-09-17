@@ -47,11 +47,7 @@ class Figure final
     EditorialGroup m_editorial{};
 };
 
-Figure parseFigure(pugi::xml_node el);
-
 Figure parseFigure(pugi::xml_node el, const ParseContext &context);
-
-void parseFigureContent(Figure &out, pugi::xml_node el);
 
 void parseFigureContent(Figure &out, pugi::xml_node el, const ParseContext &context);
 

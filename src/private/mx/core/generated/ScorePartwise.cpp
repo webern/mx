@@ -46,11 +46,6 @@ void ScorePartwise::setPart(OneOrMore<PartwisePart> value)
     m_part = std::move(value);
 }
 
-ScorePartwise parseScorePartwise(pugi::xml_node el)
-{
-    return parseScorePartwise(el, ParseContext{});
-}
-
 ScorePartwise parseScorePartwise(pugi::xml_node el, const ParseContext &context)
 {
     ScorePartwise out;
@@ -72,11 +67,6 @@ ScorePartwise parseScorePartwise(pugi::xml_node el, const ParseContext &context)
     }
     parseScorePartwiseContent(out, el, context);
     return out;
-}
-
-void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el)
-{
-    parseScorePartwiseContent(out, el, ParseContext{});
 }
 
 void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el, const ParseContext &context)

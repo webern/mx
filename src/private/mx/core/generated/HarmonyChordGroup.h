@@ -59,8 +59,6 @@ class HarmonyChordGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeHarmonyChordGroup(const HarmonyChordGroup &v, pugi::xml_node el);

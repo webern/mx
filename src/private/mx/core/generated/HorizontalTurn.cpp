@@ -191,11 +191,6 @@ void HorizontalTurn::setLastBeat(std::optional<Percent> value)
     m_lastBeat = std::move(value);
 }
 
-HorizontalTurn parseHorizontalTurn(pugi::xml_node el)
-{
-    return parseHorizontalTurn(el, ParseContext{});
-}
-
 HorizontalTurn parseHorizontalTurn(pugi::xml_node el, const ParseContext &context)
 {
     HorizontalTurn out;
@@ -285,11 +280,6 @@ HorizontalTurn parseHorizontalTurn(pugi::xml_node el, const ParseContext &contex
     }
     parseHorizontalTurnContent(out, el, context);
     return out;
-}
-
-void parseHorizontalTurnContent(HorizontalTurn &out, pugi::xml_node el)
-{
-    parseHorizontalTurnContent(out, el, ParseContext{});
 }
 
 void parseHorizontalTurnContent(HorizontalTurn &out, pugi::xml_node el, const ParseContext &context)

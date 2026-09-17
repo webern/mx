@@ -39,11 +39,7 @@ class Technical final
     std::vector<TechnicalChoice> m_choice;
 };
 
-Technical parseTechnical(pugi::xml_node el);
-
 Technical parseTechnical(pugi::xml_node el, const ParseContext &context);
-
-void parseTechnicalContent(Technical &out, pugi::xml_node el);
 
 void parseTechnicalContent(Technical &out, pugi::xml_node el, const ParseContext &context);
 

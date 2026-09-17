@@ -42,8 +42,6 @@ class Mordent : public EmptyTrillSound
     std::optional<AboveBelow> m_departure;
 };
 
-Mordent parseMordent(pugi::xml_node el);
-
 Mordent parseMordent(pugi::xml_node el, const ParseContext &context);
 
 void serializeMordent(const Mordent &v, pugi::xml_node parent, const char *tag);

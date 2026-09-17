@@ -101,11 +101,6 @@ void MIDIInstrument::setElevation(std::optional<RotationDegrees> value)
     m_elevation = std::move(value);
 }
 
-MIDIInstrument parseMIDIInstrument(pugi::xml_node el)
-{
-    return parseMIDIInstrument(el, ParseContext{});
-}
-
 MIDIInstrument parseMIDIInstrument(pugi::xml_node el, const ParseContext &context)
 {
     MIDIInstrument out;
@@ -133,11 +128,6 @@ MIDIInstrument parseMIDIInstrument(pugi::xml_node el, const ParseContext &contex
     }
     parseMIDIInstrumentContent(out, el, context);
     return out;
-}
-
-void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el)
-{
-    parseMIDIInstrumentContent(out, el, ParseContext{});
 }
 
 void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el, const ParseContext &context)

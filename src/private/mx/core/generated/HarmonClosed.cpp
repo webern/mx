@@ -31,11 +31,6 @@ void HarmonClosed::setValue(HarmonClosedValue value)
     m_value = std::move(value);
 }
 
-HarmonClosed parseHarmonClosed(pugi::xml_node el)
-{
-    return parseHarmonClosed(el, ParseContext{});
-}
-
 HarmonClosed parseHarmonClosed(pugi::xml_node el, const ParseContext &context)
 {
     HarmonClosed out;
@@ -57,11 +52,6 @@ HarmonClosed parseHarmonClosed(pugi::xml_node el, const ParseContext &context)
     }
     parseHarmonClosedContent(out, el, context);
     return out;
-}
-
-void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el)
-{
-    parseHarmonClosedContent(out, el, ParseContext{});
 }
 
 void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el, const ParseContext &context)

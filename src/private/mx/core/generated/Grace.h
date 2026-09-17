@@ -45,11 +45,7 @@ class Grace final
     std::optional<YesNo> m_slash;
 };
 
-Grace parseGrace(pugi::xml_node el);
-
 Grace parseGrace(pugi::xml_node el, const ParseContext &context);
-
-void parseGraceContent(Grace &out, pugi::xml_node el);
 
 void parseGraceContent(Grace &out, pugi::xml_node el, const ParseContext &context);
 

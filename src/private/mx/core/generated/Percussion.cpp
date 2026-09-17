@@ -151,11 +151,6 @@ void Percussion::setChoice(PercussionChoice value)
     m_choice = std::move(value);
 }
 
-Percussion parsePercussion(pugi::xml_node el)
-{
-    return parsePercussion(el, ParseContext{});
-}
-
 Percussion parsePercussion(pugi::xml_node el, const ParseContext &context)
 {
     Percussion out;
@@ -225,11 +220,6 @@ Percussion parsePercussion(pugi::xml_node el, const ParseContext &context)
     }
     parsePercussionContent(out, el, context);
     return out;
-}
-
-void parsePercussionContent(Percussion &out, pugi::xml_node el)
-{
-    parsePercussionContent(out, el, ParseContext{});
 }
 
 void parsePercussionContent(Percussion &out, pugi::xml_node el, const ParseContext &context)

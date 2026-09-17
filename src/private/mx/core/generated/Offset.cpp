@@ -31,11 +31,6 @@ void Offset::setValue(Divisions value)
     m_value = std::move(value);
 }
 
-Offset parseOffset(pugi::xml_node el)
-{
-    return parseOffset(el, ParseContext{});
-}
-
 Offset parseOffset(pugi::xml_node el, const ParseContext &context)
 {
     Offset out;
@@ -57,11 +52,6 @@ Offset parseOffset(pugi::xml_node el, const ParseContext &context)
     }
     parseOffsetContent(out, el, context);
     return out;
-}
-
-void parseOffsetContent(Offset &out, pugi::xml_node el)
-{
-    parseOffsetContent(out, el, ParseContext{});
 }
 
 void parseOffsetContent(Offset &out, pugi::xml_node el, const ParseContext &context)

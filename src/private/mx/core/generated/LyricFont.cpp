@@ -71,11 +71,6 @@ void LyricFont::setFontWeight(std::optional<FontWeight> value)
     m_fontWeight = std::move(value);
 }
 
-LyricFont parseLyricFont(pugi::xml_node el)
-{
-    return parseLyricFont(el, ParseContext{});
-}
-
 LyricFont parseLyricFont(pugi::xml_node el, const ParseContext &context)
 {
     LyricFont out;
@@ -117,11 +112,6 @@ LyricFont parseLyricFont(pugi::xml_node el, const ParseContext &context)
     }
     parseLyricFontContent(out, el, context);
     return out;
-}
-
-void parseLyricFontContent(LyricFont &out, pugi::xml_node el)
-{
-    parseLyricFontContent(out, el, ParseContext{});
 }
 
 void parseLyricFontContent(LyricFont &out, pugi::xml_node el, const ParseContext &context)

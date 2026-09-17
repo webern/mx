@@ -94,11 +94,7 @@ class HorizontalTurn final
     std::optional<Percent> m_lastBeat;
 };
 
-HorizontalTurn parseHorizontalTurn(pugi::xml_node el);
-
 HorizontalTurn parseHorizontalTurn(pugi::xml_node el, const ParseContext &context);
-
-void parseHorizontalTurnContent(HorizontalTurn &out, pugi::xml_node el);
 
 void parseHorizontalTurnContent(HorizontalTurn &out, pugi::xml_node el, const ParseContext &context);
 

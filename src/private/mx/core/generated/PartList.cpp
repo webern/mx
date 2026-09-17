@@ -51,11 +51,6 @@ void PartList::setChoice(std::vector<PartListChoice> value)
     m_choice = std::move(value);
 }
 
-PartList parsePartList(pugi::xml_node el)
-{
-    return parsePartList(el, ParseContext{});
-}
-
 PartList parsePartList(pugi::xml_node el, const ParseContext &context)
 {
     PartList out;
@@ -70,11 +65,6 @@ PartList parsePartList(pugi::xml_node el, const ParseContext &context)
     }
     parsePartListContent(out, el, context);
     return out;
-}
-
-void parsePartListContent(PartList &out, pugi::xml_node el)
-{
-    parsePartListContent(out, el, ParseContext{});
 }
 
 void parsePartListContent(PartList &out, pugi::xml_node el, const ParseContext &context)

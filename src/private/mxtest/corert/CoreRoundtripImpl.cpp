@@ -5,6 +5,7 @@
 #include "mxtest/corert/CoreRoundtripImpl.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/Version.h"
 #include "mxtest/corert/Compare.h"
@@ -188,7 +189,7 @@ CoreRoundtripResult runCoreRoundtrip(const std::string &absoluteInputPath)
 
         // 3. Pin the root version to the harness baseline, then parse.
         setRootMusicXmlVersion(inputDoc, kMusicXmlVersionBaseline);
-        auto parsed = mx::core::parse(inputDoc);
+        auto parsed = mx::core::parse(inputDoc, mx::core::ParseContext{});
         if (!parsed)
         {
             r.message = "parse failed [" + parsed.error().path + "] " + parsed.error().message;

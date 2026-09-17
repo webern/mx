@@ -36,11 +36,6 @@ void SlashGroupGroup::setSlashDot(std::vector<Empty> value)
     m_slashDot = std::move(value);
 }
 
-SlashGroupGroup parseSlashGroupGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseSlashGroupGroup(el, cursor, ParseContext{});
-}
-
 SlashGroupGroup parseSlashGroupGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     SlashGroupGroup out;

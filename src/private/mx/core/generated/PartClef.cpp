@@ -21,11 +21,6 @@ void PartClef::setClef(ClefGroup value)
     m_clef = std::move(value);
 }
 
-PartClef parsePartClef(pugi::xml_node el)
-{
-    return parsePartClef(el, ParseContext{});
-}
-
 PartClef parsePartClef(pugi::xml_node el, const ParseContext &context)
 {
     PartClef out;
@@ -40,11 +35,6 @@ PartClef parsePartClef(pugi::xml_node el, const ParseContext &context)
     }
     parsePartClefContent(out, el, context);
     return out;
-}
-
-void parsePartClefContent(PartClef &out, pugi::xml_node el)
-{
-    parsePartClefContent(out, el, ParseContext{});
 }
 
 void parsePartClefContent(PartClef &out, pugi::xml_node el, const ParseContext &context)

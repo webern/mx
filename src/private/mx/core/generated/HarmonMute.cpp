@@ -121,11 +121,6 @@ void HarmonMute::setHarmonClosed(HarmonClosed value)
     m_harmonClosed = std::move(value);
 }
 
-HarmonMute parseHarmonMute(pugi::xml_node el)
-{
-    return parseHarmonMute(el, ParseContext{});
-}
-
 HarmonMute parseHarmonMute(pugi::xml_node el, const ParseContext &context)
 {
     HarmonMute out;
@@ -183,11 +178,6 @@ HarmonMute parseHarmonMute(pugi::xml_node el, const ParseContext &context)
     }
     parseHarmonMuteContent(out, el, context);
     return out;
-}
-
-void parseHarmonMuteContent(HarmonMute &out, pugi::xml_node el)
-{
-    parseHarmonMuteContent(out, el, ParseContext{});
 }
 
 void parseHarmonMuteContent(HarmonMute &out, pugi::xml_node el, const ParseContext &context)

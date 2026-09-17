@@ -51,11 +51,6 @@ void Grace::setSlash(std::optional<YesNo> value)
     m_slash = std::move(value);
 }
 
-Grace parseGrace(pugi::xml_node el)
-{
-    return parseGrace(el, ParseContext{});
-}
-
 Grace parseGrace(pugi::xml_node el, const ParseContext &context)
 {
     Grace out;
@@ -89,11 +84,6 @@ Grace parseGrace(pugi::xml_node el, const ParseContext &context)
     }
     parseGraceContent(out, el, context);
     return out;
-}
-
-void parseGraceContent(Grace &out, pugi::xml_node el)
-{
-    parseGraceContent(out, el, ParseContext{});
 }
 
 void parseGraceContent(Grace &out, pugi::xml_node el, const ParseContext &context)

@@ -42,11 +42,7 @@ class Play final
     std::vector<PlayChoice> m_choice;
 };
 
-Play parsePlay(pugi::xml_node el);
-
 Play parsePlay(pugi::xml_node el, const ParseContext &context);
-
-void parsePlayContent(Play &out, pugi::xml_node el);
 
 void parsePlayContent(Play &out, pugi::xml_node el, const ParseContext &context);
 

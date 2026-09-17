@@ -75,11 +75,7 @@ class StringMute final
     std::optional<Token> m_id;
 };
 
-StringMute parseStringMute(pugi::xml_node el);
-
 StringMute parseStringMute(pugi::xml_node el, const ParseContext &context);
-
-void parseStringMuteContent(StringMute &out, pugi::xml_node el);
 
 void parseStringMuteContent(StringMute &out, pugi::xml_node el, const ParseContext &context);
 

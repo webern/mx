@@ -121,11 +121,6 @@ void Directive::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Directive parseDirective(pugi::xml_node el)
-{
-    return parseDirective(el, ParseContext{});
-}
-
 Directive parseDirective(pugi::xml_node el, const ParseContext &context)
 {
     Directive out;
@@ -183,11 +178,6 @@ Directive parseDirective(pugi::xml_node el, const ParseContext &context)
     }
     parseDirectiveContent(out, el, context);
     return out;
-}
-
-void parseDirectiveContent(Directive &out, pugi::xml_node el)
-{
-    parseDirectiveContent(out, el, ParseContext{});
 }
 
 void parseDirectiveContent(Directive &out, pugi::xml_node el, const ParseContext &context)

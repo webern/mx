@@ -41,11 +41,7 @@ class Ornaments final
     std::vector<OrnamentsGroup> m_group;
 };
 
-Ornaments parseOrnaments(pugi::xml_node el);
-
 Ornaments parseOrnaments(pugi::xml_node el, const ParseContext &context);
-
-void parseOrnamentsContent(Ornaments &out, pugi::xml_node el);
 
 void parseOrnamentsContent(Ornaments &out, pugi::xml_node el, const ParseContext &context);
 

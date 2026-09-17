@@ -41,11 +41,6 @@ void NonTraditionalKeyGroup::setKeyAccidental(std::optional<KeyAccidental> value
     m_keyAccidental = std::move(value);
 }
 
-NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseNonTraditionalKeyGroup(el, cursor, ParseContext{});
-}
-
 NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor,
                                                    const ParseContext &context)
 {

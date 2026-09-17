@@ -26,11 +26,6 @@ void NoteheadText::setChoice(OneOrMore<NoteheadTextChoice> value)
     m_choice = std::move(value);
 }
 
-NoteheadText parseNoteheadText(pugi::xml_node el)
-{
-    return parseNoteheadText(el, ParseContext{});
-}
-
 NoteheadText parseNoteheadText(pugi::xml_node el, const ParseContext &context)
 {
     NoteheadText out;
@@ -45,11 +40,6 @@ NoteheadText parseNoteheadText(pugi::xml_node el, const ParseContext &context)
     }
     parseNoteheadTextContent(out, el, context);
     return out;
-}
-
-void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el)
-{
-    parseNoteheadTextContent(out, el, ParseContext{});
 }
 
 void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el, const ParseContext &context)

@@ -63,11 +63,7 @@ class Directive final
     std::string m_value{};
 };
 
-Directive parseDirective(pugi::xml_node el);
-
 Directive parseDirective(pugi::xml_node el, const ParseContext &context);
-
-void parseDirectiveContent(Directive &out, pugi::xml_node el);
 
 void parseDirectiveContent(Directive &out, pugi::xml_node el, const ParseContext &context);
 

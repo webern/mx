@@ -33,8 +33,6 @@ class HeelToe : public EmptyPlacement
     std::optional<YesNo> m_substitution;
 };
 
-HeelToe parseHeelToe(pugi::xml_node el);
-
 HeelToe parseHeelToe(pugi::xml_node el, const ParseContext &context);
 
 void serializeHeelToe(const HeelToe &v, pugi::xml_node parent, const char *tag);

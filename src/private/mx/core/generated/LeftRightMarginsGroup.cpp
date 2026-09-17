@@ -31,11 +31,6 @@ void LeftRightMarginsGroup::setRightMargin(Tenths value)
     m_rightMargin = std::move(value);
 }
 
-LeftRightMarginsGroup parseLeftRightMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseLeftRightMarginsGroup(el, cursor, ParseContext{});
-}
-
 LeftRightMarginsGroup parseLeftRightMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     LeftRightMarginsGroup out;

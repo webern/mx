@@ -51,11 +51,6 @@ void Sync::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Sync parseSync(pugi::xml_node el)
-{
-    return parseSync(el, ParseContext{});
-}
-
 Sync parseSync(pugi::xml_node el, const ParseContext &context)
 {
     Sync out;
@@ -95,11 +90,6 @@ Sync parseSync(pugi::xml_node el, const ParseContext &context)
     }
     parseSyncContent(out, el, context);
     return out;
-}
-
-void parseSyncContent(Sync &out, pugi::xml_node el)
-{
-    parseSyncContent(out, el, ParseContext{});
 }
 
 void parseSyncContent(Sync &out, pugi::xml_node el, const ParseContext &context)

@@ -181,11 +181,6 @@ void EmptyTrillSound::setLastBeat(std::optional<Percent> value)
     m_lastBeat = std::move(value);
 }
 
-EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el)
-{
-    return parseEmptyTrillSound(el, ParseContext{});
-}
-
 EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el, const ParseContext &context)
 {
     EmptyTrillSound out;
@@ -271,11 +266,6 @@ EmptyTrillSound parseEmptyTrillSound(pugi::xml_node el, const ParseContext &cont
     }
     parseEmptyTrillSoundContent(out, el, context);
     return out;
-}
-
-void parseEmptyTrillSoundContent(EmptyTrillSound &out, pugi::xml_node el)
-{
-    parseEmptyTrillSoundContent(out, el, ParseContext{});
 }
 
 void parseEmptyTrillSoundContent(EmptyTrillSound &out, pugi::xml_node el, const ParseContext &context)

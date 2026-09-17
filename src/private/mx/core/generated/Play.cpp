@@ -36,11 +36,6 @@ void Play::setChoice(std::vector<PlayChoice> value)
     m_choice = std::move(value);
 }
 
-Play parsePlay(pugi::xml_node el)
-{
-    return parsePlay(el, ParseContext{});
-}
-
 Play parsePlay(pugi::xml_node el, const ParseContext &context)
 {
     Play out;
@@ -62,11 +57,6 @@ Play parsePlay(pugi::xml_node el, const ParseContext &context)
     }
     parsePlayContent(out, el, context);
     return out;
-}
-
-void parsePlayContent(Play &out, pugi::xml_node el)
-{
-    parsePlayContent(out, el, ParseContext{});
 }
 
 void parsePlayContent(Play &out, pugi::xml_node el, const ParseContext &context)

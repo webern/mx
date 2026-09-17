@@ -39,8 +39,6 @@ class LyricSyllableGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-LyricSyllableGroup parseLyricSyllableGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 LyricSyllableGroup parseLyricSyllableGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeLyricSyllableGroup(const LyricSyllableGroup &v, pugi::xml_node el);

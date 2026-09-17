@@ -41,11 +41,7 @@ class ScoreTimewise final
     OneOrMore<TimewiseMeasure> m_measure;
 };
 
-ScoreTimewise parseScoreTimewise(pugi::xml_node el);
-
 ScoreTimewise parseScoreTimewise(pugi::xml_node el, const ParseContext &context);
-
-void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el);
 
 void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el, const ParseContext &context);
 

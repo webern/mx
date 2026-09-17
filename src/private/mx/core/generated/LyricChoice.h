@@ -111,8 +111,6 @@ class LyricChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-LyricChoice parseLyricChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 LyricChoice parseLyricChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeLyricChoice(const LyricChoice &v, pugi::xml_node el);

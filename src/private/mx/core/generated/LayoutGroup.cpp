@@ -46,11 +46,6 @@ void LayoutGroup::setStaffLayout(std::vector<StaffLayout> value)
     m_staffLayout = std::move(value);
 }
 
-LayoutGroup parseLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseLayoutGroup(el, cursor, ParseContext{});
-}
-
 LayoutGroup parseLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     LayoutGroup out;

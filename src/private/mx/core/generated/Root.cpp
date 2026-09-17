@@ -31,11 +31,6 @@ void Root::setRootAlter(std::optional<HarmonyAlter> value)
     m_rootAlter = std::move(value);
 }
 
-Root parseRoot(pugi::xml_node el)
-{
-    return parseRoot(el, ParseContext{});
-}
-
 Root parseRoot(pugi::xml_node el, const ParseContext &context)
 {
     Root out;
@@ -50,11 +45,6 @@ Root parseRoot(pugi::xml_node el, const ParseContext &context)
     }
     parseRootContent(out, el, context);
     return out;
-}
-
-void parseRootContent(Root &out, pugi::xml_node el)
-{
-    parseRootContent(out, el, ParseContext{});
 }
 
 void parseRootContent(Root &out, pugi::xml_node el, const ParseContext &context)

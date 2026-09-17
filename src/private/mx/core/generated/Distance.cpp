@@ -31,11 +31,6 @@ void Distance::setValue(Tenths value)
     m_value = std::move(value);
 }
 
-Distance parseDistance(pugi::xml_node el)
-{
-    return parseDistance(el, ParseContext{});
-}
-
 Distance parseDistance(pugi::xml_node el, const ParseContext &context)
 {
     Distance out;
@@ -63,11 +58,6 @@ Distance parseDistance(pugi::xml_node el, const ParseContext &context)
     }
     parseDistanceContent(out, el, context);
     return out;
-}
-
-void parseDistanceContent(Distance &out, pugi::xml_node el)
-{
-    parseDistanceContent(out, el, ParseContext{});
 }
 
 void parseDistanceContent(Distance &out, pugi::xml_node el, const ParseContext &context)

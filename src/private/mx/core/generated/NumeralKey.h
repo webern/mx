@@ -44,11 +44,7 @@ class NumeralKey final
     NumeralMode m_numeralMode{};
 };
 
-NumeralKey parseNumeralKey(pugi::xml_node el);
-
 NumeralKey parseNumeralKey(pugi::xml_node el, const ParseContext &context);
-
-void parseNumeralKeyContent(NumeralKey &out, pugi::xml_node el);
 
 void parseNumeralKeyContent(NumeralKey &out, pugi::xml_node el, const ParseContext &context);
 

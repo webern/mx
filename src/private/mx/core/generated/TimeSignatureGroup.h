@@ -37,8 +37,6 @@ class TimeSignatureGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TimeSignatureGroup parseTimeSignatureGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 TimeSignatureGroup parseTimeSignatureGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeTimeSignatureGroup(const TimeSignatureGroup &v, pugi::xml_node el);

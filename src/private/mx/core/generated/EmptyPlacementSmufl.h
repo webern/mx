@@ -67,11 +67,7 @@ class EmptyPlacementSmufl final
     std::optional<SmuflGlyphName> m_smufl;
 };
 
-EmptyPlacementSmufl parseEmptyPlacementSmufl(pugi::xml_node el);
-
 EmptyPlacementSmufl parseEmptyPlacementSmufl(pugi::xml_node el, const ParseContext &context);
-
-void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, pugi::xml_node el);
 
 void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, pugi::xml_node el, const ParseContext &context);
 

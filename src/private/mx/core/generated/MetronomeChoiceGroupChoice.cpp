@@ -26,11 +26,6 @@ MetronomeChoiceGroupChoice MetronomeChoiceGroupChoice::group(MetronomeChoiceGrou
     return MetronomeChoiceGroupChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-MetronomeChoiceGroupChoice parseMetronomeChoiceGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseMetronomeChoiceGroupChoice(el, cursor, ParseContext{});
-}
-
 MetronomeChoiceGroupChoice parseMetronomeChoiceGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                            const ParseContext &context)
 {

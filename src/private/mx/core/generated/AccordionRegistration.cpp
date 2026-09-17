@@ -161,11 +161,6 @@ void AccordionRegistration::setAccordionLow(bool value) noexcept
     m_accordionLow = value;
 }
 
-AccordionRegistration parseAccordionRegistration(pugi::xml_node el)
-{
-    return parseAccordionRegistration(el, ParseContext{});
-}
-
 AccordionRegistration parseAccordionRegistration(pugi::xml_node el, const ParseContext &context)
 {
     AccordionRegistration out;
@@ -231,11 +226,6 @@ AccordionRegistration parseAccordionRegistration(pugi::xml_node el, const ParseC
     }
     parseAccordionRegistrationContent(out, el, context);
     return out;
-}
-
-void parseAccordionRegistrationContent(AccordionRegistration &out, pugi::xml_node el)
-{
-    parseAccordionRegistrationContent(out, el, ParseContext{});
 }
 
 void parseAccordionRegistrationContent(AccordionRegistration &out, pugi::xml_node el, const ParseContext &context)

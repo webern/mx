@@ -31,11 +31,6 @@ void PageMargins::setAllMargins(AllMarginsGroup value)
     m_allMargins = std::move(value);
 }
 
-PageMargins parsePageMargins(pugi::xml_node el)
-{
-    return parsePageMargins(el, ParseContext{});
-}
-
 PageMargins parsePageMargins(pugi::xml_node el, const ParseContext &context)
 {
     PageMargins out;
@@ -57,11 +52,6 @@ PageMargins parsePageMargins(pugi::xml_node el, const ParseContext &context)
     }
     parsePageMarginsContent(out, el, context);
     return out;
-}
-
-void parsePageMarginsContent(PageMargins &out, pugi::xml_node el)
-{
-    parsePageMarginsContent(out, el, ParseContext{});
 }
 
 void parsePageMarginsContent(PageMargins &out, pugi::xml_node el, const ParseContext &context)

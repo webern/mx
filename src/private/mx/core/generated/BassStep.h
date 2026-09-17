@@ -67,11 +67,7 @@ class BassStep final
     Step m_value{};
 };
 
-BassStep parseBassStep(pugi::xml_node el);
-
 BassStep parseBassStep(pugi::xml_node el, const ParseContext &context);
-
-void parseBassStepContent(BassStep &out, pugi::xml_node el);
 
 void parseBassStepContent(BassStep &out, pugi::xml_node el, const ParseContext &context);
 

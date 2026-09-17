@@ -31,11 +31,7 @@ class OtherPlay final
     std::string m_value{};
 };
 
-OtherPlay parseOtherPlay(pugi::xml_node el);
-
 OtherPlay parseOtherPlay(pugi::xml_node el, const ParseContext &context);
-
-void parseOtherPlayContent(OtherPlay &out, pugi::xml_node el);
 
 void parseOtherPlayContent(OtherPlay &out, pugi::xml_node el, const ParseContext &context);
 

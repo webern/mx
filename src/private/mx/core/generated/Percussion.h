@@ -86,11 +86,7 @@ class Percussion final
     PercussionChoice m_choice{};
 };
 
-Percussion parsePercussion(pugi::xml_node el);
-
 Percussion parsePercussion(pugi::xml_node el, const ParseContext &context);
-
-void parsePercussionContent(Percussion &out, pugi::xml_node el);
 
 void parsePercussionContent(Percussion &out, pugi::xml_node el, const ParseContext &context);
 

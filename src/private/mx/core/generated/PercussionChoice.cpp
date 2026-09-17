@@ -71,11 +71,6 @@ PercussionChoice PercussionChoice::otherPercussion(OtherText value)
     return PercussionChoice{Storage{std::in_place_index<10>, std::move(value)}};
 }
 
-PercussionChoice parsePercussionChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parsePercussionChoice(el, cursor, ParseContext{});
-}
-
 PercussionChoice parsePercussionChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "glass")))

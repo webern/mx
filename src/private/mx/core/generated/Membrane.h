@@ -34,11 +34,7 @@ class Membrane final
     MembraneValue m_value{};
 };
 
-Membrane parseMembrane(pugi::xml_node el);
-
 Membrane parseMembrane(pugi::xml_node el, const ParseContext &context);
-
-void parseMembraneContent(Membrane &out, pugi::xml_node el);
 
 void parseMembraneContent(Membrane &out, pugi::xml_node el, const ParseContext &context);
 

@@ -40,8 +40,6 @@ class CreditChoiceGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-CreditChoiceGroup parseCreditChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 CreditChoiceGroup parseCreditChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeCreditChoiceGroup(const CreditChoiceGroup &v, pugi::xml_node el);

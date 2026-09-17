@@ -41,11 +41,6 @@ void CueNoteGroup::setDuration(PositiveDivisions value)
     m_duration = std::move(value);
 }
 
-CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseCueNoteGroup(el, cursor, ParseContext{});
-}
-
 CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     CueNoteGroup out;

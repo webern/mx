@@ -61,11 +61,6 @@ void PerMinute::setValue(std::string value)
     m_value = std::move(value);
 }
 
-PerMinute parsePerMinute(pugi::xml_node el)
-{
-    return parsePerMinute(el, ParseContext{});
-}
-
 PerMinute parsePerMinute(pugi::xml_node el, const ParseContext &context)
 {
     PerMinute out;
@@ -99,11 +94,6 @@ PerMinute parsePerMinute(pugi::xml_node el, const ParseContext &context)
     }
     parsePerMinuteContent(out, el, context);
     return out;
-}
-
-void parsePerMinuteContent(PerMinute &out, pugi::xml_node el)
-{
-    parsePerMinuteContent(out, el, ParseContext{});
 }
 
 void parsePerMinuteContent(PerMinute &out, pugi::xml_node el, const ParseContext &context)

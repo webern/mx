@@ -33,11 +33,7 @@ class Instrument final
     Token m_id{};
 };
 
-Instrument parseInstrument(pugi::xml_node el);
-
 Instrument parseInstrument(pugi::xml_node el, const ParseContext &context);
-
-void parseInstrumentContent(Instrument &out, pugi::xml_node el);
 
 void parseInstrumentContent(Instrument &out, pugi::xml_node el, const ParseContext &context);
 

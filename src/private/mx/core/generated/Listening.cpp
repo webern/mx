@@ -36,11 +36,6 @@ void Listening::setOffset(std::optional<Offset> value)
     m_offset = std::move(value);
 }
 
-Listening parseListening(pugi::xml_node el)
-{
-    return parseListening(el, ParseContext{});
-}
-
 Listening parseListening(pugi::xml_node el, const ParseContext &context)
 {
     Listening out;
@@ -55,11 +50,6 @@ Listening parseListening(pugi::xml_node el, const ParseContext &context)
     }
     parseListeningContent(out, el, context);
     return out;
-}
-
-void parseListeningContent(Listening &out, pugi::xml_node el)
-{
-    parseListeningContent(out, el, ParseContext{});
 }
 
 void parseListeningContent(Listening &out, pugi::xml_node el, const ParseContext &context)

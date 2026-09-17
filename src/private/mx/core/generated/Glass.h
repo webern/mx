@@ -35,11 +35,7 @@ class Glass final
     GlassValue m_value{};
 };
 
-Glass parseGlass(pugi::xml_node el);
-
 Glass parseGlass(pugi::xml_node el, const ParseContext &context);
-
-void parseGlassContent(Glass &out, pugi::xml_node el);
 
 void parseGlassContent(Glass &out, pugi::xml_node el, const ParseContext &context);
 

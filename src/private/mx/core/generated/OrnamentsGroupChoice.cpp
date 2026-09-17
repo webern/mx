@@ -91,11 +91,6 @@ OrnamentsGroupChoice OrnamentsGroupChoice::otherOrnament(OtherPlacementText valu
     return OrnamentsGroupChoice{Storage{std::in_place_index<14>, std::move(value)}};
 }
 
-OrnamentsGroupChoice parseOrnamentsGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseOrnamentsGroupChoice(el, cursor, ParseContext{});
-}
-
 OrnamentsGroupChoice parseOrnamentsGroupChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "trill-mark")))

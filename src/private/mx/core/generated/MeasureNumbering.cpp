@@ -171,11 +171,6 @@ void MeasureNumbering::setValue(MeasureNumberingValue value)
     m_value = std::move(value);
 }
 
-MeasureNumbering parseMeasureNumbering(pugi::xml_node el)
-{
-    return parseMeasureNumbering(el, ParseContext{});
-}
-
 MeasureNumbering parseMeasureNumbering(pugi::xml_node el, const ParseContext &context)
 {
     MeasureNumbering out;
@@ -253,11 +248,6 @@ MeasureNumbering parseMeasureNumbering(pugi::xml_node el, const ParseContext &co
     }
     parseMeasureNumberingContent(out, el, context);
     return out;
-}
-
-void parseMeasureNumberingContent(MeasureNumbering &out, pugi::xml_node el)
-{
-    parseMeasureNumberingContent(out, el, ParseContext{});
 }
 
 void parseMeasureNumberingContent(MeasureNumbering &out, pugi::xml_node el, const ParseContext &context)

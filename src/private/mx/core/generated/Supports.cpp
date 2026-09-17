@@ -51,11 +51,6 @@ void Supports::setValue(std::optional<std::string> value)
     m_value = std::move(value);
 }
 
-Supports parseSupports(pugi::xml_node el)
-{
-    return parseSupports(el, ParseContext{});
-}
-
 Supports parseSupports(pugi::xml_node el, const ParseContext &context)
 {
     Supports out;
@@ -101,11 +96,6 @@ Supports parseSupports(pugi::xml_node el, const ParseContext &context)
     }
     parseSupportsContent(out, el, context);
     return out;
-}
-
-void parseSupportsContent(Supports &out, pugi::xml_node el)
-{
-    parseSupportsContent(out, el, ParseContext{});
 }
 
 void parseSupportsContent(Supports &out, pugi::xml_node el, const ParseContext &context)

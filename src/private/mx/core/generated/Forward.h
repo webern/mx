@@ -43,11 +43,7 @@ class Forward final
     std::optional<int> m_staff;
 };
 
-Forward parseForward(pugi::xml_node el);
-
 Forward parseForward(pugi::xml_node el, const ParseContext &context);
-
-void parseForwardContent(Forward &out, pugi::xml_node el);
 
 void parseForwardContent(Forward &out, pugi::xml_node el, const ParseContext &context);
 

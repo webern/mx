@@ -36,11 +36,6 @@ void OrnamentsGroup::setAccidentalMark(std::vector<AccidentalMark> value)
     m_accidentalMark = std::move(value);
 }
 
-OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseOrnamentsGroup(el, cursor, ParseContext{});
-}
-
 OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     OrnamentsGroup out;

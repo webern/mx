@@ -83,11 +83,7 @@ class OctaveShift final
     std::optional<Token> m_id;
 };
 
-OctaveShift parseOctaveShift(pugi::xml_node el);
-
 OctaveShift parseOctaveShift(pugi::xml_node el, const ParseContext &context);
-
-void parseOctaveShiftContent(OctaveShift &out, pugi::xml_node el);
 
 void parseOctaveShiftContent(OctaveShift &out, pugi::xml_node el, const ParseContext &context);
 

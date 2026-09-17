@@ -106,11 +106,6 @@ void StaffDetails::setStaffSize(std::optional<StaffSize> value)
     m_staffSize = std::move(value);
 }
 
-StaffDetails parseStaffDetails(pugi::xml_node el)
-{
-    return parseStaffDetails(el, ParseContext{});
-}
-
 StaffDetails parseStaffDetails(pugi::xml_node el, const ParseContext &context)
 {
     StaffDetails out;
@@ -144,11 +139,6 @@ StaffDetails parseStaffDetails(pugi::xml_node el, const ParseContext &context)
     }
     parseStaffDetailsContent(out, el, context);
     return out;
-}
-
-void parseStaffDetailsContent(StaffDetails &out, pugi::xml_node el)
-{
-    parseStaffDetailsContent(out, el, ParseContext{});
 }
 
 void parseStaffDetailsContent(StaffDetails &out, pugi::xml_node el, const ParseContext &context)

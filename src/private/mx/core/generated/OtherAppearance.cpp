@@ -31,11 +31,6 @@ void OtherAppearance::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherAppearance parseOtherAppearance(pugi::xml_node el)
-{
-    return parseOtherAppearance(el, ParseContext{});
-}
-
 OtherAppearance parseOtherAppearance(pugi::xml_node el, const ParseContext &context)
 {
     OtherAppearance out;
@@ -63,11 +58,6 @@ OtherAppearance parseOtherAppearance(pugi::xml_node el, const ParseContext &cont
     }
     parseOtherAppearanceContent(out, el, context);
     return out;
-}
-
-void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el)
-{
-    parseOtherAppearanceContent(out, el, ParseContext{});
 }
 
 void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el, const ParseContext &context)

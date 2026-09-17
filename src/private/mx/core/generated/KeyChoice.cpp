@@ -26,11 +26,6 @@ KeyChoice KeyChoice::nonTraditionalKey(std::vector<NonTraditionalKeyGroup> value
     return KeyChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-KeyChoice parseKeyChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseKeyChoice(el, cursor, ParseContext{});
-}
-
 KeyChoice parseKeyChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "cancel") || cursorIs(cursor, "fifths")))

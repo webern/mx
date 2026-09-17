@@ -21,11 +21,6 @@ void Unpitched::setDisplayStepOctave(std::optional<DisplayStepOctaveGroup> value
     m_displayStepOctave = std::move(value);
 }
 
-Unpitched parseUnpitched(pugi::xml_node el)
-{
-    return parseUnpitched(el, ParseContext{});
-}
-
 Unpitched parseUnpitched(pugi::xml_node el, const ParseContext &context)
 {
     Unpitched out;
@@ -40,11 +35,6 @@ Unpitched parseUnpitched(pugi::xml_node el, const ParseContext &context)
     }
     parseUnpitchedContent(out, el, context);
     return out;
-}
-
-void parseUnpitchedContent(Unpitched &out, pugi::xml_node el)
-{
-    parseUnpitchedContent(out, el, ParseContext{});
 }
 
 void parseUnpitchedContent(Unpitched &out, pugi::xml_node el, const ParseContext &context)

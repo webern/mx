@@ -56,11 +56,6 @@ void LyricTextGroup::setExtend(std::optional<Extend> value)
     m_extend = std::move(value);
 }
 
-LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseLyricTextGroup(el, cursor, ParseContext{});
-}
-
 LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     LyricTextGroup out;

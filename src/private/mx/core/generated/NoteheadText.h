@@ -38,11 +38,7 @@ class NoteheadText final
     OneOrMore<NoteheadTextChoice> m_choice;
 };
 
-NoteheadText parseNoteheadText(pugi::xml_node el);
-
 NoteheadText parseNoteheadText(pugi::xml_node el, const ParseContext &context);
-
-void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el);
 
 void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el, const ParseContext &context);
 

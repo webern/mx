@@ -50,11 +50,7 @@ class TupletType final
     NoteTypeValue m_value{};
 };
 
-TupletType parseTupletType(pugi::xml_node el);
-
 TupletType parseTupletType(pugi::xml_node el, const ParseContext &context);
-
-void parseTupletTypeContent(TupletType &out, pugi::xml_node el);
 
 void parseTupletTypeContent(TupletType &out, pugi::xml_node el, const ParseContext &context);
 

@@ -48,11 +48,7 @@ class PartList final
     std::vector<PartListChoice> m_choice;
 };
 
-PartList parsePartList(pugi::xml_node el);
-
 PartList parsePartList(pugi::xml_node el, const ParseContext &context);
-
-void parsePartListContent(PartList &out, pugi::xml_node el);
 
 void parsePartListContent(PartList &out, pugi::xml_node el, const ParseContext &context);
 

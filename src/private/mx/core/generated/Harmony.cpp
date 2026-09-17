@@ -226,11 +226,6 @@ void Harmony::setStaff(std::optional<int> value)
     m_staff = std::move(value);
 }
 
-Harmony parseHarmony(pugi::xml_node el)
-{
-    return parseHarmony(el, ParseContext{});
-}
-
 Harmony parseHarmony(pugi::xml_node el, const ParseContext &context)
 {
     Harmony out;
@@ -312,11 +307,6 @@ Harmony parseHarmony(pugi::xml_node el, const ParseContext &context)
     }
     parseHarmonyContent(out, el, context);
     return out;
-}
-
-void parseHarmonyContent(Harmony &out, pugi::xml_node el)
-{
-    parseHarmonyContent(out, el, ParseContext{});
 }
 
 void parseHarmonyContent(Harmony &out, pugi::xml_node el, const ParseContext &context)

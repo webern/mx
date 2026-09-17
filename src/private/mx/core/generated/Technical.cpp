@@ -36,11 +36,6 @@ void Technical::setChoice(std::vector<TechnicalChoice> value)
     m_choice = std::move(value);
 }
 
-Technical parseTechnical(pugi::xml_node el)
-{
-    return parseTechnical(el, ParseContext{});
-}
-
 Technical parseTechnical(pugi::xml_node el, const ParseContext &context)
 {
     Technical out;
@@ -62,11 +57,6 @@ Technical parseTechnical(pugi::xml_node el, const ParseContext &context)
     }
     parseTechnicalContent(out, el, context);
     return out;
-}
-
-void parseTechnicalContent(Technical &out, pugi::xml_node el)
-{
-    parseTechnicalContent(out, el, ParseContext{});
 }
 
 void parseTechnicalContent(Technical &out, pugi::xml_node el, const ParseContext &context)

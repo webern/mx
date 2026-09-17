@@ -131,11 +131,6 @@ void Fermata::setValue(FermataShape value)
     m_value = std::move(value);
 }
 
-Fermata parseFermata(pugi::xml_node el)
-{
-    return parseFermata(el, ParseContext{});
-}
-
 Fermata parseFermata(pugi::xml_node el, const ParseContext &context)
 {
     Fermata out;
@@ -197,11 +192,6 @@ Fermata parseFermata(pugi::xml_node el, const ParseContext &context)
     }
     parseFermataContent(out, el, context);
     return out;
-}
-
-void parseFermataContent(Fermata &out, pugi::xml_node el)
-{
-    parseFermataContent(out, el, ParseContext{});
 }
 
 void parseFermataContent(Fermata &out, pugi::xml_node el, const ParseContext &context)

@@ -86,11 +86,7 @@ class Tremolo final
     TremoloMarks m_value{};
 };
 
-Tremolo parseTremolo(pugi::xml_node el);
-
 Tremolo parseTremolo(pugi::xml_node el, const ParseContext &context);
-
-void parseTremoloContent(Tremolo &out, pugi::xml_node el);
 
 void parseTremoloContent(Tremolo &out, pugi::xml_node el, const ParseContext &context);
 

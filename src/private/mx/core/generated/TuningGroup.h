@@ -44,8 +44,6 @@ class TuningGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TuningGroup parseTuningGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 TuningGroup parseTuningGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeTuningGroup(const TuningGroup &v, pugi::xml_node el);

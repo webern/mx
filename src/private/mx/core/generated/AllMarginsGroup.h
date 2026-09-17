@@ -42,8 +42,6 @@ class AllMarginsGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeAllMarginsGroup(const AllMarginsGroup &v, pugi::xml_node el);

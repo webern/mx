@@ -36,11 +36,7 @@ class LineWidth final
     Tenths m_value{};
 };
 
-LineWidth parseLineWidth(pugi::xml_node el);
-
 LineWidth parseLineWidth(pugi::xml_node el, const ParseContext &context);
-
-void parseLineWidthContent(LineWidth &out, pugi::xml_node el);
 
 void parseLineWidthContent(LineWidth &out, pugi::xml_node el, const ParseContext &context);
 

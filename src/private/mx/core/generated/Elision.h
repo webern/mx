@@ -58,11 +58,7 @@ class Elision final
     std::string m_value{};
 };
 
-Elision parseElision(pugi::xml_node el);
-
 Elision parseElision(pugi::xml_node el, const ParseContext &context);
-
-void parseElisionContent(Elision &out, pugi::xml_node el);
 
 void parseElisionContent(Elision &out, pugi::xml_node el, const ParseContext &context);
 

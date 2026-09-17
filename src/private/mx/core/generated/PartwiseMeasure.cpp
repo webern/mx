@@ -86,11 +86,6 @@ void PartwiseMeasure::setMusicData(std::vector<MusicDataChoice> value)
     m_musicData = std::move(value);
 }
 
-PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el)
-{
-    return parsePartwiseMeasure(el, ParseContext{});
-}
-
 PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el, const ParseContext &context)
 {
     PartwiseMeasure out;
@@ -138,11 +133,6 @@ PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el, const ParseContext &cont
     }
     parsePartwiseMeasureContent(out, el, context);
     return out;
-}
-
-void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el)
-{
-    parsePartwiseMeasureContent(out, el, ParseContext{});
 }
 
 void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el, const ParseContext &context)

@@ -37,11 +37,7 @@ class PedalTuning final
     Semitones m_pedalAlter{};
 };
 
-PedalTuning parsePedalTuning(pugi::xml_node el);
-
 PedalTuning parsePedalTuning(pugi::xml_node el, const ParseContext &context);
-
-void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el);
 
 void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el, const ParseContext &context);
 

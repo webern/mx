@@ -41,11 +41,6 @@ void Mordent::setDeparture(std::optional<AboveBelow> value)
     m_departure = std::move(value);
 }
 
-Mordent parseMordent(pugi::xml_node el)
-{
-    return parseMordent(el, ParseContext{});
-}
-
 Mordent parseMordent(pugi::xml_node el, const ParseContext &context)
 {
     Mordent out;

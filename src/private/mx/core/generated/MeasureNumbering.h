@@ -97,11 +97,7 @@ class MeasureNumbering final
     MeasureNumberingValue m_value{};
 };
 
-MeasureNumbering parseMeasureNumbering(pugi::xml_node el);
-
 MeasureNumbering parseMeasureNumbering(pugi::xml_node el, const ParseContext &context);
-
-void parseMeasureNumberingContent(MeasureNumbering &out, pugi::xml_node el);
 
 void parseMeasureNumberingContent(MeasureNumbering &out, pugi::xml_node el, const ParseContext &context);
 

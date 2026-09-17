@@ -41,11 +41,6 @@ void PageLayout::clearPageMargins() noexcept
     m_pageMargins.clear();
 }
 
-PageLayout parsePageLayout(pugi::xml_node el)
-{
-    return parsePageLayout(el, ParseContext{});
-}
-
 PageLayout parsePageLayout(pugi::xml_node el, const ParseContext &context)
 {
     PageLayout out;
@@ -60,11 +55,6 @@ PageLayout parsePageLayout(pugi::xml_node el, const ParseContext &context)
     }
     parsePageLayoutContent(out, el, context);
     return out;
-}
-
-void parsePageLayoutContent(PageLayout &out, pugi::xml_node el)
-{
-    parsePageLayoutContent(out, el, ParseContext{});
 }
 
 void parsePageLayoutContent(PageLayout &out, pugi::xml_node el, const ParseContext &context)

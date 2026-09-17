@@ -57,11 +57,7 @@ class TimewiseMeasure final
     OneOrMore<TimewisePart> m_part;
 };
 
-TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el);
-
 TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el, const ParseContext &context);
-
-void parseTimewiseMeasureContent(TimewiseMeasure &out, pugi::xml_node el);
 
 void parseTimewiseMeasureContent(TimewiseMeasure &out, pugi::xml_node el, const ParseContext &context);
 

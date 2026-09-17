@@ -171,11 +171,6 @@ void Metronome::setChoice(MetronomeChoice value)
     m_choice = std::move(value);
 }
 
-Metronome parseMetronome(pugi::xml_node el)
-{
-    return parseMetronome(el, ParseContext{});
-}
-
 Metronome parseMetronome(pugi::xml_node el, const ParseContext &context)
 {
     Metronome out;
@@ -253,11 +248,6 @@ Metronome parseMetronome(pugi::xml_node el, const ParseContext &context)
     }
     parseMetronomeContent(out, el, context);
     return out;
-}
-
-void parseMetronomeContent(Metronome &out, pugi::xml_node el)
-{
-    parseMetronomeContent(out, el, ParseContext{});
 }
 
 void parseMetronomeContent(Metronome &out, pugi::xml_node el, const ParseContext &context)

@@ -35,11 +35,7 @@ class Tie final
     std::optional<TimeOnly> m_timeOnly;
 };
 
-Tie parseTie(pugi::xml_node el);
-
 Tie parseTie(pugi::xml_node el, const ParseContext &context);
-
-void parseTieContent(Tie &out, pugi::xml_node el);
 
 void parseTieContent(Tie &out, pugi::xml_node el, const ParseContext &context);
 

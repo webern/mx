@@ -24,11 +24,7 @@ public:
     bool operator==(const {{ident}} &) const noexcept = default;
 };
 
-{{ident}} parse{{ident}}(pugi::xml_node el);
-
 {{ident}} parse{{ident}}(pugi::xml_node el, const ParseContext &context);
-
-void parse{{ident}}Content({{ident}} &out, pugi::xml_node el);
 
 void parse{{ident}}Content({{ident}} &out, pugi::xml_node el, const ParseContext &context);
 

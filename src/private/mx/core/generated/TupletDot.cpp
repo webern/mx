@@ -61,11 +61,6 @@ void TupletDot::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-TupletDot parseTupletDot(pugi::xml_node el)
-{
-    return parseTupletDot(el, ParseContext{});
-}
-
 TupletDot parseTupletDot(pugi::xml_node el, const ParseContext &context)
 {
     TupletDot out;
@@ -103,11 +98,6 @@ TupletDot parseTupletDot(pugi::xml_node el, const ParseContext &context)
     }
     parseTupletDotContent(out, el, context);
     return out;
-}
-
-void parseTupletDotContent(TupletDot &out, pugi::xml_node el)
-{
-    parseTupletDotContent(out, el, ParseContext{});
 }
 
 void parseTupletDotContent(TupletDot &out, pugi::xml_node el, const ParseContext &context)

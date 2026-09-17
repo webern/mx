@@ -131,11 +131,6 @@ void PartName::setValue(std::string value)
     m_value = std::move(value);
 }
 
-PartName parsePartName(pugi::xml_node el)
-{
-    return parsePartName(el, ParseContext{});
-}
-
 PartName parsePartName(pugi::xml_node el, const ParseContext &context)
 {
     PartName out;
@@ -197,11 +192,6 @@ PartName parsePartName(pugi::xml_node el, const ParseContext &context)
     }
     parsePartNameContent(out, el, context);
     return out;
-}
-
-void parsePartNameContent(PartName &out, pugi::xml_node el)
-{
-    parsePartNameContent(out, el, ParseContext{});
 }
 
 void parsePartNameContent(PartName &out, pugi::xml_node el, const ParseContext &context)

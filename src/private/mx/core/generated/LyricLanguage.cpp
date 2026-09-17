@@ -41,11 +41,6 @@ void LyricLanguage::setXMLLang(std::string value)
     m_xmlLang = std::move(value);
 }
 
-LyricLanguage parseLyricLanguage(pugi::xml_node el)
-{
-    return parseLyricLanguage(el, ParseContext{});
-}
-
 LyricLanguage parseLyricLanguage(pugi::xml_node el, const ParseContext &context)
 {
     LyricLanguage out;
@@ -83,11 +78,6 @@ LyricLanguage parseLyricLanguage(pugi::xml_node el, const ParseContext &context)
     }
     parseLyricLanguageContent(out, el, context);
     return out;
-}
-
-void parseLyricLanguageContent(LyricLanguage &out, pugi::xml_node el)
-{
-    parseLyricLanguageContent(out, el, ParseContext{});
 }
 
 void parseLyricLanguageContent(LyricLanguage &out, pugi::xml_node el, const ParseContext &context)

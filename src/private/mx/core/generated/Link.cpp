@@ -141,11 +141,6 @@ void Link::setRelativeY(std::optional<Tenths> value)
     m_relativeY = std::move(value);
 }
 
-Link parseLink(pugi::xml_node el)
-{
-    return parseLink(el, ParseContext{});
-}
-
 Link parseLink(pugi::xml_node el, const ParseContext &context)
 {
     Link out;
@@ -221,11 +216,6 @@ Link parseLink(pugi::xml_node el, const ParseContext &context)
     }
     parseLinkContent(out, el, context);
     return out;
-}
-
-void parseLinkContent(Link &out, pugi::xml_node el)
-{
-    parseLinkContent(out, el, ParseContext{});
 }
 
 void parseLinkContent(Link &out, pugi::xml_node el, const ParseContext &context)

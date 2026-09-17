@@ -41,11 +41,6 @@ void EditorialVoiceGroup::setVoice(std::optional<std::string> value)
     m_voice = std::move(value);
 }
 
-EditorialVoiceGroup parseEditorialVoiceGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseEditorialVoiceGroup(el, cursor, ParseContext{});
-}
-
 EditorialVoiceGroup parseEditorialVoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     EditorialVoiceGroup out;

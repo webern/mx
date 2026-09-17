@@ -67,11 +67,7 @@ class RootStep final
     Step m_value{};
 };
 
-RootStep parseRootStep(pugi::xml_node el);
-
 RootStep parseRootStep(pugi::xml_node el, const ParseContext &context);
-
-void parseRootStepContent(RootStep &out, pugi::xml_node el);
 
 void parseRootStepContent(RootStep &out, pugi::xml_node el, const ParseContext &context);
 

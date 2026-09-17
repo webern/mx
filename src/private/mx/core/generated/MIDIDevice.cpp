@@ -41,11 +41,6 @@ void MIDIDevice::setValue(std::string value)
     m_value = std::move(value);
 }
 
-MIDIDevice parseMIDIDevice(pugi::xml_node el)
-{
-    return parseMIDIDevice(el, ParseContext{});
-}
-
 MIDIDevice parseMIDIDevice(pugi::xml_node el, const ParseContext &context)
 {
     MIDIDevice out;
@@ -71,11 +66,6 @@ MIDIDevice parseMIDIDevice(pugi::xml_node el, const ParseContext &context)
     }
     parseMIDIDeviceContent(out, el, context);
     return out;
-}
-
-void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el)
-{
-    parseMIDIDeviceContent(out, el, ParseContext{});
 }
 
 void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el, const ParseContext &context)

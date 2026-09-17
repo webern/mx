@@ -42,11 +42,7 @@ class MIDIDevice final
     std::string m_value{};
 };
 
-MIDIDevice parseMIDIDevice(pugi::xml_node el);
-
 MIDIDevice parseMIDIDevice(pugi::xml_node el, const ParseContext &context);
-
-void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el);
 
 void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el, const ParseContext &context);
 

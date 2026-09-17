@@ -45,11 +45,7 @@ class Supports final
     std::optional<std::string> m_value;
 };
 
-Supports parseSupports(pugi::xml_node el);
-
 Supports parseSupports(pugi::xml_node el, const ParseContext &context);
-
-void parseSupportsContent(Supports &out, pugi::xml_node el);
 
 void parseSupportsContent(Supports &out, pugi::xml_node el, const ParseContext &context);
 

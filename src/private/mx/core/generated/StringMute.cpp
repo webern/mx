@@ -141,11 +141,6 @@ void StringMute::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-StringMute parseStringMute(pugi::xml_node el)
-{
-    return parseStringMute(el, ParseContext{});
-}
-
 StringMute parseStringMute(pugi::xml_node el, const ParseContext &context)
 {
     StringMute out;
@@ -221,11 +216,6 @@ StringMute parseStringMute(pugi::xml_node el, const ParseContext &context)
     }
     parseStringMuteContent(out, el, context);
     return out;
-}
-
-void parseStringMuteContent(StringMute &out, pugi::xml_node el)
-{
-    parseStringMuteContent(out, el, ParseContext{});
 }
 
 void parseStringMuteContent(StringMute &out, pugi::xml_node el, const ParseContext &context)

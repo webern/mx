@@ -97,8 +97,6 @@ class NoteChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-NoteChoice parseNoteChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 NoteChoice parseNoteChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeNoteChoice(const NoteChoice &v, pugi::xml_node el);

@@ -31,11 +31,6 @@ void ElisionSyllabicGroup::setSyllabic(std::optional<Syllabic> value)
     m_syllabic = std::move(value);
 }
 
-ElisionSyllabicGroup parseElisionSyllabicGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseElisionSyllabicGroup(el, cursor, ParseContext{});
-}
-
 ElisionSyllabicGroup parseElisionSyllabicGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     ElisionSyllabicGroup out;

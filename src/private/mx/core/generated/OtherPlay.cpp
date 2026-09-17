@@ -31,11 +31,6 @@ void OtherPlay::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherPlay parseOtherPlay(pugi::xml_node el)
-{
-    return parseOtherPlay(el, ParseContext{});
-}
-
 OtherPlay parseOtherPlay(pugi::xml_node el, const ParseContext &context)
 {
     OtherPlay out;
@@ -63,11 +58,6 @@ OtherPlay parseOtherPlay(pugi::xml_node el, const ParseContext &context)
     }
     parseOtherPlayContent(out, el, context);
     return out;
-}
-
-void parseOtherPlayContent(OtherPlay &out, pugi::xml_node el)
-{
-    parseOtherPlayContent(out, el, ParseContext{});
 }
 
 void parseOtherPlayContent(OtherPlay &out, pugi::xml_node el, const ParseContext &context)

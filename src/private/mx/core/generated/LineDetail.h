@@ -51,11 +51,7 @@ class LineDetail final
     std::optional<YesNo> m_printObject;
 };
 
-LineDetail parseLineDetail(pugi::xml_node el);
-
 LineDetail parseLineDetail(pugi::xml_node el, const ParseContext &context);
-
-void parseLineDetailContent(LineDetail &out, pugi::xml_node el);
 
 void parseLineDetailContent(LineDetail &out, pugi::xml_node el, const ParseContext &context);
 

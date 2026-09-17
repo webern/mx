@@ -31,11 +31,6 @@ void KeyAccidental::setValue(AccidentalValue value)
     m_value = std::move(value);
 }
 
-KeyAccidental parseKeyAccidental(pugi::xml_node el)
-{
-    return parseKeyAccidental(el, ParseContext{});
-}
-
 KeyAccidental parseKeyAccidental(pugi::xml_node el, const ParseContext &context)
 {
     KeyAccidental out;
@@ -57,11 +52,6 @@ KeyAccidental parseKeyAccidental(pugi::xml_node el, const ParseContext &context)
     }
     parseKeyAccidentalContent(out, el, context);
     return out;
-}
-
-void parseKeyAccidentalContent(KeyAccidental &out, pugi::xml_node el)
-{
-    parseKeyAccidentalContent(out, el, ParseContext{});
 }
 
 void parseKeyAccidentalContent(KeyAccidental &out, pugi::xml_node el, const ParseContext &context)

@@ -50,11 +50,7 @@ class Degree final
     DegreeType m_degreeType{};
 };
 
-Degree parseDegree(pugi::xml_node el);
-
 Degree parseDegree(pugi::xml_node el, const ParseContext &context);
-
-void parseDegreeContent(Degree &out, pugi::xml_node el);
 
 void parseDegreeContent(Degree &out, pugi::xml_node el, const ParseContext &context);
 

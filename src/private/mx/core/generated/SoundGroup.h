@@ -47,8 +47,6 @@ class SoundGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-SoundGroup parseSoundGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 SoundGroup parseSoundGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeSoundGroup(const SoundGroup &v, pugi::xml_node el);

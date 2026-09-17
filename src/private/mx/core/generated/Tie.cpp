@@ -31,11 +31,6 @@ void Tie::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Tie parseTie(pugi::xml_node el)
-{
-    return parseTie(el, ParseContext{});
-}
-
 Tie parseTie(pugi::xml_node el, const ParseContext &context)
 {
     Tie out;
@@ -67,11 +62,6 @@ Tie parseTie(pugi::xml_node el, const ParseContext &context)
     }
     parseTieContent(out, el, context);
     return out;
-}
-
-void parseTieContent(Tie &out, pugi::xml_node el)
-{
-    parseTieContent(out, el, ParseContext{});
 }
 
 void parseTieContent(Tie &out, pugi::xml_node el, const ParseContext &context)

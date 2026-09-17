@@ -50,11 +50,7 @@ class Notations final
     std::vector<NotationsChoice> m_choice;
 };
 
-Notations parseNotations(pugi::xml_node el);
-
 Notations parseNotations(pugi::xml_node el, const ParseContext &context);
-
-void parseNotationsContent(Notations &out, pugi::xml_node el);
 
 void parseNotationsContent(Notations &out, pugi::xml_node el, const ParseContext &context);
 

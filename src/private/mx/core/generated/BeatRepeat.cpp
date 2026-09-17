@@ -51,11 +51,6 @@ void BeatRepeat::setSlash(std::optional<SlashGroup> value)
     m_slash = std::move(value);
 }
 
-BeatRepeat parseBeatRepeat(pugi::xml_node el)
-{
-    return parseBeatRepeat(el, ParseContext{});
-}
-
 BeatRepeat parseBeatRepeat(pugi::xml_node el, const ParseContext &context)
 {
     BeatRepeat out;
@@ -91,11 +86,6 @@ BeatRepeat parseBeatRepeat(pugi::xml_node el, const ParseContext &context)
     }
     parseBeatRepeatContent(out, el, context);
     return out;
-}
-
-void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el)
-{
-    parseBeatRepeatContent(out, el, ParseContext{});
 }
 
 void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el, const ParseContext &context)

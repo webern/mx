@@ -36,11 +36,6 @@ void TimewisePart::setMusicData(std::vector<MusicDataChoice> value)
     m_musicData = std::move(value);
 }
 
-TimewisePart parseTimewisePart(pugi::xml_node el)
-{
-    return parseTimewisePart(el, ParseContext{});
-}
-
 TimewisePart parseTimewisePart(pugi::xml_node el, const ParseContext &context)
 {
     TimewisePart out;
@@ -68,11 +63,6 @@ TimewisePart parseTimewisePart(pugi::xml_node el, const ParseContext &context)
     }
     parseTimewisePartContent(out, el, context);
     return out;
-}
-
-void parseTimewisePartContent(TimewisePart &out, pugi::xml_node el)
-{
-    parseTimewisePartContent(out, el, ParseContext{});
 }
 
 void parseTimewisePartContent(TimewisePart &out, pugi::xml_node el, const ParseContext &context)

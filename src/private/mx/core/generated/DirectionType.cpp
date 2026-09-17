@@ -31,11 +31,6 @@ void DirectionType::setChoice(DirectionTypeChoice value)
     m_choice = std::move(value);
 }
 
-DirectionType parseDirectionType(pugi::xml_node el)
-{
-    return parseDirectionType(el, ParseContext{});
-}
-
 DirectionType parseDirectionType(pugi::xml_node el, const ParseContext &context)
 {
     DirectionType out;
@@ -57,11 +52,6 @@ DirectionType parseDirectionType(pugi::xml_node el, const ParseContext &context)
     }
     parseDirectionTypeContent(out, el, context);
     return out;
-}
-
-void parseDirectionTypeContent(DirectionType &out, pugi::xml_node el)
-{
-    parseDirectionTypeContent(out, el, ParseContext{});
 }
 
 void parseDirectionTypeContent(DirectionType &out, pugi::xml_node el, const ParseContext &context)

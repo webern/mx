@@ -131,11 +131,6 @@ void Arrow::setChoice(ArrowChoice value)
     m_choice = std::move(value);
 }
 
-Arrow parseArrow(pugi::xml_node el)
-{
-    return parseArrow(el, ParseContext{});
-}
-
 Arrow parseArrow(pugi::xml_node el, const ParseContext &context)
 {
     Arrow out;
@@ -197,11 +192,6 @@ Arrow parseArrow(pugi::xml_node el, const ParseContext &context)
     }
     parseArrowContent(out, el, context);
     return out;
-}
-
-void parseArrowContent(Arrow &out, pugi::xml_node el)
-{
-    parseArrowContent(out, el, ParseContext{});
 }
 
 void parseArrowContent(Arrow &out, pugi::xml_node el, const ParseContext &context)

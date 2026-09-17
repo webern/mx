@@ -40,8 +40,6 @@ class OrnamentsGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeOrnamentsGroup(const OrnamentsGroup &v, pugi::xml_node el);

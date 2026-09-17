@@ -226,11 +226,6 @@ void Sound::setOffset(std::optional<Offset> value)
     m_offset = std::move(value);
 }
 
-Sound parseSound(pugi::xml_node el)
-{
-    return parseSound(el, ParseContext{});
-}
-
 Sound parseSound(pugi::xml_node el, const ParseContext &context)
 {
     Sound out;
@@ -320,11 +315,6 @@ Sound parseSound(pugi::xml_node el, const ParseContext &context)
     }
     parseSoundContent(out, el, context);
     return out;
-}
-
-void parseSoundContent(Sound &out, pugi::xml_node el)
-{
-    parseSoundContent(out, el, ParseContext{});
 }
 
 void parseSoundContent(Sound &out, pugi::xml_node el, const ParseContext &context)

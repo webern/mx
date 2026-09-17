@@ -42,11 +42,7 @@ class StaffLayout final
     std::optional<Tenths> m_staffDistance;
 };
 
-StaffLayout parseStaffLayout(pugi::xml_node el);
-
 StaffLayout parseStaffLayout(pugi::xml_node el, const ParseContext &context);
-
-void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el);
 
 void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el, const ParseContext &context);
 

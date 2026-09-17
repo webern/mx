@@ -61,11 +61,7 @@ class StyleText final
     std::string m_value{};
 };
 
-StyleText parseStyleText(pugi::xml_node el);
-
 StyleText parseStyleText(pugi::xml_node el, const ParseContext &context);
-
-void parseStyleTextContent(StyleText &out, pugi::xml_node el);
 
 void parseStyleTextContent(StyleText &out, pugi::xml_node el, const ParseContext &context);
 

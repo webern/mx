@@ -59,11 +59,7 @@ class PartSymbol final
     GroupSymbolValue m_value{};
 };
 
-PartSymbol parsePartSymbol(pugi::xml_node el);
-
 PartSymbol parsePartSymbol(pugi::xml_node el, const ParseContext &context);
-
-void parsePartSymbolContent(PartSymbol &out, pugi::xml_node el);
 
 void parsePartSymbolContent(PartSymbol &out, pugi::xml_node el, const ParseContext &context);
 

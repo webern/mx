@@ -41,11 +41,6 @@ void FirstFret::setValue(int value)
     m_value = std::move(value);
 }
 
-FirstFret parseFirstFret(pugi::xml_node el)
-{
-    return parseFirstFret(el, ParseContext{});
-}
-
 FirstFret parseFirstFret(pugi::xml_node el, const ParseContext &context)
 {
     FirstFret out;
@@ -71,11 +66,6 @@ FirstFret parseFirstFret(pugi::xml_node el, const ParseContext &context)
     }
     parseFirstFretContent(out, el, context);
     return out;
-}
-
-void parseFirstFretContent(FirstFret &out, pugi::xml_node el)
-{
-    parseFirstFretContent(out, el, ParseContext{});
 }
 
 void parseFirstFretContent(FirstFret &out, pugi::xml_node el, const ParseContext &context)

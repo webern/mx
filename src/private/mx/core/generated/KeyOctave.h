@@ -42,11 +42,7 @@ class KeyOctave final
     Octave m_value{};
 };
 
-KeyOctave parseKeyOctave(pugi::xml_node el);
-
 KeyOctave parseKeyOctave(pugi::xml_node el, const ParseContext &context);
-
-void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el);
 
 void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el, const ParseContext &context);
 

@@ -39,11 +39,7 @@ class PageMargins final
     AllMarginsGroup m_allMargins{};
 };
 
-PageMargins parsePageMargins(pugi::xml_node el);
-
 PageMargins parsePageMargins(pugi::xml_node el, const ParseContext &context);
-
-void parsePageMarginsContent(PageMargins &out, pugi::xml_node el);
 
 void parsePageMarginsContent(PageMargins &out, pugi::xml_node el, const ParseContext &context);
 

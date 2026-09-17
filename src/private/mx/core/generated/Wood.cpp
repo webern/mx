@@ -31,11 +31,6 @@ void Wood::setValue(WoodValue value)
     m_value = std::move(value);
 }
 
-Wood parseWood(pugi::xml_node el)
-{
-    return parseWood(el, ParseContext{});
-}
-
 Wood parseWood(pugi::xml_node el, const ParseContext &context)
 {
     Wood out;
@@ -57,11 +52,6 @@ Wood parseWood(pugi::xml_node el, const ParseContext &context)
     }
     parseWoodContent(out, el, context);
     return out;
-}
-
-void parseWoodContent(Wood &out, pugi::xml_node el)
-{
-    parseWoodContent(out, el, ParseContext{});
 }
 
 void parseWoodContent(Wood &out, pugi::xml_node el, const ParseContext &context)

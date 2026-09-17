@@ -31,11 +31,6 @@ void Membrane::setValue(MembraneValue value)
     m_value = std::move(value);
 }
 
-Membrane parseMembrane(pugi::xml_node el)
-{
-    return parseMembrane(el, ParseContext{});
-}
-
 Membrane parseMembrane(pugi::xml_node el, const ParseContext &context)
 {
     Membrane out;
@@ -57,11 +52,6 @@ Membrane parseMembrane(pugi::xml_node el, const ParseContext &context)
     }
     parseMembraneContent(out, el, context);
     return out;
-}
-
-void parseMembraneContent(Membrane &out, pugi::xml_node el)
-{
-    parseMembraneContent(out, el, ParseContext{});
 }
 
 void parseMembraneContent(Membrane &out, pugi::xml_node el, const ParseContext &context)

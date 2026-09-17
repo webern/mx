@@ -45,11 +45,7 @@ class TupletDot final
     std::optional<Color> m_color;
 };
 
-TupletDot parseTupletDot(pugi::xml_node el);
-
 TupletDot parseTupletDot(pugi::xml_node el, const ParseContext &context);
-
-void parseTupletDotContent(TupletDot &out, pugi::xml_node el);
 
 void parseTupletDotContent(TupletDot &out, pugi::xml_node el, const ParseContext &context);
 

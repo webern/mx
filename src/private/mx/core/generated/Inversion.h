@@ -66,11 +66,7 @@ class Inversion final
     int m_value{};
 };
 
-Inversion parseInversion(pugi::xml_node el);
-
 Inversion parseInversion(pugi::xml_node el, const ParseContext &context);
-
-void parseInversionContent(Inversion &out, pugi::xml_node el);
 
 void parseInversionContent(Inversion &out, pugi::xml_node el, const ParseContext &context);
 

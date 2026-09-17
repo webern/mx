@@ -13,22 +13,12 @@ namespace {{vars.namespace}}
 
 {{>attributes_impl}}
 {{>fields_impl}}
-{{ident}} parse{{ident}}(pugi::xml_node el)
-{
-    return parse{{ident}}(el, ParseContext{});
-}
-
 {{ident}} parse{{ident}}(pugi::xml_node el, const ParseContext &context)
 {
     {{ident}} out;
 {{>attributes_parse}}
     parse{{ident}}Content(out, el, context);
     return out;
-}
-
-void parse{{ident}}Content({{ident}} &out, pugi::xml_node el)
-{
-    parse{{ident}}Content(out, el, ParseContext{});
 }
 
 void parse{{ident}}Content({{ident}} &out, pugi::xml_node el, const ParseContext &context)

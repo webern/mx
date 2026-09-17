@@ -49,11 +49,7 @@ class Fret final
     int m_value{};
 };
 
-Fret parseFret(pugi::xml_node el);
-
 Fret parseFret(pugi::xml_node el, const ParseContext &context);
-
-void parseFretContent(Fret &out, pugi::xml_node el);
 
 void parseFretContent(Fret &out, pugi::xml_node el, const ParseContext &context);
 

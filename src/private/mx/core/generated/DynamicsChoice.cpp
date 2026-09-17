@@ -151,11 +151,6 @@ DynamicsChoice DynamicsChoice::otherDynamics(OtherText value)
     return DynamicsChoice{Storage{std::in_place_index<26>, std::move(value)}};
 }
 
-DynamicsChoice parseDynamicsChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseDynamicsChoice(el, cursor, ParseContext{});
-}
-
 DynamicsChoice parseDynamicsChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "p")))

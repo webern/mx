@@ -101,11 +101,6 @@ void Defaults::setLyricLanguage(std::vector<LyricLanguage> value)
     m_lyricLanguage = std::move(value);
 }
 
-Defaults parseDefaults(pugi::xml_node el)
-{
-    return parseDefaults(el, ParseContext{});
-}
-
 Defaults parseDefaults(pugi::xml_node el, const ParseContext &context)
 {
     Defaults out;
@@ -120,11 +115,6 @@ Defaults parseDefaults(pugi::xml_node el, const ParseContext &context)
     }
     parseDefaultsContent(out, el, context);
     return out;
-}
-
-void parseDefaultsContent(Defaults &out, pugi::xml_node el)
-{
-    parseDefaultsContent(out, el, ParseContext{});
 }
 
 void parseDefaultsContent(Defaults &out, pugi::xml_node el, const ParseContext &context)

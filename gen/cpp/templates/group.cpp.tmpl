@@ -12,11 +12,6 @@ namespace {{vars.namespace}}
 {
 
 {{>fields_impl}}
-{{ident}} parse{{ident}}(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parse{{ident}}(el, cursor, ParseContext{});
-}
-
 {{ident}} parse{{ident}}(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     {{ident}} out;

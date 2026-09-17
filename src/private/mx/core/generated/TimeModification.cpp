@@ -41,11 +41,6 @@ void TimeModification::setGroup(std::optional<TimeModificationGroup> value)
     m_group = std::move(value);
 }
 
-TimeModification parseTimeModification(pugi::xml_node el)
-{
-    return parseTimeModification(el, ParseContext{});
-}
-
 TimeModification parseTimeModification(pugi::xml_node el, const ParseContext &context)
 {
     TimeModification out;
@@ -60,11 +55,6 @@ TimeModification parseTimeModification(pugi::xml_node el, const ParseContext &co
     }
     parseTimeModificationContent(out, el, context);
     return out;
-}
-
-void parseTimeModificationContent(TimeModification &out, pugi::xml_node el)
-{
-    parseTimeModificationContent(out, el, ParseContext{});
 }
 
 void parseTimeModificationContent(TimeModification &out, pugi::xml_node el, const ParseContext &context)

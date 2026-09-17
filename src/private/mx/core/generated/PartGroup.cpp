@@ -111,11 +111,6 @@ void PartGroup::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-PartGroup parsePartGroup(pugi::xml_node el)
-{
-    return parsePartGroup(el, ParseContext{});
-}
-
 PartGroup parsePartGroup(pugi::xml_node el, const ParseContext &context)
 {
     PartGroup out;
@@ -147,11 +142,6 @@ PartGroup parsePartGroup(pugi::xml_node el, const ParseContext &context)
     }
     parsePartGroupContent(out, el, context);
     return out;
-}
-
-void parsePartGroupContent(PartGroup &out, pugi::xml_node el)
-{
-    parsePartGroupContent(out, el, ParseContext{});
 }
 
 void parsePartGroupContent(PartGroup &out, pugi::xml_node el, const ParseContext &context)

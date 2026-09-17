@@ -55,11 +55,7 @@ class Grouping final
     std::vector<Feature> m_feature;
 };
 
-Grouping parseGrouping(pugi::xml_node el);
-
 Grouping parseGrouping(pugi::xml_node el, const ParseContext &context);
-
-void parseGroupingContent(Grouping &out, pugi::xml_node el);
 
 void parseGroupingContent(Grouping &out, pugi::xml_node el, const ParseContext &context);
 

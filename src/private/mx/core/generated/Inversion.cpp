@@ -121,11 +121,6 @@ void Inversion::setValue(int value)
     m_value = std::move(value);
 }
 
-Inversion parseInversion(pugi::xml_node el)
-{
-    return parseInversion(el, ParseContext{});
-}
-
 Inversion parseInversion(pugi::xml_node el, const ParseContext &context)
 {
     Inversion out;
@@ -183,11 +178,6 @@ Inversion parseInversion(pugi::xml_node el, const ParseContext &context)
     }
     parseInversionContent(out, el, context);
     return out;
-}
-
-void parseInversionContent(Inversion &out, pugi::xml_node el)
-{
-    parseInversionContent(out, el, ParseContext{});
 }
 
 void parseInversionContent(Inversion &out, pugi::xml_node el, const ParseContext &context)

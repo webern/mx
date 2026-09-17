@@ -66,11 +66,7 @@ class BreathMark final
     BreathMarkValue m_value{};
 };
 
-BreathMark parseBreathMark(pugi::xml_node el);
-
 BreathMark parseBreathMark(pugi::xml_node el, const ParseContext &context);
-
-void parseBreathMarkContent(BreathMark &out, pugi::xml_node el);
 
 void parseBreathMarkContent(BreathMark &out, pugi::xml_node el, const ParseContext &context);
 

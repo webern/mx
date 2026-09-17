@@ -26,11 +26,6 @@ DirectionTypeChoiceChoice DirectionTypeChoiceChoice::symbol(FormattedSymbolID va
     return DirectionTypeChoiceChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseDirectionTypeChoiceChoice(el, cursor, ParseContext{});
-}
-
 DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                          const ParseContext &context)
 {

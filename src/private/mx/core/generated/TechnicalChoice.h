@@ -507,8 +507,6 @@ class TechnicalChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-TechnicalChoice parseTechnicalChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 TechnicalChoice parseTechnicalChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeTechnicalChoice(const TechnicalChoice &v, pugi::xml_node el);

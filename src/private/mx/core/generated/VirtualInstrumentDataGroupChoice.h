@@ -82,8 +82,6 @@ class VirtualInstrumentDataGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-VirtualInstrumentDataGroupChoice parseVirtualInstrumentDataGroupChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 VirtualInstrumentDataGroupChoice parseVirtualInstrumentDataGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                                        const ParseContext &context);
 

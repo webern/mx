@@ -32,11 +32,7 @@ class OtherAppearance final
     std::string m_value{};
 };
 
-OtherAppearance parseOtherAppearance(pugi::xml_node el);
-
 OtherAppearance parseOtherAppearance(pugi::xml_node el, const ParseContext &context);
-
-void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el);
 
 void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el, const ParseContext &context);
 

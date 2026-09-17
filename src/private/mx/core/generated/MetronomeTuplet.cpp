@@ -41,11 +41,6 @@ void MetronomeTuplet::setShowNumber(std::optional<ShowTuplet> value)
     m_showNumber = std::move(value);
 }
 
-MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el)
-{
-    return parseMetronomeTuplet(el, ParseContext{});
-}
-
 MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el, const ParseContext &context)
 {
     MetronomeTuplet out;

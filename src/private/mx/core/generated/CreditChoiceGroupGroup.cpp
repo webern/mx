@@ -51,11 +51,6 @@ void CreditChoiceGroupGroup::setChoice(CreditChoiceGroupGroupChoice value)
     m_choice = std::move(value);
 }
 
-CreditChoiceGroupGroup parseCreditChoiceGroupGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseCreditChoiceGroupGroup(el, cursor, ParseContext{});
-}
-
 CreditChoiceGroupGroup parseCreditChoiceGroupGroup(pugi::xml_node el, pugi::xml_node &cursor,
                                                    const ParseContext &context)
 {

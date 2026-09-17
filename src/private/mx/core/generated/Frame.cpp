@@ -166,11 +166,6 @@ void Frame::setFrameNote(OneOrMore<FrameNote> value)
     m_frameNote = std::move(value);
 }
 
-Frame parseFrame(pugi::xml_node el)
-{
-    return parseFrame(el, ParseContext{});
-}
-
 Frame parseFrame(pugi::xml_node el, const ParseContext &context)
 {
     Frame out;
@@ -232,11 +227,6 @@ Frame parseFrame(pugi::xml_node el, const ParseContext &context)
     }
     parseFrameContent(out, el, context);
     return out;
-}
-
-void parseFrameContent(Frame &out, pugi::xml_node el)
-{
-    parseFrameContent(out, el, ParseContext{});
 }
 
 void parseFrameContent(Frame &out, pugi::xml_node el, const ParseContext &context)

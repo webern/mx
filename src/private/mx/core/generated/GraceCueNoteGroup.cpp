@@ -31,11 +31,6 @@ void GraceCueNoteGroup::setFullNote(FullNoteGroup value)
     m_fullNote = std::move(value);
 }
 
-GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseGraceCueNoteGroup(el, cursor, ParseContext{});
-}
-
 GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     GraceCueNoteGroup out;

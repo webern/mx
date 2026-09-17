@@ -112,11 +112,7 @@ class FormattedTextID final
     std::string m_value{};
 };
 
-FormattedTextID parseFormattedTextID(pugi::xml_node el);
-
 FormattedTextID parseFormattedTextID(pugi::xml_node el, const ParseContext &context);
-
-void parseFormattedTextIDContent(FormattedTextID &out, pugi::xml_node el);
 
 void parseFormattedTextIDContent(FormattedTextID &out, pugi::xml_node el, const ParseContext &context);
 

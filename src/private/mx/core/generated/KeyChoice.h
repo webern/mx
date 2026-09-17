@@ -83,8 +83,6 @@ class KeyChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-KeyChoice parseKeyChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 KeyChoice parseKeyChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeKeyChoice(const KeyChoice &v, pugi::xml_node el);

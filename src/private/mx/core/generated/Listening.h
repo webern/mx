@@ -48,11 +48,7 @@ class Listening final
     std::optional<Offset> m_offset;
 };
 
-Listening parseListening(pugi::xml_node el);
-
 Listening parseListening(pugi::xml_node el, const ParseContext &context);
-
-void parseListeningContent(Listening &out, pugi::xml_node el);
 
 void parseListeningContent(Listening &out, pugi::xml_node el, const ParseContext &context);
 

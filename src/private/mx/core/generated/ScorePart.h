@@ -80,11 +80,7 @@ class ScorePart final
     std::vector<ScorePartMIDIGroup> m_midiGroup;
 };
 
-ScorePart parseScorePart(pugi::xml_node el);
-
 ScorePart parseScorePart(pugi::xml_node el, const ParseContext &context);
-
-void parseScorePartContent(ScorePart &out, pugi::xml_node el);
 
 void parseScorePartContent(ScorePart &out, pugi::xml_node el, const ParseContext &context);
 

@@ -47,11 +47,7 @@ class PerMinute final
     std::string m_value{};
 };
 
-PerMinute parsePerMinute(pugi::xml_node el);
-
 PerMinute parsePerMinute(pugi::xml_node el, const ParseContext &context);
-
-void parsePerMinuteContent(PerMinute &out, pugi::xml_node el);
 
 void parsePerMinuteContent(PerMinute &out, pugi::xml_node el, const ParseContext &context);
 

@@ -21,11 +21,6 @@ void HeelToe::setSubstitution(std::optional<YesNo> value)
     m_substitution = std::move(value);
 }
 
-HeelToe parseHeelToe(pugi::xml_node el)
-{
-    return parseHeelToe(el, ParseContext{});
-}
-
 HeelToe parseHeelToe(pugi::xml_node el, const ParseContext &context)
 {
     HeelToe out;

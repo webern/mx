@@ -45,11 +45,7 @@ class Transpose final
     TransposeGroup m_transpose{};
 };
 
-Transpose parseTranspose(pugi::xml_node el);
-
 Transpose parseTranspose(pugi::xml_node el, const ParseContext &context);
-
-void parseTransposeContent(Transpose &out, pugi::xml_node el);
 
 void parseTransposeContent(Transpose &out, pugi::xml_node el, const ParseContext &context);
 

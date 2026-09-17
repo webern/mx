@@ -101,11 +101,6 @@ void PartLink::setGroupLink(std::vector<std::string> value)
     m_groupLink = std::move(value);
 }
 
-PartLink parsePartLink(pugi::xml_node el)
-{
-    return parsePartLink(el, ParseContext{});
-}
-
 PartLink parsePartLink(pugi::xml_node el, const ParseContext &context)
 {
     PartLink out;
@@ -153,11 +148,6 @@ PartLink parsePartLink(pugi::xml_node el, const ParseContext &context)
     }
     parsePartLinkContent(out, el, context);
     return out;
-}
-
-void parsePartLinkContent(PartLink &out, pugi::xml_node el)
-{
-    parsePartLinkContent(out, el, ParseContext{});
 }
 
 void parsePartLinkContent(PartLink &out, pugi::xml_node el, const ParseContext &context)

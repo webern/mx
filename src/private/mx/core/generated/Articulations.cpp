@@ -36,11 +36,6 @@ void Articulations::setChoice(std::vector<ArticulationsChoice> value)
     m_choice = std::move(value);
 }
 
-Articulations parseArticulations(pugi::xml_node el)
-{
-    return parseArticulations(el, ParseContext{});
-}
-
 Articulations parseArticulations(pugi::xml_node el, const ParseContext &context)
 {
     Articulations out;
@@ -62,11 +57,6 @@ Articulations parseArticulations(pugi::xml_node el, const ParseContext &context)
     }
     parseArticulationsContent(out, el, context);
     return out;
-}
-
-void parseArticulationsContent(Articulations &out, pugi::xml_node el)
-{
-    parseArticulationsContent(out, el, ParseContext{});
 }
 
 void parseArticulationsContent(Articulations &out, pugi::xml_node el, const ParseContext &context)

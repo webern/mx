@@ -196,11 +196,6 @@ void Dynamics::setChoice(std::vector<DynamicsChoice> value)
     m_choice = std::move(value);
 }
 
-Dynamics parseDynamics(pugi::xml_node el)
-{
-    return parseDynamics(el, ParseContext{});
-}
-
 Dynamics parseDynamics(pugi::xml_node el, const ParseContext &context)
 {
     Dynamics out;
@@ -286,11 +281,6 @@ Dynamics parseDynamics(pugi::xml_node el, const ParseContext &context)
     }
     parseDynamicsContent(out, el, context);
     return out;
-}
-
-void parseDynamicsContent(Dynamics &out, pugi::xml_node el)
-{
-    parseDynamicsContent(out, el, ParseContext{});
 }
 
 void parseDynamicsContent(Dynamics &out, pugi::xml_node el, const ParseContext &context)

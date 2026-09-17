@@ -82,8 +82,6 @@ class ListeningChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-ListeningChoice parseListeningChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 ListeningChoice parseListeningChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeListeningChoice(const ListeningChoice &v, pugi::xml_node el);

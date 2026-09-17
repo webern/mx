@@ -84,11 +84,7 @@ class HarpPedals final
     OneOrMore<PedalTuning> m_pedalTuning;
 };
 
-HarpPedals parseHarpPedals(pugi::xml_node el);
-
 HarpPedals parseHarpPedals(pugi::xml_node el, const ParseContext &context);
-
-void parseHarpPedalsContent(HarpPedals &out, pugi::xml_node el);
 
 void parseHarpPedalsContent(HarpPedals &out, pugi::xml_node el, const ParseContext &context);
 

@@ -69,11 +69,7 @@ class Notehead final
     NoteheadValue m_value{};
 };
 
-Notehead parseNotehead(pugi::xml_node el);
-
 Notehead parseNotehead(pugi::xml_node el, const ParseContext &context);
-
-void parseNoteheadContent(Notehead &out, pugi::xml_node el);
 
 void parseNoteheadContent(Notehead &out, pugi::xml_node el, const ParseContext &context);
 

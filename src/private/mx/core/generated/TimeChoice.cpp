@@ -26,11 +26,6 @@ TimeChoice TimeChoice::senzaMisura(std::string value)
     return TimeChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-TimeChoice parseTimeChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseTimeChoice(el, cursor, ParseContext{});
-}
-
 TimeChoice parseTimeChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "beats")))

@@ -31,11 +31,6 @@ void Player::setPlayerName(std::string value)
     m_playerName = std::move(value);
 }
 
-Player parsePlayer(pugi::xml_node el)
-{
-    return parsePlayer(el, ParseContext{});
-}
-
 Player parsePlayer(pugi::xml_node el, const ParseContext &context)
 {
     Player out;
@@ -63,11 +58,6 @@ Player parsePlayer(pugi::xml_node el, const ParseContext &context)
     }
     parsePlayerContent(out, el, context);
     return out;
-}
-
-void parsePlayerContent(Player &out, pugi::xml_node el)
-{
-    parsePlayerContent(out, el, ParseContext{});
 }
 
 void parsePlayerContent(Player &out, pugi::xml_node el, const ParseContext &context)

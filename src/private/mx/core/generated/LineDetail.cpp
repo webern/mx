@@ -61,11 +61,6 @@ void LineDetail::setPrintObject(std::optional<YesNo> value)
     m_printObject = std::move(value);
 }
 
-LineDetail parseLineDetail(pugi::xml_node el)
-{
-    return parseLineDetail(el, ParseContext{});
-}
-
 LineDetail parseLineDetail(pugi::xml_node el, const ParseContext &context)
 {
     LineDetail out;
@@ -109,11 +104,6 @@ LineDetail parseLineDetail(pugi::xml_node el, const ParseContext &context)
     }
     parseLineDetailContent(out, el, context);
     return out;
-}
-
-void parseLineDetailContent(LineDetail &out, pugi::xml_node el)
-{
-    parseLineDetailContent(out, el, ParseContext{});
 }
 
 void parseLineDetailContent(LineDetail &out, pugi::xml_node el, const ParseContext &context)

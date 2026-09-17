@@ -181,11 +181,6 @@ void Bend::setWithBar(std::optional<PlacementText> value)
     m_withBar = std::move(value);
 }
 
-Bend parseBend(pugi::xml_node el)
-{
-    return parseBend(el, ParseContext{});
-}
-
 Bend parseBend(pugi::xml_node el, const ParseContext &context)
 {
     Bend out;
@@ -259,11 +254,6 @@ Bend parseBend(pugi::xml_node el, const ParseContext &context)
     }
     parseBendContent(out, el, context);
     return out;
-}
-
-void parseBendContent(Bend &out, pugi::xml_node el)
-{
-    parseBendContent(out, el, ParseContext{});
 }
 
 void parseBendContent(Bend &out, pugi::xml_node el, const ParseContext &context)

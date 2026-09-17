@@ -36,11 +36,7 @@ class NoteType final
     NoteTypeValue m_value{};
 };
 
-NoteType parseNoteType(pugi::xml_node el);
-
 NoteType parseNoteType(pugi::xml_node el, const ParseContext &context);
-
-void parseNoteTypeContent(NoteType &out, pugi::xml_node el);
 
 void parseNoteTypeContent(NoteType &out, pugi::xml_node el, const ParseContext &context);
 

@@ -41,11 +41,6 @@ void TuningGroup::setTuningOctave(Octave value)
     m_tuningOctave = std::move(value);
 }
 
-TuningGroup parseTuningGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseTuningGroup(el, cursor, ParseContext{});
-}
-
 TuningGroup parseTuningGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     TuningGroup out;

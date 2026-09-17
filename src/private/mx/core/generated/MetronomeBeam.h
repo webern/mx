@@ -34,11 +34,7 @@ class MetronomeBeam final
     BeamValue m_value{};
 };
 
-MetronomeBeam parseMetronomeBeam(pugi::xml_node el);
-
 MetronomeBeam parseMetronomeBeam(pugi::xml_node el, const ParseContext &context);
-
-void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el);
 
 void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el, const ParseContext &context);
 

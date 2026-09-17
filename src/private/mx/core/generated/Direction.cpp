@@ -116,11 +116,6 @@ void Direction::setListening(std::optional<Listening> value)
     m_listening = std::move(value);
 }
 
-Direction parseDirection(pugi::xml_node el)
-{
-    return parseDirection(el, ParseContext{});
-}
-
 Direction parseDirection(pugi::xml_node el, const ParseContext &context)
 {
     Direction out;
@@ -154,11 +149,6 @@ Direction parseDirection(pugi::xml_node el, const ParseContext &context)
     }
     parseDirectionContent(out, el, context);
     return out;
-}
-
-void parseDirectionContent(Direction &out, pugi::xml_node el)
-{
-    parseDirectionContent(out, el, ParseContext{});
 }
 
 void parseDirectionContent(Direction &out, pugi::xml_node el, const ParseContext &context)

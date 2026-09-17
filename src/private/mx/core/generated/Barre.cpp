@@ -31,11 +31,6 @@ void Barre::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-Barre parseBarre(pugi::xml_node el)
-{
-    return parseBarre(el, ParseContext{});
-}
-
 Barre parseBarre(pugi::xml_node el, const ParseContext &context)
 {
     Barre out;
@@ -67,11 +62,6 @@ Barre parseBarre(pugi::xml_node el, const ParseContext &context)
     }
     parseBarreContent(out, el, context);
     return out;
-}
-
-void parseBarreContent(Barre &out, pugi::xml_node el)
-{
-    parseBarreContent(out, el, ParseContext{});
 }
 
 void parseBarreContent(Barre &out, pugi::xml_node el, const ParseContext &context)

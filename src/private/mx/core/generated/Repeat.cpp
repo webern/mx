@@ -51,11 +51,6 @@ void Repeat::setWinged(std::optional<Winged> value)
     m_winged = std::move(value);
 }
 
-Repeat parseRepeat(pugi::xml_node el)
-{
-    return parseRepeat(el, ParseContext{});
-}
-
 Repeat parseRepeat(pugi::xml_node el, const ParseContext &context)
 {
     Repeat out;
@@ -95,11 +90,6 @@ Repeat parseRepeat(pugi::xml_node el, const ParseContext &context)
     }
     parseRepeatContent(out, el, context);
     return out;
-}
-
-void parseRepeatContent(Repeat &out, pugi::xml_node el)
-{
-    parseRepeatContent(out, el, ParseContext{});
 }
 
 void parseRepeatContent(Repeat &out, pugi::xml_node el, const ParseContext &context)

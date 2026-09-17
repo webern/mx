@@ -56,11 +56,6 @@ void Interchangeable::setTimeSignature(OneOrMore<TimeSignatureGroup> value)
     m_timeSignature = std::move(value);
 }
 
-Interchangeable parseInterchangeable(pugi::xml_node el)
-{
-    return parseInterchangeable(el, ParseContext{});
-}
-
 Interchangeable parseInterchangeable(pugi::xml_node el, const ParseContext &context)
 {
     Interchangeable out;
@@ -86,11 +81,6 @@ Interchangeable parseInterchangeable(pugi::xml_node el, const ParseContext &cont
     }
     parseInterchangeableContent(out, el, context);
     return out;
-}
-
-void parseInterchangeableContent(Interchangeable &out, pugi::xml_node el)
-{
-    parseInterchangeableContent(out, el, ParseContext{});
 }
 
 void parseInterchangeableContent(Interchangeable &out, pugi::xml_node el, const ParseContext &context)

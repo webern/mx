@@ -56,11 +56,6 @@ void Notations::setChoice(std::vector<NotationsChoice> value)
     m_choice = std::move(value);
 }
 
-Notations parseNotations(pugi::xml_node el)
-{
-    return parseNotations(el, ParseContext{});
-}
-
 Notations parseNotations(pugi::xml_node el, const ParseContext &context)
 {
     Notations out;
@@ -86,11 +81,6 @@ Notations parseNotations(pugi::xml_node el, const ParseContext &context)
     }
     parseNotationsContent(out, el, context);
     return out;
-}
-
-void parseNotationsContent(Notations &out, pugi::xml_node el)
-{
-    parseNotationsContent(out, el, ParseContext{});
 }
 
 void parseNotationsContent(Notations &out, pugi::xml_node el, const ParseContext &context)

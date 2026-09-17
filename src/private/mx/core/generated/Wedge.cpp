@@ -141,11 +141,6 @@ void Wedge::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Wedge parseWedge(pugi::xml_node el)
-{
-    return parseWedge(el, ParseContext{});
-}
-
 Wedge parseWedge(pugi::xml_node el, const ParseContext &context)
 {
     Wedge out;
@@ -221,11 +216,6 @@ Wedge parseWedge(pugi::xml_node el, const ParseContext &context)
     }
     parseWedgeContent(out, el, context);
     return out;
-}
-
-void parseWedgeContent(Wedge &out, pugi::xml_node el)
-{
-    parseWedgeContent(out, el, ParseContext{});
 }
 
 void parseWedgeContent(Wedge &out, pugi::xml_node el, const ParseContext &context)

@@ -36,11 +36,6 @@ MeasureStyleChoice MeasureStyleChoice::slash(Slash value)
     return MeasureStyleChoice{Storage{std::in_place_index<3>, std::move(value)}};
 }
 
-MeasureStyleChoice parseMeasureStyleChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseMeasureStyleChoice(el, cursor, ParseContext{});
-}
-
 MeasureStyleChoice parseMeasureStyleChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "multiple-rest")))

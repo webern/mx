@@ -48,11 +48,7 @@ class Slash final
     std::optional<SlashGroup> m_slash;
 };
 
-Slash parseSlash(pugi::xml_node el);
-
 Slash parseSlash(pugi::xml_node el, const ParseContext &context);
-
-void parseSlashContent(Slash &out, pugi::xml_node el);
 
 void parseSlashContent(Slash &out, pugi::xml_node el, const ParseContext &context);
 

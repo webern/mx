@@ -38,11 +38,7 @@ class FirstFret final
     int m_value{};
 };
 
-FirstFret parseFirstFret(pugi::xml_node el);
-
 FirstFret parseFirstFret(pugi::xml_node el, const ParseContext &context);
-
-void parseFirstFretContent(FirstFret &out, pugi::xml_node el);
 
 void parseFirstFretContent(FirstFret &out, pugi::xml_node el, const ParseContext &context);
 

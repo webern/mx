@@ -146,11 +146,6 @@ void HarpPedals::setPedalTuning(OneOrMore<PedalTuning> value)
     m_pedalTuning = std::move(value);
 }
 
-HarpPedals parseHarpPedals(pugi::xml_node el)
-{
-    return parseHarpPedals(el, ParseContext{});
-}
-
 HarpPedals parseHarpPedals(pugi::xml_node el, const ParseContext &context)
 {
     HarpPedals out;
@@ -216,11 +211,6 @@ HarpPedals parseHarpPedals(pugi::xml_node el, const ParseContext &context)
     }
     parseHarpPedalsContent(out, el, context);
     return out;
-}
-
-void parseHarpPedalsContent(HarpPedals &out, pugi::xml_node el)
-{
-    parseHarpPedalsContent(out, el, ParseContext{});
 }
 
 void parseHarpPedalsContent(HarpPedals &out, pugi::xml_node el, const ParseContext &context)

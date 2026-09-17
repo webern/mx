@@ -87,11 +87,7 @@ class Key final
     std::vector<KeyOctave> m_keyOctave;
 };
 
-Key parseKey(pugi::xml_node el);
-
 Key parseKey(pugi::xml_node el, const ParseContext &context);
-
-void parseKeyContent(Key &out, pugi::xml_node el);
 
 void parseKeyContent(Key &out, pugi::xml_node el, const ParseContext &context);
 

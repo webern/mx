@@ -71,11 +71,7 @@ class OtherPlacementText final
     std::string m_value{};
 };
 
-OtherPlacementText parseOtherPlacementText(pugi::xml_node el);
-
 OtherPlacementText parseOtherPlacementText(pugi::xml_node el, const ParseContext &context);
-
-void parseOtherPlacementTextContent(OtherPlacementText &out, pugi::xml_node el);
 
 void parseOtherPlacementTextContent(OtherPlacementText &out, pugi::xml_node el, const ParseContext &context);
 

@@ -141,11 +141,6 @@ void Fingering::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Fingering parseFingering(pugi::xml_node el)
-{
-    return parseFingering(el, ParseContext{});
-}
-
 Fingering parseFingering(pugi::xml_node el, const ParseContext &context)
 {
     Fingering out;
@@ -211,11 +206,6 @@ Fingering parseFingering(pugi::xml_node el, const ParseContext &context)
     }
     parseFingeringContent(out, el, context);
     return out;
-}
-
-void parseFingeringContent(Fingering &out, pugi::xml_node el)
-{
-    parseFingeringContent(out, el, ParseContext{});
 }
 
 void parseFingeringContent(Fingering &out, pugi::xml_node el, const ParseContext &context)

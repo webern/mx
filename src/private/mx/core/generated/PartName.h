@@ -71,11 +71,7 @@ class PartName final
     std::string m_value{};
 };
 
-PartName parsePartName(pugi::xml_node el);
-
 PartName parsePartName(pugi::xml_node el, const ParseContext &context);
-
-void parsePartNameContent(PartName &out, pugi::xml_node el);
 
 void parsePartNameContent(PartName &out, pugi::xml_node el, const ParseContext &context);
 

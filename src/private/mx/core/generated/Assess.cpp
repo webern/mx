@@ -41,11 +41,6 @@ void Assess::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Assess parseAssess(pugi::xml_node el)
-{
-    return parseAssess(el, ParseContext{});
-}
-
 Assess parseAssess(pugi::xml_node el, const ParseContext &context)
 {
     Assess out;
@@ -81,11 +76,6 @@ Assess parseAssess(pugi::xml_node el, const ParseContext &context)
     }
     parseAssessContent(out, el, context);
     return out;
-}
-
-void parseAssessContent(Assess &out, pugi::xml_node el)
-{
-    parseAssessContent(out, el, ParseContext{});
 }
 
 void parseAssessContent(Assess &out, pugi::xml_node el, const ParseContext &context)

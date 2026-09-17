@@ -141,11 +141,6 @@ void Tremolo::setValue(TremoloMarks value)
     m_value = std::move(value);
 }
 
-Tremolo parseTremolo(pugi::xml_node el)
-{
-    return parseTremolo(el, ParseContext{});
-}
-
 Tremolo parseTremolo(pugi::xml_node el, const ParseContext &context)
 {
     Tremolo out;
@@ -211,11 +206,6 @@ Tremolo parseTremolo(pugi::xml_node el, const ParseContext &context)
     }
     parseTremoloContent(out, el, context);
     return out;
-}
-
-void parseTremoloContent(Tremolo &out, pugi::xml_node el)
-{
-    parseTremoloContent(out, el, ParseContext{});
 }
 
 void parseTremoloContent(Tremolo &out, pugi::xml_node el, const ParseContext &context)

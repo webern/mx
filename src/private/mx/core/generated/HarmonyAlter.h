@@ -74,11 +74,7 @@ class HarmonyAlter final
     Semitones m_value{};
 };
 
-HarmonyAlter parseHarmonyAlter(pugi::xml_node el);
-
 HarmonyAlter parseHarmonyAlter(pugi::xml_node el, const ParseContext &context);
-
-void parseHarmonyAlterContent(HarmonyAlter &out, pugi::xml_node el);
 
 void parseHarmonyAlterContent(HarmonyAlter &out, pugi::xml_node el, const ParseContext &context);
 

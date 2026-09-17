@@ -81,11 +81,6 @@ void Elision::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Elision parseElision(pugi::xml_node el)
-{
-    return parseElision(el, ParseContext{});
-}
-
 Elision parseElision(pugi::xml_node el, const ParseContext &context)
 {
     Elision out;
@@ -127,11 +122,6 @@ Elision parseElision(pugi::xml_node el, const ParseContext &context)
     }
     parseElisionContent(out, el, context);
     return out;
-}
-
-void parseElisionContent(Elision &out, pugi::xml_node el)
-{
-    parseElisionContent(out, el, ParseContext{});
 }
 
 void parseElisionContent(Elision &out, pugi::xml_node el, const ParseContext &context)

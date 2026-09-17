@@ -31,11 +31,6 @@ void Beater::setValue(BeaterValue value)
     m_value = std::move(value);
 }
 
-Beater parseBeater(pugi::xml_node el)
-{
-    return parseBeater(el, ParseContext{});
-}
-
 Beater parseBeater(pugi::xml_node el, const ParseContext &context)
 {
     Beater out;
@@ -57,11 +52,6 @@ Beater parseBeater(pugi::xml_node el, const ParseContext &context)
     }
     parseBeaterContent(out, el, context);
     return out;
-}
-
-void parseBeaterContent(Beater &out, pugi::xml_node el)
-{
-    parseBeaterContent(out, el, ParseContext{});
 }
 
 void parseBeaterContent(Beater &out, pugi::xml_node el, const ParseContext &context)

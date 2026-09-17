@@ -14,11 +14,6 @@
 namespace mx::core
 {
 
-Result<Document> parse(const pugi::xml_document &doc)
-{
-    return parse(doc, ParseContext{});
-}
-
 Result<Document> parse(const pugi::xml_document &doc, const ParseContext &context)
 {
     try

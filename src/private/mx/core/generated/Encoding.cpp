@@ -26,11 +26,6 @@ void Encoding::setChoice(std::vector<EncodingChoice> value)
     m_choice = std::move(value);
 }
 
-Encoding parseEncoding(pugi::xml_node el)
-{
-    return parseEncoding(el, ParseContext{});
-}
-
 Encoding parseEncoding(pugi::xml_node el, const ParseContext &context)
 {
     Encoding out;
@@ -45,11 +40,6 @@ Encoding parseEncoding(pugi::xml_node el, const ParseContext &context)
     }
     parseEncodingContent(out, el, context);
     return out;
-}
-
-void parseEncodingContent(Encoding &out, pugi::xml_node el)
-{
-    parseEncodingContent(out, el, ParseContext{});
 }
 
 void parseEncodingContent(Encoding &out, pugi::xml_node el, const ParseContext &context)

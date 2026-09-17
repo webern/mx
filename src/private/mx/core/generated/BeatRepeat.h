@@ -52,11 +52,7 @@ class BeatRepeat final
     std::optional<SlashGroup> m_slash;
 };
 
-BeatRepeat parseBeatRepeat(pugi::xml_node el);
-
 BeatRepeat parseBeatRepeat(pugi::xml_node el, const ParseContext &context);
-
-void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el);
 
 void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el, const ParseContext &context);
 

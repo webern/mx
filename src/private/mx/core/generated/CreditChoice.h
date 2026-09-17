@@ -82,8 +82,6 @@ class CreditChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-CreditChoice parseCreditChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 CreditChoice parseCreditChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeCreditChoice(const CreditChoice &v, pugi::xml_node el);

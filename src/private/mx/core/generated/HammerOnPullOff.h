@@ -77,11 +77,7 @@ class HammerOnPullOff final
     std::string m_value{};
 };
 
-HammerOnPullOff parseHammerOnPullOff(pugi::xml_node el);
-
 HammerOnPullOff parseHammerOnPullOff(pugi::xml_node el, const ParseContext &context);
-
-void parseHammerOnPullOffContent(HammerOnPullOff &out, pugi::xml_node el);
 
 void parseHammerOnPullOffContent(HammerOnPullOff &out, pugi::xml_node el, const ParseContext &context);
 

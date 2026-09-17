@@ -36,11 +36,6 @@ LyricChoice LyricChoice::humming(Empty value)
     return LyricChoice{Storage{std::in_place_index<3>, std::move(value)}};
 }
 
-LyricChoice parseLyricChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseLyricChoice(el, cursor, ParseContext{});
-}
-
 LyricChoice parseLyricChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "syllabic") || cursorIs(cursor, "text")))

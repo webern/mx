@@ -31,11 +31,6 @@ void LyricSyllableGroup::setText(TextElementData value)
     m_text = std::move(value);
 }
 
-LyricSyllableGroup parseLyricSyllableGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseLyricSyllableGroup(el, cursor, ParseContext{});
-}
-
 LyricSyllableGroup parseLyricSyllableGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     LyricSyllableGroup out;

@@ -34,11 +34,7 @@ class PartTranspose final
     TransposeGroup m_transpose{};
 };
 
-PartTranspose parsePartTranspose(pugi::xml_node el);
-
 PartTranspose parsePartTranspose(pugi::xml_node el, const ParseContext &context);
-
-void parsePartTransposeContent(PartTranspose &out, pugi::xml_node el);
 
 void parsePartTransposeContent(PartTranspose &out, pugi::xml_node el, const ParseContext &context);
 

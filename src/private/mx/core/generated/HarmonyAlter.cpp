@@ -131,11 +131,6 @@ void HarmonyAlter::setValue(Semitones value)
     m_value = std::move(value);
 }
 
-HarmonyAlter parseHarmonyAlter(pugi::xml_node el)
-{
-    return parseHarmonyAlter(el, ParseContext{});
-}
-
 HarmonyAlter parseHarmonyAlter(pugi::xml_node el, const ParseContext &context)
 {
     HarmonyAlter out;
@@ -197,11 +192,6 @@ HarmonyAlter parseHarmonyAlter(pugi::xml_node el, const ParseContext &context)
     }
     parseHarmonyAlterContent(out, el, context);
     return out;
-}
-
-void parseHarmonyAlterContent(HarmonyAlter &out, pugi::xml_node el)
-{
-    parseHarmonyAlterContent(out, el, ParseContext{});
 }
 
 void parseHarmonyAlterContent(HarmonyAlter &out, pugi::xml_node el, const ParseContext &context)

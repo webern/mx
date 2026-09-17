@@ -71,11 +71,6 @@ void MetronomeNote::setMetronomeTuplet(std::optional<MetronomeTuplet> value)
     m_metronomeTuplet = std::move(value);
 }
 
-MetronomeNote parseMetronomeNote(pugi::xml_node el)
-{
-    return parseMetronomeNote(el, ParseContext{});
-}
-
 MetronomeNote parseMetronomeNote(pugi::xml_node el, const ParseContext &context)
 {
     MetronomeNote out;
@@ -90,11 +85,6 @@ MetronomeNote parseMetronomeNote(pugi::xml_node el, const ParseContext &context)
     }
     parseMetronomeNoteContent(out, el, context);
     return out;
-}
-
-void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el)
-{
-    parseMetronomeNoteContent(out, el, ParseContext{});
 }
 
 void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el, const ParseContext &context)

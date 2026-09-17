@@ -43,8 +43,6 @@ class DisplayStepOctaveGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor,
                                                    const ParseContext &context);
 

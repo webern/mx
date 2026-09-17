@@ -42,11 +42,7 @@ class StaffSize final
     NonNegativeDecimal m_value{};
 };
 
-StaffSize parseStaffSize(pugi::xml_node el);
-
 StaffSize parseStaffSize(pugi::xml_node el, const ParseContext &context);
-
-void parseStaffSizeContent(StaffSize &out, pugi::xml_node el);
 
 void parseStaffSizeContent(StaffSize &out, pugi::xml_node el, const ParseContext &context);
 

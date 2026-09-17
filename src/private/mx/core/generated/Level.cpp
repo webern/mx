@@ -71,11 +71,6 @@ void Level::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Level parseLevel(pugi::xml_node el)
-{
-    return parseLevel(el, ParseContext{});
-}
-
 Level parseLevel(pugi::xml_node el, const ParseContext &context)
 {
     Level out;
@@ -113,11 +108,6 @@ Level parseLevel(pugi::xml_node el, const ParseContext &context)
     }
     parseLevelContent(out, el, context);
     return out;
-}
-
-void parseLevelContent(Level &out, pugi::xml_node el)
-{
-    parseLevelContent(out, el, ParseContext{});
 }
 
 void parseLevelContent(Level &out, pugi::xml_node el, const ParseContext &context)

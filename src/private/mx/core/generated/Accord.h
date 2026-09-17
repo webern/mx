@@ -38,11 +38,7 @@ class Accord final
     TuningGroup m_tuning{};
 };
 
-Accord parseAccord(pugi::xml_node el);
-
 Accord parseAccord(pugi::xml_node el, const ParseContext &context);
-
-void parseAccordContent(Accord &out, pugi::xml_node el);
 
 void parseAccordContent(Accord &out, pugi::xml_node el, const ParseContext &context);
 

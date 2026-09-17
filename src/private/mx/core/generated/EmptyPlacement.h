@@ -62,11 +62,7 @@ class EmptyPlacement
     std::optional<AboveBelow> m_placement;
 };
 
-EmptyPlacement parseEmptyPlacement(pugi::xml_node el);
-
 EmptyPlacement parseEmptyPlacement(pugi::xml_node el, const ParseContext &context);
-
-void parseEmptyPlacementContent(EmptyPlacement &out, pugi::xml_node el);
 
 void parseEmptyPlacementContent(EmptyPlacement &out, pugi::xml_node el, const ParseContext &context);
 

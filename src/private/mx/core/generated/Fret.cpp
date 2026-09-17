@@ -71,11 +71,6 @@ void Fret::setValue(int value)
     m_value = std::move(value);
 }
 
-Fret parseFret(pugi::xml_node el)
-{
-    return parseFret(el, ParseContext{});
-}
-
 Fret parseFret(pugi::xml_node el, const ParseContext &context)
 {
     Fret out;
@@ -113,11 +108,6 @@ Fret parseFret(pugi::xml_node el, const ParseContext &context)
     }
     parseFretContent(out, el, context);
     return out;
-}
-
-void parseFretContent(Fret &out, pugi::xml_node el)
-{
-    parseFretContent(out, el, ParseContext{});
 }
 
 void parseFretContent(Fret &out, pugi::xml_node el, const ParseContext &context)

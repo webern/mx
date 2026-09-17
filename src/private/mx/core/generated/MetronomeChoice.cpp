@@ -26,11 +26,6 @@ MetronomeChoice MetronomeChoice::group2(MetronomeChoiceGroup2 value)
     return MetronomeChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-MetronomeChoice parseMetronomeChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseMetronomeChoice(el, cursor, ParseContext{});
-}
-
 MetronomeChoice parseMetronomeChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "beat-unit")))

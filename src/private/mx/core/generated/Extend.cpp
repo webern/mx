@@ -71,11 +71,6 @@ void Extend::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-Extend parseExtend(pugi::xml_node el)
-{
-    return parseExtend(el, ParseContext{});
-}
-
 Extend parseExtend(pugi::xml_node el, const ParseContext &context)
 {
     Extend out;
@@ -117,11 +112,6 @@ Extend parseExtend(pugi::xml_node el, const ParseContext &context)
     }
     parseExtendContent(out, el, context);
     return out;
-}
-
-void parseExtendContent(Extend &out, pugi::xml_node el)
-{
-    parseExtendContent(out, el, ParseContext{});
 }
 
 void parseExtendContent(Extend &out, pugi::xml_node el, const ParseContext &context)

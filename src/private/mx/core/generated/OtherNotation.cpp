@@ -171,11 +171,6 @@ void OtherNotation::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherNotation parseOtherNotation(pugi::xml_node el)
-{
-    return parseOtherNotation(el, ParseContext{});
-}
-
 OtherNotation parseOtherNotation(pugi::xml_node el, const ParseContext &context)
 {
     OtherNotation out;
@@ -259,11 +254,6 @@ OtherNotation parseOtherNotation(pugi::xml_node el, const ParseContext &context)
     }
     parseOtherNotationContent(out, el, context);
     return out;
-}
-
-void parseOtherNotationContent(OtherNotation &out, pugi::xml_node el)
-{
-    parseOtherNotationContent(out, el, ParseContext{});
 }
 
 void parseOtherNotationContent(OtherNotation &out, pugi::xml_node el, const ParseContext &context)

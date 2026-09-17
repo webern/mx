@@ -41,11 +41,7 @@ class Scordatura final
     OneOrMore<Accord> m_accord;
 };
 
-Scordatura parseScordatura(pugi::xml_node el);
-
 Scordatura parseScordatura(pugi::xml_node el, const ParseContext &context);
-
-void parseScordaturaContent(Scordatura &out, pugi::xml_node el);
 
 void parseScordaturaContent(Scordatura &out, pugi::xml_node el, const ParseContext &context);
 

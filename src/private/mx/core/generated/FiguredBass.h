@@ -112,11 +112,7 @@ class FiguredBass final
     EditorialGroup m_editorial{};
 };
 
-FiguredBass parseFiguredBass(pugi::xml_node el);
-
 FiguredBass parseFiguredBass(pugi::xml_node el, const ParseContext &context);
-
-void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el);
 
 void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el, const ParseContext &context);
 

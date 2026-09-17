@@ -82,8 +82,6 @@ class CreditChoiceGroupGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-CreditChoiceGroupGroupChoice parseCreditChoiceGroupGroupChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 CreditChoiceGroupGroupChoice parseCreditChoiceGroupGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                                const ParseContext &context);
 

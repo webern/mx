@@ -26,11 +26,6 @@ AttributesChoice AttributesChoice::forPart(std::vector<ForPart> value)
     return AttributesChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseAttributesChoice(el, cursor, ParseContext{});
-}
-
 AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "transpose")))

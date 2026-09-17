@@ -71,11 +71,6 @@ void TupletType::setValue(NoteTypeValue value)
     m_value = std::move(value);
 }
 
-TupletType parseTupletType(pugi::xml_node el)
-{
-    return parseTupletType(el, ParseContext{});
-}
-
 TupletType parseTupletType(pugi::xml_node el, const ParseContext &context)
 {
     TupletType out;
@@ -113,11 +108,6 @@ TupletType parseTupletType(pugi::xml_node el, const ParseContext &context)
     }
     parseTupletTypeContent(out, el, context);
     return out;
-}
-
-void parseTupletTypeContent(TupletType &out, pugi::xml_node el)
-{
-    parseTupletTypeContent(out, el, ParseContext{});
 }
 
 void parseTupletTypeContent(TupletType &out, pugi::xml_node el, const ParseContext &context)

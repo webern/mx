@@ -50,11 +50,7 @@ class Stem final
     StemValue m_value{};
 };
 
-Stem parseStem(pugi::xml_node el);
-
 Stem parseStem(pugi::xml_node el, const ParseContext &context);
-
-void parseStemContent(Stem &out, pugi::xml_node el);
 
 void parseStemContent(Stem &out, pugi::xml_node el, const ParseContext &context);
 

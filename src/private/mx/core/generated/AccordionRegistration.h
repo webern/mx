@@ -90,11 +90,7 @@ class AccordionRegistration final
     bool m_accordionLow{false};
 };
 
-AccordionRegistration parseAccordionRegistration(pugi::xml_node el);
-
 AccordionRegistration parseAccordionRegistration(pugi::xml_node el, const ParseContext &context);
-
-void parseAccordionRegistrationContent(AccordionRegistration &out, pugi::xml_node el);
 
 void parseAccordionRegistrationContent(AccordionRegistration &out, pugi::xml_node el, const ParseContext &context);
 

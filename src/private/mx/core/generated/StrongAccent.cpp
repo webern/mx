@@ -21,11 +21,6 @@ void StrongAccent::setType(std::optional<UpDown> value)
     m_type = std::move(value);
 }
 
-StrongAccent parseStrongAccent(pugi::xml_node el)
-{
-    return parseStrongAccent(el, ParseContext{});
-}
-
 StrongAccent parseStrongAccent(pugi::xml_node el, const ParseContext &context)
 {
     StrongAccent out;

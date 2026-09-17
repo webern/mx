@@ -82,8 +82,6 @@ class NoteheadTextChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-NoteheadTextChoice parseNoteheadTextChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 NoteheadTextChoice parseNoteheadTextChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeNoteheadTextChoice(const NoteheadTextChoice &v, pugi::xml_node el);

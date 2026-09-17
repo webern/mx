@@ -26,11 +26,6 @@ NameDisplayChoice NameDisplayChoice::accidentalText(AccidentalText value)
     return NameDisplayChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-NameDisplayChoice parseNameDisplayChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseNameDisplayChoice(el, cursor, ParseContext{});
-}
-
 NameDisplayChoice parseNameDisplayChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "display-text")))

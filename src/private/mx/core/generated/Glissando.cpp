@@ -171,11 +171,6 @@ void Glissando::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Glissando parseGlissando(pugi::xml_node el)
-{
-    return parseGlissando(el, ParseContext{});
-}
-
 Glissando parseGlissando(pugi::xml_node el, const ParseContext &context)
 {
     Glissando out;
@@ -259,11 +254,6 @@ Glissando parseGlissando(pugi::xml_node el, const ParseContext &context)
     }
     parseGlissandoContent(out, el, context);
     return out;
-}
-
-void parseGlissandoContent(Glissando &out, pugi::xml_node el)
-{
-    parseGlissandoContent(out, el, ParseContext{});
 }
 
 void parseGlissandoContent(Glissando &out, pugi::xml_node el, const ParseContext &context)

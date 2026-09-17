@@ -31,11 +31,6 @@ void Feature::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Feature parseFeature(pugi::xml_node el)
-{
-    return parseFeature(el, ParseContext{});
-}
-
 Feature parseFeature(pugi::xml_node el, const ParseContext &context)
 {
     Feature out;
@@ -57,11 +52,6 @@ Feature parseFeature(pugi::xml_node el, const ParseContext &context)
     }
     parseFeatureContent(out, el, context);
     return out;
-}
-
-void parseFeatureContent(Feature &out, pugi::xml_node el)
-{
-    parseFeatureContent(out, el, ParseContext{});
 }
 
 void parseFeatureContent(Feature &out, pugi::xml_node el, const ParseContext &context)

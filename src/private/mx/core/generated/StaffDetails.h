@@ -69,11 +69,7 @@ class StaffDetails final
     std::optional<StaffSize> m_staffSize;
 };
 
-StaffDetails parseStaffDetails(pugi::xml_node el);
-
 StaffDetails parseStaffDetails(pugi::xml_node el, const ParseContext &context);
-
-void parseStaffDetailsContent(StaffDetails &out, pugi::xml_node el);
 
 void parseStaffDetailsContent(StaffDetails &out, pugi::xml_node el, const ParseContext &context);
 

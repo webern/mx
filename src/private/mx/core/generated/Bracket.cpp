@@ -141,11 +141,6 @@ void Bracket::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Bracket parseBracket(pugi::xml_node el)
-{
-    return parseBracket(el, ParseContext{});
-}
-
 Bracket parseBracket(pugi::xml_node el, const ParseContext &context)
 {
     Bracket out;
@@ -227,11 +222,6 @@ Bracket parseBracket(pugi::xml_node el, const ParseContext &context)
     }
     parseBracketContent(out, el, context);
     return out;
-}
-
-void parseBracketContent(Bracket &out, pugi::xml_node el)
-{
-    parseBracketContent(out, el, ParseContext{});
 }
 
 void parseBracketContent(Bracket &out, pugi::xml_node el, const ParseContext &context)

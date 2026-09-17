@@ -161,11 +161,6 @@ void OctaveShift::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-OctaveShift parseOctaveShift(pugi::xml_node el)
-{
-    return parseOctaveShift(el, ParseContext{});
-}
-
 OctaveShift parseOctaveShift(pugi::xml_node el, const ParseContext &context)
 {
     OctaveShift out;
@@ -249,11 +244,6 @@ OctaveShift parseOctaveShift(pugi::xml_node el, const ParseContext &context)
     }
     parseOctaveShiftContent(out, el, context);
     return out;
-}
-
-void parseOctaveShiftContent(OctaveShift &out, pugi::xml_node el)
-{
-    parseOctaveShiftContent(out, el, ParseContext{});
 }
 
 void parseOctaveShiftContent(OctaveShift &out, pugi::xml_node el, const ParseContext &context)

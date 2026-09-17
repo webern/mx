@@ -100,11 +100,7 @@ class Ending final
     std::string m_value{};
 };
 
-Ending parseEnding(pugi::xml_node el);
-
 Ending parseEnding(pugi::xml_node el, const ParseContext &context);
-
-void parseEndingContent(Ending &out, pugi::xml_node el);
 
 void parseEndingContent(Ending &out, pugi::xml_node el, const ParseContext &context);
 

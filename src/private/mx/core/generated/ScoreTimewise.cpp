@@ -46,11 +46,6 @@ void ScoreTimewise::setMeasure(OneOrMore<TimewiseMeasure> value)
     m_measure = std::move(value);
 }
 
-ScoreTimewise parseScoreTimewise(pugi::xml_node el)
-{
-    return parseScoreTimewise(el, ParseContext{});
-}
-
 ScoreTimewise parseScoreTimewise(pugi::xml_node el, const ParseContext &context)
 {
     ScoreTimewise out;
@@ -72,11 +67,6 @@ ScoreTimewise parseScoreTimewise(pugi::xml_node el, const ParseContext &context)
     }
     parseScoreTimewiseContent(out, el, context);
     return out;
-}
-
-void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el)
-{
-    parseScoreTimewiseContent(out, el, ParseContext{});
 }
 
 void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el, const ParseContext &context)

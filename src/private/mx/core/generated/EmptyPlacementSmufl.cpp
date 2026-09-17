@@ -121,11 +121,6 @@ void EmptyPlacementSmufl::setSmufl(std::optional<SmuflGlyphName> value)
     m_smufl = std::move(value);
 }
 
-EmptyPlacementSmufl parseEmptyPlacementSmufl(pugi::xml_node el)
-{
-    return parseEmptyPlacementSmufl(el, ParseContext{});
-}
-
 EmptyPlacementSmufl parseEmptyPlacementSmufl(pugi::xml_node el, const ParseContext &context)
 {
     EmptyPlacementSmufl out;
@@ -187,11 +182,6 @@ EmptyPlacementSmufl parseEmptyPlacementSmufl(pugi::xml_node el, const ParseConte
     }
     parseEmptyPlacementSmuflContent(out, el, context);
     return out;
-}
-
-void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, pugi::xml_node el)
-{
-    parseEmptyPlacementSmuflContent(out, el, ParseContext{});
 }
 
 void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, pugi::xml_node el, const ParseContext &context)

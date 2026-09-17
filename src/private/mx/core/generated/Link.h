@@ -69,11 +69,7 @@ class Link final
     std::optional<Tenths> m_relativeY;
 };
 
-Link parseLink(pugi::xml_node el);
-
 Link parseLink(pugi::xml_node el, const ParseContext &context);
-
-void parseLinkContent(Link &out, pugi::xml_node el);
 
 void parseLinkContent(Link &out, pugi::xml_node el, const ParseContext &context);
 

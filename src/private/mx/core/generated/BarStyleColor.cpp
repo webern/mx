@@ -31,11 +31,6 @@ void BarStyleColor::setValue(BarStyle value)
     m_value = std::move(value);
 }
 
-BarStyleColor parseBarStyleColor(pugi::xml_node el)
-{
-    return parseBarStyleColor(el, ParseContext{});
-}
-
 BarStyleColor parseBarStyleColor(pugi::xml_node el, const ParseContext &context)
 {
     BarStyleColor out;
@@ -57,11 +52,6 @@ BarStyleColor parseBarStyleColor(pugi::xml_node el, const ParseContext &context)
     }
     parseBarStyleColorContent(out, el, context);
     return out;
-}
-
-void parseBarStyleColorContent(BarStyleColor &out, pugi::xml_node el)
-{
-    parseBarStyleColorContent(out, el, ParseContext{});
 }
 
 void parseBarStyleColorContent(BarStyleColor &out, pugi::xml_node el, const ParseContext &context)

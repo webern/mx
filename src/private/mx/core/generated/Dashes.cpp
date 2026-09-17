@@ -111,11 +111,6 @@ void Dashes::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Dashes parseDashes(pugi::xml_node el)
-{
-    return parseDashes(el, ParseContext{});
-}
-
 Dashes parseDashes(pugi::xml_node el, const ParseContext &context)
 {
     Dashes out;
@@ -179,11 +174,6 @@ Dashes parseDashes(pugi::xml_node el, const ParseContext &context)
     }
     parseDashesContent(out, el, context);
     return out;
-}
-
-void parseDashesContent(Dashes &out, pugi::xml_node el)
-{
-    parseDashesContent(out, el, ParseContext{});
 }
 
 void parseDashesContent(Dashes &out, pugi::xml_node el, const ParseContext &context)

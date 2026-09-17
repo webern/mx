@@ -48,11 +48,7 @@ class Extend final
     std::optional<Color> m_color;
 };
 
-Extend parseExtend(pugi::xml_node el);
-
 Extend parseExtend(pugi::xml_node el, const ParseContext &context);
-
-void parseExtendContent(Extend &out, pugi::xml_node el);
 
 void parseExtendContent(Extend &out, pugi::xml_node el, const ParseContext &context);
 

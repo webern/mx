@@ -51,11 +51,6 @@ void TransposeGroup::setDouble(std::optional<Double> value)
     m_double_ = std::move(value);
 }
 
-TransposeGroup parseTransposeGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseTransposeGroup(el, cursor, ParseContext{});
-}
-
 TransposeGroup parseTransposeGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     TransposeGroup out;

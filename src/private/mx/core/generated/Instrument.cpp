@@ -21,11 +21,6 @@ void Instrument::setID(Token value)
     m_id = std::move(value);
 }
 
-Instrument parseInstrument(pugi::xml_node el)
-{
-    return parseInstrument(el, ParseContext{});
-}
-
 Instrument parseInstrument(pugi::xml_node el, const ParseContext &context)
 {
     Instrument out;
@@ -53,11 +48,6 @@ Instrument parseInstrument(pugi::xml_node el, const ParseContext &context)
     }
     parseInstrumentContent(out, el, context);
     return out;
-}
-
-void parseInstrumentContent(Instrument &out, pugi::xml_node el)
-{
-    parseInstrumentContent(out, el, ParseContext{});
 }
 
 void parseInstrumentContent(Instrument &out, pugi::xml_node el, const ParseContext &context)

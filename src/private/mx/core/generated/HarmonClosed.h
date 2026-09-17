@@ -35,11 +35,7 @@ class HarmonClosed final
     HarmonClosedValue m_value{};
 };
 
-HarmonClosed parseHarmonClosed(pugi::xml_node el);
-
 HarmonClosed parseHarmonClosed(pugi::xml_node el, const ParseContext &context);
-
-void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el);
 
 void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el, const ParseContext &context);
 

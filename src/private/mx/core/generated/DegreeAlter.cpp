@@ -121,11 +121,6 @@ void DegreeAlter::setValue(Semitones value)
     m_value = std::move(value);
 }
 
-DegreeAlter parseDegreeAlter(pugi::xml_node el)
-{
-    return parseDegreeAlter(el, ParseContext{});
-}
-
 DegreeAlter parseDegreeAlter(pugi::xml_node el, const ParseContext &context)
 {
     DegreeAlter out;
@@ -183,11 +178,6 @@ DegreeAlter parseDegreeAlter(pugi::xml_node el, const ParseContext &context)
     }
     parseDegreeAlterContent(out, el, context);
     return out;
-}
-
-void parseDegreeAlterContent(DegreeAlter &out, pugi::xml_node el)
-{
-    parseDegreeAlterContent(out, el, ParseContext{});
 }
 
 void parseDegreeAlterContent(DegreeAlter &out, pugi::xml_node el, const ParseContext &context)

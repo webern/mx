@@ -26,11 +26,6 @@ CreditChoice CreditChoice::group(CreditChoiceGroup value)
     return CreditChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-CreditChoice parseCreditChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseCreditChoice(el, cursor, ParseContext{});
-}
-
 CreditChoice parseCreditChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "credit-image")))

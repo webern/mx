@@ -102,11 +102,7 @@ class Time final
     TimeChoice m_choice{};
 };
 
-Time parseTime(pugi::xml_node el);
-
 Time parseTime(pugi::xml_node el, const ParseContext &context);
-
-void parseTimeContent(Time &out, pugi::xml_node el);
 
 void parseTimeContent(Time &out, pugi::xml_node el, const ParseContext &context);
 

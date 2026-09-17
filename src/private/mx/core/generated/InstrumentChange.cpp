@@ -31,11 +31,6 @@ void InstrumentChange::setVirtualInstrumentData(VirtualInstrumentDataGroup value
     m_virtualInstrumentData = std::move(value);
 }
 
-InstrumentChange parseInstrumentChange(pugi::xml_node el)
-{
-    return parseInstrumentChange(el, ParseContext{});
-}
-
 InstrumentChange parseInstrumentChange(pugi::xml_node el, const ParseContext &context)
 {
     InstrumentChange out;
@@ -63,11 +58,6 @@ InstrumentChange parseInstrumentChange(pugi::xml_node el, const ParseContext &co
     }
     parseInstrumentChangeContent(out, el, context);
     return out;
-}
-
-void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el)
-{
-    parseInstrumentChangeContent(out, el, ParseContext{});
 }
 
 void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el, const ParseContext &context)

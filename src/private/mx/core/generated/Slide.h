@@ -101,11 +101,7 @@ class Slide final
     std::string m_value{};
 };
 
-Slide parseSlide(pugi::xml_node el);
-
 Slide parseSlide(pugi::xml_node el, const ParseContext &context);
-
-void parseSlideContent(Slide &out, pugi::xml_node el);
 
 void parseSlideContent(Slide &out, pugi::xml_node el, const ParseContext &context);
 

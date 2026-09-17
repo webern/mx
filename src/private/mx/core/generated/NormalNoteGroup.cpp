@@ -51,11 +51,6 @@ void NormalNoteGroup::clearTie() noexcept
     m_tie.clear();
 }
 
-NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseNormalNoteGroup(el, cursor, ParseContext{});
-}
-
 NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     NormalNoteGroup out;

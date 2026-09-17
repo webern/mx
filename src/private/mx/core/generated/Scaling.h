@@ -41,11 +41,7 @@ class Scaling final
     Tenths m_tenths{};
 };
 
-Scaling parseScaling(pugi::xml_node el);
-
 Scaling parseScaling(pugi::xml_node el, const ParseContext &context);
-
-void parseScalingContent(Scaling &out, pugi::xml_node el);
 
 void parseScalingContent(Scaling &out, pugi::xml_node el, const ParseContext &context);
 

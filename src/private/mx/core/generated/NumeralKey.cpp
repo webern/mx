@@ -41,11 +41,6 @@ void NumeralKey::setNumeralMode(NumeralMode value)
     m_numeralMode = std::move(value);
 }
 
-NumeralKey parseNumeralKey(pugi::xml_node el)
-{
-    return parseNumeralKey(el, ParseContext{});
-}
-
 NumeralKey parseNumeralKey(pugi::xml_node el, const ParseContext &context)
 {
     NumeralKey out;
@@ -67,11 +62,6 @@ NumeralKey parseNumeralKey(pugi::xml_node el, const ParseContext &context)
     }
     parseNumeralKeyContent(out, el, context);
     return out;
-}
-
-void parseNumeralKeyContent(NumeralKey &out, pugi::xml_node el)
-{
-    parseNumeralKeyContent(out, el, ParseContext{});
 }
 
 void parseNumeralKeyContent(NumeralKey &out, pugi::xml_node el, const ParseContext &context)

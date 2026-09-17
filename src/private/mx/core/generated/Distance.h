@@ -35,11 +35,7 @@ class Distance final
     Tenths m_value{};
 };
 
-Distance parseDistance(pugi::xml_node el);
-
 Distance parseDistance(pugi::xml_node el, const ParseContext &context);
-
-void parseDistanceContent(Distance &out, pugi::xml_node el);
 
 void parseDistanceContent(Distance &out, pugi::xml_node el, const ParseContext &context);
 

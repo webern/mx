@@ -49,11 +49,7 @@ class PageLayout final
     std::vector<PageMargins> m_pageMargins;
 };
 
-PageLayout parsePageLayout(pugi::xml_node el);
-
 PageLayout parsePageLayout(pugi::xml_node el, const ParseContext &context);
-
-void parsePageLayoutContent(PageLayout &out, pugi::xml_node el);
 
 void parsePageLayoutContent(PageLayout &out, pugi::xml_node el, const ParseContext &context);
 

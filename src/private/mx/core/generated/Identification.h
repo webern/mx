@@ -55,11 +55,7 @@ class Identification final
     std::optional<Miscellaneous> m_miscellaneous;
 };
 
-Identification parseIdentification(pugi::xml_node el);
-
 Identification parseIdentification(pugi::xml_node el, const ParseContext &context);
-
-void parseIdentificationContent(Identification &out, pugi::xml_node el);
 
 void parseIdentificationContent(Identification &out, pugi::xml_node el, const ParseContext &context);
 

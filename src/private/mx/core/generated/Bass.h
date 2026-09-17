@@ -48,11 +48,7 @@ class Bass final
     std::optional<HarmonyAlter> m_bassAlter;
 };
 
-Bass parseBass(pugi::xml_node el);
-
 Bass parseBass(pugi::xml_node el, const ParseContext &context);
-
-void parseBassContent(Bass &out, pugi::xml_node el);
 
 void parseBassContent(Bass &out, pugi::xml_node el, const ParseContext &context);
 

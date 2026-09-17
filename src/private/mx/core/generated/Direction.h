@@ -78,11 +78,7 @@ class Direction final
     std::optional<Listening> m_listening;
 };
 
-Direction parseDirection(pugi::xml_node el);
-
 Direction parseDirection(pugi::xml_node el, const ParseContext &context);
-
-void parseDirectionContent(Direction &out, pugi::xml_node el);
 
 void parseDirectionContent(Direction &out, pugi::xml_node el, const ParseContext &context);
 

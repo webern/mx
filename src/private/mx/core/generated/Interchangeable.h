@@ -49,11 +49,7 @@ class Interchangeable final
     OneOrMore<TimeSignatureGroup> m_timeSignature;
 };
 
-Interchangeable parseInterchangeable(pugi::xml_node el);
-
 Interchangeable parseInterchangeable(pugi::xml_node el, const ParseContext &context);
-
-void parseInterchangeableContent(Interchangeable &out, pugi::xml_node el);
 
 void parseInterchangeableContent(Interchangeable &out, pugi::xml_node el, const ParseContext &context);
 

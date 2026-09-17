@@ -31,11 +31,6 @@ void MetronomeBeam::setValue(BeamValue value)
     m_value = std::move(value);
 }
 
-MetronomeBeam parseMetronomeBeam(pugi::xml_node el)
-{
-    return parseMetronomeBeam(el, ParseContext{});
-}
-
 MetronomeBeam parseMetronomeBeam(pugi::xml_node el, const ParseContext &context)
 {
     MetronomeBeam out;
@@ -57,11 +52,6 @@ MetronomeBeam parseMetronomeBeam(pugi::xml_node el, const ParseContext &context)
     }
     parseMetronomeBeamContent(out, el, context);
     return out;
-}
-
-void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el)
-{
-    parseMetronomeBeamContent(out, el, ParseContext{});
 }
 
 void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el, const ParseContext &context)

@@ -31,11 +31,6 @@ void Metal::setValue(MetalValue value)
     m_value = std::move(value);
 }
 
-Metal parseMetal(pugi::xml_node el)
-{
-    return parseMetal(el, ParseContext{});
-}
-
 Metal parseMetal(pugi::xml_node el, const ParseContext &context)
 {
     Metal out;
@@ -57,11 +52,6 @@ Metal parseMetal(pugi::xml_node el, const ParseContext &context)
     }
     parseMetalContent(out, el, context);
     return out;
-}
-
-void parseMetalContent(Metal &out, pugi::xml_node el)
-{
-    parseMetalContent(out, el, ParseContext{});
 }
 
 void parseMetalContent(Metal &out, pugi::xml_node el, const ParseContext &context)

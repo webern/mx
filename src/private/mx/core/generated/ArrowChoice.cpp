@@ -26,11 +26,6 @@ ArrowChoice ArrowChoice::circularArrow(CircularArrow value)
     return ArrowChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-ArrowChoice parseArrowChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseArrowChoice(el, cursor, ParseContext{});
-}
-
 ArrowChoice parseArrowChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "arrow-direction")))

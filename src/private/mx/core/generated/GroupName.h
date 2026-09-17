@@ -67,11 +67,7 @@ class GroupName final
     std::string m_value{};
 };
 
-GroupName parseGroupName(pugi::xml_node el);
-
 GroupName parseGroupName(pugi::xml_node el, const ParseContext &context);
-
-void parseGroupNameContent(GroupName &out, pugi::xml_node el);
 
 void parseGroupNameContent(GroupName &out, pugi::xml_node el, const ParseContext &context);
 

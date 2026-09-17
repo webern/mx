@@ -31,11 +31,6 @@ void Backup::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-Backup parseBackup(pugi::xml_node el)
-{
-    return parseBackup(el, ParseContext{});
-}
-
 Backup parseBackup(pugi::xml_node el, const ParseContext &context)
 {
     Backup out;
@@ -50,11 +45,6 @@ Backup parseBackup(pugi::xml_node el, const ParseContext &context)
     }
     parseBackupContent(out, el, context);
     return out;
-}
-
-void parseBackupContent(Backup &out, pugi::xml_node el)
-{
-    parseBackupContent(out, el, ParseContext{});
 }
 
 void parseBackupContent(Backup &out, pugi::xml_node el, const ParseContext &context)

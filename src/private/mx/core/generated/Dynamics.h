@@ -109,11 +109,7 @@ class Dynamics final
     std::vector<DynamicsChoice> m_choice;
 };
 
-Dynamics parseDynamics(pugi::xml_node el);
-
 Dynamics parseDynamics(pugi::xml_node el, const ParseContext &context);
-
-void parseDynamicsContent(Dynamics &out, pugi::xml_node el);
 
 void parseDynamicsContent(Dynamics &out, pugi::xml_node el, const ParseContext &context);
 

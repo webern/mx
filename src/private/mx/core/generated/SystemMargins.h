@@ -34,11 +34,7 @@ class SystemMargins final
     LeftRightMarginsGroup m_leftRightMargins{};
 };
 
-SystemMargins parseSystemMargins(pugi::xml_node el);
-
 SystemMargins parseSystemMargins(pugi::xml_node el, const ParseContext &context);
-
-void parseSystemMarginsContent(SystemMargins &out, pugi::xml_node el);
 
 void parseSystemMarginsContent(SystemMargins &out, pugi::xml_node el, const ParseContext &context);
 

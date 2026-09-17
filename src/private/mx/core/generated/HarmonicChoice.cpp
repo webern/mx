@@ -26,11 +26,6 @@ HarmonicChoice HarmonicChoice::artificial(Empty value)
     return HarmonicChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-HarmonicChoice parseHarmonicChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseHarmonicChoice(el, cursor, ParseContext{});
-}
-
 HarmonicChoice parseHarmonicChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "natural")))

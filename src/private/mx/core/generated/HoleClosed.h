@@ -35,11 +35,7 @@ class HoleClosed final
     HoleClosedValue m_value{};
 };
 
-HoleClosed parseHoleClosed(pugi::xml_node el);
-
 HoleClosed parseHoleClosed(pugi::xml_node el, const ParseContext &context);
-
-void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el);
 
 void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el, const ParseContext &context);
 

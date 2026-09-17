@@ -21,11 +21,6 @@ void MeasureLayout::setMeasureDistance(std::optional<Tenths> value)
     m_measureDistance = std::move(value);
 }
 
-MeasureLayout parseMeasureLayout(pugi::xml_node el)
-{
-    return parseMeasureLayout(el, ParseContext{});
-}
-
 MeasureLayout parseMeasureLayout(pugi::xml_node el, const ParseContext &context)
 {
     MeasureLayout out;
@@ -40,11 +35,6 @@ MeasureLayout parseMeasureLayout(pugi::xml_node el, const ParseContext &context)
     }
     parseMeasureLayoutContent(out, el, context);
     return out;
-}
-
-void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el)
-{
-    parseMeasureLayoutContent(out, el, ParseContext{});
 }
 
 void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el, const ParseContext &context)

@@ -36,11 +36,6 @@ void NameDisplay::setChoice(std::vector<NameDisplayChoice> value)
     m_choice = std::move(value);
 }
 
-NameDisplay parseNameDisplay(pugi::xml_node el)
-{
-    return parseNameDisplay(el, ParseContext{});
-}
-
 NameDisplay parseNameDisplay(pugi::xml_node el, const ParseContext &context)
 {
     NameDisplay out;
@@ -62,11 +57,6 @@ NameDisplay parseNameDisplay(pugi::xml_node el, const ParseContext &context)
     }
     parseNameDisplayContent(out, el, context);
     return out;
-}
-
-void parseNameDisplayContent(NameDisplay &out, pugi::xml_node el)
-{
-    parseNameDisplayContent(out, el, ParseContext{});
 }
 
 void parseNameDisplayContent(NameDisplay &out, pugi::xml_node el, const ParseContext &context)

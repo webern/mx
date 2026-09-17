@@ -33,11 +33,7 @@ class GroupBarline final
     GroupBarlineValue m_value{};
 };
 
-GroupBarline parseGroupBarline(pugi::xml_node el);
-
 GroupBarline parseGroupBarline(pugi::xml_node el, const ParseContext &context);
-
-void parseGroupBarlineContent(GroupBarline &out, pugi::xml_node el);
 
 void parseGroupBarlineContent(GroupBarline &out, pugi::xml_node el, const ParseContext &context);
 

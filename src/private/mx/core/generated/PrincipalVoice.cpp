@@ -161,11 +161,6 @@ void PrincipalVoice::setValue(std::string value)
     m_value = std::move(value);
 }
 
-PrincipalVoice parsePrincipalVoice(pugi::xml_node el)
-{
-    return parsePrincipalVoice(el, ParseContext{});
-}
-
 PrincipalVoice parsePrincipalVoice(pugi::xml_node el, const ParseContext &context)
 {
     PrincipalVoice out;
@@ -251,11 +246,6 @@ PrincipalVoice parsePrincipalVoice(pugi::xml_node el, const ParseContext &contex
     }
     parsePrincipalVoiceContent(out, el, context);
     return out;
-}
-
-void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el)
-{
-    parsePrincipalVoiceContent(out, el, ParseContext{});
 }
 
 void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el, const ParseContext &context)

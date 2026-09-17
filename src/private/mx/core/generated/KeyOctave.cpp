@@ -41,11 +41,6 @@ void KeyOctave::setValue(Octave value)
     m_value = std::move(value);
 }
 
-KeyOctave parseKeyOctave(pugi::xml_node el)
-{
-    return parseKeyOctave(el, ParseContext{});
-}
-
 KeyOctave parseKeyOctave(pugi::xml_node el, const ParseContext &context)
 {
     KeyOctave out;
@@ -77,11 +72,6 @@ KeyOctave parseKeyOctave(pugi::xml_node el, const ParseContext &context)
     }
     parseKeyOctaveContent(out, el, context);
     return out;
-}
-
-void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el)
-{
-    parseKeyOctaveContent(out, el, ParseContext{});
 }
 
 void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el, const ParseContext &context)

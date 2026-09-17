@@ -31,11 +31,6 @@ void GraceNoteGroup::setGraceNoteChoice(GraceNoteChoice value)
     m_graceNoteChoice = std::move(value);
 }
 
-GraceNoteGroup parseGraceNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseGraceNoteGroup(el, cursor, ParseContext{});
-}
-
 GraceNoteGroup parseGraceNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     GraceNoteGroup out;

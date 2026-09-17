@@ -69,11 +69,7 @@ class Credit final
     CreditChoice m_choice{};
 };
 
-Credit parseCredit(pugi::xml_node el);
-
 Credit parseCredit(pugi::xml_node el, const ParseContext &context);
-
-void parseCreditContent(Credit &out, pugi::xml_node el);
 
 void parseCreditContent(Credit &out, pugi::xml_node el, const ParseContext &context);
 

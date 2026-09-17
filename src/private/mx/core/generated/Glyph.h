@@ -39,11 +39,7 @@ class Glyph final
     SmuflGlyphName m_value{};
 };
 
-Glyph parseGlyph(pugi::xml_node el);
-
 Glyph parseGlyph(pugi::xml_node el, const ParseContext &context);
-
-void parseGlyphContent(Glyph &out, pugi::xml_node el);
 
 void parseGlyphContent(Glyph &out, pugi::xml_node el, const ParseContext &context);
 

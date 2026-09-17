@@ -76,11 +76,7 @@ class Segno final
     std::optional<Token> m_id;
 };
 
-Segno parseSegno(pugi::xml_node el);
-
 Segno parseSegno(pugi::xml_node el, const ParseContext &context);
-
-void parseSegnoContent(Segno &out, pugi::xml_node el);
 
 void parseSegnoContent(Segno &out, pugi::xml_node el, const ParseContext &context);
 

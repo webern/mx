@@ -41,8 +41,6 @@ class SwingChoiceGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeSwingChoiceGroup(const SwingChoiceGroup &v, pugi::xml_node el);

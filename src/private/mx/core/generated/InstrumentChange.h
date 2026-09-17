@@ -41,11 +41,7 @@ class InstrumentChange final
     VirtualInstrumentDataGroup m_virtualInstrumentData{};
 };
 
-InstrumentChange parseInstrumentChange(pugi::xml_node el);
-
 InstrumentChange parseInstrumentChange(pugi::xml_node el, const ParseContext &context);
-
-void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el);
 
 void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el, const ParseContext &context);
 

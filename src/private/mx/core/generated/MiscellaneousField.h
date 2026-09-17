@@ -32,11 +32,7 @@ class MiscellaneousField final
     std::string m_value{};
 };
 
-MiscellaneousField parseMiscellaneousField(pugi::xml_node el);
-
 MiscellaneousField parseMiscellaneousField(pugi::xml_node el, const ParseContext &context);
-
-void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el);
 
 void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el, const ParseContext &context);
 

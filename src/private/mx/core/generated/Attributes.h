@@ -83,11 +83,7 @@ class Attributes final
     std::vector<MeasureStyle> m_measureStyle;
 };
 
-Attributes parseAttributes(pugi::xml_node el);
-
 Attributes parseAttributes(pugi::xml_node el, const ParseContext &context);
-
-void parseAttributesContent(Attributes &out, pugi::xml_node el);
 
 void parseAttributesContent(Attributes &out, pugi::xml_node el, const ParseContext &context);
 

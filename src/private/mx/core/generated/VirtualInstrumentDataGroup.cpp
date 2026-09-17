@@ -41,11 +41,6 @@ void VirtualInstrumentDataGroup::setVirtualInstrument(std::optional<VirtualInstr
     m_virtualInstrument = std::move(value);
 }
 
-VirtualInstrumentDataGroup parseVirtualInstrumentDataGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseVirtualInstrumentDataGroup(el, cursor, ParseContext{});
-}
-
 VirtualInstrumentDataGroup parseVirtualInstrumentDataGroup(pugi::xml_node el, pugi::xml_node &cursor,
                                                            const ParseContext &context)
 {

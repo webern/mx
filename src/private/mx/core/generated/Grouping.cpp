@@ -66,11 +66,6 @@ void Grouping::setFeature(std::vector<Feature> value)
     m_feature = std::move(value);
 }
 
-Grouping parseGrouping(pugi::xml_node el)
-{
-    return parseGrouping(el, ParseContext{});
-}
-
 Grouping parseGrouping(pugi::xml_node el, const ParseContext &context)
 {
     Grouping out;
@@ -110,11 +105,6 @@ Grouping parseGrouping(pugi::xml_node el, const ParseContext &context)
     }
     parseGroupingContent(out, el, context);
     return out;
-}
-
-void parseGroupingContent(Grouping &out, pugi::xml_node el)
-{
-    parseGroupingContent(out, el, ParseContext{});
 }
 
 void parseGroupingContent(Grouping &out, pugi::xml_node el, const ParseContext &context)

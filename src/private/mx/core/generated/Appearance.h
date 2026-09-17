@@ -57,11 +57,7 @@ class Appearance final
     std::vector<OtherAppearance> m_otherAppearance;
 };
 
-Appearance parseAppearance(pugi::xml_node el);
-
 Appearance parseAppearance(pugi::xml_node el, const ParseContext &context);
-
-void parseAppearanceContent(Appearance &out, pugi::xml_node el);
 
 void parseAppearanceContent(Appearance &out, pugi::xml_node el, const ParseContext &context);
 

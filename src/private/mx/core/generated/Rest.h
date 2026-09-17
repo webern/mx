@@ -39,11 +39,7 @@ class Rest final
     std::optional<DisplayStepOctaveGroup> m_displayStepOctave;
 };
 
-Rest parseRest(pugi::xml_node el);
-
 Rest parseRest(pugi::xml_node el, const ParseContext &context);
-
-void parseRestContent(Rest &out, pugi::xml_node el);
 
 void parseRestContent(Rest &out, pugi::xml_node el, const ParseContext &context);
 

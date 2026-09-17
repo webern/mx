@@ -44,11 +44,7 @@ class Assess final
     std::optional<TimeOnly> m_timeOnly;
 };
 
-Assess parseAssess(pugi::xml_node el);
-
 Assess parseAssess(pugi::xml_node el, const ParseContext &context);
-
-void parseAssessContent(Assess &out, pugi::xml_node el);
 
 void parseAssessContent(Assess &out, pugi::xml_node el, const ParseContext &context);
 

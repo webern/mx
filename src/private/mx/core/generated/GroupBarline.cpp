@@ -31,11 +31,6 @@ void GroupBarline::setValue(GroupBarlineValue value)
     m_value = std::move(value);
 }
 
-GroupBarline parseGroupBarline(pugi::xml_node el)
-{
-    return parseGroupBarline(el, ParseContext{});
-}
-
 GroupBarline parseGroupBarline(pugi::xml_node el, const ParseContext &context)
 {
     GroupBarline out;
@@ -57,11 +52,6 @@ GroupBarline parseGroupBarline(pugi::xml_node el, const ParseContext &context)
     }
     parseGroupBarlineContent(out, el, context);
     return out;
-}
-
-void parseGroupBarlineContent(GroupBarline &out, pugi::xml_node el)
-{
-    parseGroupBarlineContent(out, el, ParseContext{});
 }
 
 void parseGroupBarlineContent(GroupBarline &out, pugi::xml_node el, const ParseContext &context)

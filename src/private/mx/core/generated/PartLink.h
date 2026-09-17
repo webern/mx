@@ -59,11 +59,7 @@ class PartLink final
     std::vector<std::string> m_groupLink;
 };
 
-PartLink parsePartLink(pugi::xml_node el);
-
 PartLink parsePartLink(pugi::xml_node el, const ParseContext &context);
-
-void parsePartLinkContent(PartLink &out, pugi::xml_node el);
 
 void parsePartLinkContent(PartLink &out, pugi::xml_node el, const ParseContext &context);
 

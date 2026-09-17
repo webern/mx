@@ -69,11 +69,7 @@ class NumeralRoot final
     NumeralValue m_value{};
 };
 
-NumeralRoot parseNumeralRoot(pugi::xml_node el);
-
 NumeralRoot parseNumeralRoot(pugi::xml_node el, const ParseContext &context);
-
-void parseNumeralRootContent(NumeralRoot &out, pugi::xml_node el);
 
 void parseNumeralRootContent(NumeralRoot &out, pugi::xml_node el, const ParseContext &context);
 

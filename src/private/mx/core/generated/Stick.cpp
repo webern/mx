@@ -61,11 +61,6 @@ void Stick::setStickMaterial(StickMaterial value)
     m_stickMaterial = std::move(value);
 }
 
-Stick parseStick(pugi::xml_node el)
-{
-    return parseStick(el, ParseContext{});
-}
-
 Stick parseStick(pugi::xml_node el, const ParseContext &context)
 {
     Stick out;
@@ -95,11 +90,6 @@ Stick parseStick(pugi::xml_node el, const ParseContext &context)
     }
     parseStickContent(out, el, context);
     return out;
-}
-
-void parseStickContent(Stick &out, pugi::xml_node el)
-{
-    parseStickContent(out, el, ParseContext{});
 }
 
 void parseStickContent(Stick &out, pugi::xml_node el, const ParseContext &context)

@@ -42,11 +42,7 @@ class Numeral final
     std::optional<NumeralKey> m_numeralKey;
 };
 
-Numeral parseNumeral(pugi::xml_node el);
-
 Numeral parseNumeral(pugi::xml_node el, const ParseContext &context);
-
-void parseNumeralContent(Numeral &out, pugi::xml_node el);
 
 void parseNumeralContent(Numeral &out, pugi::xml_node el, const ParseContext &context);
 

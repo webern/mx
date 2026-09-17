@@ -36,11 +36,7 @@ class BeatUnitTied final
     BeatUnitGroup m_beatUnit{};
 };
 
-BeatUnitTied parseBeatUnitTied(pugi::xml_node el);
-
 BeatUnitTied parseBeatUnitTied(pugi::xml_node el, const ParseContext &context);
-
-void parseBeatUnitTiedContent(BeatUnitTied &out, pugi::xml_node el);
 
 void parseBeatUnitTiedContent(BeatUnitTied &out, pugi::xml_node el, const ParseContext &context);
 

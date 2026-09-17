@@ -121,11 +121,6 @@ void Image::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Image parseImage(pugi::xml_node el)
-{
-    return parseImage(el, ParseContext{});
-}
-
 Image parseImage(pugi::xml_node el, const ParseContext &context)
 {
     Image out;
@@ -199,11 +194,6 @@ Image parseImage(pugi::xml_node el, const ParseContext &context)
     }
     parseImageContent(out, el, context);
     return out;
-}
-
-void parseImageContent(Image &out, pugi::xml_node el)
-{
-    parseImageContent(out, el, ParseContext{});
 }
 
 void parseImageContent(Image &out, pugi::xml_node el, const ParseContext &context)

@@ -75,11 +75,7 @@ class TextElementData final
     std::string m_value{};
 };
 
-TextElementData parseTextElementData(pugi::xml_node el);
-
 TextElementData parseTextElementData(pugi::xml_node el, const ParseContext &context);
-
-void parseTextElementDataContent(TextElementData &out, pugi::xml_node el);
 
 void parseTextElementDataContent(TextElementData &out, pugi::xml_node el, const ParseContext &context);
 

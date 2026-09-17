@@ -181,11 +181,6 @@ void Pedal::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Pedal parsePedal(pugi::xml_node el)
-{
-    return parsePedal(el, ParseContext{});
-}
-
 Pedal parsePedal(pugi::xml_node el, const ParseContext &context)
 {
     Pedal out;
@@ -277,11 +272,6 @@ Pedal parsePedal(pugi::xml_node el, const ParseContext &context)
     }
     parsePedalContent(out, el, context);
     return out;
-}
-
-void parsePedalContent(Pedal &out, pugi::xml_node el)
-{
-    parsePedalContent(out, el, ParseContext{});
 }
 
 void parsePedalContent(Pedal &out, pugi::xml_node el, const ParseContext &context)

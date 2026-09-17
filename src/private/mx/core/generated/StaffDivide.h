@@ -76,11 +76,7 @@ class StaffDivide final
     std::optional<Token> m_id;
 };
 
-StaffDivide parseStaffDivide(pugi::xml_node el);
-
 StaffDivide parseStaffDivide(pugi::xml_node el, const ParseContext &context);
-
-void parseStaffDivideContent(StaffDivide &out, pugi::xml_node el);
 
 void parseStaffDivideContent(StaffDivide &out, pugi::xml_node el, const ParseContext &context);
 

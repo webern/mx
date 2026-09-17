@@ -41,11 +41,6 @@ EncodingChoice EncodingChoice::supports(Supports value)
     return EncodingChoice{Storage{std::in_place_index<4>, std::move(value)}};
 }
 
-EncodingChoice parseEncodingChoice(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseEncodingChoice(el, cursor, ParseContext{});
-}
-
 EncodingChoice parseEncodingChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "encoding-date")))

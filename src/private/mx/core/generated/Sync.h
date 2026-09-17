@@ -47,11 +47,7 @@ class Sync final
     std::optional<TimeOnly> m_timeOnly;
 };
 
-Sync parseSync(pugi::xml_node el);
-
 Sync parseSync(pugi::xml_node el, const ParseContext &context);
-
-void parseSyncContent(Sync &out, pugi::xml_node el);
 
 void parseSyncContent(Sync &out, pugi::xml_node el, const ParseContext &context);
 

@@ -121,11 +121,6 @@ void BassStep::setValue(Step value)
     m_value = std::move(value);
 }
 
-BassStep parseBassStep(pugi::xml_node el)
-{
-    return parseBassStep(el, ParseContext{});
-}
-
 BassStep parseBassStep(pugi::xml_node el, const ParseContext &context)
 {
     BassStep out;
@@ -183,11 +178,6 @@ BassStep parseBassStep(pugi::xml_node el, const ParseContext &context)
     }
     parseBassStepContent(out, el, context);
     return out;
-}
-
-void parseBassStepContent(BassStep &out, pugi::xml_node el)
-{
-    parseBassStepContent(out, el, ParseContext{});
 }
 
 void parseBassStepContent(BassStep &out, pugi::xml_node el, const ParseContext &context)

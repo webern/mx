@@ -51,11 +51,6 @@ void SystemLayout::setSystemDividers(std::optional<SystemDividers> value)
     m_systemDividers = std::move(value);
 }
 
-SystemLayout parseSystemLayout(pugi::xml_node el)
-{
-    return parseSystemLayout(el, ParseContext{});
-}
-
 SystemLayout parseSystemLayout(pugi::xml_node el, const ParseContext &context)
 {
     SystemLayout out;
@@ -70,11 +65,6 @@ SystemLayout parseSystemLayout(pugi::xml_node el, const ParseContext &context)
     }
     parseSystemLayoutContent(out, el, context);
     return out;
-}
-
-void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el)
-{
-    parseSystemLayoutContent(out, el, ParseContext{});
 }
 
 void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el, const ParseContext &context)

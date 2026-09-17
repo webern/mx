@@ -71,11 +71,6 @@ void GroupSymbol::setValue(GroupSymbolValue value)
     m_value = std::move(value);
 }
 
-GroupSymbol parseGroupSymbol(pugi::xml_node el)
-{
-    return parseGroupSymbol(el, ParseContext{});
-}
-
 GroupSymbol parseGroupSymbol(pugi::xml_node el, const ParseContext &context)
 {
     GroupSymbol out;
@@ -113,11 +108,6 @@ GroupSymbol parseGroupSymbol(pugi::xml_node el, const ParseContext &context)
     }
     parseGroupSymbolContent(out, el, context);
     return out;
-}
-
-void parseGroupSymbolContent(GroupSymbol &out, pugi::xml_node el)
-{
-    parseGroupSymbolContent(out, el, ParseContext{});
 }
 
 void parseGroupSymbolContent(GroupSymbol &out, pugi::xml_node el, const ParseContext &context)

@@ -47,8 +47,6 @@ class NormalNoteGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeNormalNoteGroup(const NormalNoteGroup &v, pugi::xml_node el);

@@ -82,8 +82,6 @@ class DirectionTypeChoiceChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                          const ParseContext &context);
 

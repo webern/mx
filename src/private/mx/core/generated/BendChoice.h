@@ -82,8 +82,6 @@ class BendChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-BendChoice parseBendChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 BendChoice parseBendChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeBendChoice(const BendChoice &v, pugi::xml_node el);

@@ -60,11 +60,7 @@ class SystemLayout final
     std::optional<SystemDividers> m_systemDividers;
 };
 
-SystemLayout parseSystemLayout(pugi::xml_node el);
-
 SystemLayout parseSystemLayout(pugi::xml_node el, const ParseContext &context);
-
-void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el);
 
 void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el, const ParseContext &context);
 

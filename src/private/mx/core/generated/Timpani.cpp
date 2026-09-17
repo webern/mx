@@ -21,11 +21,6 @@ void Timpani::setSmufl(std::optional<SmuflPictogramGlyphName> value)
     m_smufl = std::move(value);
 }
 
-Timpani parseTimpani(pugi::xml_node el)
-{
-    return parseTimpani(el, ParseContext{});
-}
-
 Timpani parseTimpani(pugi::xml_node el, const ParseContext &context)
 {
     Timpani out;
@@ -47,11 +42,6 @@ Timpani parseTimpani(pugi::xml_node el, const ParseContext &context)
     }
     parseTimpaniContent(out, el, context);
     return out;
-}
-
-void parseTimpaniContent(Timpani &out, pugi::xml_node el)
-{
-    parseTimpaniContent(out, el, ParseContext{});
 }
 
 void parseTimpaniContent(Timpani &out, pugi::xml_node el, const ParseContext &context)

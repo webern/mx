@@ -42,8 +42,6 @@ class SlashGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-SlashGroup parseSlashGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 SlashGroup parseSlashGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeSlashGroup(const SlashGroup &v, pugi::xml_node el);

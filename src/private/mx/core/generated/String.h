@@ -67,11 +67,7 @@ class String final
     StringNumber m_value{};
 };
 
-String parseString(pugi::xml_node el);
-
 String parseString(pugi::xml_node el, const ParseContext &context);
-
-void parseStringContent(String &out, pugi::xml_node el);
 
 void parseStringContent(String &out, pugi::xml_node el, const ParseContext &context);
 

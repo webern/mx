@@ -171,11 +171,6 @@ void AccidentalMark::setValue(AccidentalValue value)
     m_value = std::move(value);
 }
 
-AccidentalMark parseAccidentalMark(pugi::xml_node el)
-{
-    return parseAccidentalMark(el, ParseContext{});
-}
-
 AccidentalMark parseAccidentalMark(pugi::xml_node el, const ParseContext &context)
 {
     AccidentalMark out;
@@ -253,11 +248,6 @@ AccidentalMark parseAccidentalMark(pugi::xml_node el, const ParseContext &contex
     }
     parseAccidentalMarkContent(out, el, context);
     return out;
-}
-
-void parseAccidentalMarkContent(AccidentalMark &out, pugi::xml_node el)
-{
-    parseAccidentalMarkContent(out, el, ParseContext{});
 }
 
 void parseAccidentalMarkContent(AccidentalMark &out, pugi::xml_node el, const ParseContext &context)

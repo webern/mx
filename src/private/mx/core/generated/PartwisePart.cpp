@@ -36,11 +36,6 @@ void PartwisePart::setMeasure(OneOrMore<PartwiseMeasure> value)
     m_measure = std::move(value);
 }
 
-PartwisePart parsePartwisePart(pugi::xml_node el)
-{
-    return parsePartwisePart(el, ParseContext{});
-}
-
 PartwisePart parsePartwisePart(pugi::xml_node el, const ParseContext &context)
 {
     PartwisePart out;
@@ -68,11 +63,6 @@ PartwisePart parsePartwisePart(pugi::xml_node el, const ParseContext &context)
     }
     parsePartwisePartContent(out, el, context);
     return out;
-}
-
-void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el)
-{
-    parsePartwisePartContent(out, el, ParseContext{});
 }
 
 void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el, const ParseContext &context)

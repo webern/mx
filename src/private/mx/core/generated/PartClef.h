@@ -34,11 +34,7 @@ class PartClef final
     ClefGroup m_clef{};
 };
 
-PartClef parsePartClef(pugi::xml_node el);
-
 PartClef parsePartClef(pugi::xml_node el, const ParseContext &context);
-
-void parsePartClefContent(PartClef &out, pugi::xml_node el);
 
 void parsePartClefContent(PartClef &out, pugi::xml_node el, const ParseContext &context);
 

@@ -86,11 +86,7 @@ class Glissando final
     std::string m_value{};
 };
 
-Glissando parseGlissando(pugi::xml_node el);
-
 Glissando parseGlissando(pugi::xml_node el, const ParseContext &context);
-
-void parseGlissandoContent(Glissando &out, pugi::xml_node el);
 
 void parseGlissandoContent(Glissando &out, pugi::xml_node el, const ParseContext &context);
 

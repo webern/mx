@@ -34,11 +34,7 @@ class OtherText final
     std::string m_value{};
 };
 
-OtherText parseOtherText(pugi::xml_node el);
-
 OtherText parseOtherText(pugi::xml_node el, const ParseContext &context);
-
-void parseOtherTextContent(OtherText &out, pugi::xml_node el);
 
 void parseOtherTextContent(OtherText &out, pugi::xml_node el, const ParseContext &context);
 

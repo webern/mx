@@ -51,11 +51,6 @@ void ForPart::setPartTranspose(PartTranspose value)
     m_partTranspose = std::move(value);
 }
 
-ForPart parseForPart(pugi::xml_node el)
-{
-    return parseForPart(el, ParseContext{});
-}
-
 ForPart parseForPart(pugi::xml_node el, const ParseContext &context)
 {
     ForPart out;
@@ -81,11 +76,6 @@ ForPart parseForPart(pugi::xml_node el, const ParseContext &context)
     }
     parseForPartContent(out, el, context);
     return out;
-}
-
-void parseForPartContent(ForPart &out, pugi::xml_node el)
-{
-    parseForPartContent(out, el, ParseContext{});
 }
 
 void parseForPartContent(ForPart &out, pugi::xml_node el, const ParseContext &context)

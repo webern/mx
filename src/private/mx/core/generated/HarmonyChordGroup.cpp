@@ -66,11 +66,6 @@ void HarmonyChordGroup::setDegree(std::vector<Degree> value)
     m_degree = std::move(value);
 }
 
-HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor)
-{
-    return parseHarmonyChordGroup(el, cursor, ParseContext{});
-}
-
 HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     HarmonyChordGroup out;

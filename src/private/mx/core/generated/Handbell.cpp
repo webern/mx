@@ -121,11 +121,6 @@ void Handbell::setValue(HandbellValue value)
     m_value = std::move(value);
 }
 
-Handbell parseHandbell(pugi::xml_node el)
-{
-    return parseHandbell(el, ParseContext{});
-}
-
 Handbell parseHandbell(pugi::xml_node el, const ParseContext &context)
 {
     Handbell out;
@@ -183,11 +178,6 @@ Handbell parseHandbell(pugi::xml_node el, const ParseContext &context)
     }
     parseHandbellContent(out, el, context);
     return out;
-}
-
-void parseHandbellContent(Handbell &out, pugi::xml_node el)
-{
-    parseHandbellContent(out, el, ParseContext{});
 }
 
 void parseHandbellContent(Handbell &out, pugi::xml_node el, const ParseContext &context)

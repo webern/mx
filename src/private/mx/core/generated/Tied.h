@@ -103,11 +103,7 @@ class Tied final
     std::optional<Token> m_id;
 };
 
-Tied parseTied(pugi::xml_node el);
-
 Tied parseTied(pugi::xml_node el, const ParseContext &context);
-
-void parseTiedContent(Tied &out, pugi::xml_node el);
 
 void parseTiedContent(Tied &out, pugi::xml_node el, const ParseContext &context);
 

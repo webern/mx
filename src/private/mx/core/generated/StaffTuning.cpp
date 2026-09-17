@@ -31,11 +31,6 @@ void StaffTuning::setTuning(TuningGroup value)
     m_tuning = std::move(value);
 }
 
-StaffTuning parseStaffTuning(pugi::xml_node el)
-{
-    return parseStaffTuning(el, ParseContext{});
-}
-
 StaffTuning parseStaffTuning(pugi::xml_node el, const ParseContext &context)
 {
     StaffTuning out;
@@ -63,11 +58,6 @@ StaffTuning parseStaffTuning(pugi::xml_node el, const ParseContext &context)
     }
     parseStaffTuningContent(out, el, context);
     return out;
-}
-
-void parseStaffTuningContent(StaffTuning &out, pugi::xml_node el)
-{
-    parseStaffTuningContent(out, el, ParseContext{});
 }
 
 void parseStaffTuningContent(StaffTuning &out, pugi::xml_node el, const ParseContext &context)

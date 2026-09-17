@@ -39,11 +39,7 @@ class Player final
     std::string m_playerName{};
 };
 
-Player parsePlayer(pugi::xml_node el);
-
 Player parsePlayer(pugi::xml_node el, const ParseContext &context);
-
-void parsePlayerContent(Player &out, pugi::xml_node el);
 
 void parsePlayerContent(Player &out, pugi::xml_node el, const ParseContext &context);
 

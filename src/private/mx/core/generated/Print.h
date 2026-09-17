@@ -75,11 +75,7 @@ class Print final
     std::optional<NameDisplay> m_partAbbreviationDisplay;
 };
 
-Print parsePrint(pugi::xml_node el);
-
 Print parsePrint(pugi::xml_node el, const ParseContext &context);
-
-void parsePrintContent(Print &out, pugi::xml_node el);
 
 void parsePrintContent(Print &out, pugi::xml_node el, const ParseContext &context);
 

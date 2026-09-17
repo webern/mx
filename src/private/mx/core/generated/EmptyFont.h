@@ -41,11 +41,7 @@ class EmptyFont final
     std::optional<FontWeight> m_fontWeight;
 };
 
-EmptyFont parseEmptyFont(pugi::xml_node el);
-
 EmptyFont parseEmptyFont(pugi::xml_node el, const ParseContext &context);
-
-void parseEmptyFontContent(EmptyFont &out, pugi::xml_node el);
 
 void parseEmptyFontContent(EmptyFont &out, pugi::xml_node el, const ParseContext &context);
 

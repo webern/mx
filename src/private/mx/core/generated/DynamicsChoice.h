@@ -434,8 +434,6 @@ class DynamicsChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-DynamicsChoice parseDynamicsChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 DynamicsChoice parseDynamicsChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeDynamicsChoice(const DynamicsChoice &v, pugi::xml_node el);

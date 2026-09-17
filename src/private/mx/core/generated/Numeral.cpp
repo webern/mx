@@ -41,11 +41,6 @@ void Numeral::setNumeralKey(std::optional<NumeralKey> value)
     m_numeralKey = std::move(value);
 }
 
-Numeral parseNumeral(pugi::xml_node el)
-{
-    return parseNumeral(el, ParseContext{});
-}
-
 Numeral parseNumeral(pugi::xml_node el, const ParseContext &context)
 {
     Numeral out;
@@ -60,11 +55,6 @@ Numeral parseNumeral(pugi::xml_node el, const ParseContext &context)
     }
     parseNumeralContent(out, el, context);
     return out;
-}
-
-void parseNumeralContent(Numeral &out, pugi::xml_node el)
-{
-    parseNumeralContent(out, el, ParseContext{});
 }
 
 void parseNumeralContent(Numeral &out, pugi::xml_node el, const ParseContext &context)

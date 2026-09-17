@@ -97,8 +97,6 @@ class HarmonyChordGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-HarmonyChordGroupChoice parseHarmonyChordGroupChoice(pugi::xml_node el, pugi::xml_node &cursor);
-
 HarmonyChordGroupChoice parseHarmonyChordGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
                                                      const ParseContext &context);
 

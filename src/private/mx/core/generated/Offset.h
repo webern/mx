@@ -40,11 +40,7 @@ class Offset final
     Divisions m_value{};
 };
 
-Offset parseOffset(pugi::xml_node el);
-
 Offset parseOffset(pugi::xml_node el, const ParseContext &context);
-
-void parseOffsetContent(Offset &out, pugi::xml_node el);
 
 void parseOffsetContent(Offset &out, pugi::xml_node el, const ParseContext &context);
 

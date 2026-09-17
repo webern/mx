@@ -41,11 +41,6 @@ void Transpose::setTranspose(TransposeGroup value)
     m_transpose = std::move(value);
 }
 
-Transpose parseTranspose(pugi::xml_node el)
-{
-    return parseTranspose(el, ParseContext{});
-}
-
 Transpose parseTranspose(pugi::xml_node el, const ParseContext &context)
 {
     Transpose out;
@@ -71,11 +66,6 @@ Transpose parseTranspose(pugi::xml_node el, const ParseContext &context)
     }
     parseTransposeContent(out, el, context);
     return out;
-}
-
-void parseTransposeContent(Transpose &out, pugi::xml_node el)
-{
-    parseTransposeContent(out, el, ParseContext{});
 }
 
 void parseTransposeContent(Transpose &out, pugi::xml_node el, const ParseContext &context)

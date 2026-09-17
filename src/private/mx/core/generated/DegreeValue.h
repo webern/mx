@@ -71,11 +71,7 @@ class DegreeValue final
     int m_value{};
 };
 
-DegreeValue parseDegreeValue(pugi::xml_node el);
-
 DegreeValue parseDegreeValue(pugi::xml_node el, const ParseContext &context);
-
-void parseDegreeValueContent(DegreeValue &out, pugi::xml_node el);
 
 void parseDegreeValueContent(DegreeValue &out, pugi::xml_node el, const ParseContext &context);
 

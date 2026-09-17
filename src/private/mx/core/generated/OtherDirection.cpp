@@ -161,11 +161,6 @@ void OtherDirection::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherDirection parseOtherDirection(pugi::xml_node el)
-{
-    return parseOtherDirection(el, ParseContext{});
-}
-
 OtherDirection parseOtherDirection(pugi::xml_node el, const ParseContext &context)
 {
     OtherDirection out;
@@ -239,11 +234,6 @@ OtherDirection parseOtherDirection(pugi::xml_node el, const ParseContext &contex
     }
     parseOtherDirectionContent(out, el, context);
     return out;
-}
-
-void parseOtherDirectionContent(OtherDirection &out, pugi::xml_node el)
-{
-    parseOtherDirectionContent(out, el, ParseContext{});
 }
 
 void parseOtherDirectionContent(OtherDirection &out, pugi::xml_node el, const ParseContext &context)

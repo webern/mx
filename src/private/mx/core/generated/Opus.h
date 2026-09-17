@@ -43,11 +43,7 @@ class Opus final
     std::optional<std::string> m_xlinkActuate;
 };
 
-Opus parseOpus(pugi::xml_node el);
-
 Opus parseOpus(pugi::xml_node el, const ParseContext &context);
-
-void parseOpusContent(Opus &out, pugi::xml_node el);
 
 void parseOpusContent(Opus &out, pugi::xml_node el, const ParseContext &context);
 

@@ -71,11 +71,6 @@ void Beam::setValue(BeamValue value)
     m_value = std::move(value);
 }
 
-Beam parseBeam(pugi::xml_node el)
-{
-    return parseBeam(el, ParseContext{});
-}
-
 Beam parseBeam(pugi::xml_node el, const ParseContext &context)
 {
     Beam out;
@@ -113,11 +108,6 @@ Beam parseBeam(pugi::xml_node el, const ParseContext &context)
     }
     parseBeamContent(out, el, context);
     return out;
-}
-
-void parseBeamContent(Beam &out, pugi::xml_node el)
-{
-    parseBeamContent(out, el, ParseContext{});
 }
 
 void parseBeamContent(Beam &out, pugi::xml_node el, const ParseContext &context)

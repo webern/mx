@@ -36,11 +36,7 @@ class Unpitched final
     std::optional<DisplayStepOctaveGroup> m_displayStepOctave;
 };
 
-Unpitched parseUnpitched(pugi::xml_node el);
-
 Unpitched parseUnpitched(pugi::xml_node el, const ParseContext &context);
-
-void parseUnpitchedContent(Unpitched &out, pugi::xml_node el);
 
 void parseUnpitchedContent(Unpitched &out, pugi::xml_node el, const ParseContext &context);
 

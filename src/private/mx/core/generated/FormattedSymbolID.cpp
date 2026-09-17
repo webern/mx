@@ -231,11 +231,6 @@ void FormattedSymbolID::setValue(SmuflGlyphName value)
     m_value = std::move(value);
 }
 
-FormattedSymbolID parseFormattedSymbolID(pugi::xml_node el)
-{
-    return parseFormattedSymbolID(el, ParseContext{});
-}
-
 FormattedSymbolID parseFormattedSymbolID(pugi::xml_node el, const ParseContext &context)
 {
     FormattedSymbolID out;
@@ -337,11 +332,6 @@ FormattedSymbolID parseFormattedSymbolID(pugi::xml_node el, const ParseContext &
     }
     parseFormattedSymbolIDContent(out, el, context);
     return out;
-}
-
-void parseFormattedSymbolIDContent(FormattedSymbolID &out, pugi::xml_node el)
-{
-    parseFormattedSymbolIDContent(out, el, ParseContext{});
 }
 
 void parseFormattedSymbolIDContent(FormattedSymbolID &out, pugi::xml_node el, const ParseContext &context)

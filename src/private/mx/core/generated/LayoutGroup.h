@@ -45,8 +45,6 @@ class LayoutGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-LayoutGroup parseLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor);
-
 LayoutGroup parseLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeLayoutGroup(const LayoutGroup &v, pugi::xml_node el);

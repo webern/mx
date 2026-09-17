@@ -201,11 +201,6 @@ void Tied::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Tied parseTied(pugi::xml_node el)
-{
-    return parseTied(el, ParseContext{});
-}
-
 Tied parseTied(pugi::xml_node el, const ParseContext &context)
 {
     Tied out;
@@ -305,11 +300,6 @@ Tied parseTied(pugi::xml_node el, const ParseContext &context)
     }
     parseTiedContent(out, el, context);
     return out;
-}
-
-void parseTiedContent(Tied &out, pugi::xml_node el)
-{
-    parseTiedContent(out, el, ParseContext{});
 }
 
 void parseTiedContent(Tied &out, pugi::xml_node el, const ParseContext &context)

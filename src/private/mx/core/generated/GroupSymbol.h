@@ -47,11 +47,7 @@ class GroupSymbol final
     GroupSymbolValue m_value{};
 };
 
-GroupSymbol parseGroupSymbol(pugi::xml_node el);
-
 GroupSymbol parseGroupSymbol(pugi::xml_node el, const ParseContext &context);
-
-void parseGroupSymbolContent(GroupSymbol &out, pugi::xml_node el);
 
 void parseGroupSymbolContent(GroupSymbol &out, pugi::xml_node el, const ParseContext &context);
 

@@ -31,11 +31,6 @@ void Cancel::setValue(Fifths value)
     m_value = std::move(value);
 }
 
-Cancel parseCancel(pugi::xml_node el)
-{
-    return parseCancel(el, ParseContext{});
-}
-
 Cancel parseCancel(pugi::xml_node el, const ParseContext &context)
 {
     Cancel out;
@@ -57,11 +52,6 @@ Cancel parseCancel(pugi::xml_node el, const ParseContext &context)
     }
     parseCancelContent(out, el, context);
     return out;
-}
-
-void parseCancelContent(Cancel &out, pugi::xml_node el)
-{
-    parseCancelContent(out, el, ParseContext{});
 }
 
 void parseCancelContent(Cancel &out, pugi::xml_node el, const ParseContext &context)

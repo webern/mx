@@ -113,11 +113,7 @@ class AccidentalText final
     AccidentalValue m_value{};
 };
 
-AccidentalText parseAccidentalText(pugi::xml_node el);
-
 AccidentalText parseAccidentalText(pugi::xml_node el, const ParseContext &context);
-
-void parseAccidentalTextContent(AccidentalText &out, pugi::xml_node el);
 
 void parseAccidentalTextContent(AccidentalText &out, pugi::xml_node el, const ParseContext &context);
 

@@ -101,11 +101,6 @@ void NonArpeggiate::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-NonArpeggiate parseNonArpeggiate(pugi::xml_node el)
-{
-    return parseNonArpeggiate(el, ParseContext{});
-}
-
 NonArpeggiate parseNonArpeggiate(pugi::xml_node el, const ParseContext &context)
 {
     NonArpeggiate out;
@@ -165,11 +160,6 @@ NonArpeggiate parseNonArpeggiate(pugi::xml_node el, const ParseContext &context)
     }
     parseNonArpeggiateContent(out, el, context);
     return out;
-}
-
-void parseNonArpeggiateContent(NonArpeggiate &out, pugi::xml_node el)
-{
-    parseNonArpeggiateContent(out, el, ParseContext{});
 }
 
 void parseNonArpeggiateContent(NonArpeggiate &out, pugi::xml_node el, const ParseContext &context)

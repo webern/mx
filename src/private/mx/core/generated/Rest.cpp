@@ -31,11 +31,6 @@ void Rest::setDisplayStepOctave(std::optional<DisplayStepOctaveGroup> value)
     m_displayStepOctave = std::move(value);
 }
 
-Rest parseRest(pugi::xml_node el)
-{
-    return parseRest(el, ParseContext{});
-}
-
 Rest parseRest(pugi::xml_node el, const ParseContext &context)
 {
     Rest out;
@@ -57,11 +52,6 @@ Rest parseRest(pugi::xml_node el, const ParseContext &context)
     }
     parseRestContent(out, el, context);
     return out;
-}
-
-void parseRestContent(Rest &out, pugi::xml_node el)
-{
-    parseRestContent(out, el, ParseContext{});
 }
 
 void parseRestContent(Rest &out, pugi::xml_node el, const ParseContext &context)

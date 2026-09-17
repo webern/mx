@@ -31,11 +31,6 @@ void LineWidth::setValue(Tenths value)
     m_value = std::move(value);
 }
 
-LineWidth parseLineWidth(pugi::xml_node el)
-{
-    return parseLineWidth(el, ParseContext{});
-}
-
 LineWidth parseLineWidth(pugi::xml_node el, const ParseContext &context)
 {
     LineWidth out;
@@ -63,11 +58,6 @@ LineWidth parseLineWidth(pugi::xml_node el, const ParseContext &context)
     }
     parseLineWidthContent(out, el, context);
     return out;
-}
-
-void parseLineWidthContent(LineWidth &out, pugi::xml_node el)
-{
-    parseLineWidthContent(out, el, ParseContext{});
 }
 
 void parseLineWidthContent(LineWidth &out, pugi::xml_node el, const ParseContext &context)

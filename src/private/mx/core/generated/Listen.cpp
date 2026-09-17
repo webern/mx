@@ -26,11 +26,6 @@ void Listen::setChoice(OneOrMore<ListenChoice> value)
     m_choice = std::move(value);
 }
 
-Listen parseListen(pugi::xml_node el)
-{
-    return parseListen(el, ParseContext{});
-}
-
 Listen parseListen(pugi::xml_node el, const ParseContext &context)
 {
     Listen out;
@@ -45,11 +40,6 @@ Listen parseListen(pugi::xml_node el, const ParseContext &context)
     }
     parseListenContent(out, el, context);
     return out;
-}
-
-void parseListenContent(Listen &out, pugi::xml_node el)
-{
-    parseListenContent(out, el, ParseContext{});
 }
 
 void parseListenContent(Listen &out, pugi::xml_node el, const ParseContext &context)

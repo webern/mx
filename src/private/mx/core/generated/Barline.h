@@ -98,11 +98,7 @@ class Barline final
     std::optional<Repeat> m_repeat;
 };
 
-Barline parseBarline(pugi::xml_node el);
-
 Barline parseBarline(pugi::xml_node el, const ParseContext &context);
-
-void parseBarlineContent(Barline &out, pugi::xml_node el);
 
 void parseBarlineContent(Barline &out, pugi::xml_node el, const ParseContext &context);
 

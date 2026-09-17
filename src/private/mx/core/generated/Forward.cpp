@@ -41,11 +41,6 @@ void Forward::setStaff(std::optional<int> value)
     m_staff = std::move(value);
 }
 
-Forward parseForward(pugi::xml_node el)
-{
-    return parseForward(el, ParseContext{});
-}
-
 Forward parseForward(pugi::xml_node el, const ParseContext &context)
 {
     Forward out;
@@ -60,11 +55,6 @@ Forward parseForward(pugi::xml_node el, const ParseContext &context)
     }
     parseForwardContent(out, el, context);
     return out;
-}
-
-void parseForwardContent(Forward &out, pugi::xml_node el)
-{
-    parseForwardContent(out, el, ParseContext{});
 }
 
 void parseForwardContent(Forward &out, pugi::xml_node el, const ParseContext &context)

@@ -121,11 +121,6 @@ void BreathMark::setValue(BreathMarkValue value)
     m_value = std::move(value);
 }
 
-BreathMark parseBreathMark(pugi::xml_node el)
-{
-    return parseBreathMark(el, ParseContext{});
-}
-
 BreathMark parseBreathMark(pugi::xml_node el, const ParseContext &context)
 {
     BreathMark out;
@@ -183,11 +178,6 @@ BreathMark parseBreathMark(pugi::xml_node el, const ParseContext &context)
     }
     parseBreathMarkContent(out, el, context);
     return out;
-}
-
-void parseBreathMarkContent(BreathMark &out, pugi::xml_node el)
-{
-    parseBreathMarkContent(out, el, ParseContext{});
 }
 
 void parseBreathMarkContent(BreathMark &out, pugi::xml_node el, const ParseContext &context)

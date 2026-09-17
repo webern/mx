@@ -41,11 +41,7 @@ class ScorePartwise final
     OneOrMore<PartwisePart> m_part;
 };
 
-ScorePartwise parseScorePartwise(pugi::xml_node el);
-
 ScorePartwise parseScorePartwise(pugi::xml_node el, const ParseContext &context);
-
-void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el);
 
 void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el, const ParseContext &context);
 
