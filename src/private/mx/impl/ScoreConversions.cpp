@@ -44,6 +44,20 @@ std::vector<const core::ScorePart *> headerPartList(const core::ScoreHeaderGroup
 
 core::ScoreTimewise partwiseTimewise(const core::ScorePartwise &inScore, const DiagnosticsContext &diagnostics)
 {
+    // Each score-part below takes the first part with its id.
+    std::set<std::string> partIds;
+    int partIndex = 0;
+    for (const auto &part : inScore.part())
+    {
+        if (!partIds.insert(part.id().value()).second)
+        {
+            diagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, partLocation(partIndex),
+                               "part id \"" + part.id().value() +
+                                   "\" is used by an earlier part; writing the earlier part in its place");
+        }
+        ++partIndex;
+    }
+
     core::ScoreTimewise outScore;
     outScore.setScoreHeader(inScore.scoreHeader());
     outScore.setVersion(inScore.version());

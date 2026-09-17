@@ -7,6 +7,7 @@
 #include "mx/api/PartData.h"
 
 #include <mutex>
+#include <string>
 
 namespace mx
 {
@@ -14,10 +15,12 @@ namespace core
 {
 class PartwisePart;
 class ScorePart;
+class Token;
 } // namespace core
 
 namespace impl
 {
+class DiagnosticsContext;
 class ScoreWriter;
 
 class PartWriter
@@ -34,6 +37,10 @@ class PartWriter
     const int myTicksPerQuarter;
     mutable std::mutex myMutex;
     const ScoreWriter &myScoreWriter;
+
+    const DiagnosticsContext &diagnostics() const;
+    // Builds an id token from text, reporting text that is not a valid id.
+    core::Token writtenToken(const char *name, const std::string &text) const;
 
   private:
     /// Writes all the measures from myPartData to outPart

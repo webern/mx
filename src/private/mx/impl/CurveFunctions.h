@@ -168,11 +168,12 @@ template <typename SLUR_OR_TIE_ELEMENT_TYPE> api::CurveStop parseCurveStop(const
 // never look at the SpannerNumber directly.
 template <typename ATTRIBUTES_TYPE>
 void writeAttributesFromCurveStart(const api::CurveStart inCurve, ATTRIBUTES_TYPE &outAttributes,
-                                   const std::optional<int> &inResolvedNumber)
+                                   const std::optional<int> &inResolvedNumber,
+                                   const DiagnosticsContext &diagnostics = {}, const api::Location &location = {})
 {
     using CurveTypeAttribute = std::decay_t<decltype(outAttributes.type())>;
     outAttributes.setType(CurveTypeAttribute::start());
-    impl::setId(inCurve.id, outAttributes);
+    impl::setId(inCurve.id, outAttributes, diagnostics, location);
     impl::setAttributesFromPositionData(inCurve.curvePoints.positionData, outAttributes);
     impl::setAttributesFromLineData(inCurve.lineData, outAttributes);
 
@@ -212,11 +213,12 @@ void writeAttributesFromCurveStart(const api::CurveStart inCurve, ATTRIBUTES_TYP
 
 template <typename ATTRIBUTES_TYPE>
 void writeAttributesFromCurveContinue(const api::CurveContinue inCurve, ATTRIBUTES_TYPE &outAttributes,
-                                      const std::optional<int> &inResolvedNumber)
+                                      const std::optional<int> &inResolvedNumber,
+                                      const DiagnosticsContext &diagnostics = {}, const api::Location &location = {})
 {
     using CurveTypeAttribute = std::decay_t<decltype(outAttributes.type())>;
     outAttributes.setType(CurveTypeAttribute::continue_());
-    impl::setId(inCurve.id, outAttributes);
+    impl::setId(inCurve.id, outAttributes, diagnostics, location);
     impl::setAttributesFromPositionData(inCurve.curvePoints.positionData, outAttributes);
 
     if (inResolvedNumber.has_value())
@@ -258,11 +260,12 @@ void writeAttributesFromCurveContinue(const api::CurveContinue inCurve, ATTRIBUT
 
 template <typename ATTRIBUTES_TYPE>
 void writeAttributesFromCurveStop(const api::CurveStop inCurve, ATTRIBUTES_TYPE &outAttributes,
-                                  const std::optional<int> &inResolvedNumber)
+                                  const std::optional<int> &inResolvedNumber,
+                                  const DiagnosticsContext &diagnostics = {}, const api::Location &location = {})
 {
     using CurveTypeAttribute = std::decay_t<decltype(outAttributes.type())>;
     outAttributes.setType(CurveTypeAttribute::stop());
-    impl::setId(inCurve.id, outAttributes);
+    impl::setId(inCurve.id, outAttributes, diagnostics, location);
     impl::setAttributesFromPositionData(inCurve.curvePoints.positionData, outAttributes);
 
     if (inResolvedNumber.has_value())
@@ -289,11 +292,13 @@ void writeAttributesFromCurveStop(const api::CurveStop inCurve, ATTRIBUTES_TYPE 
 
 // Emits a lone <tied type="let-ring"> from an api::TieLetRing, carrying its
 // shared visual attributes (position, orientation, color).
-inline void writeAttributesFromTieLetRing(const api::TieLetRing &inTie, core::Tied &outTied)
+inline void writeAttributesFromTieLetRing(const api::TieLetRing &inTie, core::Tied &outTied,
+                                          const DiagnosticsContext &diagnostics = {},
+                                          const api::Location &location = {})
 {
     outTied.setType(core::TiedType::letRing());
     impl::setAttributesFromPositionData(inTie.positionData, outTied);
-    impl::setId(inTie.id, outTied);
+    impl::setId(inTie.id, outTied, diagnostics, location);
 
     if (inTie.isColorSpecified)
     {

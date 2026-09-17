@@ -38,20 +38,29 @@ class DiagnosticsContext
     }
 
     void report(api::Severity severity, api::DiagnosticCode code, const MeasureCursor &cursor,
-                std::string message) const
-    {
-        api::Location location;
-        location.partIndex = cursor.partIndex;
-        location.measureIndex = cursor.measureIndex;
-        location.staffIndex = cursor.staffIndex;
-        location.voiceIndex = cursor.voiceIndex;
-        location.tickTimePosition = cursor.tickTimePosition;
-        report(severity, code, std::move(location), std::move(message));
-    }
+                std::string message) const;
 
   private:
     std::shared_ptr<std::reference_wrapper<api::Diagnostics>> myDiagnostics;
 };
+
+// The full score position of a cursor.
+inline api::Location cursorLocation(const MeasureCursor &cursor)
+{
+    api::Location location;
+    location.partIndex = cursor.partIndex;
+    location.measureIndex = cursor.measureIndex;
+    location.staffIndex = cursor.staffIndex;
+    location.voiceIndex = cursor.voiceIndex;
+    location.tickTimePosition = cursor.tickTimePosition;
+    return location;
+}
+
+inline void DiagnosticsContext::report(api::Severity severity, api::DiagnosticCode code, const MeasureCursor &cursor,
+                                       std::string message) const
+{
+    report(severity, code, cursorLocation(cursor), std::move(message));
+}
 
 // The part, measure and tick of a cursor, for a report that is not about one staff or voice.
 inline api::Location measureLocation(const MeasureCursor &cursor)
@@ -69,6 +78,14 @@ inline api::Location measureOnlyLocation(const MeasureCursor &cursor)
     api::Location location;
     location.partIndex = cursor.partIndex;
     location.measureIndex = cursor.measureIndex;
+    return location;
+}
+
+// The location of a report about a whole part.
+inline api::Location partLocation(int partIndex)
+{
+    api::Location location;
+    location.partIndex = partIndex;
     return location;
 }
 

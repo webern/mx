@@ -112,10 +112,11 @@ void parseGlissandoOrSlide(const GLISSANDO_OR_SLIDE_TYPE &inElement, api::NoteAt
 // writeAttributesFromCurveStart/Stop in CurveFunctions.h.
 template <typename GLISSANDO_OR_SLIDE_TYPE>
 void writeAttributesFromGlissandoStart(const api::GlissandoStart &inStart, GLISSANDO_OR_SLIDE_TYPE &outElement,
-                                       const std::optional<int> &inResolvedNumber)
+                                       const std::optional<int> &inResolvedNumber,
+                                       const DiagnosticsContext &diagnostics = {}, const api::Location &location = {})
 {
     outElement.setType(core::StartStop::start());
-    setId(inStart.id, outElement);
+    setId(inStart.id, outElement, diagnostics, location);
     setAttributesFromPositionData(inStart.positionData, outElement);
     setAttributesFromPrintData(inStart.printData, outElement);
     setAttributesFromLineData(inStart.lineData, outElement);
@@ -150,10 +151,11 @@ void writeAttributesFromGlissandoStart(const api::GlissandoStart &inStart, GLISS
 
 template <typename GLISSANDO_OR_SLIDE_TYPE>
 void writeAttributesFromGlissandoStop(const api::GlissandoStop &inStop, GLISSANDO_OR_SLIDE_TYPE &outElement,
-                                      const std::optional<int> &inResolvedNumber)
+                                      const std::optional<int> &inResolvedNumber,
+                                      const DiagnosticsContext &diagnostics = {}, const api::Location &location = {})
 {
     outElement.setType(core::StartStop::stop());
-    setId(inStop.id, outElement);
+    setId(inStop.id, outElement, diagnostics, location);
     setAttributesFromPositionData(inStop.positionData, outElement);
     setAttributesFromLineData(inStop.lineData, outElement);
 

@@ -172,7 +172,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     {
         direction.setDirective(myConverter.convert(myDirectionData.directive));
     }
-    setId(myDirectionData.id, direction);
+    setId(myDirectionData.id, direction, myDiagnostics, cursorLocation(myCursor));
 
     if (myDirectionData.isStaffValueSpecified || myCursor.staffIndex != 0)
     {
@@ -225,7 +225,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         if (myDirectionData.isSoundDataSpecified && myDirectionData.soundData.isSpecified())
         {
             core::Sound sound{};
-            writeSoundData(myDirectionData.soundData, sound);
+            writeSoundData(myDirectionData.soundData, sound, myDiagnostics, cursorLocation(myCursor));
             direction.setSound(std::move(sound));
         }
 
@@ -235,7 +235,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     {
         // The direction has no other content; emit a standalone <sound> element.
         core::Sound sound{};
-        writeSoundData(myDirectionData.soundData, sound);
+        writeSoundData(myDirectionData.soundData, sound, myDiagnostics, cursorLocation(myCursor));
 
         if (offset != 0)
         {
@@ -301,6 +301,12 @@ void DirectionWriter::emitMark(api::MarkData mark, core::Direction &direction)
         dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
         addDirectionType(std::move(dt), direction);
     }
+
+    if (!isMarkDynamic(mark.markType) && !isMarkPedal(mark.markType))
+    {
+        myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
+                             "a direction mark that is not a dynamic or pedal is not written");
+    }
 }
 
 core::PedalType corePedalType(api::PedalLineKind kind)
@@ -339,7 +345,7 @@ void DirectionWriter::emitPedal(const api::PedalLineData &item, core::Direction 
     pedal.setType(corePedalType(item.kind));
     pedal.setLine(core::YesNo::yes());
     setAttributesFromPositionData(item.positionData, pedal);
-    setId(item.id, pedal);
+    setId(item.id, pedal, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
     addDirectionType(std::move(dt), direction);
@@ -361,7 +367,7 @@ void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, const void 
         wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStop.spread)}});
     }
     setAttributesFromPositionData(wedgeStop.positionData, wedge);
-    setId(wedgeStop.id, wedge);
+    setId(wedgeStop.id, wedge, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
     addDirectionType(std::move(dt), direction);
@@ -375,6 +381,11 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, const vo
     if (wedgeStart.wedgeType != api::WedgeType::unspecified)
     {
         wedge.setType(myConverter.convert(wedgeStart.wedgeType));
+    }
+    else
+    {
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted,
+                             cursorLocation(myCursor), "wedge type is unspecified; using crescendo");
     }
 
     const auto number = mySpannerResolver.emittedNumber(wedgeStart.number, inIdentity);
@@ -394,7 +405,7 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, const vo
     {
         setAttributesFromColorData(wedgeStart.colorData, wedge);
     }
-    setId(wedgeStart.id, wedge);
+    setId(wedgeStart.id, wedge, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
     addDirectionType(std::move(dt), direction);
@@ -405,7 +416,8 @@ void DirectionWriter::emitOttavaStop(const api::OttavaStop &ottavaStop, const vo
 {
     core::OctaveShift os{};
     setAttributesFromSpannerStop(ottavaStop.spannerStop, os,
-                                 mySpannerResolver.emittedNumber(ottavaStop.spannerStop.number, inIdentity));
+                                 mySpannerResolver.emittedNumber(ottavaStop.spannerStop.number, inIdentity),
+                                 myDiagnostics, cursorLocation(myCursor));
     os.setType(core::UpDownStopContinue::stop());
 
     // The stop has no size of its own; it inherits the size of the start it closes, which the
@@ -429,7 +441,7 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
     impl::setAttributesFromPositionData(ottavaStart.spannerStart.positionData, os);
     impl::setAttributesFromPrintData(ottavaStart.spannerStart.printData, os);
     impl::setAttributesFromLineData(ottavaStart.spannerStart.lineData, os);
-    impl::setId(ottavaStart.spannerStart.id, os);
+    impl::setId(ottavaStart.spannerStart.id, os, myDiagnostics, cursorLocation(myCursor));
 
     const auto number = mySpannerResolver.emittedNumber(ottavaStart.spannerStart.number, inIdentity);
     if (number.has_value())
@@ -454,6 +466,8 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
         break;
 
     default:
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted,
+                             cursorLocation(myCursor), "octave-shift type is unspecified; using up");
         break;
     }
 
@@ -475,7 +489,8 @@ void DirectionWriter::emitBracketStart(const api::SpannerStart &item, const void
                                        core::Direction &direction)
 {
     core::Bracket bracket{};
-    setAttributesFromSpannerStart(item, bracket, mySpannerResolver.emittedNumber(item.number, inIdentity));
+    setAttributesFromSpannerStart(item, bracket, mySpannerResolver.emittedNumber(item.number, inIdentity),
+                                  myDiagnostics, cursorLocation(myCursor));
     bracket.setType(core::StartStopContinue::start());
     setAttributesFromPositionData(item.positionData, bracket);
     setAttributesFromPrintData(item.printData, bracket);
@@ -488,7 +503,8 @@ void DirectionWriter::emitBracketStart(const api::SpannerStart &item, const void
 void DirectionWriter::emitBracketStop(const api::SpannerStop &item, const void *inIdentity, core::Direction &direction)
 {
     core::Bracket bracket{};
-    setAttributesFromSpannerStop(item, bracket, mySpannerResolver.emittedNumber(item.number, inIdentity));
+    setAttributesFromSpannerStop(item, bracket, mySpannerResolver.emittedNumber(item.number, inIdentity), myDiagnostics,
+                                 cursorLocation(myCursor));
     bracket.setType(core::StartStopContinue::stop());
     applyBracketLineData(item.lineData, bracket, myConverter);
     core::DirectionType dt{};
@@ -499,7 +515,8 @@ void DirectionWriter::emitBracketStop(const api::SpannerStop &item, const void *
 void DirectionWriter::emitDashesStart(const api::SpannerStart &item, const void *inIdentity, core::Direction &direction)
 {
     core::Dashes dashes{};
-    setAttributesFromSpannerStart(item, dashes, mySpannerResolver.emittedNumber(item.number, inIdentity));
+    setAttributesFromSpannerStart(item, dashes, mySpannerResolver.emittedNumber(item.number, inIdentity), myDiagnostics,
+                                  cursorLocation(myCursor));
     dashes.setType(core::StartStopContinue::start());
     setAttributesFromPositionData(item.positionData, dashes);
     setAttributesFromPrintData(item.printData, dashes);
@@ -512,7 +529,8 @@ void DirectionWriter::emitDashesStart(const api::SpannerStart &item, const void 
 void DirectionWriter::emitDashesStop(const api::SpannerStop &item, const void *inIdentity, core::Direction &direction)
 {
     core::Dashes dashes{};
-    setAttributesFromSpannerStop(item, dashes, mySpannerResolver.emittedNumber(item.number, inIdentity));
+    setAttributesFromSpannerStop(item, dashes, mySpannerResolver.emittedNumber(item.number, inIdentity), myDiagnostics,
+                                 cursorLocation(myCursor));
     dashes.setType(core::StartStopContinue::stop());
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::dashes(dashes));
@@ -696,7 +714,7 @@ void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &di
     {
         setAttributesFromColorData(*tempo.color, metronome);
     }
-    setId(tempo.id, metronome);
+    setId(tempo.id, metronome, myDiagnostics, cursorLocation(myCursor));
     if (tempo.justify != api::HorizontalAlignment::unspecified)
     {
         metronome.setJustify(myConverter.convert(tempo.justify));
@@ -750,7 +768,7 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             {
                 outSymbol.setJustify(myConverter.convert(symbolData.justify));
             }
-            setId(symbolData.id, outSymbol);
+            setId(symbolData.id, outSymbol, myDiagnostics, cursorLocation(myCursor));
             choiceItem = core::DirectionTypeChoiceChoice::symbol(std::move(outSymbol));
         }
         else
@@ -772,7 +790,7 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             {
                 outWords.setJustify(myConverter.convert(wordsData.justify));
             }
-            setId(wordsData.id, outWords);
+            setId(wordsData.id, outWords, myDiagnostics, cursorLocation(myCursor));
             choiceItem = core::DirectionTypeChoiceChoice::words(std::move(outWords));
         }
 
@@ -805,7 +823,7 @@ void DirectionWriter::emitSegno(const api::SegnoData &item, core::Direction &dir
     {
         segno.setSmufl(core::SmuflSegnoGlyphName::parse(item.smufl));
     }
-    setId(item.id, segno);
+    setId(item.id, segno, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::segno(core::OneOrMore<core::Segno>{std::move(segno)}));
     addDirectionType(std::move(dt), direction);
@@ -824,7 +842,7 @@ void DirectionWriter::emitCoda(const api::CodaData &item, core::Direction &direc
     {
         coda.setSmufl(core::SmuflCodaGlyphName::parse(item.smufl));
     }
-    setId(item.id, coda);
+    setId(item.id, coda, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::coda(core::OneOrMore<core::Coda>{std::move(coda)}));
     addDirectionType(std::move(dt), direction);
@@ -848,7 +866,7 @@ void DirectionWriter::emitRehearsal(const api::RehearsalData &item, core::Direct
     {
         rehearsal.setJustify(myConverter.convert(item.justify));
     }
-    setId(item.id, rehearsal);
+    setId(item.id, rehearsal, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
     addDirectionType(std::move(dt), direction);
@@ -866,7 +884,7 @@ core::EmptyPrintStyleAlignID DirectionWriter::createEmptyPrintStyleAlign(const a
     {
         setAttributesFromColorData(*color, element);
     }
-    setId(id, element);
+    setId(id, element, myDiagnostics, cursorLocation(myCursor));
     return element;
 }
 
@@ -904,7 +922,7 @@ void DirectionWriter::emitStringMute(const api::StringMuteData &item, core::Dire
     {
         setAttributesFromColorData(*item.color, stringMute);
     }
-    setId(item.id, stringMute);
+    setId(item.id, stringMute, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::stringMute(std::move(stringMute)));
     addDirectionType(std::move(dt), direction);
@@ -931,7 +949,7 @@ void DirectionWriter::emitStaffDivide(const api::StaffDivideData &item, core::Di
     {
         setAttributesFromColorData(*item.color, staffDivide);
     }
-    setId(item.id, staffDivide);
+    setId(item.id, staffDivide, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::staffDivide(std::move(staffDivide)));
     addDirectionType(std::move(dt), direction);
@@ -964,7 +982,7 @@ void DirectionWriter::emitPrincipalVoice(const api::PrincipalVoiceData &item, co
     {
         setAttributesFromColorData(*item.color, principalVoice);
     }
-    setId(item.id, principalVoice);
+    setId(item.id, principalVoice, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::principalVoice(std::move(principalVoice)));
     addDirectionType(std::move(dt), direction);
@@ -988,7 +1006,7 @@ void DirectionWriter::emitOtherDirection(const api::OtherDirectionData &item, co
     {
         setAttributesFromColorData(*item.color, otherDirection);
     }
-    setId(item.id, otherDirection);
+    setId(item.id, otherDirection, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::otherDirection(std::move(otherDirection)));
     addDirectionType(std::move(dt), direction);
@@ -1027,7 +1045,7 @@ void DirectionWriter::emitImage(const api::ImageData &item, core::Direction &dir
     default:
         break;
     }
-    setId(item.id, image);
+    setId(item.id, image, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::image(std::move(image)));
     addDirectionType(std::move(dt), direction);
@@ -1048,7 +1066,7 @@ void DirectionWriter::emitAccordionRegistration(const api::AccordionRegistration
     {
         setAttributesFromColorData(*item.color, accordion);
     }
-    setId(item.id, accordion);
+    setId(item.id, accordion, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::accordionRegistration(std::move(accordion)));
     addDirectionType(std::move(dt), direction);
@@ -1067,6 +1085,11 @@ void DirectionWriter::emitHarpPedals(const api::HarpPedalsData &item, core::Dire
     for (const auto &tuning : item.pedalTunings)
     {
         core::PedalTuning pedalTuning{};
+        if (tuning.step == api::Step::unspecified)
+        {
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted,
+                                 cursorLocation(myCursor), "pedal-step is unspecified; using C");
+        }
         pedalTuning.setPedalStep(myConverter.convert(tuning.step));
         pedalTuning.setPedalAlter(
             core::Semitones{core::Decimal{Converter::convertToAlter(tuning.alter, tuning.cents)}});
@@ -1086,7 +1109,7 @@ void DirectionWriter::emitHarpPedals(const api::HarpPedalsData &item, core::Dire
     {
         setAttributesFromColorData(*item.color, harpPedals);
     }
-    setId(item.id, harpPedals);
+    setId(item.id, harpPedals, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::harpPedals(std::move(harpPedals)));
     addDirectionType(std::move(dt), direction);
@@ -1110,13 +1133,21 @@ void DirectionWriter::emitScordatura(const api::ScordaturaData &item, core::Dire
             accord.setString(core::StringNumber{*accordData.stringNumber});
         }
         core::TuningGroup tuning{};
+        if (accordData.tuningStep == api::Step::unspecified)
+        {
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted,
+                                 cursorLocation(myCursor), "accord tuning-step is unspecified; using C");
+        }
         tuning.setTuningStep(myConverter.convert(accordData.tuningStep));
         if (accordData.tuningAlter != 0 || accordData.tuningCents != 0.0)
         {
             tuning.setTuningAlter(core::Semitones{
                 core::Decimal{Converter::convertToAlter(accordData.tuningAlter, accordData.tuningCents)}});
         }
-        tuning.setTuningOctave(core::Octave{accordData.tuningOctave});
+        const core::Octave tuningOctave{accordData.tuningOctave};
+        reportAdjusted(myDiagnostics, cursorLocation(myCursor), "accord tuning-octave", accordData.tuningOctave,
+                       tuningOctave.value());
+        tuning.setTuningOctave(tuningOctave);
         accord.setTuning(std::move(tuning));
         if (!isFirstAccordAdded)
         {
@@ -1128,7 +1159,7 @@ void DirectionWriter::emitScordatura(const api::ScordaturaData &item, core::Dire
             scordatura.addAccord(std::move(accord));
         }
     }
-    setId(item.id, scordatura);
+    setId(item.id, scordatura, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::scordatura(std::move(scordatura)));
     addDirectionType(std::move(dt), direction);
@@ -1258,7 +1289,7 @@ void DirectionWriter::emitPercussion(const api::PercussionData &item, core::Dire
     {
         setAttributesFromColorData(*item.color, percussion);
     }
-    setId(item.id, percussion);
+    setId(item.id, percussion, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::percussion(core::OneOrMore<core::Percussion>{std::move(percussion)}));
     addDirectionType(std::move(dt), direction);
@@ -1501,6 +1532,11 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
         }
         case api::HarmonyChordSource::root:
         default: {
+            if (chordIter->root == api::Step::unspecified)
+            {
+                myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted,
+                                     cursorLocation(myCursor), "harmony root-step is unspecified; using C");
+            }
             auto step = chordIter->root == api::Step::unspecified ? api::Step::c : chordIter->root;
 
             core::Root root{};
@@ -1661,6 +1697,11 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
         }
 
         // Note: ProcessingInstruction is not available in the new core; miscData is skipped.
+        if (!chordIter->miscData.empty())
+        {
+            myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
+                                 "harmony misc data is not written");
+        }
 
         if (chordIter->hasFrameData)
         {
@@ -1792,7 +1833,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
             }
         }
 
-        setId(figuredBassData.id, figuredBass);
+        setId(figuredBassData.id, figuredBass, myDiagnostics, cursorLocation(myCursor));
 
         if (figuredBassData.parentheses != api::Bool::unspecified)
         {
@@ -1802,8 +1843,11 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
 
         if (figuredBassData.durationTimeTicks >= 0)
         {
-            figuredBass.setDuration(
-                core::PositiveDivisions{core::Decimal{static_cast<double>(figuredBassData.durationTimeTicks)}});
+            const core::PositiveDivisions duration{
+                core::Decimal{static_cast<double>(figuredBassData.durationTimeTicks)}};
+            reportAdjusted(myDiagnostics, cursorLocation(myCursor), "figured-bass duration",
+                           static_cast<double>(figuredBassData.durationTimeTicks), duration.value().value());
+            figuredBass.setDuration(duration);
         }
 
         output.push_back(core::MusicDataChoice::figuredBass(figuredBass));

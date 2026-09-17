@@ -53,9 +53,10 @@ MX_OPTIONAL_SET_INT_FUNC(number, setNumber, Number);
 // object; these helpers never look at the SpannerNumber directly.
 template <typename ATTRIBUTES_TYPE>
 void setAttributesFromSpannerStart(const api::SpannerStart &start, ATTRIBUTES_TYPE &outAttributes,
-                                   const std::optional<int> &inResolvedNumber)
+                                   const std::optional<int> &inResolvedNumber,
+                                   const DiagnosticsContext &diagnostics = {}, const api::Location &location = {})
 {
-    setId(start.id, outAttributes);
+    setId(start.id, outAttributes, diagnostics, location);
 
     if (inResolvedNumber.has_value())
     {
@@ -70,7 +71,8 @@ void setAttributesFromSpannerStart(const api::SpannerStart &start, ATTRIBUTES_TY
 
 template <typename ATTRIBUTES_TYPE>
 void setAttributesFromSpannerStop(const api::SpannerStop &stop, ATTRIBUTES_TYPE &outAttributes,
-                                  const std::optional<int> &inResolvedNumber)
+                                  const std::optional<int> &inResolvedNumber,
+                                  const DiagnosticsContext &diagnostics = {}, const api::Location &location = {})
 {
     if (inResolvedNumber.has_value())
     {
@@ -84,7 +86,7 @@ void setAttributesFromSpannerStop(const api::SpannerStop &stop, ATTRIBUTES_TYPE 
 
     setAttributesFromPositionData(stop.positionData, outAttributes);
     setAttributesFromLineData(stop.lineData, outAttributes);
-    setId(stop.id, outAttributes);
+    setId(stop.id, outAttributes, diagnostics, location);
 }
 } // namespace impl
 } // namespace mx

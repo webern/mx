@@ -164,6 +164,21 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
     using PartPair = std::pair<core::ScorePart, core::PartwisePart>;
     using PartPairs = std::vector<PartPair>;
 
+    // A part group is written as a start before its first part and a stop after its last part.
+    const auto isPartInScore = [this](int index) {
+        return index >= 0 && index < static_cast<int>(myScoreData.parts.size());
+    };
+    for (const auto &group : myScoreData.partGroups)
+    {
+        if (!isPartInScore(group.firstPartIndex) || !isPartInScore(group.lastPartIndex))
+        {
+            myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, api::Location{},
+                                 "part-group from part index " + std::to_string(group.firstPartIndex) +
+                                     " to part index " + std::to_string(group.lastPartIndex) +
+                                     " refers to a part the score does not have; it is not written whole");
+        }
+    }
+
     int partIndex = 0;
     PartPairs partPairs;
     for (const auto &partData : myScoreData.parts)

@@ -51,7 +51,7 @@ class PropertiesWriter
     void writeDivisions(int value);
     void writeKey(int staffIndex, const api::KeyData &inKeyData);
     static void writeTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey);
-    static void writeNonTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey);
+    void writeNonTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey) const;
     // staffIndex is INDEX_UNSPECIFIED for the unscoped <time>, else the zero-based staff index of a
     // <time number="N"> override.
     void writeTime(const api::TimeChoice &value, int staffIndex);

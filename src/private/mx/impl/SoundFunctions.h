@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/SoundData.h"
+#include "mx/impl/DiagnosticsContext.h"
 
 namespace mx
 {
@@ -19,6 +20,7 @@ namespace impl
 api::SoundData readSoundData(const core::Sound &inSound);
 
 // api -> core: write the api::SoundData scalar attributes onto a core::Sound element.
-void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound);
+void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound, const DiagnosticsContext &diagnostics,
+                    const api::Location &location);
 } // namespace impl
 } // namespace mx

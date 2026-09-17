@@ -49,6 +49,8 @@ class NoteWriter
     void addTie(bool isStart) const;
     void setNoteChoiceAndFullNoteGroup(bool isStartOfChord) const;
     void assembleNoteChoice() const;
+    // The note's octave, reporting a clamp and an unspecified step, which the caller writes as C.
+    core::Octave writtenOctave() const;
     void setFullNoteTypeChoice() const;
     void setStaffAndVoice() const;
     void setDurationNameAndDots() const;

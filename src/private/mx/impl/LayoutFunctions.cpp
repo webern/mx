@@ -37,9 +37,11 @@ namespace mx
 namespace impl
 {
 
-static core::Tenths toTenths(double value)
+static core::Tenths toTenths(double value, const DiagnosticsContext &diagnostics, const char *name)
 {
-    return core::Tenths{core::Decimal{value > 0.0 ? value : 0.0}};
+    const double written = value > 0.0 ? value : 0.0;
+    reportAdjusted(diagnostics, api::Location{}, name, value, written);
+    return core::Tenths{core::Decimal{written}};
 }
 
 static std::vector<core::PageMargins> createPageMargins(const api::PageMarginsData &inPageMargins)
@@ -170,6 +172,13 @@ void addScaling(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &out
         return;
     }
 
+    if (inDefaults.scalingMillimeters <= 0 || inDefaults.scalingTenths <= 0)
+    {
+        diagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted, api::Location{},
+                           inDefaults.scalingMillimeters <= 0 ? "scaling millimeters are unspecified; using 0"
+                                                              : "scaling tenths are unspecified; using 0");
+    }
+
     auto defaults = outScoreHeaderGroup.defaults().value_or(core::Defaults{});
     core::Scaling scaling{};
 
@@ -209,13 +218,15 @@ void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGrou
 
     if (inDefaults.systemLayout.systemDistance)
     {
-        systemLayout.setSystemDistance(toTenths(inDefaults.systemLayout.systemDistance.value()));
+        systemLayout.setSystemDistance(
+            toTenths(inDefaults.systemLayout.systemDistance.value(), diagnostics, "system-distance"));
         needsDefaults = true;
     }
 
     if (inDefaults.systemLayout.topSystemDistance)
     {
-        systemLayout.setTopSystemDistance(toTenths(inDefaults.systemLayout.topSystemDistance.value()));
+        systemLayout.setTopSystemDistance(
+            toTenths(inDefaults.systemLayout.topSystemDistance.value(), diagnostics, "top-system-distance"));
         needsDefaults = true;
     }
 
@@ -224,8 +235,8 @@ void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGrou
         const auto &margins = inDefaults.systemLayout.margins.value();
         core::SystemMargins sm;
         core::LeftRightMarginsGroup lrm;
-        lrm.setLeftMargin(toTenths(margins.left));
-        lrm.setRightMargin(toTenths(margins.right));
+        lrm.setLeftMargin(toTenths(margins.left, diagnostics, "left-margin"));
+        lrm.setRightMargin(toTenths(margins.right, diagnostics, "right-margin"));
         sm.setLeftRightMargins(lrm);
         systemLayout.setSystemMargins(sm);
         needsDefaults = true;
@@ -234,7 +245,8 @@ void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGrou
     if (inDefaults.systemLayout.staffDistance)
     {
         core::StaffLayout staffLayout;
-        staffLayout.setStaffDistance(toTenths(inDefaults.systemLayout.staffDistance.value()));
+        staffLayout.setStaffDistance(
+            toTenths(inDefaults.systemLayout.staffDistance.value(), diagnostics, "staff-distance"));
         layout.addStaffLayout(staffLayout);
         needsDefaults = true;
     }
@@ -242,8 +254,10 @@ void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGrou
     for (const auto &[staffIndex, staffDistance] : inDefaults.systemLayout.staffDistances)
     {
         core::StaffLayout staffLayout;
-        staffLayout.setNumber(core::StaffNumber{staffIndex + 1});
-        staffLayout.setStaffDistance(toTenths(staffDistance));
+        const core::StaffNumber staffNumber{staffIndex + 1};
+        reportAdjusted(diagnostics, api::Location{}, "staff-layout number", staffIndex + 1, staffNumber.value());
+        staffLayout.setNumber(staffNumber);
+        staffLayout.setStaffDistance(toTenths(staffDistance, diagnostics, "staff-distance"));
         layout.addStaffLayout(staffLayout);
         needsDefaults = true;
     }
@@ -273,21 +287,23 @@ void addAppearance(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &
         {
             core::LineWidth lw;
             lw.setType(core::LineWidthType{appearanceData.appearanceSubType});
-            lw.setValue(toTenths(appearanceData.value));
+            lw.setValue(toTenths(appearanceData.value, diagnostics, "line-width"));
             appearance.addLineWidth(lw);
         }
         else if (appearanceData.appearanceType == api::AppearanceType::NoteSize)
         {
             core::NoteSize ns;
             ns.setType(core::NoteSizeType::parse(appearanceData.appearanceSubType));
-            ns.setValue(core::NonNegativeDecimal{core::Decimal{appearanceData.value}});
+            const core::NonNegativeDecimal noteSize{core::Decimal{appearanceData.value}};
+            reportAdjusted(diagnostics, api::Location{}, "note-size", appearanceData.value, noteSize.value().value());
+            ns.setValue(noteSize);
             appearance.addNoteSize(ns);
         }
         else if (appearanceData.appearanceType == api::AppearanceType::Distance)
         {
             core::Distance di;
             di.setType(core::DistanceType{appearanceData.appearanceSubType});
-            di.setValue(toTenths(appearanceData.value));
+            di.setValue(toTenths(appearanceData.value, diagnostics, "distance"));
             appearance.addDistance(di);
         }
         else if (appearanceData.appearanceType == api::AppearanceType::OtherAppearance)
