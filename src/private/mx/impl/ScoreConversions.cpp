@@ -117,7 +117,7 @@ core::ScoreTimewise partwiseTimewise(const core::ScorePartwise &inScore)
     return outScore;
 }
 
-core::ScorePartwise timewisePartwise(const core::ScoreTimewise &inScore)
+core::ScorePartwise timewisePartwise(const core::ScoreTimewise &inScore, const DiagnosticsContext &diagnostics)
 {
     core::ScorePartwise outScore;
     outScore.setScoreHeader(inScore.scoreHeader());

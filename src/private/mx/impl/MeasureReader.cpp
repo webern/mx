@@ -382,7 +382,7 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
 
     myCurrentCursor.isBackupInProgress = false;
     impl::NoteReader noteReader{inMxNote};
-    impl::NoteFunctions noteFunc{inMxNote, myCurrentCursor};
+    impl::NoteFunctions noteFunc{inMxNote, myCurrentCursor, myDiagnostics};
     auto noteData = noteFunc.parseNote();
 
     int noteDataStaffIndex = noteReader.getStaffNumber() - 1;
@@ -605,7 +605,7 @@ void MeasureReader::parseForward(const core::Forward &inMxForward) const
 
 void MeasureReader::parseDirection(const core::Direction &inDirection) const
 {
-    DirectionReader reader{inDirection, myCurrentCursor};
+    DirectionReader reader{inDirection, myCurrentCursor, myDiagnostics};
     auto directionData = reader.getDirectionData();
 
     // make an adjustment if the directionData refers to a non-existent staff
@@ -787,7 +787,7 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
 
 void MeasureReader::parseHarmony(const core::Harmony &inHarmony) const
 {
-    DirectionReader reader{inHarmony, myCurrentCursor};
+    DirectionReader reader{inHarmony, myCurrentCursor, myDiagnostics};
     auto directionData = reader.getDirectionData();
 
     // make an adjustment if the directionData refers to a non-existent staff

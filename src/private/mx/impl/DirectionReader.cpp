@@ -98,13 +98,16 @@ namespace mx
 {
 namespace impl
 {
-DirectionReader::DirectionReader(const core::Direction &inDirection, Cursor inCursor)
-    : myDirection{&inDirection}, myHarmony{nullptr}, myCursor{inCursor}, myConverter{}, myOutDirectionData{}
+DirectionReader::DirectionReader(const core::Direction &inDirection, MeasureCursor inCursor,
+                                 DiagnosticsContext diagnostics)
+    : myDirection{&inDirection}, myHarmony{nullptr}, myCursor{inCursor}, myConverter{}, myDiagnostics{diagnostics},
+      myOutDirectionData{}
 {
 }
 
-DirectionReader::DirectionReader(const core::Harmony &inHarmony, Cursor inCursor)
-    : myDirection{nullptr}, myHarmony{&inHarmony}, myCursor{inCursor}, myConverter{}, myOutDirectionData{}
+DirectionReader::DirectionReader(const core::Harmony &inHarmony, MeasureCursor inCursor, DiagnosticsContext diagnostics)
+    : myDirection{nullptr}, myHarmony{&inHarmony}, myCursor{inCursor}, myConverter{}, myDiagnostics{diagnostics},
+      myOutDirectionData{}
 {
 }
 

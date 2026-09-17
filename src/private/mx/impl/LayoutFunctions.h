@@ -6,6 +6,7 @@
 
 #include "mx/api/DefaultsData.h"
 #include "mx/core/generated/ScoreHeaderGroup.h"
+#include "mx/impl/DiagnosticsContext.h"
 
 namespace mx
 {
@@ -22,12 +23,14 @@ void addDefaultsFonts(const api::DefaultsData &inDefaults, core::ScoreHeaderGrou
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // core::ScoreHeaderGroup -> api::DefaultsData
-api::DefaultsData createDefaults(const core::ScoreHeaderGroup &inScoreHeaderGroup);
+api::DefaultsData createDefaults(const core::ScoreHeaderGroup &inScoreHeaderGroup,
+                                 const DiagnosticsContext &diagnostics);
 void addScaling(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
 void addPageMargins(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
 void addSystemMargins(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
 void addStaffLayout(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
-void addAppearance(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
+void addAppearance(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults,
+                   const DiagnosticsContext &diagnostics);
 void addDefaultsFonts(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
 } // namespace impl
 } // namespace mx

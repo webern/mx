@@ -28,7 +28,7 @@ TEST(ottavaStart15ma, DirectionReader)
     core::DirectionType dirType{};
     dirType.setChoice(core::DirectionTypeChoice::octaveShift(oct));
     dir.setDirectionType(core::OneOrMore<core::DirectionType>{dirType});
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     cursor.tickTimePosition = tickTimePosition;
     DirectionReader reader{dir, cursor};
     auto directionData = reader.getDirectionData();
@@ -59,7 +59,7 @@ TEST(ottavaStart22maAnd22mb, DirectionReader)
     direction.setDirectionType(core::OneOrMore<core::DirectionType>{upType});
     direction.addDirectionType(downType);
 
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     DirectionReader reader{direction, cursor};
     const auto directionData = reader.getDirectionData();
 
@@ -101,7 +101,7 @@ TEST(ottavaStart8vaAnd8vb, DirectionReader)
     dir.addDirectionType(dirType2);
     dir.addDirectionType(dirType3);
 
-    Cursor cursor{1, 111};
+    MeasureCursor cursor{1, 111};
     cursor.tickTimePosition = tickTimePosition;
     DirectionReader reader{dir, cursor};
     auto directionData = reader.getDirectionData();
@@ -133,7 +133,7 @@ TEST(ottavaStop, DirectionReader)
     dirType.setChoice(core::DirectionTypeChoice::octaveShift(oct));
     core::Direction dir{};
     dir.setDirectionType(core::OneOrMore<core::DirectionType>{dirType});
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     cursor.tickTimePosition = tickTimePosition;
     DirectionReader reader{dir, cursor};
     auto directionData = reader.getDirectionData();
@@ -157,7 +157,7 @@ TEST(ottavaStopWithoutSize, DirectionReader)
     dirType.setChoice(core::DirectionTypeChoice::octaveShift(oct));
     core::Direction dir{};
     dir.setDirectionType(core::OneOrMore<core::DirectionType>{dirType});
-    Cursor cursor{1, 100};
+    MeasureCursor cursor{1, 100};
     DirectionReader reader{dir, cursor};
     const auto directionData = reader.getDirectionData();
     REQUIRE(directionData.directionTypes.size() == 1);

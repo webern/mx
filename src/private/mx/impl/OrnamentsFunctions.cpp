@@ -40,8 +40,9 @@ void ornamentsFunctionsParseMordentSpecificAttributes(const core::Mordent &m, ap
     }
 }
 
-OrnamentsFunctions::OrnamentsFunctions(const core::Ornaments &inOrnaments, impl::Cursor inCursor)
-    : myOrnaments{inOrnaments}, myCursor{inCursor}
+OrnamentsFunctions::OrnamentsFunctions(const core::Ornaments &inOrnaments, MeasureCursor inCursor,
+                                       DiagnosticsContext diagnostics)
+    : myOrnaments{inOrnaments}, myCursor{inCursor}, myDiagnostics{diagnostics}
 {
 }
 

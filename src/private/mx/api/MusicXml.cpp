@@ -405,8 +405,9 @@ Result<ScoreData> getScore(const MusicXml &document, Diagnostics &diagnostics)
         // that; the owned document is untouched.
         if (coreDocument.isScoreTimewise())
         {
-            const core::ScorePartwise scorePartwise = impl::timewisePartwise(coreDocument.asScoreTimewise());
-            impl::ScoreReader reader{scorePartwise, impl::DiagnosticsContext{diagnostics}};
+            const impl::DiagnosticsContext context{diagnostics};
+            const core::ScorePartwise scorePartwise = impl::timewisePartwise(coreDocument.asScoreTimewise(), context);
+            impl::ScoreReader reader{scorePartwise, context};
             auto score = reader.getScoreData();
             score.musicXmlType = "timewise";
             return score;

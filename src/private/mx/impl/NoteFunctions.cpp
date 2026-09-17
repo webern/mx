@@ -30,8 +30,8 @@ namespace mx
 {
 namespace impl
 {
-NoteFunctions::NoteFunctions(const core::Note &inMxNote, impl::Cursor inCursor)
-    : myNote{inMxNote}, myCursor{inCursor}, myOutNoteData{}
+NoteFunctions::NoteFunctions(const core::Note &inMxNote, MeasureCursor inCursor, DiagnosticsContext diagnostics)
+    : myNote{inMxNote}, myCursor{inCursor}, myDiagnostics{diagnostics}, myOutNoteData{}
 {
 }
 
@@ -260,7 +260,7 @@ void NoteFunctions::parseNotations() const
                 break;
             }
             case core::NotationsChoice::Kind::ornaments: {
-                OrnamentsFunctions funcs{notationsChoice.asOrnaments(), myCursor};
+                OrnamentsFunctions funcs{notationsChoice.asOrnaments(), myCursor, myDiagnostics};
                 funcs.parseOrnaments(myOutNoteData.noteAttachmentData);
                 break;
             }

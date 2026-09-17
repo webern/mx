@@ -6,6 +6,7 @@
 
 #include "mx/core/generated/ScorePartwise.h"
 #include "mx/core/generated/ScoreTimewise.h"
+#include "mx/impl/DiagnosticsContext.h"
 
 namespace mx
 {
@@ -21,7 +22,7 @@ namespace impl
 core::ScoreTimewise partwiseTimewise(const core::ScorePartwise &inScore);
 
 // Converts a 'score-timewise' to 'score-partwise'.
-core::ScorePartwise timewisePartwise(const core::ScoreTimewise &inScore);
+core::ScorePartwise timewisePartwise(const core::ScoreTimewise &inScore, const DiagnosticsContext &diagnostics);
 
 } // namespace impl
 } // namespace mx

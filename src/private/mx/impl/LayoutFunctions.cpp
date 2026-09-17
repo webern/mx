@@ -299,14 +299,15 @@ void addAppearance(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &
     outScoreHeaderGroup.setDefaults(defaults);
 }
 
-api::DefaultsData createDefaults(const core::ScoreHeaderGroup &inScoreHeaderGroup)
+api::DefaultsData createDefaults(const core::ScoreHeaderGroup &inScoreHeaderGroup,
+                                 const DiagnosticsContext &diagnostics)
 {
     api::DefaultsData defaults;
     addScaling(inScoreHeaderGroup, defaults);
     addPageMargins(inScoreHeaderGroup, defaults);
     addSystemMargins(inScoreHeaderGroup, defaults);
     addStaffLayout(inScoreHeaderGroup, defaults);
-    addAppearance(inScoreHeaderGroup, defaults);
+    addAppearance(inScoreHeaderGroup, defaults, diagnostics);
     addDefaultsFonts(inScoreHeaderGroup, defaults);
     return defaults;
 }
@@ -457,7 +458,8 @@ void addStaffLayout(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::Defau
     }
 }
 
-void addAppearance(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults)
+void addAppearance(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults,
+                   const DiagnosticsContext &diagnostics)
 {
     outDefaults.appearance.clear();
 

@@ -7,7 +7,8 @@
 #include "mx/api/NoteData.h"
 #include "mx/core/generated/Note.h"
 #include "mx/impl/Converter.h"
-#include "mx/impl/Cursor.h"
+#include "mx/impl/DiagnosticsContext.h"
+#include "mx/impl/MeasureCursor.h"
 
 #include <mutex>
 
@@ -20,13 +21,14 @@ class NoteReader;
 class NoteFunctions
 {
   public:
-    NoteFunctions(const core::Note &inMxNote, impl::Cursor cursor);
+    NoteFunctions(const core::Note &inMxNote, MeasureCursor cursor, DiagnosticsContext diagnostics = {});
     ~NoteFunctions() = default;
     api::NoteData parseNote() const;
 
   private:
     const core::Note &myNote;
-    const impl::Cursor myCursor;
+    const MeasureCursor myCursor;
+    DiagnosticsContext myDiagnostics;
     mutable api::NoteData myOutNoteData;
     mutable std::mutex myMutex;
 

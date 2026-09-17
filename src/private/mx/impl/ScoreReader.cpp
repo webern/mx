@@ -258,7 +258,7 @@ api::ScoreData ScoreReader::getScoreData() const
 
     if (myHeaderGroup.defaults().has_value())
     {
-        myOutScoreData.defaults = createDefaults(myHeaderGroup);
+        myOutScoreData.defaults = createDefaults(myHeaderGroup, myDiagnostics);
     }
 
     createCredits(myHeaderGroup, myOutScoreData);

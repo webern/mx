@@ -7,7 +7,8 @@
 #include "mx/api/MarkData.h"
 #include "mx/api/NoteAttachmentData.h"
 #include "mx/impl/Converter.h"
-#include "mx/impl/Cursor.h"
+#include "mx/impl/DiagnosticsContext.h"
+#include "mx/impl/MeasureCursor.h"
 
 namespace mx
 {
@@ -22,7 +23,7 @@ namespace impl
 class OrnamentsFunctions
 {
   public:
-    OrnamentsFunctions(const core::Ornaments &inOrnaments, impl::Cursor inCursor);
+    OrnamentsFunctions(const core::Ornaments &inOrnaments, MeasureCursor inCursor, DiagnosticsContext diagnostics = {});
     ~OrnamentsFunctions() = default;
     OrnamentsFunctions(const OrnamentsFunctions &) = default;
     OrnamentsFunctions(OrnamentsFunctions &&) = default;
@@ -30,7 +31,8 @@ class OrnamentsFunctions
 
   private:
     const core::Ornaments &myOrnaments;
-    const impl::Cursor myCursor;
+    const MeasureCursor myCursor;
+    DiagnosticsContext myDiagnostics;
 
   private:
     void parseOrnamentsSet(api::NoteAttachmentData &outAttachments) const;
