@@ -16,7 +16,8 @@ namespace mx
 {
 namespace impl
 {
-void createEncoding(const api::EncodingData &inEncoding, core::ScoreHeaderGroup &header)
+void createEncoding(const api::EncodingData &inEncoding, core::ScoreHeaderGroup &header,
+                    const DiagnosticsContext &diagnostics)
 {
     // The old code mutated co-allocated identification/encoding through
     // shared pointers; under value semantics we build local copies and

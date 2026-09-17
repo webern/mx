@@ -106,12 +106,13 @@ static core::PageLayout createPageLayout(const api::PageLayoutData &inPageLayout
     return outPageLayout;
 }
 
-void addDefaultsData(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup)
+void addDefaultsData(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup,
+                     const DiagnosticsContext &diagnostics)
 {
-    addScaling(inDefaults, outScoreHeaderGroup);
+    addScaling(inDefaults, outScoreHeaderGroup, diagnostics);
     addPageLayout(inDefaults.pageLayout, outScoreHeaderGroup);
-    addSystemMargins(inDefaults, outScoreHeaderGroup);
-    addAppearance(inDefaults, outScoreHeaderGroup);
+    addSystemMargins(inDefaults, outScoreHeaderGroup, diagnostics);
+    addAppearance(inDefaults, outScoreHeaderGroup, diagnostics);
     addDefaultsFonts(inDefaults, outScoreHeaderGroup);
 }
 
@@ -161,7 +162,8 @@ void addDefaultsFonts(const api::DefaultsData &inDefaults, core::ScoreHeaderGrou
     outScoreHeaderGroup.setDefaults(defaults);
 }
 
-void addScaling(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup)
+void addScaling(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup,
+                const DiagnosticsContext &diagnostics)
 {
     if (inDefaults.scalingMillimeters <= 0 && inDefaults.scalingTenths <= 0)
     {
@@ -197,7 +199,8 @@ void addPageLayout(const api::PageLayoutData &inPageLayout, core::ScoreHeaderGro
     outScoreHeaderGroup.setDefaults(defaults);
 }
 
-void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup)
+void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup,
+                      const DiagnosticsContext &diagnostics)
 {
     bool needsDefaults = false;
     auto defaults = outScoreHeaderGroup.defaults().value_or(core::Defaults{});
@@ -253,7 +256,8 @@ void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGrou
     }
 }
 
-void addAppearance(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup)
+void addAppearance(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup,
+                   const DiagnosticsContext &diagnostics)
 {
     if (inDefaults.appearance.empty())
     {

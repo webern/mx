@@ -5,11 +5,14 @@
 #pragma once
 
 #include "mx/api/Diagnostics.h"
+#include "mx/core/Lexical.h"
 #include "mx/impl/MeasureCursor.h"
 
+#include <cmath>
 #include <functional>
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <utility>
 
 namespace mx
@@ -58,6 +61,43 @@ inline api::Location measureLocation(const MeasureCursor &cursor)
     location.measureIndex = cursor.measureIndex;
     location.tickTimePosition = cursor.tickTimePosition;
     return location;
+}
+
+// The part and measure of a cursor, for a report about a whole measure.
+inline api::Location measureOnlyLocation(const MeasureCursor &cursor)
+{
+    api::Location location;
+    location.partIndex = cursor.partIndex;
+    location.measureIndex = cursor.measureIndex;
+    return location;
+}
+
+inline std::string formatReportedNumber(double value)
+{
+    return core::formatDouble(value);
+}
+
+inline std::string formatReportedNumber(long long value)
+{
+    return std::to_string(value);
+}
+
+// Reports when a core value mx built to write differs from the api value it was built from, because
+// the core type holds a narrower range. Pass the value read back from the built core value.
+template <typename T>
+bool reportAdjusted(const DiagnosticsContext &diagnostics, api::Location location, const std::string &name, T apiValue,
+                    T writtenValue)
+{
+    const bool isAdjusted =
+        std::is_floating_point_v<T> ? std::abs(apiValue - writtenValue) > 1e-9 : apiValue != writtenValue;
+    if (isAdjusted)
+    {
+        using Format = std::conditional_t<std::is_floating_point_v<T>, double, long long>;
+        diagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, std::move(location),
+                           name + " " + formatReportedNumber(static_cast<Format>(apiValue)) +
+                               " is out of range; using " + formatReportedNumber(static_cast<Format>(writtenValue)));
+    }
+    return isAdjusted;
 }
 } // namespace impl
 } // namespace mx

@@ -12,6 +12,7 @@
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/Key.h"
 #include "mx/core/generated/PartwiseMeasure.h"
+#include "mx/impl/DiagnosticsContext.h"
 
 namespace mx
 {
@@ -29,7 +30,9 @@ namespace impl
 class PropertiesWriter
 {
   public:
-    explicit PropertiesWriter(core::PartwiseMeasure &inPartwiseMeasure);
+    // location is the part and measure written, for reports.
+    explicit PropertiesWriter(core::PartwiseMeasure &inPartwiseMeasure, DiagnosticsContext diagnostics = {},
+                              api::Location location = {});
 
     // destroy and reallocate a new properties element
     // without inserting it into the measure
@@ -68,6 +71,8 @@ class PropertiesWriter
     core::Attributes myAttributes;
     bool myHasContent;
     core::PartwiseMeasure &myPartwiseMeasure;
+    DiagnosticsContext myDiagnostics;
+    api::Location myLocation;
 };
 
 } // namespace impl

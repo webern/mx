@@ -359,12 +359,14 @@ Result<MusicXml> fromScore(const ScoreData &score, Diagnostics &diagnostics)
 {
     try
     {
-        impl::ScoreWriter writer{score, impl::DiagnosticsContext{diagnostics}};
+        const impl::DiagnosticsContext context{diagnostics};
+        impl::ScoreWriter writer{score, context};
         core::ScorePartwise scorePartwise = writer.getScorePartwise();
 
         if (score.musicXmlType == "timewise")
         {
-            return MusicXml{core::Document{impl::partwiseTimewise(scorePartwise)}, score.encoding.writeMxVersion};
+            return MusicXml{core::Document{impl::partwiseTimewise(scorePartwise, context)},
+                            score.encoding.writeMxVersion};
         }
 
         return MusicXml{core::Document{std::move(scorePartwise)}, score.encoding.writeMxVersion};

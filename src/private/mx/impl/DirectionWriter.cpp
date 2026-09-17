@@ -145,10 +145,10 @@ static void applyBracketLineData(const api::LineData &lineData, core::Bracket &b
     }
 }
 
-DirectionWriter::DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor,
-                                 const SpannerResolver &inSpannerResolver)
+DirectionWriter::DirectionWriter(const api::DirectionData &inDirectionData, const MeasureCursor &inCursor,
+                                 const SpannerResolver &inSpannerResolver, DiagnosticsContext diagnostics)
     : myDirectionData{inDirectionData}, myCursor{inCursor}, mySpannerResolver{inSpannerResolver}, myConverter{},
-      myPlacements{}, myIsFirstDirectionTypeAdded{false}
+      myDiagnostics{std::move(diagnostics)}, myPlacements{}, myIsFirstDirectionTypeAdded{false}
 {
 }
 
@@ -268,7 +268,7 @@ void DirectionWriter::emitMark(api::MarkData mark, core::Direction &direction)
     // if !isDirection( mark ) continue;
     if (isMarkDynamic(mark.markType))
     {
-        DynamicsWriter dynamicsWriter{mark, myCursor};
+        DynamicsWriter dynamicsWriter{mark, myCursor, myDiagnostics};
         core::OneOrMore<core::Dynamics> dynamicsSet{dynamicsWriter.getDynamics()};
         core::DirectionType dt{};
         dt.setChoice(core::DirectionTypeChoice::dynamics(dynamicsSet));

@@ -47,8 +47,10 @@ namespace mx
 namespace impl
 {
 
-PropertiesWriter::PropertiesWriter(core::PartwiseMeasure &inPartwiseMeasure)
-    : myAttributes{}, myHasContent{false}, myPartwiseMeasure{inPartwiseMeasure}
+PropertiesWriter::PropertiesWriter(core::PartwiseMeasure &inPartwiseMeasure, DiagnosticsContext diagnostics,
+                                   api::Location location)
+    : myAttributes{}, myHasContent{false}, myPartwiseMeasure{inPartwiseMeasure}, myDiagnostics{std::move(diagnostics)},
+      myLocation{std::move(location)}
 {
 }
 

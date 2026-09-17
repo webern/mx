@@ -27,8 +27,9 @@ namespace api
 // becomes "X". Building the Id is the only place this happens: mx writes the id exactly as the Id
 // holds it.
 //
-// Scrubbing is silent. To find out whether your text was already a legal id, compare it with the
-// id you built:
+// Writing the score with fromScore reports each id that building scrubbed, in the Diagnostics you
+// pass it. To find out sooner whether your text was already a legal id, compare it with the id you
+// built:
 //
 //     const auto id = Id{myText};
 //     if (id.value() != myText)

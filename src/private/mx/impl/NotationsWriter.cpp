@@ -317,7 +317,7 @@ core::Notations NotationsWriter::getNotations() const
         }
         else if (isMarkDynamic(mark.markType))
         {
-            DynamicsWriter dynamicsWriter{mark, myCursor};
+            DynamicsWriter dynamicsWriter{mark, myCursor, myScoreWriter.getDiagnostics()};
             outNotations.addChoice(core::NotationsChoice::dynamics(dynamicsWriter.getDynamics()));
         }
         else if (isMarkFermata(mark.markType))

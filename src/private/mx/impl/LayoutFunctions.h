@@ -14,11 +14,15 @@ namespace impl
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // api::DefaultsData -> core::ScoreHeaderGroup
-void addDefaultsData(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup);
-void addScaling(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup);
+void addDefaultsData(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup,
+                     const DiagnosticsContext &diagnostics);
+void addScaling(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup,
+                const DiagnosticsContext &diagnostics);
 void addPageLayout(const api::PageLayoutData &inPageLayout, core::ScoreHeaderGroup &outScoreHeaderGroup);
-void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup);
-void addAppearance(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup);
+void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup,
+                      const DiagnosticsContext &diagnostics);
+void addAppearance(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup,
+                   const DiagnosticsContext &diagnostics);
 void addDefaultsFonts(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

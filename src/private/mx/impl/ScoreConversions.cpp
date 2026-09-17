@@ -42,7 +42,7 @@ std::vector<const core::ScorePart *> headerPartList(const core::ScoreHeaderGroup
 
 } // namespace
 
-core::ScoreTimewise partwiseTimewise(const core::ScorePartwise &inScore)
+core::ScoreTimewise partwiseTimewise(const core::ScorePartwise &inScore, const DiagnosticsContext &diagnostics)
 {
     core::ScoreTimewise outScore;
     outScore.setScoreHeader(inScore.scoreHeader());

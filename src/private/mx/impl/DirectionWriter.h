@@ -10,7 +10,8 @@
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/PercussionChoice.h"
 #include "mx/impl/Converter.h"
-#include "mx/impl/Cursor.h"
+#include "mx/impl/DiagnosticsContext.h"
+#include "mx/impl/MeasureCursor.h"
 #include "mx/impl/SpannerResolver.h"
 
 #include <set>
@@ -26,8 +27,8 @@ class DirectionWriter
     // inSpannerResolver supplies the resolved 'number' for start/stop pairs such as wedge,
     // octave-shift, bracket, and dashes and stop semantics such as the size attribute of an
     // octave-shift (see SpannerResolver); it outlives this writer.
-    DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor,
-                    const SpannerResolver &inSpannerResolver);
+    DirectionWriter(const api::DirectionData &inDirectionData, const MeasureCursor &inCursor,
+                    const SpannerResolver &inSpannerResolver, DiagnosticsContext diagnostics = {});
     std::vector<core::MusicDataChoice> getDirectionLikeThings();
 
   private:
@@ -76,9 +77,10 @@ class DirectionWriter
 
   private:
     const api::DirectionData &myDirectionData;
-    const Cursor myCursor;
+    const MeasureCursor myCursor;
     const SpannerResolver &mySpannerResolver;
     const Converter myConverter;
+    DiagnosticsContext myDiagnostics;
     bool myIsFirstDirectionTypeAdded;
     std::set<api::Placement> myPlacements;
 };

@@ -60,7 +60,8 @@ MeasureWriter::MeasureWriter(const api::MeasureData &inMeasureData, const Measur
 core::PartwiseMeasure MeasureWriter::getPartwiseMeasure()
 {
     myOutMeasure = core::PartwiseMeasure{};
-    myPropertiesWriter = std::unique_ptr<PropertiesWriter>{new PropertiesWriter{myOutMeasure}};
+    myPropertiesWriter = std::unique_ptr<PropertiesWriter>{
+        new PropertiesWriter{myOutMeasure, myScoreWriter.getDiagnostics(), measureOnlyLocation(myHistory.getCursor())}};
     auto cursor = myHistory.getCursor();
     cursor.reset();
     myHistory = History{cursor};
@@ -824,7 +825,8 @@ void MeasureWriter::writeDirection(const api::DirectionData &inDirectionData)
         myPropertiesWriter->flushBuffer();
     }
 
-    DirectionWriter directionWriter{inDirectionData, myHistory.getCursor(), myScoreWriter.getSpannerResolver()};
+    DirectionWriter directionWriter{inDirectionData, myHistory.getCursor(), myScoreWriter.getSpannerResolver(),
+                                    myScoreWriter.getDiagnostics()};
     auto mdcSet = directionWriter.getDirectionLikeThings();
     for (const auto &mdc : mdcSet)
     {
