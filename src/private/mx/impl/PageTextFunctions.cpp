@@ -69,8 +69,8 @@ core::Image makeCoreImage(const api::PageImageData &in, const DiagnosticsContext
     setImageValignFromVerticalAlignment(in.positionData.verticalAlignment, image);
     if (in.positionData.verticalAlignment == api::VerticalAlignment::baseline)
     {
-        diagnostics.report(api::Severity::warning, api::DiagnosticCode::droppedData, api::Location{},
-                           "credit-image valign baseline has no valign-image counterpart; omitted");
+        diagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, api::Location{},
+                           "a credit-image valign of baseline is not written; an image has no baseline alignment");
     }
     return image;
 }

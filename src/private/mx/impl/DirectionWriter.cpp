@@ -1030,8 +1030,8 @@ void DirectionWriter::emitImage(const api::ImageData &item, core::Direction &dir
     setImageValignFromVerticalAlignment(item.positionData.verticalAlignment, image);
     if (item.positionData.verticalAlignment == api::VerticalAlignment::baseline)
     {
-        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
-                             "image valign baseline has no valign-image counterpart; omitted");
+        myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
+                             "an image valign of baseline is not written; an image has no baseline alignment");
     }
     setId(item.id, image, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
