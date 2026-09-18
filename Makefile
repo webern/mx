@@ -53,6 +53,7 @@ endif
 DOCKER_RUN := $(DOCKER) run --rm \
 	-v $(CURDIR):/workspace \
 	-v $(DOCKER_VOLUME):/workspace/build \
+	-e JOBS=$(JOBS) \
 	$(DOCKER_USER) \
 	$(DOCKER_IMAGE)
 
