@@ -103,7 +103,6 @@
 #include "mx/core/generated/TimeModificationGroup.h"
 #include "mx/core/generated/Timpani.h"
 #include "mx/core/generated/TuningGroup.h"
-#include "mx/core/generated/ValignImage.h"
 #include "mx/core/generated/Wedge.h"
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
@@ -113,6 +112,7 @@
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/OttavaFunctions.h"
+#include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
@@ -1026,24 +1026,12 @@ void DirectionWriter::emitImage(const api::ImageData &item, core::Direction &dir
         image.setWidth(core::Tenths{core::Decimal{*item.width}});
     }
     setAttributesFromPositionData(item.positionData, image);
-    // <image>'s valign is the valign-image type (no baseline), which the generic position
-    // helper cannot write; set it on the element directly. A baseline value cannot be
-    // expressed on an image and is not written.
-    switch (item.positionData.verticalAlignment)
+    // <image>'s valign is the valign-image type, not valign; see PositionFunctions.h.
+    setImageValignFromVerticalAlignment(item.positionData.verticalAlignment, image);
+    if (item.positionData.verticalAlignment == api::VerticalAlignment::baseline)
     {
-    case api::VerticalAlignment::top:
-        image.setValign(core::ValignImage::top());
-        break;
-    case api::VerticalAlignment::middle:
-        image.setValign(core::ValignImage::middle());
-        break;
-    case api::VerticalAlignment::bottom:
-        image.setValign(core::ValignImage::bottom());
-        break;
-    case api::VerticalAlignment::baseline:
-    case api::VerticalAlignment::unspecified:
-    default:
-        break;
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
+                             "image valign baseline has no valign-image counterpart; omitted");
     }
     setId(item.id, image, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};

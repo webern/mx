@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/PageTextData.h"
+#include "mx/impl/DiagnosticsContext.h"
 
 namespace mx
 {
@@ -27,6 +28,7 @@ void createCredits(const core::ScoreHeaderGroup &inHeader, api::ScoreData &outSc
 
 // Writes the score's pageTextItems and pageImageItems back out as
 // `<credit>` elements on the header.
-void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &outHeader);
+void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &outHeader,
+                   const DiagnosticsContext &diagnostics);
 } // namespace impl
 } // namespace mx

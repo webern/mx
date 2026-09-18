@@ -46,6 +46,29 @@ static std::vector<DirectionData> roundTripDirectionData(const DirectionData &in
     return oscore.parts.back().measures.back().staves.back().directions;
 }
 
+// Serializes a DirectionData without reading it back, so the raw <image> valign attribute
+// can be checked. The image valign-image vocabulary has no baseline value, so the reader
+// converting a written attribute back would never see a baseline value it could get wrong
+// -- the bug is in what gets written, not what round-trips (#444).
+static std::string xmlForDirectionData(const DirectionData &inDirectionData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    staff.directions.push_back(inDirectionData);
+
+    auto r1 = fromScore(score);
+    if (!r1.ok())
+        return {};
+    std::stringstream ss;
+    std::move(r1).value().writeToStream(ss);
+    return ss.str();
+}
+
 TEST(Damp, DirectionMarksRoundTrip)
 {
     DirectionData direction;
@@ -175,6 +198,22 @@ TEST(Image, DirectionMarksRoundTrip)
     REQUIRE(out.width.has_value());
     CHECK_DOUBLES_EQUAL(80.0, *out.width, 0.0001);
     CHECK(out.positionData.verticalAlignment == VerticalAlignment::middle);
+}
+
+T_END;
+
+TEST(ImageValignBaselineUnwritable, DirectionMarksRoundTrip)
+{
+    // valign-image has no baseline value, so it must not be written -- and in particular
+    // not defaulted to "top" (#444).
+    DirectionData direction;
+    ImageData image;
+    image.source = "logo.png";
+    image.type = "image/png";
+    image.positionData.verticalAlignment = VerticalAlignment::baseline;
+    direction.directionTypes.emplace_back(DirectionChoice{image});
+    const auto xml = xmlForDirectionData(direction);
+    CHECK(xml.find("valign=") == std::string::npos);
 }
 
 T_END;

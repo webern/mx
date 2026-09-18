@@ -159,7 +159,7 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
 
     createEncoding(myScoreData.encoding, header, myDiagnostics);
     addDefaultsData(myScoreData.defaults, header, myDiagnostics);
-    createCredits(myScoreData, header);
+    createCredits(myScoreData, header, myDiagnostics);
 
     using PartPair = std::pair<core::ScorePart, core::PartwisePart>;
     using PartPairs = std::vector<PartPair>;

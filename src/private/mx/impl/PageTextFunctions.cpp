@@ -48,7 +48,7 @@ api::PageImageData getImageData(const core::Image &image, int pageNumber)
     return out;
 }
 
-core::Image makeCoreImage(const api::PageImageData &in)
+core::Image makeCoreImage(const api::PageImageData &in, const DiagnosticsContext &diagnostics)
 {
     core::Image image{};
     image.setSource(in.source);
@@ -65,11 +65,19 @@ core::Image makeCoreImage(const api::PageImageData &in)
     }
 
     setAttributesFromPositionData(in.positionData, image);
+    // <credit-image> writes valign-image, not valign; see PositionFunctions.h.
+    setImageValignFromVerticalAlignment(in.positionData.verticalAlignment, image);
+    if (in.positionData.verticalAlignment == api::VerticalAlignment::baseline)
+    {
+        diagnostics.report(api::Severity::warning, api::DiagnosticCode::droppedData, api::Location{},
+                           "credit-image valign baseline has no valign-image counterpart; omitted");
+    }
     return image;
 }
 } // namespace
 
-void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &outHeader)
+void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &outHeader,
+                   const DiagnosticsContext &diagnostics)
 {
     for (const auto &p : inScoreData.pageTextItems)
     {
@@ -128,7 +136,7 @@ void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &ou
     for (const auto &img : inScoreData.pageImageItems)
     {
         core::Credit credit;
-        credit.setChoice(core::CreditChoice::creditImage(makeCoreImage(img)));
+        credit.setChoice(core::CreditChoice::creditImage(makeCoreImage(img, diagnostics)));
 
         if (img.pageNumber > 0)
         {

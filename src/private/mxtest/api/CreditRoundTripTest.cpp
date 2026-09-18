@@ -112,6 +112,38 @@ TEST(creditRoundTrip, creditImage)
     CHECK_EQUAL(60.0, got.positionData.defaultY);
 }
 
+TEST(creditRoundTrip, imageValignMiddleWritesMiddle)
+{
+    // The reader always reports credit-image valign as unspecified (it has no
+    // vertical-alignment vocabulary for valign-image), so a round trip would not show a
+    // writer bug here; check the written XML instead (#444).
+    auto in = makeMinimalScore();
+    PageImageData img{};
+    img.source = "logo.png";
+    img.type = "image/png";
+    img.positionData.verticalAlignment = VerticalAlignment::middle;
+    in.pageImageItems.push_back(img);
+
+    const auto xml = mxtest::toXml(in);
+    CHECK(xml.find("valign=\"middle\"") != std::string::npos);
+    CHECK(xml.find("valign=\"top\"") == std::string::npos);
+}
+
+TEST(creditRoundTrip, imageValignBaselineOmitsAttribute)
+{
+    // valign-image has no baseline value, so it must not be written at all -- and in
+    // particular not defaulted to "top" (#444).
+    auto in = makeMinimalScore();
+    PageImageData img{};
+    img.source = "logo.png";
+    img.type = "image/png";
+    img.positionData.verticalAlignment = VerticalAlignment::baseline;
+    in.pageImageItems.push_back(img);
+
+    const auto xml = mxtest::toXml(in);
+    CHECK(xml.find("valign=") == std::string::npos);
+}
+
 TEST(creditRoundTrip, justifySurvives)
 {
     auto in = makeMinimalScore();
