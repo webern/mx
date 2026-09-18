@@ -349,4 +349,74 @@ TEST(tooManyConcurrentSpannersIsLocatedRefusal, Diagnostics)
 
 T_END
 
+inline std::string diagnosticsIdXml(const std::string &partList, const std::string &partId)
+{
+    return R"(<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="4.0">
+  <part-list>)" +
+           partList + R"(</part-list>
+  <part id=")" +
+           partId +
+           R"(">
+    <measure number="1"><attributes><divisions>1</divisions></attributes></measure>
+  </part>
+</score-partwise>
+)";
+}
+
+inline std::string diagnosticsScorePart(const std::string &id)
+{
+    return "<score-part id=\"" + id + "\"><part-name>Music</part-name></score-part>";
+}
+
+TEST(fromStreamReportsDuplicateId, Diagnostics)
+{
+    std::istringstream stream{diagnosticsIdXml(diagnosticsScorePart("P1") + diagnosticsScorePart("P1"), "P1")};
+    Diagnostics diagnostics;
+    const auto document = MusicXml::fromStream(stream, diagnostics);
+    REQUIRE(document.ok());
+    REQUIRE(diagnostics.all().size() == 1);
+
+    const auto &diagnostic = diagnostics.all().front();
+    CHECK(Severity::warning == diagnostic.severity);
+    CHECK(DiagnosticCode::duplicateId == diagnostic.code);
+    CHECK_EQUAL(std::string{"/score-partwise/part-list/score-part[2]"}, diagnostic.location.xmlPath);
+}
+
+T_END
+
+TEST(fromStreamReportsDanglingIdReference, Diagnostics)
+{
+    std::istringstream stream{diagnosticsIdXml(diagnosticsScorePart("P1"), "P9")};
+    Diagnostics diagnostics;
+    const auto document = MusicXml::fromStream(stream, diagnostics);
+    REQUIRE(document.ok());
+    REQUIRE(diagnostics.all().size() == 1);
+
+    const auto &diagnostic = diagnostics.all().front();
+    CHECK(Severity::warning == diagnostic.severity);
+    CHECK(DiagnosticCode::danglingIdReference == diagnostic.code);
+    CHECK_EQUAL(std::string{"/score-partwise/part"}, diagnostic.location.xmlPath);
+}
+
+T_END
+
+TEST(writeToStreamRenamesDuplicateId, Diagnostics)
+{
+    // Reading keeps the document as it was written; writing it out cannot,
+    // because a duplicate ID is not a MusicXML document.
+    std::istringstream stream{diagnosticsIdXml(diagnosticsScorePart("P1") + diagnosticsScorePart("P1"), "P1")};
+    const auto document = MusicXml::fromStream(stream);
+    REQUIRE(document.ok());
+
+    Diagnostics diagnostics;
+    std::ostringstream written;
+    REQUIRE(document.value().writeToStream(written, diagnostics).ok());
+    REQUIRE(diagnostics.all().size() == 1);
+    CHECK(DiagnosticCode::duplicateId == diagnostics.all().front().code);
+    CHECK(written.str().find("id=\"P1-2\"") != std::string::npos);
+}
+
+T_END
+
 #endif

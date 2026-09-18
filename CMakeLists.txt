@@ -68,6 +68,8 @@ set(MX_CORE_RUNTIME_SOURCES
     ${PRIVATE_DIR}/mx/core/Decimal.cpp
     ${PRIVATE_DIR}/mx/core/Decimal.h
     ${PRIVATE_DIR}/mx/core/Error.h
+    ${PRIVATE_DIR}/mx/core/IdIntegrity.cpp
+    ${PRIVATE_DIR}/mx/core/IdIntegrity.h
     ${PRIVATE_DIR}/mx/core/Lexical.cpp
     ${PRIVATE_DIR}/mx/core/Lexical.h
     ${PRIVATE_DIR}/mx/core/NameToken.cpp
