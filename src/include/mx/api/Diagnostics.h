@@ -30,7 +30,9 @@ enum class DiagnosticCode
     unmatchedSpanner,      // a spanner endpoint had no matching endpoint
     invalidValue,          // a value could not be read, so a default was used
     missingValueDefaulted, // a required value was missing, so a default was used
-    droppedData            // data could not be read or written, so it was left out
+    droppedData,           // data could not be read or written, so it was left out
+    duplicateId,           // two elements claimed one ID, which must be unique
+    danglingIdReference    // an ID reference did not name the ID it should have
 };
 
 // A non-fatal problem noticed while producing a score or MusicXML document.

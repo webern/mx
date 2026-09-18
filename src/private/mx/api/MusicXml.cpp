@@ -5,6 +5,7 @@
 #include "mx/api/MusicXml.h"
 #include "mx/core/Attribution.h"
 #include "mx/core/Error.h"
+#include "mx/core/IdIntegrity.h"
 #include "mx/core/ParseContext.h"
 #include "mx/core/generated/Document.h"
 #include "mx/impl/ScoreConversions.h"
@@ -86,19 +87,28 @@ DiagnosticCode mirrorToApiDiagnosticCode(core::DiagnosticCode code)
         return DiagnosticCode::valueAdjusted;
     case core::DiagnosticCode::missingValueDefaulted:
         return DiagnosticCode::missingValueDefaulted;
+    case core::DiagnosticCode::duplicateId:
+        return DiagnosticCode::duplicateId;
+    case core::DiagnosticCode::danglingIdReference:
+        return DiagnosticCode::danglingIdReference;
     }
     return DiagnosticCode::invalidValue;
 }
 
-// Every import repair leaves a usable document, so each one is a warning.
-core::ParseContext parseContextReportingTo(Diagnostics &diagnostics)
+// Every repair leaves a usable document, so each one is a warning.
+core::DiagnosticHandler handlerReportingTo(Diagnostics &diagnostics)
 {
-    return core::ParseContext{[&diagnostics](const core::Diagnostic &diagnostic) {
+    return [&diagnostics](const core::Diagnostic &diagnostic) {
         Location location;
         location.xmlPath = diagnostic.path;
         diagnostics.add(Diagnostic{Severity::warning, mirrorToApiDiagnosticCode(diagnostic.code), std::move(location),
                                    diagnostic.message});
-    }};
+    };
+}
+
+core::ParseContext parseContextReportingTo(Diagnostics &diagnostics)
+{
+    return core::ParseContext{handlerReportingTo(diagnostics)};
 }
 
 // Builds the error for a caught exception. Call it inside a catch block only:
@@ -209,6 +219,10 @@ Result<MusicXml> MusicXml::fromFile(const std::string &filePath, Diagnostics &di
             return mirrorToApiError(parsed.error());
         }
 
+        // After the parse, so that a repaired id is reported before any
+        // collision the repair caused.
+        core::checkIds(xdoc, handlerReportingTo(diagnostics));
+
         return MusicXml{core::Document{std::move(parsed).value()}, true};
     }
     catch (const std::bad_alloc &)
@@ -250,6 +264,10 @@ Result<MusicXml> MusicXml::fromStream(std::istream &stream, Diagnostics &diagnos
             return mirrorToApiError(parsed.error());
         }
 
+        // After the parse, so that a repaired id is reported before any
+        // collision the repair caused.
+        core::checkIds(xdoc, handlerReportingTo(diagnostics));
+
         return MusicXml{core::Document{std::move(parsed).value()}, true};
     }
     catch (const std::bad_alloc &)
@@ -268,6 +286,12 @@ Result<MusicXml> MusicXml::fromStream(std::istream &stream, Diagnostics &diagnos
 
 Result<void> MusicXml::writeToFile(const std::string &filePath) const
 {
+    Diagnostics diagnostics;
+    return writeToFile(filePath, diagnostics);
+}
+
+Result<void> MusicXml::writeToFile(const std::string &filePath, Diagnostics &diagnostics) const
+{
     try
     {
         pugi::xml_document xdoc;
@@ -280,6 +304,7 @@ Result<void> MusicXml::writeToFile(const std::string &filePath) const
         {
             core::serialize(toWrite, xdoc);
         }
+        core::repairIds(xdoc, handlerReportingTo(diagnostics));
         if (!xdoc.save_file(filePath.c_str(), "  "))
         {
             return ApiError{ResultCode::ioError, Location{}, "writeToFile: could not write '" + filePath + "'"};
@@ -302,6 +327,12 @@ Result<void> MusicXml::writeToFile(const std::string &filePath) const
 
 Result<void> MusicXml::writeToStream(std::ostream &stream) const
 {
+    Diagnostics diagnostics;
+    return writeToStream(stream, diagnostics);
+}
+
+Result<void> MusicXml::writeToStream(std::ostream &stream, Diagnostics &diagnostics) const
+{
     try
     {
         pugi::xml_document xdoc;
@@ -314,6 +345,7 @@ Result<void> MusicXml::writeToStream(std::ostream &stream) const
         {
             core::serialize(toWrite, xdoc);
         }
+        core::repairIds(xdoc, handlerReportingTo(diagnostics));
         xdoc.save(stream, "  ");
         return Result<void>{};
     }

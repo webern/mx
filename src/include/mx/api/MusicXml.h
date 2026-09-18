@@ -55,15 +55,27 @@ class MusicXml
     // are represented by an error result.
     Result<void> writeToFile(const std::string &filePath) const;
 
+    // Writes the document to a file and reports what had to be adjusted to
+    // keep the output valid, such as an id claimed by two elements.
+    Result<void> writeToFile(const std::string &filePath, Diagnostics &diagnostics) const;
+
     // Writes the document to a character stream.
     Result<void> writeToStream(std::ostream &stream) const;
 
-    // TODO: document ID validity loophole
-    //
+    // Writes the document to a character stream and reports what had to be
+    // adjusted to keep the output valid.
+    Result<void> writeToStream(std::ostream &stream, Diagnostics &diagnostics) const;
+
     // This is an escape hatch in case mx::api does not do what you need and
     // you want to edit the core DOM directly. You will need to include the
     // private mx::core headers in your header search paths to do so. Not
     // recommended, try opening an issue first!
+    //
+    // An id you set here follows the same rules as one that was parsed. The
+    // core model can keep an id a legal name, but it cannot keep it unique,
+    // so that is checked when the document is written. A duplicate is
+    // renamed and reported. A reference that does not name an id, or that
+    // names the wrong kind of element, is reported and left as it is.
     //
     // The reference is only good for as long as this MusicXml is alive and
     // you have not moved it away: do not keep it past a std::move of this

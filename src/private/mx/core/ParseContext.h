@@ -18,13 +18,16 @@
 namespace mx::core
 {
 
-/// The repairs the lenient parsers make on import. The parsed document is
-/// still valid; a diagnostic tells the caller what was changed.
+/// What a diagnostic is about: the repairs the lenient parsers make on
+/// import, and the document-wide ID rules no single value can enforce. The
+/// document is usable either way; a diagnostic says what was found.
 enum class DiagnosticCode
 {
     invalidValue,
     valueAdjusted,
     missingValueDefaulted,
+    duplicateId,
+    danglingIdReference,
 };
 
 struct Diagnostic
