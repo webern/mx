@@ -35,6 +35,7 @@
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/ScoreWriter.h"
 
+#include <algorithm>
 #include <atomic>
 #include <sstream>
 
@@ -350,7 +351,18 @@ void PartWriter::writeMeasures(core::PartwisePart &outPart) const
 
 void PartWriter::writeMeasures(const mx::api::PartData &inPartData, core::PartwisePart &outPart) const
 {
-    MeasureCursor cursor{static_cast<int>(inPartData.measures.at(0).staves.size()), myTicksPerQuarter};
+    // The cursor's staff count is a part-wide value, not a per-measure one: PartReader gives every
+    // measure of a part the same (maximum) staff count on read (PartReader.cpp calculateNumStaves),
+    // so the writer must decide "is this part multi-staff" the same way. Using only the first
+    // measure's count here left later measures that introduce more staves writing their extra
+    // staves' notes without <staff>, silently reading back on staff 1 (issue #442).
+    int partStaffCount = 0;
+    for (const auto &measure : inPartData.measures)
+    {
+        partStaffCount = std::max(partStaffCount, static_cast<int>(measure.staves.size()));
+    }
+
+    MeasureCursor cursor{partStaffCount, myTicksPerQuarter};
     cursor.measureIndex = 0;
     cursor.partIndex = myPartIndex;
     cursor.isFirstMeasureInPart = true;
