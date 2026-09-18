@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/PositionData.h"
+#include "mx/core/generated/ValignImage.h"
 #include "mx/impl/Converter.h"
 #include "mx/utility/OptionalMembers.h"
 
@@ -191,6 +192,38 @@ void setAttributesFromPositionData(const api::PositionData &positionData, ATTRIB
     {
         lookForAndSetHasPlacement(true, &outAttributes);
         lookForAndSetPlacement(converter.convert(positionData.placement), &outAttributes);
+    }
+}
+
+// <image> and <credit-image> write vertical alignment as valign-image (top, middle, bottom --
+// no baseline), not valign. setAttributesFromPositionData above cannot write it: its presence
+// setter engages the field with its natural zero (top) for any specified alignment, and its
+// value setter is compiled out because a core::Valign does not convert to the
+// std::optional<core::ValignImage> that valign-image elements expect, so the natural-zero top
+// is left in place no matter what was authored. Call this afterward on the same element to
+// write the correct value. Vertical alignments unspecified are omitted, and so is baseline:
+// valign-image has no baseline value, so a baseline alignment cannot be represented and is
+// omitted rather than mapped to something misleading. Callers that want to report the dropped
+// baseline case should check for it before calling this.
+template <typename ATTRIBUTES_TYPE>
+void setImageValignFromVerticalAlignment(api::VerticalAlignment verticalAlignment, ATTRIBUTES_TYPE &outAttributes)
+{
+    switch (verticalAlignment)
+    {
+    case api::VerticalAlignment::top:
+        outAttributes.setValign(core::ValignImage::top());
+        break;
+    case api::VerticalAlignment::middle:
+        outAttributes.setValign(core::ValignImage::middle());
+        break;
+    case api::VerticalAlignment::bottom:
+        outAttributes.setValign(core::ValignImage::bottom());
+        break;
+    case api::VerticalAlignment::baseline:
+    case api::VerticalAlignment::unspecified:
+    default:
+        outAttributes.setValign(std::nullopt);
+        break;
     }
 }
 } // namespace impl

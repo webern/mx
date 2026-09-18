@@ -148,6 +148,23 @@ TEST(pedalMarkOnANoteIsDropped, WriteDiagnostics)
 
 T_END
 
+TEST(creditImageValignBaselineIsDropped, WriteDiagnostics)
+{
+    auto score = writeDiagnosticsScore(1);
+    PageImageData img{};
+    img.source = "logo.png";
+    img.type = "image/png";
+    img.positionData.verticalAlignment = VerticalAlignment::baseline;
+    score.pageImageItems.push_back(img);
+
+    const auto diagnostics = writeDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 1);
+    writeDiagnosticsCheck(diagnostics.all().front(), DiagnosticCode::droppedData,
+                          "a credit-image valign of baseline is not written; an image has no baseline alignment");
+}
+
+T_END
+
 TEST(unmatchedSlurIsReportedAtItsNote, WriteDiagnostics)
 {
     auto score = writeDiagnosticsScore(2);
