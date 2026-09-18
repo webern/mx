@@ -178,6 +178,19 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
     auto iter = mdcSpan.begin();
     const auto endIter = mdcSpan.end();
 
+    // True when this element moves the musical position, which a chord cannot straddle.
+    const auto isTimelineJump = [this](const core::MusicDataChoice &choice) {
+        if (choice.isBackup())
+        {
+            return myCurrentCursor.convertDurationToGlobalTickScale(choice.asBackup().duration()) != 0;
+        }
+        if (choice.isForward())
+        {
+            return myCurrentCursor.convertDurationToGlobalTickScale(choice.asForward().duration()) != 0;
+        }
+        return false;
+    };
+
     for (; iter != endIter; ++iter)
     {
         const auto &mdc = *iter;
@@ -189,9 +202,12 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
         // current tick position in myCurrentCursor
         auto peekAheadAtNextNoteIter = iter + 1;
 
-        // stop at <backup>/<forward>: a note past a timeline jump can't chord with this one
+        // stop at <backup>/<forward>: a note past a timeline jump can't chord with this one.
+        // A duration that rounds to zero ticks moves nothing, so it does not separate the two.
+        // MusicXML requires a positive duration here, but core repairs a non-positive one to a
+        // value so small that it scales to zero ticks, and that note is still at this position.
         while (mdc.isNote() && peekAheadAtNextNoteIter != endIter && !peekAheadAtNextNoteIter->isNote() &&
-               !peekAheadAtNextNoteIter->isBackup() && !peekAheadAtNextNoteIter->isForward())
+               !isTimelineJump(*peekAheadAtNextNoteIter))
         {
             ++peekAheadAtNextNoteIter;
         }
