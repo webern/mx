@@ -8,7 +8,10 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/TupletData.h"
 #include "mx/core/generated/Note.h"
+#include "mx/core/generated/NoteType.h"
+#include "mx/core/generated/NoteTypeValue.h"
 #include "mx/core/generated/TimeModification.h"
+#include "mx/core/generated/TimeModificationGroup.h"
 #include "mx/core/generated/Tuplet.h"
 #include "mx/core/generated/TupletNumber.h"
 #include "mx/core/generated/TupletPortion.h"
@@ -117,6 +120,45 @@ TEST(guessesBothFromTimeModificationWhenBothAbsent, TupletReader)
     REQUIRE(starts.size() == 1);
     CHECK_EQUAL(3, starts.front().actualNumber);
     CHECK_EQUAL(2, starts.front().normalNumber);
+}
+
+T_END
+
+// issue #440 (third bullet): time-modification's normal-type/normal-dot describe only the
+// normal side; there is no actual-type. So when normal-type differs from the note's own
+// written type (3 eighths in the time of 2 quarters), the guessed actual duration must come
+// from the note's own <type>/<dot>, not from normal-type.
+TEST(guessesActualDurationFromNoteTypeNotFromNormalType, TupletReader)
+{
+    core::Tuplet tuplet;
+    tuplet.setType(core::StartStop::start());
+    // both tuplet-actual and tuplet-normal are absent; both sides must be guessed.
+
+    core::TimeModificationGroup group;
+    group.setNormalType(core::NoteTypeValue::quarter());
+
+    core::TimeModification timeMod;
+    timeMod.setActualNotes(3);
+    timeMod.setNormalNotes(2);
+    timeMod.setGroup(group);
+
+    core::NoteType noteType;
+    noteType.setValue(core::NoteTypeValue::eighth());
+
+    core::Note note;
+    note.setType(noteType);
+    note.setTimeModification(timeMod);
+
+    Cursor cursor{1, 480};
+    TupletReader reader{tuplet, cursor, note};
+
+    std::vector<api::TupletStart> starts;
+    std::vector<api::TupletStop> stops;
+    reader.parseTuplet(starts, stops);
+
+    REQUIRE(starts.size() == 1);
+    CHECK(api::DurationName::eighth == starts.front().actualDurationName);
+    CHECK(api::DurationName::quarter == starts.front().normalDurationName);
 }
 
 T_END

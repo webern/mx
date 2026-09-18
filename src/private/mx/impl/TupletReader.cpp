@@ -147,17 +147,14 @@ void TupletReader::guessActualFromNote(api::TupletStart &outTupletStart)
     const auto &timeMod = *myNote.timeModification();
     outTupletStart.actualNumber = timeMod.actualNotes();
 
+    // Unlike the normal side, time-modification has no actual-type/actual-dot: the actual
+    // notes are always of the note's own written type, so guess from the note itself.
     Converter converter;
-    if (timeMod.group().has_value())
-    {
-        const auto &grp = *timeMod.group();
-        outTupletStart.actualDurationName = converter.convert(grp.normalType());
-        outTupletStart.actualDots = static_cast<int>(grp.normalDot().size());
-    }
-    else if (myNote.type().has_value())
+    if (myNote.type().has_value())
     {
         outTupletStart.actualDurationName = converter.convert(myNote.type()->value());
     }
+    outTupletStart.actualDots = static_cast<int>(myNote.dot().size());
 }
 
 } // namespace impl
