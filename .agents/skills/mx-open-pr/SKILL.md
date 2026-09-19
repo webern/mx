@@ -28,8 +28,8 @@ Look at the labels on GitHub, choose the ones that match the pr best.
 Write a PR body. Keep it tight and human-readable, but with enough information to understand what
 was done and why.
 
-Determine from the original prompt whether the user wanted you to YOLO and open or whether the user
-wanted to see a draft first.
+Open it as a draft unless this prompt asked for it ready. Draft-first is the `pr-tracking` default;
+do not stop to ask which.
 
 When ready, create the pr and note the pr number. Make sure the PR body contains references to
 issues closed and issues/PRs related (if any).
