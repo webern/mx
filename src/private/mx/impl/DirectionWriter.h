@@ -24,7 +24,7 @@ namespace impl
 class DirectionWriter
 {
   public:
-    // inSpannerResolver supplies the resolved 'number' for start/stop pairs such as wedge,
+    // inSpannerResolver supplies the resolved 'number' for start/stop pairs such as wedge, pedal,
     // octave-shift, bracket, and dashes and stop semantics such as the size attribute of an
     // octave-shift (see SpannerResolver); it outlives this writer.
     DirectionWriter(const api::DirectionData &inDirectionData, const MeasureCursor &inCursor,
@@ -42,7 +42,7 @@ class DirectionWriter
     // spanner: the same address the SpannerResolver saw when it walked the score, so the resolved
     // 'number' -- and, for an ottava stop, the size -- can be looked up for the emitted element.
     void emitMark(api::MarkData mark, core::Direction &direction);
-    void emitPedal(const api::PedalLineData &pedal, core::Direction &direction);
+    void emitPedal(const api::PedalLineData &pedal, const void *inIdentity, core::Direction &direction);
     void emitWedgeStop(const api::WedgeStop &wedgeStop, const void *inIdentity, core::Direction &direction);
     void emitWedgeStart(const api::WedgeStart &wedgeStart, const void *inIdentity, core::Direction &direction);
     void emitOttavaStop(const api::OttavaStop &ottavaStop, const void *inIdentity, core::Direction &direction);

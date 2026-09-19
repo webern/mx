@@ -713,6 +713,10 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
         pedalData.tickTimePosition = myOutDirectionData.tickTimePosition;
         pedalData.positionData = getPositionData(pedal);
         pedalData.positionData.placement = placement;
+        if (pedal.number().has_value())
+        {
+            pedalData.number = api::SpannerNumber(pedal.number()->value());
+        }
         pedalData.id = getId(pedal);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(pedalData)});
         return;

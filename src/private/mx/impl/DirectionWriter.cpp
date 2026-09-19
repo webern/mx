@@ -333,7 +333,7 @@ core::PedalType corePedalType(api::PedalLineKind kind)
     return core::PedalType::start();
 }
 
-void DirectionWriter::emitPedal(const api::PedalLineData &item, core::Direction &direction)
+void DirectionWriter::emitPedal(const api::PedalLineData &item, const void *inIdentity, core::Direction &direction)
 {
     // An unspecified kind describes no pedal event; emit nothing rather than a guessed default.
     if (item.kind == api::PedalLineKind::unspecified)
@@ -344,6 +344,13 @@ void DirectionWriter::emitPedal(const api::PedalLineData &item, core::Direction 
     core::Pedal pedal{};
     pedal.setType(corePedalType(item.kind));
     pedal.setLine(core::YesNo::yes());
+
+    const auto number = mySpannerResolver.emittedNumber(item.number, inIdentity);
+    if (number.has_value())
+    {
+        pedal.setNumber(core::NumberLevel{*number});
+    }
+
     setAttributesFromPositionData(item.positionData, pedal);
     setId(item.id, pedal, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
@@ -1330,7 +1337,7 @@ void DirectionWriter::emitDirectionTypes(core::Direction &direction)
             break;
 
         case api::DirectionChoice::Kind::pedal:
-            emitPedal(choice.pedal(), direction);
+            emitPedal(choice.pedal(), &choice, direction);
             break;
 
         case api::DirectionChoice::Kind::wordsRun:
