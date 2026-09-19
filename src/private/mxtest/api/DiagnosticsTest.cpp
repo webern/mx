@@ -419,4 +419,24 @@ TEST(writeToStreamRenamesDuplicateId, Diagnostics)
 
 T_END
 
+TEST(authoredMidiPartWritesNoIdDiagnostics, Diagnostics)
+{
+    // A part that brings playback data but no instrument id gets one from the library, and every
+    // element that refers to the instrument carries it, so the written document has nothing to
+    // repair.
+    auto score = diagnosticsScore(1);
+    score.parts.front().instrumentData.midiData.name = "Flute";
+    score.parts.front().instrumentData.midiData.channel = 1;
+
+    const auto document = fromScore(score);
+    REQUIRE(document.ok());
+
+    Diagnostics diagnostics;
+    std::ostringstream written;
+    REQUIRE(document.value().writeToStream(written, diagnostics).ok());
+    CHECK(diagnostics.all().empty());
+}
+
+T_END
+
 #endif
