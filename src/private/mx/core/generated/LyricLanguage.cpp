@@ -31,12 +31,12 @@ void LyricLanguage::setName(std::optional<std::string> value)
     m_name = std::move(value);
 }
 
-const std::string &LyricLanguage::xmlLang() const noexcept
+const Language &LyricLanguage::xmlLang() const noexcept
 {
     return m_xmlLang;
 }
 
-void LyricLanguage::setXMLLang(std::string value)
+void LyricLanguage::setXMLLang(Language value)
 {
     m_xmlLang = std::move(value);
 }
@@ -63,7 +63,7 @@ LyricLanguage parseLyricLanguage(pugi::xml_node el, const ParseContext &context)
         else if (aname == "xml:lang")
         {
             seen_xmlLang = true;
-            out.setXMLLang(std::string{a.value()});
+            out.setXMLLang(parseValue<Language>(a.value(), context, el, "xml:lang"));
         }
         else
         {
@@ -73,7 +73,7 @@ LyricLanguage parseLyricLanguage(pugi::xml_node el, const ParseContext &context)
     if (!seen_xmlLang)
     {
         // Configured import repair (plan §2.4): inject the default.
-        out.setXMLLang(std::string("und"));
+        out.setXMLLang(Language::parse("und"));
         reportAttributeDefaulted(context, el, "xml:lang", "und");
     }
     parseLyricLanguageContent(out, el, context);
@@ -101,7 +101,7 @@ void serializeLyricLanguage(const LyricLanguage &v, pugi::xml_node parent, const
     {
         setAttribute(el, "name", *v.name());
     }
-    setAttribute(el, "xml:lang", v.xmlLang());
+    setAttribute(el, "xml:lang", v.xmlLang().toString());
     serializeLyricLanguageContent(v, el);
 }
 

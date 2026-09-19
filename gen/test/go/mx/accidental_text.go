@@ -12,7 +12,7 @@ import (
 type AccidentalText struct {
 	SMUFL         *SMUFLAccidentalGlyphName // attribute "smufl"
 	XMLLang       *string                   // attribute "xml:lang"
-	XMLSpace      *string                   // attribute "xml:space"
+	XMLSpace      *XMLSpace                 // attribute "xml:space"
 	Justify       *LeftCenterRight          // attribute "justify"
 	DefaultX      *Tenths                   // attribute "default-x"
 	DefaultY      *Tenths                   // attribute "default-y"
@@ -50,7 +50,7 @@ func parseAccidentalText(el *etree.Element) (*AccidentalText, error) {
 			v := a.Value
 			m.XMLLang = &v
 		case "xml:space":
-			v := a.Value
+			v := ParseXMLSpace(a.Value)
 			m.XMLSpace = &v
 		case "justify":
 			v := ParseLeftCenterRight(a.Value)
@@ -133,7 +133,7 @@ func serializeAccidentalText(m *AccidentalText, parent *etree.Element, tag strin
 		el.CreateAttr("xml:lang", (*m.XMLLang))
 	}
 	if m.XMLSpace != nil {
-		el.CreateAttr("xml:space", (*m.XMLSpace))
+		el.CreateAttr("xml:space", (*m.XMLSpace).String())
 	}
 	if m.Justify != nil {
 		el.CreateAttr("justify", (*m.Justify).String())

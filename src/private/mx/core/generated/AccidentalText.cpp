@@ -21,22 +21,22 @@ void AccidentalText::setSmufl(std::optional<SmuflAccidentalGlyphName> value)
     m_smufl = std::move(value);
 }
 
-const std::optional<std::string> &AccidentalText::xmlLang() const noexcept
+const std::optional<Language> &AccidentalText::xmlLang() const noexcept
 {
     return m_xmlLang;
 }
 
-void AccidentalText::setXMLLang(std::optional<std::string> value)
+void AccidentalText::setXMLLang(std::optional<Language> value)
 {
     m_xmlLang = std::move(value);
 }
 
-const std::optional<std::string> &AccidentalText::xmlSpace() const noexcept
+const std::optional<XMLSpace> &AccidentalText::xmlSpace() const noexcept
 {
     return m_xmlSpace;
 }
 
-void AccidentalText::setXMLSpace(std::optional<std::string> value)
+void AccidentalText::setXMLSpace(std::optional<XMLSpace> value)
 {
     m_xmlSpace = std::move(value);
 }
@@ -267,11 +267,11 @@ AccidentalText parseAccidentalText(pugi::xml_node el, const ParseContext &contex
         }
         else if (aname == "xml:lang")
         {
-            out.setXMLLang(std::string{a.value()});
+            out.setXMLLang(parseValue<Language>(a.value(), context, el, "xml:lang"));
         }
         else if (aname == "xml:space")
         {
-            out.setXMLSpace(std::string{a.value()});
+            out.setXMLSpace(parseValue<XMLSpace>(a.value(), context, el, "xml:space"));
         }
         else if (aname == "justify")
         {
@@ -380,11 +380,11 @@ void serializeAccidentalText(const AccidentalText &v, pugi::xml_node parent, con
     }
     if (v.xmlLang())
     {
-        setAttribute(el, "xml:lang", *v.xmlLang());
+        setAttribute(el, "xml:lang", v.xmlLang()->toString());
     }
     if (v.xmlSpace())
     {
-        setAttribute(el, "xml:space", *v.xmlSpace());
+        setAttribute(el, "xml:space", v.xmlSpace()->toString());
     }
     if (v.justify())
     {

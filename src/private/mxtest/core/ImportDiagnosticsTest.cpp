@@ -104,7 +104,7 @@ TEST(MissingLyricLanguageIsDefaultedAndReported, ImportDiagnostics)
     const auto &defaults = parsed.document.asScorePartwise().scoreHeader().defaults();
     REQUIRE(defaults.has_value());
     REQUIRE(defaults->lyricLanguage().size() == 1);
-    CHECK_EQUAL(std::string{"und"}, defaults->lyricLanguage().front().xmlLang());
+    CHECK_EQUAL(std::string{"und"}, defaults->lyricLanguage().front().xmlLang().value());
 
     REQUIRE(parsed.diagnostics.size() == 1);
     const Diagnostic &diagnostic = parsed.diagnostics.front();

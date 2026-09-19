@@ -9,10 +9,12 @@
 #include "cpul/cpulTestHarness.h"
 
 #include "mx/core/Decimal.h"
+#include "mx/core/Language.h"
 #include "mx/core/Lexical.h"
 #include "mx/core/NameToken.h"
 #include "mx/core/Token.h"
 #include "mx/core/generated/AboveBelow.h"
+#include "mx/core/generated/ActuateType.h"
 #include "mx/core/generated/Color.h"
 #include "mx/core/generated/CommaSeparatedText.h"
 #include "mx/core/generated/EndingNumber.h"
@@ -26,10 +28,13 @@
 #include "mx/core/generated/PositiveDivisions.h"
 #include "mx/core/generated/PositiveIntegerOrEmpty.h"
 #include "mx/core/generated/RotationDegrees.h"
+#include "mx/core/generated/ShowType.h"
 #include "mx/core/generated/SmuflAccidentalGlyphName.h"
 #include "mx/core/generated/SmuflCodaGlyphName.h"
 #include "mx/core/generated/SmuflWavyLineGlyphName.h"
 #include "mx/core/generated/TimeOnly.h"
+#include "mx/core/generated/TypeType.h"
+#include "mx/core/generated/XMLSpace.h"
 #include "mx/core/generated/YyyyMmDd.h"
 
 #include <string>
@@ -278,6 +283,62 @@ TEST(TokenRepairsToNCName, Values)
     CHECK(ValueParseOutcome::valid == outcome); // surrounding whitespace is not a repair
     CHECK_EQUAL(std::string{"P1"}, Token::parse("P 1", outcome).toString());
     CHECK(ValueParseOutcome::invalid == outcome);
+}
+
+TEST(ImportedXmlAndXlinkVocabulary, Values)
+{
+    // The xml:space and xlink vocabularies come from the imported schemas
+    // (docs/xml.xsd, docs/xlink.xsd), so the enums carry exactly the members
+    // those schemas declare -- and an out-of-vocabulary value repairs to the
+    // natural zero the way every other MusicXML enum does.
+    CHECK_EQUAL(std::string_view{"default"}, XMLSpace{}.toString());
+    CHECK_EQUAL(std::string_view{"preserve"}, XMLSpace::preserve().toString());
+    CHECK_EQUAL(std::string_view{"simple"}, TypeType{}.toString());
+    CHECK_EQUAL(std::string_view{"arc"}, TypeType::arc().toString());
+    CHECK_EQUAL(std::string_view{"new"}, ShowType{}.toString());
+    CHECK_EQUAL(std::string_view{"embed"}, ShowType::embed().toString());
+    CHECK_EQUAL(std::string_view{"onLoad"}, ActuateType{}.toString());
+    CHECK_EQUAL(std::string_view{"onRequest"}, ActuateType::onRequest().toString());
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    CHECK_EQUAL(std::string_view{"preserve"}, XMLSpace::parse("preserve", outcome).toString());
+    CHECK(ValueParseOutcome::valid == outcome);
+    CHECK(TypeType::parse("sometimes", outcome) == TypeType{});
+    CHECK(ValueParseOutcome::invalid == outcome);
+    TypeType strict;
+    CHECK(!TypeType::tryParse("sometimes", strict));
+}
+
+TEST(LanguageKeepsTheBuiltinPatternOrEmpty, Values)
+{
+    // xml:lang is the builtin xs:language pattern: a letter-led run of 1-8
+    // letters, then hyphen-separated subtags of 1-8 letters or digits. The
+    // empty string is legal -- the "un-declaration" xml.xsd unions in -- and
+    // it is both the natural zero and the repair, so an out-of-grammar tag
+    // is representable only as "no language stated".
+    CHECK_EQUAL(std::string{""}, Language{}.toString());
+    CHECK_EQUAL(std::string{"en"}, Language{"en"}.toString());
+    CHECK_EQUAL(std::string{"en-US"}, Language{"en-US"}.toString());
+    CHECK_EQUAL(std::string{"und"}, Language{"und"}.toString());
+    CHECK_EQUAL(std::string{""}, Language{"not a language"}.toString());
+    CHECK_EQUAL(std::string{""}, Language{"abcdefghijkl"}.toString()); // subtag over 8
+    CHECK_EQUAL(std::string{""}, Language{"-en"}.toString());          // empty first subtag
+    CHECK_EQUAL(std::string{""}, Language{"1en"}.toString());          // digit-led
+    CHECK_EQUAL(std::string{""}, Language{"en_US"}.toString());        // not a tag separator
+    Language parsed;
+    CHECK(Language::tryParse("ja", parsed));
+    CHECK(Language::tryParse("", parsed)); // the un-declaration
+    CHECK(!Language::tryParse("not a language", parsed));
+    CHECK(!Language::tryParse("en-US-x-123456789", parsed)); // subtag over 8
+    ValueParseOutcome outcome = ValueParseOutcome::invalid;
+    CHECK_EQUAL(std::string{"fr"}, Language::parse(" fr ", outcome).toString());
+    CHECK(ValueParseOutcome::valid == outcome); // surrounding whitespace is not a repair
+    CHECK_EQUAL(std::string{""}, Language::parse("not a language", outcome).toString());
+    CHECK(ValueParseOutcome::invalid == outcome);
+    Language tag;
+    tag.setValue("de-CH");
+    CHECK_EQUAL(std::string{"de-CH"}, tag.toString());
+    tag.setValue("12");
+    CHECK_EQUAL(std::string{""}, tag.toString());
 }
 
 TEST(NameTokenRepairsToNmtoken, Values)

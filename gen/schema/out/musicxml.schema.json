@@ -21,6 +21,9 @@
             "minimum": 1,
             "maximum": 3
         },
+        "actuateType": {
+            "enum": ["onLoad", "onRequest", "other", "none"]
+        },
         "arrow-direction": {
             "description": "The arrow-direction type represents the direction in which an arrow points, using Unicode arrow terminology.",
             "enum": ["left", "up", "right", "down", "northwest", "northeast", "southeast", "southwest", "left right", "up down", "northwest southeast", "northeast southwest", "other"]
@@ -401,6 +404,9 @@
             "description": "The show-tuplet type indicates whether to show a part of a tuplet relating to the tuplet-actual element, both the tuplet-actual and tuplet-normal elements, or neither.",
             "enum": ["actual", "both", "none"]
         },
+        "showType": {
+            "enum": ["new", "replace", "embed", "other", "none"]
+        },
         "smufl-accidental-glyph-name": {
             "description": "The smufl-accidental-glyph-name type is used to reference a specific Standard Music Font Layout (SMuFL) accidental character. The value is a SMuFL canonical glyph name that starts with one of the strings used at the start of glyph names for SMuFL accidentals.",
             "type": "string",
@@ -587,6 +593,9 @@
             "description": "The two-note-turn type describes the ending notes of trills and mordents for playback, relative to the current note.",
             "enum": ["whole", "half", "none"]
         },
+        "typeType": {
+            "enum": ["simple", "extended", "title", "resource", "locator", "arc"]
+        },
         "up-down": {
             "description": "The up-down type is used for the direction of arrows and other pointed symbols like vertical accents, indicating which way the tip is pointing.",
             "enum": ["up", "down"]
@@ -618,6 +627,9 @@
         "wood-value": {
             "description": "The wood-value type represents pictograms for wood percussion instruments. The maraca and maracas values distinguish the one- and two-maraca versions of the pictogram.",
             "enum": ["bamboo scraper", "board clapper", "cabasa", "castanets", "castanets with handle", "claves", "football rattle", "guiro", "log drum", "maraca", "maracas", "quijada", "rainstick", "ratchet", "reco-reco", "sandpaper blocks", "slit drum", "temple block", "vibraslap", "whip", "wood block"]
+        },
+        "xml-space": {
+            "enum": ["default", "preserve"]
         },
         "yes-no": {
             "description": "The yes-no type is used for boolean-like attributes. We cannot use W3C XML Schema booleans due to their restrictions on expression of boolean values.",
@@ -701,7 +713,7 @@
             "properties": {
                 "smufl": { "$ref": "#/$defs/smufl-accidental-glyph-name" },
                 "xml:lang": { "type": "string" },
-                "xml:space": { "type": "string" },
+                "xml:space": { "$ref": "#/$defs/xml-space" },
                 "justify": { "$ref": "#/$defs/left-center-right" },
                 "default-x": { "$ref": "#/$defs/tenths" },
                 "default-y": { "$ref": "#/$defs/tenths" },
@@ -1096,7 +1108,7 @@
             "additionalProperties": false,
             "properties": {
                 "xml:lang": { "type": "string" },
-                "xml:space": { "type": "string" },
+                "xml:space": { "$ref": "#/$defs/xml-space" },
                 "justify": { "$ref": "#/$defs/left-center-right" },
                 "default-x": { "$ref": "#/$defs/tenths" },
                 "default-y": { "$ref": "#/$defs/tenths" },
@@ -1766,7 +1778,7 @@
             "additionalProperties": false,
             "properties": {
                 "xml:lang": { "type": "string" },
-                "xml:space": { "type": "string" },
+                "xml:space": { "$ref": "#/$defs/xml-space" },
                 "justify": { "$ref": "#/$defs/left-center-right" },
                 "default-x": { "$ref": "#/$defs/tenths" },
                 "default-y": { "$ref": "#/$defs/tenths" },
@@ -1816,11 +1828,11 @@
             "properties": {
                 "name": { "type": "string" },
                 "xlink:href": { "type": "string" },
-                "xlink:type": { "type": "string" },
+                "xlink:type": { "$ref": "#/$defs/typeType" },
                 "xlink:role": { "type": "string" },
                 "xlink:title": { "type": "string" },
-                "xlink:show": { "type": "string" },
-                "xlink:actuate": { "type": "string" },
+                "xlink:show": { "$ref": "#/$defs/showType" },
+                "xlink:actuate": { "$ref": "#/$defs/actuateType" },
                 "element": { "type": "string" },
                 "position": { "type": "integer" },
                 "default-x": { "$ref": "#/$defs/tenths" },
@@ -4022,11 +4034,11 @@
             "additionalProperties": false,
             "properties": {
                 "xlink:href": { "type": "string" },
-                "xlink:type": { "type": "string" },
+                "xlink:type": { "$ref": "#/$defs/typeType" },
                 "xlink:role": { "type": "string" },
                 "xlink:title": { "type": "string" },
-                "xlink:show": { "type": "string" },
-                "xlink:actuate": { "type": "string" }
+                "xlink:show": { "$ref": "#/$defs/showType" },
+                "xlink:actuate": { "$ref": "#/$defs/actuateType" }
             }
         },
         "part-group": {
@@ -4053,11 +4065,11 @@
             "additionalProperties": false,
             "properties": {
                 "xlink:href": { "type": "string" },
-                "xlink:type": { "type": "string" },
+                "xlink:type": { "$ref": "#/$defs/typeType" },
                 "xlink:role": { "type": "string" },
                 "xlink:title": { "type": "string" },
-                "xlink:show": { "type": "string" },
-                "xlink:actuate": { "type": "string" },
+                "xlink:show": { "$ref": "#/$defs/showType" },
+                "xlink:actuate": { "$ref": "#/$defs/actuateType" },
                 "instrument-link": { "type": "array", "items": { "$ref": "#/$defs/instrument-link" } },
                 "group-link": { "type": "array", "items": { "type": "string" } }
             }

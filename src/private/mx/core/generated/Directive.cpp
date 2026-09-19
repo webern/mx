@@ -11,12 +11,12 @@
 namespace mx::core
 {
 
-const std::optional<std::string> &Directive::xmlLang() const noexcept
+const std::optional<Language> &Directive::xmlLang() const noexcept
 {
     return m_xmlLang;
 }
 
-void Directive::setXMLLang(std::optional<std::string> value)
+void Directive::setXMLLang(std::optional<Language> value)
 {
     m_xmlLang = std::move(value);
 }
@@ -133,7 +133,7 @@ Directive parseDirective(pugi::xml_node el, const ParseContext &context)
         }
         if (aname == "xml:lang")
         {
-            out.setXMLLang(std::string{a.value()});
+            out.setXMLLang(parseValue<Language>(a.value(), context, el, "xml:lang"));
         }
         else if (aname == "default-x")
         {
@@ -194,7 +194,7 @@ void serializeDirective(const Directive &v, pugi::xml_node parent, const char *t
     pugi::xml_node el = parent.append_child(tag);
     if (v.xmlLang())
     {
-        setAttribute(el, "xml:lang", *v.xmlLang());
+        setAttribute(el, "xml:lang", v.xmlLang()->toString());
     }
     if (v.defaultX())
     {

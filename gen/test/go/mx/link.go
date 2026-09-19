@@ -11,19 +11,19 @@ import (
 // with a MusicXML opus. If a relative link is used within a document that is part of a compressed
 // MusicXML file, the link is relative to the root folder of the zip file.
 type Link struct {
-	Name         *string // attribute "name"
-	XlinkHref    *string // attribute "xlink:href"
-	XlinkType    *string // attribute "xlink:type"
-	XlinkRole    *string // attribute "xlink:role"
-	XlinkTitle   *string // attribute "xlink:title"
-	XlinkShow    *string // attribute "xlink:show"
-	XlinkActuate *string // attribute "xlink:actuate"
-	Element      *string // attribute "element"
-	Position     *int    // attribute "position"
-	DefaultX     *Tenths // attribute "default-x"
-	DefaultY     *Tenths // attribute "default-y"
-	RelativeX    *Tenths // attribute "relative-x"
-	RelativeY    *Tenths // attribute "relative-y"
+	Name         *string      // attribute "name"
+	XlinkHref    *string      // attribute "xlink:href"
+	XlinkType    *TypeType    // attribute "xlink:type"
+	XlinkRole    *string      // attribute "xlink:role"
+	XlinkTitle   *string      // attribute "xlink:title"
+	XlinkShow    *ShowType    // attribute "xlink:show"
+	XlinkActuate *ActuateType // attribute "xlink:actuate"
+	Element      *string      // attribute "element"
+	Position     *int         // attribute "position"
+	DefaultX     *Tenths      // attribute "default-x"
+	DefaultY     *Tenths      // attribute "default-y"
+	RelativeX    *Tenths      // attribute "relative-x"
+	RelativeY    *Tenths      // attribute "relative-y"
 }
 
 func parseLink(el *etree.Element) (*Link, error) {
@@ -40,7 +40,7 @@ func parseLink(el *etree.Element) (*Link, error) {
 			v := a.Value
 			m.XlinkHref = &v
 		case "xlink:type":
-			v := a.Value
+			v := ParseTypeType(a.Value)
 			m.XlinkType = &v
 		case "xlink:role":
 			v := a.Value
@@ -49,10 +49,10 @@ func parseLink(el *etree.Element) (*Link, error) {
 			v := a.Value
 			m.XlinkTitle = &v
 		case "xlink:show":
-			v := a.Value
+			v := ParseShowType(a.Value)
 			m.XlinkShow = &v
 		case "xlink:actuate":
-			v := a.Value
+			v := ParseActuateType(a.Value)
 			m.XlinkActuate = &v
 		case "element":
 			v := a.Value
@@ -91,7 +91,7 @@ func serializeLink(m *Link, parent *etree.Element, tag string) {
 		el.CreateAttr("xlink:href", (*m.XlinkHref))
 	}
 	if m.XlinkType != nil {
-		el.CreateAttr("xlink:type", (*m.XlinkType))
+		el.CreateAttr("xlink:type", (*m.XlinkType).String())
 	}
 	if m.XlinkRole != nil {
 		el.CreateAttr("xlink:role", (*m.XlinkRole))
@@ -100,10 +100,10 @@ func serializeLink(m *Link, parent *etree.Element, tag string) {
 		el.CreateAttr("xlink:title", (*m.XlinkTitle))
 	}
 	if m.XlinkShow != nil {
-		el.CreateAttr("xlink:show", (*m.XlinkShow))
+		el.CreateAttr("xlink:show", (*m.XlinkShow).String())
 	}
 	if m.XlinkActuate != nil {
-		el.CreateAttr("xlink:actuate", (*m.XlinkActuate))
+		el.CreateAttr("xlink:actuate", (*m.XlinkActuate).String())
 	}
 	if m.Element != nil {
 		el.CreateAttr("element", (*m.Element))

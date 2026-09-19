@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/Language.h"
 #include "mx/core/NameToken.h"
 #include "mx/core/Token.h"
 
@@ -26,14 +27,14 @@ class LyricLanguage final
     void setNumber(std::optional<NameToken> value);
     const std::optional<std::string> &name() const noexcept;
     void setName(std::optional<std::string> value);
-    const std::string &xmlLang() const noexcept;
-    void setXMLLang(std::string value);
+    const Language &xmlLang() const noexcept;
+    void setXMLLang(Language value);
     bool operator==(const LyricLanguage &other) const = default;
 
   private:
     std::optional<NameToken> m_number;
     std::optional<std::string> m_name;
-    std::string m_xmlLang{};
+    Language m_xmlLang{};
 };
 
 LyricLanguage parseLyricLanguage(pugi::xml_node el, const ParseContext &context);

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/Language.h"
 #include "mx/core/generated/Color.h"
 #include "mx/core/generated/FontFamily.h"
 #include "mx/core/generated/FontSize.h"
@@ -31,8 +32,8 @@ class ParseContext;
 class TextElementData final
 {
   public:
-    const std::optional<std::string> &xmlLang() const noexcept;
-    void setXMLLang(std::optional<std::string> value);
+    const std::optional<Language> &xmlLang() const noexcept;
+    void setXMLLang(std::optional<Language> value);
     const std::optional<FontFamily> &fontFamily() const noexcept;
     void setFontFamily(std::optional<FontFamily> value);
     const std::optional<FontStyle> &fontStyle() const noexcept;
@@ -60,7 +61,7 @@ class TextElementData final
     bool operator==(const TextElementData &other) const = default;
 
   private:
-    std::optional<std::string> m_xmlLang;
+    std::optional<Language> m_xmlLang;
     std::optional<FontFamily> m_fontFamily;
     std::optional<FontStyle> m_fontStyle;
     std::optional<FontSize> m_fontSize;

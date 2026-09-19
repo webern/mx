@@ -64,6 +64,10 @@ date                 = "std::string"
 nmtoken              = "NameToken"
 id                   = "Token"
 idref                = "Token"
+# The XML namespace's language tag: a hand-written repairing wrapper
+# (Language.h/cpp) enforcing the builtin xs:language pattern, with the empty
+# string admitted because the attribute's schema unions the un-declaration in.
+language             = "Language"
 decimal              = "Decimal"
 integer              = "int"
 positive_integer     = "int"

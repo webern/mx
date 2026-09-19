@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/Language.h"
 #include "mx/core/generated/Color.h"
 #include "mx/core/generated/FontFamily.h"
 #include "mx/core/generated/FontSize.h"
@@ -25,8 +26,8 @@ class ParseContext;
 class Directive final
 {
   public:
-    const std::optional<std::string> &xmlLang() const noexcept;
-    void setXMLLang(std::optional<std::string> value);
+    const std::optional<Language> &xmlLang() const noexcept;
+    void setXMLLang(std::optional<Language> value);
     const std::optional<Tenths> &defaultX() const noexcept;
     void setDefaultX(std::optional<Tenths> value);
     const std::optional<Tenths> &defaultY() const noexcept;
@@ -50,7 +51,7 @@ class Directive final
     bool operator==(const Directive &other) const = default;
 
   private:
-    std::optional<std::string> m_xmlLang;
+    std::optional<Language> m_xmlLang;
     std::optional<Tenths> m_defaultX;
     std::optional<Tenths> m_defaultY;
     std::optional<Tenths> m_relativeX;
