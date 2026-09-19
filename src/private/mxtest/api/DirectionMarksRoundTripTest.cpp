@@ -320,6 +320,40 @@ TEST(PedalPlacement, DirectionMarksRoundTrip)
 
 T_END;
 
+// A pedal line's number survives a round trip, which is what lets two lines held down at once
+// be told apart (#411).
+TEST(PedalExplicitNumber, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    PedalLineData pedal{PedalLineKind::start};
+    pedal.number = SpannerNumber(2);
+    direction.directionTypes.emplace_back(DirectionChoice{pedal});
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isPedal());
+    CHECK(directions.front().directionTypes.front().pedal().kind == PedalLineKind::start);
+    CHECK(SpannerNumber(2) == directions.front().directionTypes.front().pedal().number);
+}
+
+T_END;
+
+// A lone pedal line needs no number, so none is written; every ordinary score stays unchanged.
+TEST(PedalWithoutNumberWritesNoAttribute, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    direction.directionTypes.emplace_back(DirectionChoice{PedalLineData{PedalLineKind::start}});
+    const auto xml = xmlForDirectionData(direction);
+    const auto pedalStart = xml.find("<pedal");
+    REQUIRE(pedalStart != std::string::npos);
+    const auto pedalEnd = xml.find(">", pedalStart);
+    REQUIRE(pedalEnd != std::string::npos);
+    const auto pedalElement = xml.substr(pedalStart, pedalEnd - pedalStart);
+    CHECK(pedalElement.find("number=") == std::string::npos);
+}
+
+T_END;
+
 TEST(Scordatura, DirectionMarksRoundTrip)
 {
     DirectionData direction;

@@ -25,7 +25,8 @@ namespace impl
 // elements (octave-shift, bracket, dashes) whose number attributes are
 // independent of each other in MusicXML, so each gets its own pool.
 // GlissandoType similarly distinguishes <glissando> from <slide>, two distinct
-// elements with independent number attributes.
+// elements with independent number attributes. Pedal lines number themselves
+// independently of every other family too.
 enum class SpannerNumberClass
 {
     slur,
@@ -34,6 +35,7 @@ enum class SpannerNumberClass
     octaveShift,
     bracket,
     dashes,
+    pedal,
     glissando,
     slide,
     wavyLine
@@ -175,8 +177,7 @@ class SpannerEventCollector
 
     // Mirrors DirectionWriter::emitDirectionTypes: one pass over the ordered direction-type
     // content, registering each spanner event with the address of its DirectionChoice -- the
-    // same identity the writer presents when it asks for the emitted number. Pedals are
-    // skipped: mx::api does not model <pedal>'s number attribute.
+    // same identity the writer presents when it asks for the emitted number.
     void addDirection(const api::DirectionData &inDirection)
     {
         myCurrentNoteTag = nullptr;
@@ -226,6 +227,20 @@ class SpannerEventCollector
             case api::DirectionChoice::Kind::dashesStop:
                 add(SpannerNumberClass::dashes, &choice, choice.dashesStop().number, false, true);
                 break;
+
+            case api::DirectionChoice::Kind::pedal: {
+                // A pedal line opens with a downstroke, a sostenuto mark, or a resume, and ends
+                // with an explicit or implicit lift; change and continueLine happen while the
+                // line stays open.
+                const auto pedal = choice.pedal();
+                const bool opens = pedal.kind == api::PedalLineKind::start ||
+                                   pedal.kind == api::PedalLineKind::sostenuto ||
+                                   pedal.kind == api::PedalLineKind::resume;
+                const bool closes =
+                    pedal.kind == api::PedalLineKind::stop || pedal.kind == api::PedalLineKind::discontinue;
+                add(SpannerNumberClass::pedal, &choice, pedal.number, opens, closes);
+                break;
+            }
 
             default:
                 break;
@@ -503,6 +518,8 @@ static const char *spannerClassName(SpannerNumberClass inClass)
         return "bracket";
     case SpannerNumberClass::dashes:
         return "dashes";
+    case SpannerNumberClass::pedal:
+        return "pedal";
     case SpannerNumberClass::glissando:
         return "glissando";
     case SpannerNumberClass::slide:

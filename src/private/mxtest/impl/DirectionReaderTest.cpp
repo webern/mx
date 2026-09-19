@@ -7,10 +7,14 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/OttavaData.h"
+#include "mx/api/SpannerNumber.h"
 #include "mx/core/generated/Direction.h"
 #include "mx/core/generated/DirectionType.h"
 #include "mx/core/generated/DirectionTypeChoice.h"
 #include "mx/core/generated/OctaveShift.h"
+#include "mx/core/generated/Pedal.h"
+#include "mx/core/generated/PedalType.h"
+#include "mx/core/generated/YesNo.h"
 #include "mx/impl/DirectionReader.h"
 
 #include <memory>
@@ -163,6 +167,51 @@ TEST(ottavaStopWithoutSize, DirectionReader)
     REQUIRE(directionData.directionTypes.size() == 1);
     REQUIRE(directionData.directionTypes.front().isOttavaStop());
     CHECK(api::Bool::no == directionData.directionTypes.front().ottavaStop().writeSize);
+}
+
+T_END
+
+// A pedal line's number is what tells two lines held down at once apart, so the reader has to
+// keep it (#411).
+TEST(pedalLineNumber, DirectionReader)
+{
+    core::Pedal pedal{};
+    pedal.setType(core::PedalType::start());
+    pedal.setLine(core::YesNo::yes());
+    pedal.setNumber(core::NumberLevel{2});
+    core::DirectionType dirType{};
+    dirType.setChoice(core::DirectionTypeChoice::pedal(pedal));
+    core::Direction dir{};
+    dir.setDirectionType(core::OneOrMore<core::DirectionType>{dirType});
+    MeasureCursor cursor{1, 100};
+    cursor.tickTimePosition = 150;
+    DirectionReader reader{dir, cursor};
+    const auto directionData = reader.getDirectionData();
+    REQUIRE(directionData.directionTypes.size() == 1);
+    REQUIRE(directionData.directionTypes.front().isPedal());
+    const auto pedalData = directionData.directionTypes.front().pedal();
+    CHECK(pedalData.kind == api::PedalLineKind::start);
+    CHECK(api::SpannerNumber(2) == pedalData.number);
+}
+
+T_END
+
+// A lone pedal line needs no number, so its absence reads as unspecified rather than as a level.
+TEST(pedalLineWithoutNumber, DirectionReader)
+{
+    core::Pedal pedal{};
+    pedal.setType(core::PedalType::stop());
+    pedal.setLine(core::YesNo::yes());
+    core::DirectionType dirType{};
+    dirType.setChoice(core::DirectionTypeChoice::pedal(pedal));
+    core::Direction dir{};
+    dir.setDirectionType(core::OneOrMore<core::DirectionType>{dirType});
+    MeasureCursor cursor{1, 100};
+    DirectionReader reader{dir, cursor};
+    const auto directionData = reader.getDirectionData();
+    REQUIRE(directionData.directionTypes.size() == 1);
+    REQUIRE(directionData.directionTypes.front().isPedal());
+    CHECK(directionData.directionTypes.front().pedal().number.isUnspecified());
 }
 
 T_END

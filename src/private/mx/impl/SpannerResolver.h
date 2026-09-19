@@ -29,9 +29,9 @@ namespace impl
 // concurrently-open identity spanner is never handed the same number.
 //
 // Numbers come from a pool of 1..16 per part and per spanner class (slur,
-// tied, wedge, octave-shift, bracket, dashes, glissando, slide, and wavy-line
-// each have their own pool; a slur numbered 1 and a wedge numbered 1 do not
-// conflict). The number-level documentation scopes concurrency to the part,
+// tied, wedge, octave-shift, bracket, dashes, pedal, glissando, slide, and
+// wavy-line each have their own pool; a slur numbered 1 and a wedge numbered 1
+// do not conflict). The number-level documentation scopes concurrency to the part,
 // never the staff: two spanners conflict exactly when they overlap in the
 // order a streaming reader encounters them, even when they sit on different
 // staves of the part. So resolvePart walks the part in the exact order
@@ -49,9 +49,10 @@ namespace impl
 //
 // Identity ids are scoped per part and per spanner class: events in the same
 // part sharing a class and id are one logical spanner, even across staves.
-// Pedal starts/stops carry SpannerNumber, but mx::api does not model the
-// <pedal> number attribute (added in MusicXML 3.1), so pedals are ignored
-// here and no number is ever emitted for one.
+// The events of one pedal line -- its downstroke, any change or formatting
+// continuation, and the lift that ends it -- likewise share a SpannerNumber
+// identity, and a pedal line numbered with an explicit level keeps that level
+// while it is open.
 //
 // If more than 16 spanners of one class are open at once in a part (which no
 // real score approaches), resolution refuses the write rather than emitting

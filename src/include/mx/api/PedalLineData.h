@@ -7,6 +7,7 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
+#include "mx/api/SpannerNumber.h"
 
 #include <optional>
 #include <string>
@@ -54,14 +55,24 @@ struct PedalLineData
     int tickTimePosition;
     PositionData positionData;
 
+    // Which line this event belongs to when two pedal lines are held down at once; MusicXML calls
+    // it the number. It can be left unspecified, and usually should be: a lone line, and any run
+    // of lines that do not overlap, needs no number. A number is only needed to tell two lines
+    // apart when they overlap -- when a line opens before the one before it has closed, as a
+    // sostenuto line under a damper line does -- because otherwise a lift cannot be matched to
+    // the right downstroke. Give every event of one line the same SpannerNumber (see
+    // SpannerNumber.h): an explicit level is written verbatim, or an identity label lets the
+    // writer assign the level.
+    SpannerNumber number;
+
     // The <pedal> element's id attribute (see Id.h).
     std::optional<Id> id;
 
-    PedalLineData() : kind{PedalLineKind::unspecified}, tickTimePosition{0}, positionData{}, id{}
+    PedalLineData() : kind{PedalLineKind::unspecified}, tickTimePosition{0}, positionData{}, number{}, id{}
     {
     }
 
-    PedalLineData(PedalLineKind inKind) : kind{inKind}, tickTimePosition{0}, positionData{}, id{}
+    PedalLineData(PedalLineKind inKind) : kind{inKind}, tickTimePosition{0}, positionData{}, number{}, id{}
     {
     }
 };
@@ -70,6 +81,7 @@ MXAPI_EQUALS_BEGIN(PedalLineData)
 MXAPI_EQUALS_MEMBER(kind)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PedalLineData);

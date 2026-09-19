@@ -433,4 +433,157 @@ TEST(wedgeNumbersRoundTrip, SpannerIdentity)
 
 T_END
 
+namespace spannerIdentityTest
+{
+// One measure of four quarter notes on one staff, with a directions list the caller fills in.
+inline ScoreData makeSingleMeasureScore()
+{
+    ScoreData score;
+    score.ticksPerQuarter = ticksPerQuarter;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &voice = measure.staves.back().voices[0];
+    for (int i = 0; i < 4; ++i)
+    {
+        voice.notes.push_back(makeQuarter(i * ticksPerQuarter, Step::c, 4));
+    }
+    return score;
+}
+
+inline void addPedalDirection(std::vector<DirectionData> &ioDirections, int inTick, PedalLineKind inKind,
+                              const SpannerNumber &inNumber)
+{
+    DirectionData direction;
+    direction.tickTimePosition = inTick;
+    PedalLineData pedal{inKind};
+    pedal.number = inNumber;
+    direction.directionTypes.emplace_back(DirectionChoice{pedal});
+    ioDirections.push_back(direction);
+}
+} // namespace spannerIdentityTest
+
+// Two pedal lines held down at once -- a damper line and a sostenuto line -- are told apart by
+// their numbers. Authored with identity numbers, they overlap in document order and must receive
+// different ones, and both numbers must survive the round trip (#411).
+TEST(overlappingIdentityPedalLinesGetDistinctNumbers, SpannerIdentity)
+{
+    using namespace spannerIdentityTest;
+    auto score = makeSingleMeasureScore();
+    auto &directions = score.parts.at(0).measures.at(0).staves.at(0).directions;
+
+    addPedalDirection(directions, 0, PedalLineKind::start, SpannerNumber("damper"));
+    addPedalDirection(directions, 0, PedalLineKind::sostenuto, SpannerNumber("sostenuto"));
+    addPedalDirection(directions, 4 * ticksPerQuarter, PedalLineKind::stop, SpannerNumber("damper"));
+    addPedalDirection(directions, 4 * ticksPerQuarter, PedalLineKind::discontinue, SpannerNumber("sostenuto"));
+
+    const auto xml = toXml(score);
+    REQUIRE(!xml.empty());
+    const auto roundTripped = fromXml(xml);
+
+    const auto &readDirections = roundTripped.parts.at(0).measures.at(0).staves.at(0).directions;
+    REQUIRE(readDirections.size() == 4);
+    CHECK(SpannerNumber(1) == readDirections.at(0).directionTypes.at(0).pedal().number);
+    CHECK(SpannerNumber(2) == readDirections.at(1).directionTypes.at(0).pedal().number);
+    CHECK(SpannerNumber(1) == readDirections.at(2).directionTypes.at(0).pedal().number);
+    CHECK(SpannerNumber(2) == readDirections.at(3).directionTypes.at(0).pedal().number);
+}
+
+T_END
+
+// An explicit pedal number is emitted verbatim for both ends of the line.
+TEST(explicitPedalNumberRoundTrips, SpannerIdentity)
+{
+    using namespace spannerIdentityTest;
+    auto score = makeSingleMeasureScore();
+    auto &directions = score.parts.at(0).measures.at(0).staves.at(0).directions;
+
+    addPedalDirection(directions, 0, PedalLineKind::start, SpannerNumber(4));
+    addPedalDirection(directions, 2 * ticksPerQuarter, PedalLineKind::stop, SpannerNumber(4));
+
+    const auto xml = toXml(score);
+    REQUIRE(!xml.empty());
+    const auto roundTripped = fromXml(xml);
+
+    const auto &readDirections = roundTripped.parts.at(0).measures.at(0).staves.at(0).directions;
+    REQUIRE(readDirections.size() == 2);
+    CHECK(SpannerNumber(4) == readDirections.at(0).directionTypes.at(0).pedal().number);
+    CHECK(SpannerNumber(4) == readDirections.at(1).directionTypes.at(0).pedal().number);
+}
+
+T_END
+
+// A pedal line and a wedge draw their numbers from separate pools, so two concurrent identity
+// spanners of the two families both take number 1.
+TEST(pedalAndWedgePoolsAreIndependent, SpannerIdentity)
+{
+    using namespace spannerIdentityTest;
+    auto score = makeSingleMeasureScore();
+    auto &directions = score.parts.at(0).measures.at(0).staves.at(0).directions;
+
+    addPedalDirection(directions, 0, PedalLineKind::start, SpannerNumber("p"));
+    addPedalDirection(directions, 2 * ticksPerQuarter, PedalLineKind::stop, SpannerNumber("p"));
+
+    DirectionData wedgeStartDirection;
+    wedgeStartDirection.tickTimePosition = 0;
+    WedgeStart wedgeStart;
+    wedgeStart.wedgeType = WedgeType::crescendo;
+    wedgeStart.number = SpannerNumber("w");
+    wedgeStartDirection.directionTypes.emplace_back(DirectionChoice{wedgeStart});
+    directions.push_back(wedgeStartDirection);
+
+    DirectionData wedgeStopDirection;
+    wedgeStopDirection.tickTimePosition = 2 * ticksPerQuarter;
+    WedgeStop wedgeStop;
+    wedgeStop.number = SpannerNumber("w");
+    wedgeStopDirection.directionTypes.emplace_back(DirectionChoice{wedgeStop});
+    directions.push_back(wedgeStopDirection);
+
+    const auto xml = toXml(score);
+    REQUIRE(!xml.empty());
+    const auto roundTripped = fromXml(xml);
+
+    const auto &readDirections = roundTripped.parts.at(0).measures.at(0).staves.at(0).directions;
+
+    // The reader orders directions by tick, so collect the numbers by kind rather than by index.
+    SpannerNumber pedalStartNumber;
+    SpannerNumber pedalStopNumber;
+    SpannerNumber wedgeStartNumber;
+    SpannerNumber wedgeStopNumber;
+    for (const auto &direction : readDirections)
+    {
+        for (const auto &choice : direction.directionTypes)
+        {
+            if (choice.isPedal())
+            {
+                if (choice.pedal().kind == PedalLineKind::start)
+                {
+                    pedalStartNumber = choice.pedal().number;
+                }
+                else
+                {
+                    pedalStopNumber = choice.pedal().number;
+                }
+            }
+            else if (choice.isWedgeStart())
+            {
+                wedgeStartNumber = choice.wedgeStart().number;
+            }
+            else if (choice.isWedgeStop())
+            {
+                wedgeStopNumber = choice.wedgeStop().number;
+            }
+        }
+    }
+
+    CHECK(SpannerNumber(1) == pedalStartNumber);
+    CHECK(SpannerNumber(1) == pedalStopNumber);
+    CHECK(SpannerNumber(1) == wedgeStartNumber);
+    CHECK(SpannerNumber(1) == wedgeStopNumber);
+}
+
+T_END
+
 #endif
