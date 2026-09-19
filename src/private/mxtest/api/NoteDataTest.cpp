@@ -1867,6 +1867,164 @@ TEST(guessedTupletNormalKeepsTheNoteDots, NoteData)
     CHECK_EQUAL(1, rereread.at(0).normalDots);
 }
 
+// issue #443: the position attributes of a <tuplet> were read into TupletStart and TupletStop and
+// never written, so the placement of a tuplet bracket was lost on write.
+TEST(tupletPositionDataSurvivesWriteAndRead, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto &note = voice.notes.back();
+
+    TupletStart start;
+    start.positionData.isDefaultXSpecified = true;
+    start.positionData.defaultX = 12.5;
+    start.positionData.isDefaultYSpecified = true;
+    start.positionData.defaultY = -3.5;
+    start.positionData.isRelativeXSpecified = true;
+    start.positionData.relativeX = 1.5;
+    start.positionData.isRelativeYSpecified = true;
+    start.positionData.relativeY = 2.5;
+    start.positionData.placement = Placement::above;
+    note.noteAttachmentData.tupletStarts.push_back(start);
+
+    TupletStop stop;
+    stop.positionData.isDefaultXSpecified = true;
+    stop.positionData.defaultX = 44.5;
+    note.noteAttachmentData.tupletStops.push_back(stop);
+
+    const auto written = toXml(score);
+    CHECK(written.find("default-x=\"12.5\"") != std::string::npos);
+    CHECK(written.find("default-y=\"-3.5\"") != std::string::npos);
+    CHECK(written.find("relative-x=\"1.5\"") != std::string::npos);
+    CHECK(written.find("relative-y=\"2.5\"") != std::string::npos);
+    CHECK(written.find("placement=\"above\"") != std::string::npos);
+    CHECK(written.find("default-x=\"44.5\"") != std::string::npos);
+
+    const auto out = roundTrip(score);
+    const auto &outStarts =
+        out.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.tupletStarts;
+    REQUIRE(1 == outStarts.size());
+    CHECK(outStarts.at(0).positionData.isDefaultXSpecified);
+    CHECK(outStarts.at(0).positionData.isDefaultYSpecified);
+    CHECK(outStarts.at(0).positionData.isRelativeXSpecified);
+    CHECK(outStarts.at(0).positionData.isRelativeYSpecified);
+    CHECK_DOUBLES_EQUAL(12.5, outStarts.at(0).positionData.defaultX, 0.00001);
+    CHECK_DOUBLES_EQUAL(-3.5, outStarts.at(0).positionData.defaultY, 0.00001);
+    CHECK_DOUBLES_EQUAL(1.5, outStarts.at(0).positionData.relativeX, 0.00001);
+    CHECK_DOUBLES_EQUAL(2.5, outStarts.at(0).positionData.relativeY, 0.00001);
+    CHECK(Placement::above == outStarts.at(0).positionData.placement);
+
+    const auto &outStops =
+        out.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.tupletStops;
+    REQUIRE(1 == outStops.size());
+    CHECK(outStops.at(0).positionData.isDefaultXSpecified);
+    CHECK_DOUBLES_EQUAL(44.5, outStops.at(0).positionData.defaultX, 0.00001);
+}
+
+T_END;
+
+// issue #443: accidental marks were read into MarkData and never written back.
+TEST(accidentalMarkSurvivesWriteAndRead, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto &note = voice.notes.back();
+
+    MarkData mark{MarkType::accidentalMarkSharp};
+    mark.positionData.isDefaultXSpecified = true;
+    mark.positionData.defaultX = 7.5;
+    mark.positionData.placement = Placement::above;
+    note.noteAttachmentData.marks.push_back(mark);
+
+    const auto written = toXml(score);
+    CHECK(written.find("<accidental-mark") != std::string::npos);
+    CHECK(written.find(">sharp<") != std::string::npos);
+    CHECK(written.find("default-x=\"7.5\"") != std::string::npos);
+
+    const auto out = roundTrip(score);
+    const auto &marks = out.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks;
+    REQUIRE(1 == marks.size());
+    CHECK(MarkType::accidentalMarkSharp == marks.at(0).markType);
+    CHECK(marks.at(0).positionData.isDefaultXSpecified);
+    CHECK_DOUBLES_EQUAL(7.5, marks.at(0).positionData.defaultX, 0.00001);
+    CHECK(Placement::above == marks.at(0).positionData.placement);
+}
+
+T_END;
+
+// issue #443: a source may hang an accidental mark on the ornament it decorates. The mark is
+// kept and written at the notations level, which is the other place MusicXML allows, because the
+// api does not record which of the two places a mark came from.
+TEST(accidentalMarkOnAnOrnamentIsWrittenAtTheNotationsLevel, NoteData)
+{
+    const std::string xml = R"(<score-partwise version="3.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>MusicXML Part</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <notations>
+          <ornaments>
+            <trill-mark/>
+            <accidental-mark placement="above">sharp</accidental-mark>
+          </ornaments>
+        </notations>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = fromXml(xml);
+    const auto &marks = score.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks;
+    REQUIRE(2 == marks.size());
+    CHECK(MarkType::trillMark == marks.at(0).markType);
+    CHECK(MarkType::accidentalMarkSharp == marks.at(1).markType);
+
+    const auto written = toXml(score);
+    CHECK(written.find("<accidental-mark") != std::string::npos);
+    CHECK(written.find("<trill-mark") != std::string::npos);
+
+    // both marks are still there after the source's ornament attachment is normalized away
+    const auto reread = fromXml(written);
+    const auto &rereadMarks =
+        reread.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks;
+    REQUIRE(2 == rereadMarks.size());
+    bool foundTrill = false;
+    bool foundSharp = false;
+    for (const auto &mark : rereadMarks)
+    {
+        foundTrill = foundTrill || (mark.markType == MarkType::trillMark);
+        foundSharp = foundSharp || (mark.markType == MarkType::accidentalMarkSharp);
+    }
+    CHECK(foundTrill);
+    CHECK(foundSharp);
+}
+
 T_END;
 
 #endif

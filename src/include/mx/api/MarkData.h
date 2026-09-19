@@ -222,6 +222,7 @@ bool isMarkFermata(MarkType);
 bool isMarkArpeggiate(MarkType);
 bool isMarkNonArpeggiate(MarkType);
 bool isMarkOtherNotation(MarkType);
+bool isMarkAccidentalMark(MarkType);
 
 bool isMarkCustom(MarkType);
 std::string getCustomMarkName(MarkType);

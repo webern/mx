@@ -75,6 +75,35 @@ bool isMarkOtherNotation(MarkType markType)
     return markType == MarkType::otherNotation;
 }
 
+// Every accidental-mark value. accidentalUnknown is not one of them: it is the error state, and
+// the converter would turn it into a natural, inventing a glyph the caller did not ask for.
+bool isMarkAccidentalMark(MarkType markType)
+{
+    return (markType == MarkType::accidentalMarkSharp) || (markType == MarkType::accidentalMarkNatural) ||
+           (markType == MarkType::accidentalMarkFlat) || (markType == MarkType::accidentalMarkDoubleSharp) ||
+           (markType == MarkType::accidentalMarkSharpSharp) || (markType == MarkType::accidentalMarkFlatFlat) ||
+           (markType == MarkType::accidentalMarkNaturalSharp) || (markType == MarkType::accidentalMarkNaturalFlat) ||
+           (markType == MarkType::accidentalMarkQuarterFlat) || (markType == MarkType::accidentalMarkQuarterSharp) ||
+           (markType == MarkType::accidentalMarkThreeQuartersFlat) ||
+           (markType == MarkType::accidentalMarkThreeQuartersSharp) ||
+           (markType == MarkType::accidentalMarkSharpDown) || (markType == MarkType::accidentalMarkSharpUp) ||
+           (markType == MarkType::accidentalMarkNaturalDown) || (markType == MarkType::accidentalMarkNaturalUp) ||
+           (markType == MarkType::accidentalMarkFlatDown) || (markType == MarkType::accidentalMarkFlatUp) ||
+           (markType == MarkType::accidentalMarkDoubleSharpDown) ||
+           (markType == MarkType::accidentalMarkDoubleSharpUp) || (markType == MarkType::accidentalMarkFlatFlatDown) ||
+           (markType == MarkType::accidentalMarkFlatFlatUp) || (markType == MarkType::accidentalMarkArrowDown) ||
+           (markType == MarkType::accidentalMarkArrowUp) || (markType == MarkType::accidentalMarkTripleSharp) ||
+           (markType == MarkType::accidentalMarkTripleFlat) ||
+           (markType == MarkType::accidentalMarkSlashQuarterSharp) ||
+           (markType == MarkType::accidentalMarkSlashSharp) || (markType == MarkType::accidentalMarkSlashFlat) ||
+           (markType == MarkType::accidentalMarkDoubleSlashFlat) || (markType == MarkType::accidentalMarkSharp1) ||
+           (markType == MarkType::accidentalMarkSharp2) || (markType == MarkType::accidentalMarkSharp3) ||
+           (markType == MarkType::accidentalMarkSharp5) || (markType == MarkType::accidentalMarkFlat1) ||
+           (markType == MarkType::accidentalMarkFlat2) || (markType == MarkType::accidentalMarkFlat3) ||
+           (markType == MarkType::accidentalMarkFlat4) || (markType == MarkType::accidentalMarkSori) ||
+           (markType == MarkType::accidentalMarkKoron);
+}
+
 bool isMarkPedal(MarkType markType)
 {
     return (markType == MarkType::pedal) || (markType == MarkType::damp);
