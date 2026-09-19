@@ -11,12 +11,12 @@
 namespace mx::core
 {
 
-const std::optional<std::string> &TextElementData::xmlLang() const noexcept
+const std::optional<Language> &TextElementData::xmlLang() const noexcept
 {
     return m_xmlLang;
 }
 
-void TextElementData::setXMLLang(std::optional<std::string> value)
+void TextElementData::setXMLLang(std::optional<Language> value)
 {
     m_xmlLang = std::move(value);
 }
@@ -153,7 +153,7 @@ TextElementData parseTextElementData(pugi::xml_node el, const ParseContext &cont
         }
         if (aname == "xml:lang")
         {
-            out.setXMLLang(std::string{a.value()});
+            out.setXMLLang(parseValue<Language>(a.value(), context, el, "xml:lang"));
         }
         else if (aname == "font-family")
         {
@@ -222,7 +222,7 @@ void serializeTextElementData(const TextElementData &v, pugi::xml_node parent, c
     pugi::xml_node el = parent.append_child(tag);
     if (v.xmlLang())
     {
-        setAttribute(el, "xml:lang", *v.xmlLang());
+        setAttribute(el, "xml:lang", v.xmlLang()->toString());
     }
     if (v.fontFamily())
     {

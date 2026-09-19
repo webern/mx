@@ -225,5 +225,13 @@ class Schema:
     complex_types: dict[str, ComplexType]
     groups: dict[str, Group]
     attribute_groups: dict[str, AttributeGroup]
+    # The top-level xs:attribute declarations. The imported xml/xlink schemas
+    # declare their attributes this way (xml:lang, xlink:type, ...), so this
+    # is where an external attribute ref's type lives.
+    attributes: dict[str, Attribute]
     elements: list[TopLevelElement]
     imports: list[tuple[str, str]]  # (namespace, schemaLocation)
+    # The imported schemas that sit beside this one, keyed by namespace. An
+    # import by URL (xlink.xsd -> the XML namespace) or a missing file is not
+    # resolved; a reference that needs one fails loud when it is lowered.
+    imported: dict[str, Schema] = field(default_factory=dict)

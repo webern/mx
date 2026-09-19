@@ -1,11 +1,11 @@
 {{#merged_attributes}}
 {{#is_required}}
-    setAttribute(el, {{name.wire_q}}, {{#type_ref.is_value}}v.{{ident}}().toString(){{/type_ref.is_value}}{{#type_ref.name_token}}v.{{ident}}().toString(){{/type_ref.name_token}}{{#type_ref.is_primitive_string}}{{^type_ref.name_token}}v.{{ident}}(){{/type_ref.name_token}}{{/type_ref.is_primitive_string}}{{#type_ref.is_primitive_integer}}formatInt(v.{{ident}}()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_decimal}}v.{{ident}}().toString(){{/type_ref.is_primitive_decimal}});
+    setAttribute(el, {{name.wire_q}}, {{#type_ref.is_value}}v.{{ident}}().toString(){{/type_ref.is_value}}{{#type_ref.wrapper}}v.{{ident}}().toString(){{/type_ref.wrapper}}{{#type_ref.is_primitive_string}}{{^type_ref.wrapper}}v.{{ident}}(){{/type_ref.wrapper}}{{/type_ref.is_primitive_string}}{{#type_ref.is_primitive_integer}}formatInt(v.{{ident}}()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_decimal}}v.{{ident}}().toString(){{/type_ref.is_primitive_decimal}});
 {{/is_required}}
 {{#is_optional}}
     if (v.{{ident}}())
     {
-        setAttribute(el, {{name.wire_q}}, {{#type_ref.is_value}}v.{{ident}}()->toString(){{/type_ref.is_value}}{{#type_ref.name_token}}v.{{ident}}()->toString(){{/type_ref.name_token}}{{#type_ref.is_primitive_string}}{{^type_ref.name_token}}*v.{{ident}}(){{/type_ref.name_token}}{{/type_ref.is_primitive_string}}{{#type_ref.is_primitive_integer}}formatInt(*v.{{ident}}()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_decimal}}v.{{ident}}()->toString(){{/type_ref.is_primitive_decimal}});
+        setAttribute(el, {{name.wire_q}}, {{#type_ref.is_value}}v.{{ident}}()->toString(){{/type_ref.is_value}}{{#type_ref.wrapper}}v.{{ident}}()->toString(){{/type_ref.wrapper}}{{#type_ref.is_primitive_string}}{{^type_ref.wrapper}}*v.{{ident}}(){{/type_ref.wrapper}}{{/type_ref.is_primitive_string}}{{#type_ref.is_primitive_integer}}formatInt(*v.{{ident}}()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_decimal}}v.{{ident}}()->toString(){{/type_ref.is_primitive_decimal}});
     }
 {{/is_optional}}
 {{/merged_attributes}}

@@ -171,6 +171,62 @@ class DeadTypeRegression(unittest.TestCase):
         self.assertIn("measure-text", names)
 
 
+class ImportedVocabulary(unittest.TestCase):
+    """The imported xml/xlink schema declarations: the closed vocabularies
+    those schemas declare arrive as ordinary value types with the schema's own
+    members, the refs the IR pins to an XSD BUILTIN (xml:lang, the anyURI
+    links) stay primitives, and an imported type nothing references never
+    enters the IR."""
+
+    def test_enums_carry_the_schema_members(self):
+        for xsd in XSDS:
+            with self.subTest(xsd=xsd.name):
+                m = build_ir(parse(xsd), xsd.stem)
+                by_name = {v.name: v for v in m.value_types}
+                self.assertEqual(
+                    by_name["typeType"].values,
+                    ["simple", "extended", "title", "resource", "locator", "arc"],
+                )
+                self.assertEqual(
+                    by_name["showType"].values, ["new", "replace", "embed", "other", "none"]
+                )
+                self.assertEqual(
+                    by_name["actuateType"].values, ["onLoad", "onRequest", "other", "none"]
+                )
+                self.assertEqual(by_name["xml-space"].values, ["default", "preserve"])
+
+    def test_attribute_refs_point_at_the_imported_types(self):
+        m = build_ir(parse(XSD_40), "musicxml-4.0")
+        # The refs are declared on the attribute groups the formatted-text
+        # family shares, so gather from both.
+        refs = {a.name: a.type for c in m.complex_types for a in c.attributes}
+        refs.update({a.name: a.type for ag in m.attribute_groups for a in ag.attributes})
+        self.assertEqual(refs["xml:lang"], ir.Ref("language", "primitive"))
+        self.assertEqual(refs["xml:space"], ir.Ref("xml-space", "value"))
+        self.assertEqual(refs["xlink:type"], ir.Ref("typeType", "value"))
+        # xs:anyURI accepts nearly any string, so the link refs stay primitive.
+        self.assertEqual(refs["xlink:href"], ir.Ref("string", "primitive"))
+        self.assertEqual(refs["xlink:role"], ir.Ref("string", "primitive"))
+        self.assertEqual(refs["xlink:title"], ir.Ref("string", "primitive"))
+
+    def test_pinned_refs_leave_the_builtin_table(self):
+        m = build_ir(parse(XSD_40), "musicxml-4.0")
+        for resolved in ("xml:space", "xlink:type", "xlink:show", "xlink:actuate"):
+            self.assertNotIn(resolved, m.builtins)
+        # The pinned refs name an XSD builtin rather than a declaration; the
+        # two builtins they reach carry the IR's lexical facts.
+        self.assertEqual(m.builtins["xml:lang"], "language")
+        self.assertEqual(m.builtins["xlink:href"], "string")
+        self.assertEqual(m.builtins["xs:language"], "language")
+        self.assertEqual(m.builtins["xs:NCName"], "nmtoken")
+
+    def test_unreferenced_imported_types_do_not_enter_the_ir(self):
+        m = build_ir(parse(XSD_40), "musicxml-4.0")
+        names = {v.name for v in m.value_types}
+        for unused in ("hrefType", "roleType", "arcroleType", "labelType", "fromType", "toType"):
+            self.assertNotIn(unused, names)
+
+
 class ResolverIntegrity(unittest.TestCase):
     """The resolution layer must produce a self-contained, resolvable view for
     every complex type: groups fully spliced, attributes deduped and resolvable,

@@ -2,7 +2,10 @@
 
 #pragma once
 
+#include "mx/core/generated/ActuateType.h"
 #include "mx/core/generated/InstrumentLink.h"
+#include "mx/core/generated/ShowType.h"
+#include "mx/core/generated/TypeType.h"
 
 #include <optional>
 #include <span>
@@ -30,16 +33,16 @@ class PartLink final
   public:
     const std::string &xlinkHref() const noexcept;
     void setXlinkHref(std::string value);
-    const std::optional<std::string> &xlinkType() const noexcept;
-    void setXlinkType(std::optional<std::string> value);
+    const std::optional<TypeType> &xlinkType() const noexcept;
+    void setXlinkType(std::optional<TypeType> value);
     const std::optional<std::string> &xlinkRole() const noexcept;
     void setXlinkRole(std::optional<std::string> value);
     const std::optional<std::string> &xlinkTitle() const noexcept;
     void setXlinkTitle(std::optional<std::string> value);
-    const std::optional<std::string> &xlinkShow() const noexcept;
-    void setXlinkShow(std::optional<std::string> value);
-    const std::optional<std::string> &xlinkActuate() const noexcept;
-    void setXlinkActuate(std::optional<std::string> value);
+    const std::optional<ShowType> &xlinkShow() const noexcept;
+    void setXlinkShow(std::optional<ShowType> value);
+    const std::optional<ActuateType> &xlinkActuate() const noexcept;
+    void setXlinkActuate(std::optional<ActuateType> value);
     std::span<const InstrumentLink> instrumentLink() const noexcept;
     void addInstrumentLink(InstrumentLink value);
     void setInstrumentLink(std::vector<InstrumentLink> value);
@@ -50,11 +53,11 @@ class PartLink final
 
   private:
     std::string m_xlinkHref{};
-    std::optional<std::string> m_xlinkType;
+    std::optional<TypeType> m_xlinkType;
     std::optional<std::string> m_xlinkRole;
     std::optional<std::string> m_xlinkTitle;
-    std::optional<std::string> m_xlinkShow;
-    std::optional<std::string> m_xlinkActuate;
+    std::optional<ShowType> m_xlinkShow;
+    std::optional<ActuateType> m_xlinkActuate;
     std::vector<InstrumentLink> m_instrumentLink;
     std::vector<std::string> m_groupLink;
 };

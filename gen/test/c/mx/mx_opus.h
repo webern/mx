@@ -6,6 +6,9 @@
 #include <libxml/tree.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "mx_actuate_type.h"
+#include "mx_show_type.h"
+#include "mx_type_type.h"
 
 /*
  * The opus type represents a link to a MusicXML opus document that composes multiple MusicXML
@@ -15,15 +18,15 @@ typedef struct {
     bool has_xlink_href;
     char *xlink_href; /* attribute xlink:href */
     bool has_xlink_type;
-    char *xlink_type; /* attribute xlink:type */
+    MxTypeType xlink_type; /* attribute xlink:type */
     bool has_xlink_role;
     char *xlink_role; /* attribute xlink:role */
     bool has_xlink_title;
     char *xlink_title; /* attribute xlink:title */
     bool has_xlink_show;
-    char *xlink_show; /* attribute xlink:show */
+    MxShowType xlink_show; /* attribute xlink:show */
     bool has_xlink_actuate;
-    char *xlink_actuate; /* attribute xlink:actuate */
+    MxActuateType xlink_actuate; /* attribute xlink:actuate */
 } MxOpus;
 
 /* NULL on error; the message is in mx_error(). */

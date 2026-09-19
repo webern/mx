@@ -21,7 +21,15 @@ _XS_PRIMITIVE = {
     "xs:nonNegativeInteger": "non_negative_integer",
     "xs:date": "date",
     "xs:anyURI": "string",
-    "xs:language": "token",
+    # The XML namespace's language tag: a token restricted by the builtin
+    # pattern [a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})* (XSD 1.0 Part 2). A distinct
+    # primitive for the same reason the identity tokens are: a target that
+    # wants validity-by-construction repairs it, and a non-validating target
+    # maps it straight back to its token spelling (zero output change).
+    "xs:language": "language",
+    # NCName is NMTOKEN minus the colon; no MusicXML type rests on it
+    # directly, but the imported xml:space enumeration does.
+    "xs:NCName": "nmtoken",
     # The identity builtins are NCName-derived: lexically NARROWER than token
     # (no whitespace, no empty value, no leading digit or ':' for ID/IDREF;
     # ID values are document-unique). Preserved as distinct primitives -- a
@@ -32,18 +40,17 @@ _XS_PRIMITIVE = {
     "xs:IDREF": "idref",
 }
 
-# The 10 attribute refs into the imported xml/xlink schemas, resolved to the
-# primitive the emitter should use. This is the only place the IR reaches
-# outside the main schema.
+# The imported xml/xlink attribute refs the IR resolves to a builtin
+# primitive instead of following the import: xml:lang's declared type is the
+# xs:language BUILTIN (no schema declares it) and href/role/title are
+# xs:anyURI/xs:string, which accept nearly any string. Every other external
+# ref is lowered from its declaration in the imported schema, which the XSD
+# parser has read beside the main one.
 _EXTERNAL_ATTR = {
-    "xml:lang": "token",
-    "xml:space": "token",
+    "xml:lang": "language",
     "xlink:href": "string",
-    "xlink:type": "token",
     "xlink:role": "string",
     "xlink:title": "string",
-    "xlink:show": "token",
-    "xlink:actuate": "token",
 }
 
 _NUMERIC = {"decimal", "integer", "positive_integer", "non_negative_integer"}
@@ -82,6 +89,16 @@ class _Builder:
         self.source = source
         self.anon_names: dict[int, str] = {}  # id(ComplexType) -> synthesized name
         self.synth: list[tuple[str, xsd.ComplexType]] = []
+        # The imported schemas' attribute declarations, indexed by local name
+        # (the wire ref keeps its prefix).
+        self.external_attrs: dict[str, list[tuple[str, xsd.Attribute]]] = {}
+        for namespace, ext in schema.imported.items():
+            for attr_name, decl in ext.attributes.items():
+                self.external_attrs.setdefault(attr_name, []).append((namespace, decl))
+        # Value types lowered out of the imported schemas, by IR name. They
+        # are picked up when an attribute ref reaches them (so no unreachable
+        # external type ever enters the IR).
+        self.external_values: dict[str, ir.ValueType] = {}
 
     # ----- top level ------------------------------------------------------- #
 
@@ -90,11 +107,10 @@ class _Builder:
         reachable = reachable_types(self.schema)
 
         value_types = [
-            self._value_type(st)
+            self._value_type(st, self.schema.simple_types)
             for name, st in self.schema.simple_types.items()
             if name in reachable
         ]
-        value_types = self._topo_sort_values(value_types)
         groups = [
             ir.Group(name, self._particle(g.particle), g.doc)
             for name, g in self.schema.groups.items()
@@ -115,6 +131,11 @@ class _Builder:
             if name in reachable
         ]
         complex_types += [self._complex_type(name, ct) for name, ct in self.synth]
+
+        # The attribute refs lowered above may have pulled value types out of
+        # the imported schemas; they join the emit order deps-first.
+        value_types += list(self.external_values.values())
+        value_types = self._topo_sort_values(value_types)
 
         resolver = Resolver(groups, attribute_groups, complex_types)
         for ct in complex_types:
@@ -169,20 +190,25 @@ class _Builder:
 
     # ----- value types ----------------------------------------------------- #
 
-    def _value_type(self, st: xsd.SimpleType) -> ir.ValueType:
+    def _value_type(self, st: xsd.SimpleType, simple_types: dict, name: str | None = None) -> ir.ValueType:
+        """Lower one simple type. `simple_types` is the schema the type is
+        declared in (the main one, or an imported schema); `name` overrides
+        the type's own name, for an anonymous type hoisted under a name the
+        declaring schema gave it only by context."""
+        type_name = st.name if name is None else name
         if isinstance(st.content, xsd.Union):
-            return self._union(st)
+            return self._union(type_name, st, simple_types)
         if isinstance(st.content, xsd.ListType):
             # MusicXML uses no xs:list; represent defensively as a token string.
-            return ir.StringType(st.name, "token", doc=st.doc)
-        primitive, facets = self._resolve_restriction(st.name)
+            return ir.StringType(type_name, "token", doc=st.doc)
+        primitive, facets = self._restriction(simple_types, st)
         if facets.enumerations:
             return ir.EnumType(
-                st.name, primitive, [e.value for e in facets.enumerations], st.doc
+                type_name, primitive, [e.value for e in facets.enumerations], st.doc
             )
         if primitive in _NUMERIC:
             return ir.NumberType(
-                st.name,
+                type_name,
                 primitive,
                 facets.min_inclusive,
                 facets.max_inclusive,
@@ -191,7 +217,7 @@ class _Builder:
                 st.doc,
             )
         return ir.StringType(
-            st.name,
+            type_name,
             primitive,
             list(facets.patterns),
             facets.min_length,
@@ -200,24 +226,24 @@ class _Builder:
             st.doc,
         )
 
-    def _resolve_restriction(self, type_name: str) -> tuple[str, xsd.Facets]:
-        """Collapse a restriction chain to (primitive, merged facets). Child
-        facets override inherited ones; patterns accumulate."""
-        st = self.schema.simple_types.get(type_name)
-        if st is None or not isinstance(st.content, xsd.Restriction):
-            return _primitive(type_name), xsd.Facets()
-        base = st.content.base
-        if base in self.schema.simple_types:
-            primitive, merged = self._resolve_restriction(base)
-        else:
-            primitive, merged = _primitive(base), xsd.Facets()
+    def _restriction(self, simple_types: dict, st: xsd.SimpleType) -> tuple[str, xsd.Facets]:
+        """A restriction's own facets merged onto its base chain."""
+        primitive, merged = self._resolve_restriction(simple_types, st.content.base)
         _merge_facets(merged, st.content.facets)
         return primitive, merged
 
-    def _union(self, st: xsd.SimpleType) -> ir.UnionType:
+    def _resolve_restriction(self, simple_types: dict, type_name: str) -> tuple[str, xsd.Facets]:
+        """Collapse a restriction chain to (primitive, merged facets). Child
+        facets override inherited ones; patterns accumulate."""
+        st = simple_types.get(type_name)
+        if st is None or not isinstance(st.content, xsd.Restriction):
+            return _primitive(type_name), xsd.Facets()
+        return self._restriction(simple_types, st)
+
+    def _union(self, name: str, st: xsd.SimpleType, simple_types: dict) -> ir.UnionType:
         members: list[ir.UnionMember] = []
         for m in st.content.member_types:
-            if m in self.schema.simple_types:
+            if m in simple_types:
                 members.append(ir.UnionMember(ir.Ref(m, "value")))
             else:
                 members.append(ir.UnionMember(ir.Ref(_primitive(m), "primitive")))
@@ -234,12 +260,63 @@ class _Builder:
 
     def _attr(self, a: xsd.Attribute) -> ir.Attr:
         if a.ref:
-            ref = ir.Ref(_primitive(a.ref), "primitive")
+            ref = self._external_ref(a.ref)
             name = a.ref
         else:
             ref = self._type_ref(a.type) if a.type else ir.Ref("string", "primitive")
             name = a.name or ""
         return ir.Attr(name, ref, a.use == "required", a.default, a.fixed, a.doc)
+
+    # ----- imported attributes --------------------------------------------- #
+
+    def _external_ref(self, ref_name: str) -> ir.Ref:
+        """Resolve an imported attribute ref (xml:lang, xlink:type, ...) to the
+        type its declaration names.
+
+        The pinned refs in _EXTERNAL_ATTR never look at the import: their
+        declared type is an XML-Schema BUILTIN with nothing to read. The rest
+        are declared in the imported xml/xlink schemas, which the XSD parser
+        has already read beside the main one.
+        """
+        pinned = _EXTERNAL_ATTR.get(ref_name)
+        if pinned is not None:
+            return ir.Ref(pinned, "primitive")
+        candidates = self.external_attrs.get(ref_name.split(":")[-1], [])
+        if len(candidates) != 1:
+            raise ValueError(
+                f"external attribute ref {ref_name!r} resolves to "
+                f"{len(candidates)} declarations in the imported schemas"
+            )
+        namespace, decl = candidates[0]
+        return self._external_decl_ref(namespace, decl, ref_name)
+
+    def _external_decl_ref(self, namespace: str, decl: xsd.Attribute, ref_name: str) -> ir.Ref:
+        """The type an imported attribute declaration carries: a named type
+        from its own schema (xlink:typeType), or its inline type hoisted under
+        the qualified ref name (xml:space)."""
+        if decl.type:
+            return self._external_type_ref(namespace, decl.type)
+        if decl.inline_type is not None:
+            name = ref_name.replace(":", "-")
+            self._external_value(name, decl.inline_type, namespace)
+            return ir.Ref(name, "value")
+        return ir.Ref("string", "primitive")
+
+    def _external_type_ref(self, namespace: str, type_name: str) -> ir.Ref:
+        ext = self.schema.imported[namespace]
+        name = type_name.split(":")[-1]
+        st = ext.simple_types.get(name)
+        if st is None:
+            return ir.Ref(_primitive(type_name), "primitive")
+        self._external_value(name, st, namespace)
+        return ir.Ref(name, "value")
+
+    def _external_value(self, name: str, st: xsd.SimpleType, namespace: str) -> None:
+        """Lower (once) a value type declared in an imported schema."""
+        if name not in self.external_values:
+            self.external_values[name] = self._value_type(
+                st, self.schema.imported[namespace].simple_types, name=name
+            )
 
     # ----- complex types --------------------------------------------------- #
 

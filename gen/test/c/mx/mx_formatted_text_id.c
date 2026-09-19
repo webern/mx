@@ -25,7 +25,7 @@ MxFormattedTextID *mx_formatted_text_id_parse(xmlNodePtr el) {
             m->xml_lang = mx_strdup(s);
         } else if (strcmp(aname, "xml:space") == 0) {
             m->has_xml_space = true;
-            m->xml_space = mx_strdup(s);
+            m->xml_space = mx_xml_space_parse(s);
         } else if (strcmp(aname, "justify") == 0) {
             m->has_justify = true;
             m->justify = mx_left_center_right_parse(s);
@@ -128,7 +128,7 @@ xmlNodePtr mx_formatted_text_id_serialize(const MxFormattedTextID *m, xmlNodePtr
         xmlSetProp(el, BAD_CAST "xml:lang", BAD_CAST m->xml_lang);
     }
     if (m->has_xml_space) {
-        xmlSetProp(el, BAD_CAST "xml:space", BAD_CAST m->xml_space);
+        xmlSetProp(el, BAD_CAST "xml:space", BAD_CAST mx_xml_space_to_string(m->xml_space));
     }
     if (m->has_justify) {
         xmlSetProp(el, BAD_CAST "justify", BAD_CAST mx_left_center_right_to_string(m->justify));
@@ -223,8 +223,6 @@ void mx_formatted_text_id_free(MxFormattedTextID *m) {
         return;
     if (m->has_xml_lang)
         free(m->xml_lang);
-    if (m->has_xml_space)
-        free(m->xml_space);
     if (m->has_font_family)
         free(m->font_family);
     if (m->has_font_size)

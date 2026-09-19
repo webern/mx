@@ -59,6 +59,11 @@ class PlateRef:
     # lexically narrower than a free string. A validating target renders a
     # repairing wrapper for it; others ignore the flag. Neutral schema fact.
     name_token: bool = False
+    # True when the target maps this primitive to a WRAPPER type whose
+    # value-style API (parse/toString) the rendered code uses instead of a raw
+    # target string. A superset of `name_token`: the identity tokens plus the
+    # language tag. Target binding, like `ident`.
+    wrapper: bool = False
     # True when the referent is the xs:ID primitive, whose value must be unique
     # within the document. Neutral schema fact.
     unique_id: bool = False

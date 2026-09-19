@@ -31,12 +31,12 @@ void Link::setXlinkHref(std::string value)
     m_xlinkHref = std::move(value);
 }
 
-const std::optional<std::string> &Link::xlinkType() const noexcept
+const std::optional<TypeType> &Link::xlinkType() const noexcept
 {
     return m_xlinkType;
 }
 
-void Link::setXlinkType(std::optional<std::string> value)
+void Link::setXlinkType(std::optional<TypeType> value)
 {
     m_xlinkType = std::move(value);
 }
@@ -61,22 +61,22 @@ void Link::setXlinkTitle(std::optional<std::string> value)
     m_xlinkTitle = std::move(value);
 }
 
-const std::optional<std::string> &Link::xlinkShow() const noexcept
+const std::optional<ShowType> &Link::xlinkShow() const noexcept
 {
     return m_xlinkShow;
 }
 
-void Link::setXlinkShow(std::optional<std::string> value)
+void Link::setXlinkShow(std::optional<ShowType> value)
 {
     m_xlinkShow = std::move(value);
 }
 
-const std::optional<std::string> &Link::xlinkActuate() const noexcept
+const std::optional<ActuateType> &Link::xlinkActuate() const noexcept
 {
     return m_xlinkActuate;
 }
 
-void Link::setXlinkActuate(std::optional<std::string> value)
+void Link::setXlinkActuate(std::optional<ActuateType> value)
 {
     m_xlinkActuate = std::move(value);
 }
@@ -163,7 +163,7 @@ Link parseLink(pugi::xml_node el, const ParseContext &context)
         }
         else if (aname == "xlink:type")
         {
-            out.setXlinkType(std::string{a.value()});
+            out.setXlinkType(parseValue<TypeType>(a.value(), context, el, "xlink:type"));
         }
         else if (aname == "xlink:role")
         {
@@ -175,11 +175,11 @@ Link parseLink(pugi::xml_node el, const ParseContext &context)
         }
         else if (aname == "xlink:show")
         {
-            out.setXlinkShow(std::string{a.value()});
+            out.setXlinkShow(parseValue<ShowType>(a.value(), context, el, "xlink:show"));
         }
         else if (aname == "xlink:actuate")
         {
-            out.setXlinkActuate(std::string{a.value()});
+            out.setXlinkActuate(parseValue<ActuateType>(a.value(), context, el, "xlink:actuate"));
         }
         else if (aname == "element")
         {
@@ -238,7 +238,7 @@ void serializeLink(const Link &v, pugi::xml_node parent, const char *tag)
     setAttribute(el, "xlink:href", v.xlinkHref());
     if (v.xlinkType())
     {
-        setAttribute(el, "xlink:type", *v.xlinkType());
+        setAttribute(el, "xlink:type", v.xlinkType()->toString());
     }
     if (v.xlinkRole())
     {
@@ -250,11 +250,11 @@ void serializeLink(const Link &v, pugi::xml_node parent, const char *tag)
     }
     if (v.xlinkShow())
     {
-        setAttribute(el, "xlink:show", *v.xlinkShow());
+        setAttribute(el, "xlink:show", v.xlinkShow()->toString());
     }
     if (v.xlinkActuate())
     {
-        setAttribute(el, "xlink:actuate", *v.xlinkActuate());
+        setAttribute(el, "xlink:actuate", v.xlinkActuate()->toString());
     }
     if (v.element())
     {

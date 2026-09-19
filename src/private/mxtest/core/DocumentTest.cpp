@@ -18,7 +18,10 @@
 
 #include "pugixml.hpp"
 
+#include <algorithm>
+#include <cstddef>
 #include <string>
+#include <vector>
 
 using namespace mx::core;
 
@@ -108,6 +111,40 @@ TEST(RejectsMissingRequiredAttribute, Document)
                             "<part id=\"P1\"><measure number=\"1\"/></part></score-partwise>");
     CHECK(e.code == ErrorCode::missingRequiredAttribute);
     CHECK(e.path.find("score-part") != std::string::npos);
+}
+
+TEST(RepairsOutOfVocabularyXmlAndXlinkAttributes, Document)
+{
+    // #398: xml:lang, xml:space and the xlink attributes are constrained now.
+    // An out-of-vocabulary value is repaired to the type's natural value and
+    // reported, the same leniency every other value type applies -- a
+    // document-level REFUSAL would turn a 3.x file into an unparseable one.
+    std::vector<Diagnostic> diagnostics;
+    pugi::xml_document doc;
+    CHECK(doc.load_string("<score-partwise version=\"4.0\">"
+                          "<credit page=\"1\">"
+                          "<link xlink:href=\"http://x\" xlink:type=\"bogus\" xlink:show=\"sometimes\"/>"
+                          "<credit-words xml:lang=\"not a language\" xml:space=\"sometimes\">Hello</credit-words>"
+                          "</credit>"
+                          "<part-list><score-part id=\"P1\"><part-name>M</part-name></score-part></part-list>"
+                          "<part id=\"P1\"><measure number=\"1\"/></part></score-partwise>"));
+    const ParseContext context{[&diagnostics](const Diagnostic &diagnostic) { diagnostics.push_back(diagnostic); }};
+    auto result = parse(doc, context);
+    CHECK(result.ok());
+
+    const auto reported = [&diagnostics](const std::string &message) {
+        return std::any_of(diagnostics.begin(), diagnostics.end(),
+                           [&message](const Diagnostic &diagnostic) { return diagnostic.message == message; });
+    };
+    CHECK_EQUAL(std::size_t{4}, diagnostics.size());
+    CHECK(reported("invalid value \"bogus\" in attribute \"xlink:type\"; using \"simple\""));
+    CHECK(reported("invalid value \"sometimes\" in attribute \"xlink:show\"; using \"new\""));
+    CHECK(reported("invalid value \"not a language\" in attribute \"xml:lang\"; using \"\""));
+    CHECK(reported("invalid value \"sometimes\" in attribute \"xml:space\"; using \"default\""));
+    for (const Diagnostic &diagnostic : diagnostics)
+    {
+        CHECK(DiagnosticCode::invalidValue == diagnostic.code);
+    }
 }
 
 TEST(RejectsNewerVersion, Document)

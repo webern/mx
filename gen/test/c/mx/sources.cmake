@@ -9,6 +9,7 @@ set(MX_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/mx_accord.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_accordion_middle.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_accordion_registration.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_actuate_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_appearance.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_arpeggiate.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_arrow.c
@@ -249,6 +250,7 @@ set(MX_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/mx_semitones.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_show_frets.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_show_tuplet.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_show_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_slash.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_slide.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_slur.c
@@ -322,6 +324,7 @@ set(MX_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/mx_tuplet_portion.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_tuplet_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_two_note_turn.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_type_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_typed_text.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_unpitched.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_up_down.c
@@ -336,6 +339,7 @@ set(MX_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/mx_winged.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_wood.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_work.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_xml_space.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_yes_no.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_yes_no_number.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_yyyy_mm_dd.c

@@ -8,6 +8,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/Accord.cpp
     ${CMAKE_CURRENT_LIST_DIR}/AccordionMiddle.cpp
     ${CMAKE_CURRENT_LIST_DIR}/AccordionRegistration.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ActuateType.cpp
     ${CMAKE_CURRENT_LIST_DIR}/AllMarginsGroup.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Appearance.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Arpeggiate.cpp
@@ -336,6 +337,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/Semitones.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ShowFrets.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ShowTuplet.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ShowType.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Slash.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SlashGroup.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SlashGroupGroup.cpp
@@ -433,6 +435,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/TupletPortion.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TupletType.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TwoNoteTurn.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/TypeType.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TypedText.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Unpitched.cpp
     ${CMAKE_CURRENT_LIST_DIR}/UpDown.cpp
@@ -451,6 +454,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/Wood.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WoodValue.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Work.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/XMLSpace.cpp
     ${CMAKE_CURRENT_LIST_DIR}/YesNo.cpp
     ${CMAKE_CURRENT_LIST_DIR}/YesNoNumber.cpp
     ${CMAKE_CURRENT_LIST_DIR}/YyyyMmDd.cpp
@@ -462,6 +466,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/Accord.h
     ${CMAKE_CURRENT_LIST_DIR}/AccordionMiddle.h
     ${CMAKE_CURRENT_LIST_DIR}/AccordionRegistration.h
+    ${CMAKE_CURRENT_LIST_DIR}/ActuateType.h
     ${CMAKE_CURRENT_LIST_DIR}/AllMarginsGroup.h
     ${CMAKE_CURRENT_LIST_DIR}/Appearance.h
     ${CMAKE_CURRENT_LIST_DIR}/Arpeggiate.h
@@ -790,6 +795,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/Semitones.h
     ${CMAKE_CURRENT_LIST_DIR}/ShowFrets.h
     ${CMAKE_CURRENT_LIST_DIR}/ShowTuplet.h
+    ${CMAKE_CURRENT_LIST_DIR}/ShowType.h
     ${CMAKE_CURRENT_LIST_DIR}/Slash.h
     ${CMAKE_CURRENT_LIST_DIR}/SlashGroup.h
     ${CMAKE_CURRENT_LIST_DIR}/SlashGroupGroup.h
@@ -887,6 +893,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/TupletPortion.h
     ${CMAKE_CURRENT_LIST_DIR}/TupletType.h
     ${CMAKE_CURRENT_LIST_DIR}/TwoNoteTurn.h
+    ${CMAKE_CURRENT_LIST_DIR}/TypeType.h
     ${CMAKE_CURRENT_LIST_DIR}/TypedText.h
     ${CMAKE_CURRENT_LIST_DIR}/Unpitched.h
     ${CMAKE_CURRENT_LIST_DIR}/UpDown.h
@@ -906,6 +913,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/Wood.h
     ${CMAKE_CURRENT_LIST_DIR}/WoodValue.h
     ${CMAKE_CURRENT_LIST_DIR}/Work.h
+    ${CMAKE_CURRENT_LIST_DIR}/XMLSpace.h
     ${CMAKE_CURRENT_LIST_DIR}/YesNo.h
     ${CMAKE_CURRENT_LIST_DIR}/YesNoNumber.h
     ${CMAKE_CURRENT_LIST_DIR}/YyyyMmDd.h

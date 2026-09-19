@@ -64,6 +64,11 @@ _PRIM_NUMERIC = {"decimal", "integer", "positive_integer", "non_negative_integer
 # repairs them, a non-validating one ignores the flag.
 _PRIM_NAME_TOKEN = {"id", "idref", "idrefs", "nmtoken", "nmtokens"}
 
+# The primitives a validating target maps to a wrapper class rather than a raw
+# target string: the name tokens plus the language tag (a builtin lexical
+# space, like them, but not a name).
+_PRIM_WRAPPER = _PRIM_NAME_TOKEN | {"language"}
+
 
 def wrap_doc(doc: str | None, width: int) -> list[str]:
     """Greedy word-wrap of raw doc text at `width` (the wrapped TEXT width;
@@ -512,6 +517,7 @@ class _Builder:
                 if ref.name in _PRIM_NUMERIC
                 else "primitive-string",
                 name_token=ref.name in _PRIM_NAME_TOKEN,
+                wrapper=ref.name in _PRIM_WRAPPER,
                 unique_id=ref.name == "id",
             )
         if ref.category == "value":

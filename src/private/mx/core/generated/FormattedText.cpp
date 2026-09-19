@@ -11,22 +11,22 @@
 namespace mx::core
 {
 
-const std::optional<std::string> &FormattedText::xmlLang() const noexcept
+const std::optional<Language> &FormattedText::xmlLang() const noexcept
 {
     return m_xmlLang;
 }
 
-void FormattedText::setXMLLang(std::optional<std::string> value)
+void FormattedText::setXMLLang(std::optional<Language> value)
 {
     m_xmlLang = std::move(value);
 }
 
-const std::optional<std::string> &FormattedText::xmlSpace() const noexcept
+const std::optional<XMLSpace> &FormattedText::xmlSpace() const noexcept
 {
     return m_xmlSpace;
 }
 
-void FormattedText::setXMLSpace(std::optional<std::string> value)
+void FormattedText::setXMLSpace(std::optional<XMLSpace> value)
 {
     m_xmlSpace = std::move(value);
 }
@@ -253,11 +253,11 @@ FormattedText parseFormattedText(pugi::xml_node el, const ParseContext &context)
         }
         if (aname == "xml:lang")
         {
-            out.setXMLLang(std::string{a.value()});
+            out.setXMLLang(parseValue<Language>(a.value(), context, el, "xml:lang"));
         }
         else if (aname == "xml:space")
         {
-            out.setXMLSpace(std::string{a.value()});
+            out.setXMLSpace(parseValue<XMLSpace>(a.value(), context, el, "xml:space"));
         }
         else if (aname == "justify")
         {
@@ -362,11 +362,11 @@ void serializeFormattedText(const FormattedText &v, pugi::xml_node parent, const
     pugi::xml_node el = parent.append_child(tag);
     if (v.xmlLang())
     {
-        setAttribute(el, "xml:lang", *v.xmlLang());
+        setAttribute(el, "xml:lang", v.xmlLang()->toString());
     }
     if (v.xmlSpace())
     {
-        setAttribute(el, "xml:space", *v.xmlSpace());
+        setAttribute(el, "xml:space", v.xmlSpace()->toString());
     }
     if (v.justify())
     {

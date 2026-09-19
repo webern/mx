@@ -28,7 +28,7 @@ MxLink *mx_link_parse(xmlNodePtr el) {
             m->xlink_href = mx_strdup(s);
         } else if (strcmp(aname, "xlink:type") == 0) {
             m->has_xlink_type = true;
-            m->xlink_type = mx_strdup(s);
+            m->xlink_type = mx_type_type_parse(s);
         } else if (strcmp(aname, "xlink:role") == 0) {
             m->has_xlink_role = true;
             m->xlink_role = mx_strdup(s);
@@ -37,10 +37,10 @@ MxLink *mx_link_parse(xmlNodePtr el) {
             m->xlink_title = mx_strdup(s);
         } else if (strcmp(aname, "xlink:show") == 0) {
             m->has_xlink_show = true;
-            m->xlink_show = mx_strdup(s);
+            m->xlink_show = mx_show_type_parse(s);
         } else if (strcmp(aname, "xlink:actuate") == 0) {
             m->has_xlink_actuate = true;
-            m->xlink_actuate = mx_strdup(s);
+            m->xlink_actuate = mx_actuate_type_parse(s);
         } else if (strcmp(aname, "element") == 0) {
             m->has_element = true;
             m->element = mx_strdup(s);
@@ -94,7 +94,7 @@ xmlNodePtr mx_link_serialize(const MxLink *m, xmlNodePtr parent, const char *tag
         xmlSetProp(el, BAD_CAST "xlink:href", BAD_CAST m->xlink_href);
     }
     if (m->has_xlink_type) {
-        xmlSetProp(el, BAD_CAST "xlink:type", BAD_CAST m->xlink_type);
+        xmlSetProp(el, BAD_CAST "xlink:type", BAD_CAST mx_type_type_to_string(m->xlink_type));
     }
     if (m->has_xlink_role) {
         xmlSetProp(el, BAD_CAST "xlink:role", BAD_CAST m->xlink_role);
@@ -103,10 +103,10 @@ xmlNodePtr mx_link_serialize(const MxLink *m, xmlNodePtr parent, const char *tag
         xmlSetProp(el, BAD_CAST "xlink:title", BAD_CAST m->xlink_title);
     }
     if (m->has_xlink_show) {
-        xmlSetProp(el, BAD_CAST "xlink:show", BAD_CAST m->xlink_show);
+        xmlSetProp(el, BAD_CAST "xlink:show", BAD_CAST mx_show_type_to_string(m->xlink_show));
     }
     if (m->has_xlink_actuate) {
-        xmlSetProp(el, BAD_CAST "xlink:actuate", BAD_CAST m->xlink_actuate);
+        xmlSetProp(el, BAD_CAST "xlink:actuate", BAD_CAST mx_actuate_type_to_string(m->xlink_actuate));
     }
     if (m->has_element) {
         xmlSetProp(el, BAD_CAST "element", BAD_CAST m->element);
@@ -146,16 +146,10 @@ void mx_link_free(MxLink *m) {
         free(m->name);
     if (m->has_xlink_href)
         free(m->xlink_href);
-    if (m->has_xlink_type)
-        free(m->xlink_type);
     if (m->has_xlink_role)
         free(m->xlink_role);
     if (m->has_xlink_title)
         free(m->xlink_title);
-    if (m->has_xlink_show)
-        free(m->xlink_show);
-    if (m->has_xlink_actuate)
-        free(m->xlink_actuate);
     if (m->has_element)
         free(m->element);
     free(m);

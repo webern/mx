@@ -10,7 +10,7 @@ import (
 // The formatted-text-id type represents a text element with text-formatting and id attributes.
 type FormattedTextID struct {
 	XMLLang       *string             // attribute "xml:lang"
-	XMLSpace      *string             // attribute "xml:space"
+	XMLSpace      *XMLSpace           // attribute "xml:space"
 	Justify       *LeftCenterRight    // attribute "justify"
 	DefaultX      *Tenths             // attribute "default-x"
 	DefaultY      *Tenths             // attribute "default-y"
@@ -46,7 +46,7 @@ func parseFormattedTextID(el *etree.Element) (*FormattedTextID, error) {
 			v := a.Value
 			m.XMLLang = &v
 		case "xml:space":
-			v := a.Value
+			v := ParseXMLSpace(a.Value)
 			m.XMLSpace = &v
 		case "justify":
 			v := ParseLeftCenterRight(a.Value)
@@ -129,7 +129,7 @@ func serializeFormattedTextID(m *FormattedTextID, parent *etree.Element, tag str
 		el.CreateAttr("xml:lang", (*m.XMLLang))
 	}
 	if m.XMLSpace != nil {
-		el.CreateAttr("xml:space", (*m.XMLSpace))
+		el.CreateAttr("xml:space", (*m.XMLSpace).String())
 	}
 	if m.Justify != nil {
 		el.CreateAttr("justify", (*m.Justify).String())

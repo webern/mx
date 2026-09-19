@@ -4,7 +4,10 @@
 
 #include "mx/core/NameToken.h"
 #include "mx/core/Token.h"
+#include "mx/core/generated/ActuateType.h"
+#include "mx/core/generated/ShowType.h"
 #include "mx/core/generated/Tenths.h"
+#include "mx/core/generated/TypeType.h"
 
 #include <optional>
 #include <string>
@@ -29,16 +32,16 @@ class Link final
     void setName(std::optional<std::string> value);
     const std::string &xlinkHref() const noexcept;
     void setXlinkHref(std::string value);
-    const std::optional<std::string> &xlinkType() const noexcept;
-    void setXlinkType(std::optional<std::string> value);
+    const std::optional<TypeType> &xlinkType() const noexcept;
+    void setXlinkType(std::optional<TypeType> value);
     const std::optional<std::string> &xlinkRole() const noexcept;
     void setXlinkRole(std::optional<std::string> value);
     const std::optional<std::string> &xlinkTitle() const noexcept;
     void setXlinkTitle(std::optional<std::string> value);
-    const std::optional<std::string> &xlinkShow() const noexcept;
-    void setXlinkShow(std::optional<std::string> value);
-    const std::optional<std::string> &xlinkActuate() const noexcept;
-    void setXlinkActuate(std::optional<std::string> value);
+    const std::optional<ShowType> &xlinkShow() const noexcept;
+    void setXlinkShow(std::optional<ShowType> value);
+    const std::optional<ActuateType> &xlinkActuate() const noexcept;
+    void setXlinkActuate(std::optional<ActuateType> value);
     const std::optional<NameToken> &element() const noexcept;
     void setElement(std::optional<NameToken> value);
     const std::optional<int> &position() const noexcept;
@@ -56,11 +59,11 @@ class Link final
   private:
     std::optional<std::string> m_name;
     std::string m_xlinkHref{};
-    std::optional<std::string> m_xlinkType;
+    std::optional<TypeType> m_xlinkType;
     std::optional<std::string> m_xlinkRole;
     std::optional<std::string> m_xlinkTitle;
-    std::optional<std::string> m_xlinkShow;
-    std::optional<std::string> m_xlinkActuate;
+    std::optional<ShowType> m_xlinkShow;
+    std::optional<ActuateType> m_xlinkActuate;
     std::optional<NameToken> m_element;
     std::optional<int> m_position;
     std::optional<Tenths> m_defaultX;

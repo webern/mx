@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/Language.h"
 #include "mx/core/generated/AccidentalValue.h"
 #include "mx/core/generated/Color.h"
 #include "mx/core/generated/EnclosureShape.h"
@@ -17,6 +18,7 @@
 #include "mx/core/generated/Tenths.h"
 #include "mx/core/generated/TextDirection.h"
 #include "mx/core/generated/Valign.h"
+#include "mx/core/generated/XMLSpace.h"
 
 #include <optional>
 #include <string>
@@ -38,10 +40,10 @@ class AccidentalText final
   public:
     const std::optional<SmuflAccidentalGlyphName> &smufl() const noexcept;
     void setSmufl(std::optional<SmuflAccidentalGlyphName> value);
-    const std::optional<std::string> &xmlLang() const noexcept;
-    void setXMLLang(std::optional<std::string> value);
-    const std::optional<std::string> &xmlSpace() const noexcept;
-    void setXMLSpace(std::optional<std::string> value);
+    const std::optional<Language> &xmlLang() const noexcept;
+    void setXMLLang(std::optional<Language> value);
+    const std::optional<XMLSpace> &xmlSpace() const noexcept;
+    void setXMLSpace(std::optional<XMLSpace> value);
     const std::optional<LeftCenterRight> &justify() const noexcept;
     void setJustify(std::optional<LeftCenterRight> value);
     const std::optional<Tenths> &defaultX() const noexcept;
@@ -88,8 +90,8 @@ class AccidentalText final
 
   private:
     std::optional<SmuflAccidentalGlyphName> m_smufl;
-    std::optional<std::string> m_xmlLang;
-    std::optional<std::string> m_xmlSpace;
+    std::optional<Language> m_xmlLang;
+    std::optional<XMLSpace> m_xmlSpace;
     std::optional<LeftCenterRight> m_justify;
     std::optional<Tenths> m_defaultX;
     std::optional<Tenths> m_defaultY;

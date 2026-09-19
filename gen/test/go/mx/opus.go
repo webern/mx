@@ -10,12 +10,12 @@ import (
 // The opus type represents a link to a MusicXML opus document that composes multiple MusicXML
 // scores into a collection.
 type Opus struct {
-	XlinkHref    *string // attribute "xlink:href"
-	XlinkType    *string // attribute "xlink:type"
-	XlinkRole    *string // attribute "xlink:role"
-	XlinkTitle   *string // attribute "xlink:title"
-	XlinkShow    *string // attribute "xlink:show"
-	XlinkActuate *string // attribute "xlink:actuate"
+	XlinkHref    *string      // attribute "xlink:href"
+	XlinkType    *TypeType    // attribute "xlink:type"
+	XlinkRole    *string      // attribute "xlink:role"
+	XlinkTitle   *string      // attribute "xlink:title"
+	XlinkShow    *ShowType    // attribute "xlink:show"
+	XlinkActuate *ActuateType // attribute "xlink:actuate"
 }
 
 func parseOpus(el *etree.Element) (*Opus, error) {
@@ -29,7 +29,7 @@ func parseOpus(el *etree.Element) (*Opus, error) {
 			v := a.Value
 			m.XlinkHref = &v
 		case "xlink:type":
-			v := a.Value
+			v := ParseTypeType(a.Value)
 			m.XlinkType = &v
 		case "xlink:role":
 			v := a.Value
@@ -38,10 +38,10 @@ func parseOpus(el *etree.Element) (*Opus, error) {
 			v := a.Value
 			m.XlinkTitle = &v
 		case "xlink:show":
-			v := a.Value
+			v := ParseShowType(a.Value)
 			m.XlinkShow = &v
 		case "xlink:actuate":
-			v := a.Value
+			v := ParseActuateType(a.Value)
 			m.XlinkActuate = &v
 		default:
 			return nil, fmt.Errorf("unknown attribute %q on <%s>", a.FullKey(), el.Tag)
@@ -59,7 +59,7 @@ func serializeOpus(m *Opus, parent *etree.Element, tag string) {
 		el.CreateAttr("xlink:href", (*m.XlinkHref))
 	}
 	if m.XlinkType != nil {
-		el.CreateAttr("xlink:type", (*m.XlinkType))
+		el.CreateAttr("xlink:type", (*m.XlinkType).String())
 	}
 	if m.XlinkRole != nil {
 		el.CreateAttr("xlink:role", (*m.XlinkRole))
@@ -68,9 +68,9 @@ func serializeOpus(m *Opus, parent *etree.Element, tag string) {
 		el.CreateAttr("xlink:title", (*m.XlinkTitle))
 	}
 	if m.XlinkShow != nil {
-		el.CreateAttr("xlink:show", (*m.XlinkShow))
+		el.CreateAttr("xlink:show", (*m.XlinkShow).String())
 	}
 	if m.XlinkActuate != nil {
-		el.CreateAttr("xlink:actuate", (*m.XlinkActuate))
+		el.CreateAttr("xlink:actuate", (*m.XlinkActuate).String())
 	}
 }

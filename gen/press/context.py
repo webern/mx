@@ -226,6 +226,7 @@ def plate_context(plates: Plates, plate) -> dict:
         refs += [f.type_ref for f in items]
         ctx["any_decimal"] = any(r.kind == "primitive-decimal" for r in refs)
         ctx["any_name_token"] = any(r.name_token for r in refs)
+        ctx["any_language"] = any(r.wire == "language" for r in refs)
         ctx["any_min1"] = any(f.min1 for f in items)
         ctx["any_bounded"] = any(f.max is not None for f in items)
         ctx["any_vector"] = any(f.cardinality == "vector" for f in items)

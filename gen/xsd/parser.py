@@ -2,8 +2,10 @@
 
 Uses the stdlib ElementTree. The parser is intentionally strict about the
 MusicXML subset: it understands the element kinds the schema actually uses and
-ignores annotations and XML comments. It does not resolve imported schemas
-(xml.xsd, xlink.xsd); attribute refs into those namespaces are kept verbatim.
+ignores annotations and XML comments. An imported schema that sits beside the
+main one (xml.xsd, xlink.xsd) is parsed too, so attribute refs into those
+namespaces can be resolved by the IR; an import that names no local file (a
+URL, as xlink.xsd's own xml.xsd import does) is left unresolved.
 """
 
 from __future__ import annotations
@@ -39,8 +41,37 @@ XS = "{http://www.w3.org/2001/XMLSchema}"
 
 
 def parse(path: str | Path) -> Schema:
+    schema = _parse_file(path)
+    _resolve_imports(schema, Path(path))
+    return schema
+
+
+def _parse_file(path: str | Path) -> Schema:
+    """Parse one schema document, without resolving its imports."""
     root = ET.parse(path).getroot()
     return _Parser().schema(root)
+
+
+def _parse_imported_file(path: str | Path) -> Schema:
+    """Parse one imported schema document, reading only its declarations."""
+    root = ET.parse(path).getroot()
+    return _ImportedParser().schema(root)
+
+
+def _resolve_imports(schema: Schema, path: Path) -> None:
+    """Parse the imported schemas that sit beside `path`.
+
+    One level only: the declarations the IR lowers (the xml/xlink attribute
+    declarations) name types from their own file, so following an import's
+    own imports buys nothing. A schemaLocation that is a URL, or a path with
+    no file behind it, stays unresolved and surfaces if a reference needs it.
+    """
+    for namespace, location in schema.imports:
+        if not location or "://" in location:
+            continue
+        candidate = path.parent / location
+        if candidate.is_file():
+            schema.imported[namespace] = _parse_imported_file(candidate)
 
 
 def _local(tag: object) -> str:
@@ -74,14 +105,7 @@ def _max_occurs(elem: ET.Element) -> int:
 
 class _Parser:
     def schema(self, root: ET.Element) -> Schema:
-        schema = Schema(
-            simple_types={},
-            complex_types={},
-            groups={},
-            attribute_groups={},
-            elements=[],
-            imports=[],
-        )
+        schema = _empty_schema()
         for child in _kids(root):
             kind = _local(child.tag)
             if kind == "import":
@@ -100,6 +124,9 @@ class _Parser:
             elif kind == "attributeGroup":
                 ag = self.attribute_group(child)
                 schema.attribute_groups[ag.name] = ag
+            elif kind == "attribute":
+                a = self.attribute(child)
+                schema.attributes[a.name] = a
             elif kind == "element":
                 schema.elements.append(self.top_level_element(child))
         return schema
@@ -256,3 +283,41 @@ class _Parser:
     def top_level_element(self, elem: ET.Element) -> TopLevelElement:
         inline = next((self.complex_type(c) for c in _kids(elem) if _local(c.tag) == "complexType"), None)
         return TopLevelElement(elem.get("name", ""), elem.get("type"), inline, _doc(elem))
+
+
+class _ImportedParser(_Parser):
+    """Read an imported schema's attribute declarations and the simple types
+    they name -- nothing else.
+
+    The imported xml/xlink schemas declare far more than their attributes
+    (xlink.xsd's groups use xs:any, which the MusicXML subset has no model
+    for). The IR resolves external attribute refs to those declarations, so
+    the narrower read keeps the imported documents inside the same subset the
+    main schema stays in.
+    """
+
+    def schema(self, root: ET.Element) -> Schema:
+        """The imported schema's attribute and simple-type declarations."""
+        schema = _empty_schema()
+        for child in _kids(root):
+            kind = _local(child.tag)
+            if kind == "simpleType":
+                st = self.simple_type(child)
+                schema.simple_types[st.name] = st
+            elif kind == "attribute":
+                a = self.attribute(child)
+                schema.attributes[a.name] = a
+        return schema
+
+
+def _empty_schema() -> Schema:
+    """A schema with no declarations, ready to be filled in."""
+    return Schema(
+        simple_types={},
+        complex_types={},
+        groups={},
+        attribute_groups={},
+        attributes={},
+        elements=[],
+        imports=[],
+    )

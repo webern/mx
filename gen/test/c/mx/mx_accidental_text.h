@@ -21,6 +21,7 @@
 #include "mx_tenths.h"
 #include "mx_text_direction.h"
 #include "mx_valign.h"
+#include "mx_xml_space.h"
 
 /*
  * The accidental-text type represents an element with an accidental value and text-formatting
@@ -32,7 +33,7 @@ typedef struct {
     bool has_xml_lang;
     char *xml_lang; /* attribute xml:lang */
     bool has_xml_space;
-    char *xml_space; /* attribute xml:space */
+    MxXMLSpace xml_space; /* attribute xml:space */
     bool has_justify;
     MxLeftCenterRight justify; /* attribute justify */
     bool has_default_x;
