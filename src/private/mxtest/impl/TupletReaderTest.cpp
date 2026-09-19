@@ -7,6 +7,8 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/TupletData.h"
+#include "mx/core/generated/Empty.h"
+#include "mx/core/generated/EmptyPlacement.h"
 #include "mx/core/generated/Note.h"
 #include "mx/core/generated/NoteType.h"
 #include "mx/core/generated/NoteTypeValue.h"
@@ -159,6 +161,142 @@ TEST(guessesActualDurationFromNoteTypeNotFromNormalType, TupletReader)
     REQUIRE(starts.size() == 1);
     CHECK(api::DurationName::eighth == starts.front().actualDurationName);
     CHECK(api::DurationName::quarter == starts.front().normalDurationName);
+}
+
+T_END
+
+// issue #452: an absent normal-type means the normal figure is the note's own written
+// figure, so its dots belong to the guessed normal duration.
+TEST(guessesNormalDotsFromNoteDots, TupletReader)
+{
+    core::Tuplet tuplet;
+    tuplet.setType(core::StartStop::start());
+
+    core::TimeModification timeMod;
+    timeMod.setActualNotes(3);
+    timeMod.setNormalNotes(2);
+
+    core::NoteType noteType;
+    noteType.setValue(core::NoteTypeValue::quarter());
+
+    core::Note note;
+    note.setType(noteType);
+    note.setTimeModification(timeMod);
+    note.addDot(core::EmptyPlacement{});
+
+    Cursor cursor{1, 480};
+    TupletReader reader{tuplet, cursor, note};
+
+    std::vector<api::TupletStart> starts;
+    std::vector<api::TupletStop> stops;
+    reader.parseTuplet(starts, stops);
+
+    REQUIRE(starts.size() == 1);
+    CHECK(api::DurationName::quarter == starts.front().normalDurationName);
+    CHECK_EQUAL(1, starts.front().normalDots);
+    CHECK_EQUAL(1, starts.front().actualDots);
+}
+
+T_END
+
+// The count matters rather than the presence of one dot: a double-dotted note has two.
+TEST(guessesTwoNormalDotsFromTwoNoteDots, TupletReader)
+{
+    core::Tuplet tuplet;
+    tuplet.setType(core::StartStop::start());
+
+    core::TimeModification timeMod;
+    timeMod.setActualNotes(3);
+    timeMod.setNormalNotes(2);
+
+    core::NoteType noteType;
+    noteType.setValue(core::NoteTypeValue::quarter());
+
+    core::Note note;
+    note.setType(noteType);
+    note.setTimeModification(timeMod);
+    note.addDot(core::EmptyPlacement{});
+    note.addDot(core::EmptyPlacement{});
+
+    Cursor cursor{1, 480};
+    TupletReader reader{tuplet, cursor, note};
+
+    std::vector<api::TupletStart> starts;
+    std::vector<api::TupletStop> stops;
+    reader.parseTuplet(starts, stops);
+
+    REQUIRE(starts.size() == 1);
+    CHECK_EQUAL(2, starts.front().normalDots);
+}
+
+T_END
+
+// An explicit normal-type/normal-dot still wins: the note's own dots must not overwrite
+// the normal side that the file spelled out.
+TEST(explicitNormalDotsWinOverNoteDots, TupletReader)
+{
+    core::Tuplet tuplet;
+    tuplet.setType(core::StartStop::start());
+
+    core::TimeModificationGroup group;
+    group.setNormalType(core::NoteTypeValue::half());
+    group.addNormalDot(core::Empty{});
+
+    core::TimeModification timeMod;
+    timeMod.setActualNotes(3);
+    timeMod.setNormalNotes(2);
+    timeMod.setGroup(group);
+
+    core::NoteType noteType;
+    noteType.setValue(core::NoteTypeValue::quarter());
+
+    core::Note note;
+    note.setType(noteType);
+    note.setTimeModification(timeMod);
+    note.addDot(core::EmptyPlacement{});
+    note.addDot(core::EmptyPlacement{});
+
+    Cursor cursor{1, 480};
+    TupletReader reader{tuplet, cursor, note};
+
+    std::vector<api::TupletStart> starts;
+    std::vector<api::TupletStop> stops;
+    reader.parseTuplet(starts, stops);
+
+    REQUIRE(starts.size() == 1);
+    CHECK(api::DurationName::half == starts.front().normalDurationName);
+    CHECK_EQUAL(1, starts.front().normalDots);
+}
+
+T_END
+
+// A note with no dots guesses zero dots rather than the unspecified sentinel, so that a
+// second round trip reads the same value back.
+TEST(guessesZeroNormalDotsWhenNoteHasNoDots, TupletReader)
+{
+    core::Tuplet tuplet;
+    tuplet.setType(core::StartStop::start());
+
+    core::TimeModification timeMod;
+    timeMod.setActualNotes(3);
+    timeMod.setNormalNotes(2);
+
+    core::NoteType noteType;
+    noteType.setValue(core::NoteTypeValue::quarter());
+
+    core::Note note;
+    note.setType(noteType);
+    note.setTimeModification(timeMod);
+
+    Cursor cursor{1, 480};
+    TupletReader reader{tuplet, cursor, note};
+
+    std::vector<api::TupletStart> starts;
+    std::vector<api::TupletStop> stops;
+    reader.parseTuplet(starts, stops);
+
+    REQUIRE(starts.size() == 1);
+    CHECK_EQUAL(0, starts.front().normalDots);
 }
 
 T_END

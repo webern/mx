@@ -1807,4 +1807,66 @@ TEST(implicitStaffOnSingleStaffPartOmitsElement, NoteData)
 
 T_END;
 
+// issue #452: a <tuplet> on a dotted note whose <time-modification> does not restate the
+// normal figure guesses that figure from the note, dots included, so the tuplet written back
+// carries a tuplet-dot.
+TEST(guessedTupletNormalKeepsTheNoteDots, NoteData)
+{
+    const std::string xml = R"(<score-partwise version="3.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>MusicXML Part</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>2</divisions>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <dot/>
+        <time-modification>
+          <actual-notes>3</actual-notes>
+          <normal-notes>2</normal-notes>
+        </time-modification>
+        <notations>
+          <tuplet type="start" number="1"/>
+        </notations>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = mxtest::fromXml(xml);
+    const auto &starts =
+        score.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.tupletStarts;
+    REQUIRE(1 == starts.size());
+    CHECK(DurationName::quarter == starts.at(0).normalDurationName);
+    CHECK_EQUAL(1, starts.at(0).normalDots);
+
+    const auto written = mxtest::toXml(score);
+    const auto normalPos = written.find("<tuplet-normal>");
+    REQUIRE(normalPos != std::string::npos);
+    const auto normalEnd = written.find("</tuplet-normal>", normalPos);
+    REQUIRE(normalEnd != std::string::npos);
+    CHECK(written.substr(normalPos, normalEnd - normalPos).find("<tuplet-dot") != std::string::npos);
+
+    // reading the written document back reports the same dotted normal figure
+    const auto reread = mxtest::fromXml(written);
+    const auto &rereread =
+        reread.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.tupletStarts;
+    REQUIRE(1 == rereread.size());
+    CHECK_EQUAL(1, rereread.at(0).normalDots);
+}
+
+T_END;
+
 #endif

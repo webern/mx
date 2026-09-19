@@ -132,9 +132,15 @@ void TupletReader::guessNormalFromNote(api::TupletStart &outTupletStart)
         outTupletStart.normalDurationName = converter.convert(grp.normalType());
         outTupletStart.normalDots = static_cast<int>(grp.normalDot().size());
     }
-    else if (myNote.type().has_value())
+    else
     {
-        outTupletStart.normalDurationName = converter.convert(myNote.type()->value());
+        // An absent normal-type means the normal figure is the note's own written figure,
+        // its dots included (see the time-modification type in the MusicXML schema).
+        if (myNote.type().has_value())
+        {
+            outTupletStart.normalDurationName = converter.convert(myNote.type()->value());
+        }
+        outTupletStart.normalDots = static_cast<int>(myNote.dot().size());
     }
 }
 
