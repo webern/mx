@@ -36,8 +36,6 @@
 #include "mx/impl/ScoreWriter.h"
 
 #include <algorithm>
-#include <atomic>
-#include <sstream>
 
 namespace mx
 {
@@ -58,14 +56,20 @@ void applyPrintObject(api::Bool printObject, core::PartName &out)
 }
 } // namespace
 
-// Synthesized <score-instrument> ids, e.g. "ID1000000". Seeded high so they
-// are unlikely to collide with ids already present in parsed documents. The
-// sequence is shared process-wide so that instruments of different parts
-// cannot collide inside one document.
-int partWriterNextSynthesizedId()
+// The base of the ids given to parts that bring no instrument id of their own, e.g. "ID1000000".
+// High enough to be unlikely to collide with ids already present in a parsed score.
+constexpr int kSynthesizedInstrumentIdBase = 1000000;
+
+// The id the part's instrument carries, repeated by every element that refers to it. The
+// caller's InstrumentData::uniqueId when it set one; otherwise derived from the part's place in
+// the score, so the same ScoreData always writes the same file, and two parts never collide.
+core::Token PartWriter::partInstrumentId() const
 {
-    static std::atomic<int> nextId{1000000};
-    return nextId.fetch_add(1);
+    if (!myPartData.instrumentData.uniqueId.empty())
+    {
+        return writtenToken("instrument id", myPartData.instrumentData.uniqueId);
+    }
+    return core::Token{"ID" + std::to_string(kSynthesizedInstrumentIdBase + myPartIndex)};
 }
 
 PartWriter::PartWriter(const api::PartData &inPartData, int inPartIndex, int inTicksPerQuarter,
@@ -132,11 +136,11 @@ core::ScorePart PartWriter::getScorePart() const
         scorePart.addGroup(group);
     }
 
+    const core::Token instrumentId = partInstrumentId();
+
     core::ScoreInstrument scoreInstrument{};
     bool addScoreInstrument = false;
-    scoreInstrument.setID(myPartData.instrumentData.uniqueId.empty()
-                              ? core::Token{}
-                              : writtenToken("instrument id", myPartData.instrumentData.uniqueId));
+    scoreInstrument.setID(instrumentId);
 
     if (myPartData.instrumentData.name.size() > 0)
     {
@@ -206,7 +210,7 @@ core::ScorePart PartWriter::getScorePart() const
     core::ScorePartMIDIGroup midiGroup{};
     core::MIDIDevice midiDevice{};
     core::MIDIInstrument midiInstrument{};
-    midiInstrument.setID(core::Token{myPartData.instrumentData.uniqueId});
+    midiInstrument.setID(instrumentId);
 
     const auto &apiMidiData = myPartData.instrumentData.midiData;
     if (apiMidiData.device.size() > 0 || apiMidiData.devicePort.has_value())
@@ -225,9 +229,9 @@ core::ScorePart PartWriter::getScorePart() const
         // The midi-device attaches to this part's instrument, the same instrument the
         // midi-instrument below is written for. Emit that link only when the source stated it;
         // for a single-instrument part it is otherwise implied.
-        if (apiMidiData.writeDeviceId == api::Bool::yes && myPartData.instrumentData.uniqueId.size() > 0)
+        if (apiMidiData.writeDeviceId == api::Bool::yes)
         {
-            midiDevice.setID(core::Token{myPartData.instrumentData.uniqueId});
+            midiDevice.setID(instrumentId);
         }
 
         midiGroup.setMIDIDevice(midiDevice);
@@ -299,20 +303,11 @@ core::ScorePart PartWriter::getScorePart() const
         scorePart.addMIDIGroup(midiGroup);
     }
 
+    // Once the part has playback data, a score-instrument is required, so write one even when
+    // the caller described no instrument. It already carries the id the midi elements above
+    // refer to, which is what makes that reference resolve.
     if (addMidiElement && !addScoreInstrument)
     {
-        if (myPartData.instrumentData.uniqueId.size() == 0)
-        {
-            std::stringstream ss;
-            ss << "ID";
-            ss << partWriterNextSynthesizedId();
-            scoreInstrument.setID(core::Token{ss.str()});
-        }
-        else
-        {
-            scoreInstrument.setID(core::Token{myPartData.instrumentData.uniqueId});
-        }
-
         scorePart.addScoreInstrument(scoreInstrument);
     }
 

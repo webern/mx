@@ -8,6 +8,7 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
 #include "mxtest/api/RoundTrip.h"
+#include "mxtest/api/TestHelpers.h"
 
 using namespace std;
 using namespace mx::api;
@@ -42,7 +43,70 @@ ScoreData makeScoreWithMidiName(const std::string &midiName)
     s.parts.push_back(pd);
     return s;
 }
+
+// The same score, but with the instrument id left to the library.
+ScoreData makeScoreWithMidiNameAndNoInstrumentId(const std::string &midiName)
+{
+    auto scoreData = makeScoreWithMidiName(midiName);
+    scoreData.parts.at(0).instrumentData.uniqueId.clear();
+    return scoreData;
+}
+
+// The value of the first id attribute after the given tag name.
+std::string idAfterTag(const std::string &xml, const std::string &tag)
+{
+    const auto tagPosition = xml.find(tag);
+    if (tagPosition == std::string::npos)
+    {
+        return {};
+    }
+    const auto idPosition = xml.find("id=\"", tagPosition);
+    if (idPosition == std::string::npos)
+    {
+        return {};
+    }
+    const auto valueStart = idPosition + 4;
+    const auto valueEnd = xml.find('"', valueStart);
+    if (valueEnd == std::string::npos)
+    {
+        return {};
+    }
+    return xml.substr(valueStart, valueEnd - valueStart);
+}
 } // namespace
+
+TEST(midiInstrumentId, isTheSameOnEveryWrite)
+{
+    const auto scoreData = makeScoreWithMidiNameAndNoInstrumentId("Flute Player One");
+    const auto first = mxtest::toXml(scoreData);
+
+    // Writing an unrelated score in between used to shift the id the library gives the
+    // instrument, because the counter behind it outlived the call.
+    static_cast<void>(mxtest::toXml(makeScoreWithMidiName("Other Player")));
+
+    const auto second = mxtest::toXml(scoreData);
+    CHECK(!first.empty());
+    CHECK_EQUAL(first, second);
+}
+
+TEST(midiInstrumentId, isReferencedByTheMidiInstrument)
+{
+    const auto xml = mxtest::toXml(makeScoreWithMidiNameAndNoInstrumentId("Flute Player One"));
+    const auto scoreInstrumentId = idAfterTag(xml, "<score-instrument");
+    const auto midiInstrumentId = idAfterTag(xml, "<midi-instrument");
+    CHECK(!scoreInstrumentId.empty());
+    CHECK_EQUAL(scoreInstrumentId, midiInstrumentId);
+}
+
+TEST(midiInstrumentId, survivesWriteAndRead)
+{
+    const auto scoreData = makeScoreWithMidiNameAndNoInstrumentId("Flute Player One");
+    const auto writtenId = idAfterTag(mxtest::toXml(scoreData), "<score-instrument");
+
+    const auto out = mxtest::roundTrip(scoreData);
+    REQUIRE(out.parts.size() == 1);
+    CHECK_EQUAL(writtenId, out.parts.at(0).instrumentData.uniqueId);
+}
 
 TEST(midiNameRoundTrip, survivesWriteAndRead)
 {

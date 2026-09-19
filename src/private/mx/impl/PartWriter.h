@@ -41,6 +41,8 @@ class PartWriter
     const DiagnosticsContext &diagnostics() const;
     // Builds an id token from text, reporting text that is not a valid id.
     core::Token writtenToken(const char *name, const std::string &text) const;
+    // The id of this part's instrument: the caller's, or one derived from the part's position.
+    core::Token partInstrumentId() const;
 
   private:
     /// Writes all the measures from myPartData to outPart

@@ -106,6 +106,8 @@ struct MidiData
 // changes. Whatever you set here is in effect for the entire part, start to finish.
 struct InstrumentData
 {
+    // Identifies the instrument within the score. You can leave it empty: the library then gives
+    // the instrument a stable id of its own and keeps the part's playback pointed at it.
     std::string uniqueId;
     std::string name;
     std::string abbreviation;
