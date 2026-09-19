@@ -114,9 +114,8 @@ TEST(creditRoundTrip, creditImage)
 
 TEST(creditRoundTrip, imageValignMiddleWritesMiddle)
 {
-    // The reader always reports credit-image valign as unspecified (it has no
-    // vertical-alignment vocabulary for valign-image), so a round trip would not show a
-    // writer bug here; check the written XML instead (#444).
+    // A middle alignment must be written as valign-image's middle, not left at the
+    // natural-zero top (#444).
     auto in = makeMinimalScore();
     PageImageData img{};
     img.source = "logo.png";
@@ -142,6 +141,81 @@ TEST(creditRoundTrip, imageValignBaselineOmitsAttribute)
 
     const auto xml = mxtest::toXml(in);
     CHECK(xml.find("valign=") == std::string::npos);
+}
+
+TEST(creditRoundTrip, imageValignSurvives)
+{
+    // The reader dropped <credit-image>'s valign attribute, so every alignment came back
+    // unspecified (#454).
+    for (const auto alignment : {VerticalAlignment::top, VerticalAlignment::middle, VerticalAlignment::bottom})
+    {
+        auto in = makeMinimalScore();
+        PageImageData img{};
+        img.source = "logo.png";
+        img.type = "image/png";
+        img.positionData.verticalAlignment = alignment;
+        in.pageImageItems.push_back(img);
+
+        const auto out = mxtest::roundTrip(in);
+
+        REQUIRE(out.pageImageItems.size() == 1);
+        CHECK(alignment == out.pageImageItems.at(0).positionData.verticalAlignment);
+    }
+}
+
+TEST(creditRoundTrip, imageValignAbsentStaysUnspecified)
+{
+    auto in = makeMinimalScore();
+    PageImageData img{};
+    img.source = "logo.png";
+    img.type = "image/png";
+    in.pageImageItems.push_back(img);
+
+    const auto xml = mxtest::toXml(in);
+    CHECK(xml.find("valign=") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(in);
+
+    REQUIRE(out.pageImageItems.size() == 1);
+    CHECK(VerticalAlignment::unspecified == out.pageImageItems.at(0).positionData.verticalAlignment);
+}
+
+TEST(creditRoundTrip, imageValignIsReadFromXml)
+{
+    const std::string xml = R"(<score-partwise version="3.0">
+  <credit>
+    <credit-image source="logo.png" type="image/png" valign="middle" />
+  </credit>
+  <part-list>
+    <score-part id="P1">
+      <part-name>Flute</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = mxtest::fromXml(xml);
+
+    REQUIRE(score.pageImageItems.size() == 1);
+    const auto &img = score.pageImageItems.at(0);
+    CHECK_EQUAL("logo.png", img.source);
+    CHECK(VerticalAlignment::middle == img.positionData.verticalAlignment);
 }
 
 TEST(creditRoundTrip, justifySurvives)

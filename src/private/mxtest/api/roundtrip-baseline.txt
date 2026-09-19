@@ -742,3 +742,10 @@ musuite/testStringVoiceName.xml
 lysuite/ly33e_Spanners_OctaveShifts_InvalidSize.xml
 synthetic/octave-shift.3.0.xml
 synthetic/octave-shift.3.1.xml
+
+# Unblocked by #454 (credit-image valign round-trip). The reader read the
+# <credit-image> valign attribute and then discarded it, so the writer had
+# nothing to emit and the attribute was lost. getImageData now reads it -- top,
+# middle or bottom, the valign-image vocabulary. This fixture's valign="top" was
+# its only divergence.
+synthetic/credit-image.3.0.xml

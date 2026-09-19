@@ -226,5 +226,30 @@ void setImageValignFromVerticalAlignment(api::VerticalAlignment verticalAlignmen
         break;
     }
 }
+
+// <image> and <credit-image> read vertical alignment as valign-image (top, middle, bottom --
+// no baseline), not valign, which getPositionData above cannot see: the value getter for valign
+// is compiled out for a ValignImage field, so a present attribute comes back as the default
+// baseline. Read it from the element with this instead. An absent attribute reads as
+// unspecified.
+template <typename ATTRIBUTES_TYPE> api::VerticalAlignment getImageValign(const ATTRIBUTES_TYPE &inAttributes)
+{
+    if (!checkHasValign<ATTRIBUTES_TYPE>(&inAttributes))
+    {
+        return api::VerticalAlignment::unspecified;
+    }
+
+    switch (inAttributes.valign()->tag())
+    {
+    case core::ValignImage::Tag::top:
+        return api::VerticalAlignment::top;
+    case core::ValignImage::Tag::middle:
+        return api::VerticalAlignment::middle;
+    case core::ValignImage::Tag::bottom:
+        return api::VerticalAlignment::bottom;
+    }
+
+    return api::VerticalAlignment::unspecified;
+}
 } // namespace impl
 } // namespace mx

@@ -41,10 +41,8 @@ api::PageImageData getImageData(const core::Image &image, int pageNumber)
     }
 
     out.positionData = getPositionData(image);
-    // The <credit-image> valign uses the credit-image-specific
-    // ValignImage vocabulary, which PositionData does not model. Avoid
-    // recording a misleading vertical-alignment value.
-    out.positionData.verticalAlignment = api::VerticalAlignment::unspecified;
+    // <credit-image> reads valign-image, not valign; see PositionFunctions.h.
+    out.positionData.verticalAlignment = getImageValign(image);
     return out;
 }
 
