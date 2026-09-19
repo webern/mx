@@ -270,6 +270,15 @@ core::ScorePart PartWriter::getScorePart() const
         midiInstrument.setMIDIProgram(program);
     }
 
+    if (myPartData.instrumentData.midiData.unpitched != api::VALUE_UNSPECIFIED)
+    {
+        addMidiElement = true;
+        const core::MIDI128 unpitched{myPartData.instrumentData.midiData.unpitched};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-unpitched",
+                       myPartData.instrumentData.midiData.unpitched, unpitched.value());
+        midiInstrument.setMIDIUnpitched(unpitched);
+    }
+
     if (myPartData.instrumentData.midiData.isElevationSpecified)
     {
         addMidiElement = true;

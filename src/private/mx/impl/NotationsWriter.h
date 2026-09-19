@@ -36,6 +36,7 @@ class NotationsWriter
     core::NotationsChoice makeTechnicalNotationsChoice() const;
     void addArticulation(const api::MarkData &markData, core::Articulations &outArticulations) const;
     void addOrnament(const api::MarkData &markData, core::Ornaments &outOrnaments) const;
+    void addAccidentalMark(const api::MarkData &markData, core::Notations &outNotations) const;
     void addTechnical(const api::MarkData &markData, core::Technical &outTechnical) const;
 
     // Kept as their own (non-inlined) methods rather than loops inlined in getNotations(), the

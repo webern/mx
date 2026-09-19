@@ -4,6 +4,7 @@
 
 #include "mx/impl/NotationsWriter.h"
 #include "mx/core/Token.h"
+#include "mx/core/generated/AccidentalMark.h"
 #include "mx/core/generated/Arpeggiate.h"
 #include "mx/core/generated/ArrowChoice.h"
 #include "mx/core/generated/ArrowChoiceGroup.h"
@@ -103,6 +104,7 @@ core::NotationsChoice notationsWriterMakeTupletStop(const api::TupletStop &inTup
 {
     core::Tuplet tuplet;
     tuplet.setType(core::StartStop::stop());
+    setAttributesFromPositionData(inTupletStop.positionData, tuplet);
     setId(inTupletStop.id, tuplet, diagnostics, location);
 
     if (inTupletStop.numberLevel > 0)
@@ -236,6 +238,7 @@ core::Notations NotationsWriter::getNotations() const
     {
         core::Tuplet tuplet;
         tuplet.setType(core::StartStop::start());
+        setAttributesFromPositionData(tupletStart.positionData, tuplet);
         setId(tupletStart.id, tuplet, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
 
         core::TupletPortion actual;
@@ -335,6 +338,10 @@ core::Notations NotationsWriter::getNotations() const
         if (isMarkOrnament(mark.markType))
         {
             this->addOrnament(mark, ornaments);
+        }
+        if (isMarkAccidentalMark(mark.markType))
+        {
+            this->addAccidentalMark(mark, outNotations);
         }
         if (isMarkTechnical(mark.markType))
         {
@@ -980,6 +987,24 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, core::Ornaments &ou
     }
 
     outOrnaments.addGroup(group);
+}
+
+// An accidental mark is written at the notations level. MusicXML also allows one inside
+// <ornaments>, next to the ornament it decorates, but the api does not record which of the two
+// places a mark came from -- both arrive here as the same MarkType -- and an <ornaments> group is
+// required to carry an ornament, so putting one there would mean inventing an ornament. Marks
+// from either place are written here instead.
+void NotationsWriter::addAccidentalMark(const api::MarkData &mark, core::Notations &outNotations) const
+{
+    if (!isMarkAccidentalMark(mark.markType))
+    {
+        return;
+    }
+
+    core::AccidentalMark accidentalMark;
+    accidentalMark.setValue(myConverter.convertAccidentalMark(mark.markType));
+    setAttributesFromPositionData(mark.positionData, accidentalMark);
+    outNotations.addChoice(core::NotationsChoice::accidentalMark(accidentalMark));
 }
 
 void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &outTechnical) const
