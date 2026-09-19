@@ -80,7 +80,6 @@
 #include "mx/core/generated/Timpani.h"
 #include "mx/core/generated/TuningGroup.h"
 #include "mx/core/generated/UpDownStopContinue.h"
-#include "mx/core/generated/ValignImage.h"
 #include "mx/core/generated/Wedge.h"
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
@@ -975,29 +974,8 @@ void DirectionReader::parseImage(const core::DirectionType &directionType)
         outImage.width = static_cast<double>(image.width()->value().value());
     }
     outImage.positionData = getPositionData(image);
-    // <image>'s valign is the valign-image type (no baseline), which the generic position
-    // helper cannot read; take it from the element directly.
-    if (image.valign().has_value())
-    {
-        switch (image.valign()->tag())
-        {
-        case core::ValignImage::Tag::top:
-            outImage.positionData.verticalAlignment = api::VerticalAlignment::top;
-            break;
-        case core::ValignImage::Tag::middle:
-            outImage.positionData.verticalAlignment = api::VerticalAlignment::middle;
-            break;
-        case core::ValignImage::Tag::bottom:
-            outImage.positionData.verticalAlignment = api::VerticalAlignment::bottom;
-            break;
-        default:
-            break;
-        }
-    }
-    else
-    {
-        outImage.positionData.verticalAlignment = api::VerticalAlignment::unspecified;
-    }
+    // <image> reads valign-image, not valign; see PositionFunctions.h.
+    outImage.positionData.verticalAlignment = getImageValign(image);
     outImage.id = getId(image);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outImage)});
 }

@@ -39,9 +39,9 @@ class PageImageData
     /// attribute). Values <= 0 mean unspecified.
     int pageNumber;
 
-    /// default-x/default-y/relative-x/relative-y and horizontal alignment.
-    /// (Vertical alignment uses a credit-image specific type and is not
-    /// modeled here.)
+    /// default-x/default-y/relative-x/relative-y and alignment. Vertical
+    /// alignment for an image is top, middle or bottom; there is no
+    /// baseline.
     PositionData positionData;
 
     PageImageData()
