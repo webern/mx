@@ -722,9 +722,8 @@ lysuite/ly33b_Spanners_Tie.xml
 # export of a glissando and a tab slide drawn from a note toward a rest, so
 # each line starts and stops on the one note it can anchor to, written
 # start-then-stop. The writer used to emit every stop before every start,
-# inverting the pair. (Its sibling tuplet_singletons-ref.xml is not pinned:
-# the ordering is fixed, but the writer restates <tuplet-actual>/
-# <tuplet-normal> on a start whose source omits them.)
+# inverting the pair. (Its sibling tuplet_singletons-ref.xml is pinned with the
+# tuplet portion work below.)
 rpatters1/gliss_to_rest-ref.xml
 
 # Unblocked by VoiceData::label: mx renumbered every voice from the position of
@@ -749,3 +748,33 @@ synthetic/octave-shift.3.1.xml
 # middle or bottom, the valign-image vocabulary. This fixture's valign="top" was
 # its only divergence.
 synthetic/credit-image.3.0.xml
+
+# Unblocked by tuplet portion fidelity. A <tuplet> may state its ratio in
+# <tuplet-actual>/<tuplet-normal> or leave it to the note's <time-modification>;
+# mx used to read both shapes the same way and then write both portions onto
+# every start, inventing a <tuplet-type> where the source had none. The reader
+# now records which shape the file used and the writer states a portion only
+# where it says something the note does not already say. ly23b and ly23c also
+# needed show-type and line-shape, and PreserveTimeModificationNormalType needed
+# bracket on a tuplet stop. ly23d is the corpus's one genuinely nested tuplet,
+# and tuplet-nested.3.0.xml is its synthetic companion.
+foundsuite/Invention_5.xml
+ksuite/k011a_Tuplets.xml
+lysuite/ly23a_Tuplets.xml
+lysuite/ly23b_Tuplets_Styles.xml
+lysuite/ly23c_Tuplet_Display_NonStandard.xml
+lysuite/ly23d_Tuplets_Nested.xml
+mjbsuite/PreserveTimeModificationNormalType.xml
+musuite/testDurationRoundingError.xml
+musuite/testDurationRoundingError_ref.xml
+musuite/testTuplets1.xml
+musuite/testTuplets1_ref.xml
+musuite/testTuplets2.xml
+musuite/testTuplets2_ref.xml
+musuite/testTuplets3.xml
+musuite/testTuplets3_ref.xml
+musuite/testTuplets4.xml
+rpatters1/tuplet_singletons-ref.xml
+synthetic/tuplet-nested.3.0.xml
+synthetic/tuplet.3.0.xml
+synthetic/tuplet.3.1.xml

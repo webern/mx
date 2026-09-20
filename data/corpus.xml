@@ -4,13 +4,13 @@
      usage (descending). Do not edit by hand; regenerate with the tool. -->
 <corpus-features>
   <summary>
-    <files total="840" wild="447" synthetic="393"/>
+    <files total="841" wild="447" synthetic="394"/>
     <elements total="442" used-in-wild="329" synthetic-only="113"/>
   </summary>
   <elements>
-    <element name="measure" total-files="840" wild-files="447" synthetic-files="393" min-synthetic-version="3.0">
+    <element name="measure" total-files="841" wild-files="447" synthetic-files="394" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="number" wild-files="447" synthetic-files="393"/>
+        <attribute name="number" wild-files="447" synthetic-files="394"/>
         <attribute name="width" wild-files="157" synthetic-files="2"/>
         <attribute name="implicit" wild-files="24" synthetic-files="2"/>
         <attribute name="id" wild-files="0" synthetic-files="1"/>
@@ -32,7 +32,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 435 more -->
       </wild-files>
-      <synthetic-files count="393" min-version="3.0">
+      <synthetic-files count="394" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -401,6 +401,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -428,9 +429,9 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="part" total-files="840" wild-files="447" synthetic-files="393" min-synthetic-version="3.0">
+    <element name="part" total-files="841" wild-files="447" synthetic-files="394" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="id" wild-files="447" synthetic-files="393"/>
+        <attribute name="id" wild-files="447" synthetic-files="394"/>
       </attributes>
       <wild-files count="447">
         <file>custom/musescore-slur-start-stop.musicxml</file>
@@ -447,7 +448,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 435 more -->
       </wild-files>
-      <synthetic-files count="393" min-version="3.0">
+      <synthetic-files count="394" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -816,6 +817,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -843,7 +845,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="part-list" total-files="840" wild-files="447" synthetic-files="393" min-synthetic-version="3.0">
+    <element name="part-list" total-files="841" wild-files="447" synthetic-files="394" min-synthetic-version="3.0">
       <wild-files count="447">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -859,7 +861,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 435 more -->
       </wild-files>
-      <synthetic-files count="393" min-version="3.0">
+      <synthetic-files count="394" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -1228,6 +1230,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -1255,7 +1258,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="part-name" total-files="840" wild-files="447" synthetic-files="393" min-synthetic-version="3.0">
+    <element name="part-name" total-files="841" wild-files="447" synthetic-files="394" min-synthetic-version="3.0">
       <attributes>
         <attribute name="print-object" wild-files="41" synthetic-files="1"/>
         <attribute name="color" wild-files="1" synthetic-files="1"/>
@@ -1284,7 +1287,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 435 more -->
       </wild-files>
-      <synthetic-files count="393" min-version="3.0">
+      <synthetic-files count="394" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -1653,6 +1656,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -1680,9 +1684,9 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="score-part" total-files="840" wild-files="447" synthetic-files="393" min-synthetic-version="3.0">
+    <element name="score-part" total-files="841" wild-files="447" synthetic-files="394" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="id" wild-files="447" synthetic-files="393"/>
+        <attribute name="id" wild-files="447" synthetic-files="394"/>
       </attributes>
       <wild-files count="447">
         <file>custom/musescore-slur-start-stop.musicxml</file>
@@ -1699,7 +1703,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 435 more -->
       </wild-files>
-      <synthetic-files count="393" min-version="3.0">
+      <synthetic-files count="394" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -2068,6 +2072,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -2095,9 +2100,9 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="score-partwise" total-files="837" wild-files="444" synthetic-files="393" min-synthetic-version="3.0">
+    <element name="score-partwise" total-files="838" wild-files="444" synthetic-files="394" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="version" wild-files="170" synthetic-files="393"/>
+        <attribute name="version" wild-files="170" synthetic-files="394"/>
       </attributes>
       <wild-files count="444">
         <file>custom/musescore-slur-start-stop.musicxml</file>
@@ -2114,7 +2119,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 432 more -->
       </wild-files>
-      <synthetic-files count="393" min-version="3.0">
+      <synthetic-files count="394" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -2483,6 +2488,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -2510,7 +2516,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="duration" total-files="458" wild-files="442" synthetic-files="16" min-synthetic-version="3.0">
+    <element name="duration" total-files="459" wild-files="442" synthetic-files="17" min-synthetic-version="3.0">
       <wild-files count="442">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2526,7 +2532,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 430 more -->
       </wild-files>
-      <synthetic-files count="16" min-version="3.0">
+      <synthetic-files count="17" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/coda.3.0.xml</file>
         <file version="3.1">synthetic/coda.3.1.xml</file>
@@ -2542,10 +2548,11 @@
         <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/suffix.3.0.xml</file>
         <file version="4.0">synthetic/tied.cue.4.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="attributes" total-files="483" wild-files="440" synthetic-files="43" min-synthetic-version="3.0">
+    <element name="attributes" total-files="484" wild-files="440" synthetic-files="44" min-synthetic-version="3.0">
       <wild-files count="440">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2561,7 +2568,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 428 more -->
       </wild-files>
-      <synthetic-files count="43" min-version="3.0">
+      <synthetic-files count="44" min-version="3.0">
         <file version="3.0">synthetic/beat-repeat.3.0.xml</file>
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
@@ -2604,10 +2611,11 @@
         <file version="3.1">synthetic/time.3.1.xml</file>
         <file version="3.0">synthetic/transpose.3.0.xml</file>
         <file version="3.1">synthetic/transpose.3.1.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="divisions" total-files="450" wild-files="440" synthetic-files="10" min-synthetic-version="3.0">
+    <element name="divisions" total-files="451" wild-files="440" synthetic-files="11" min-synthetic-version="3.0">
       <wild-files count="440">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2623,7 +2631,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 428 more -->
       </wild-files>
-      <synthetic-files count="10" min-version="3.0">
+      <synthetic-files count="11" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/coda.3.0.xml</file>
         <file version="3.1">synthetic/coda.3.1.xml</file>
@@ -2633,10 +2641,11 @@
         <file version="3.0">synthetic/segno.3.0.xml</file>
         <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="4.0">synthetic/tied.cue.4.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="note" total-files="666" wild-files="440" synthetic-files="226" min-synthetic-version="3.0">
+    <element name="note" total-files="667" wild-files="440" synthetic-files="227" min-synthetic-version="3.0">
       <attributes>
         <attribute name="default-x" wild-files="148" synthetic-files="2"/>
         <attribute name="default-y" wild-files="58" synthetic-files="2"/>
@@ -2675,7 +2684,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 428 more -->
       </wild-files>
-      <synthetic-files count="226" min-version="3.0">
+      <synthetic-files count="227" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -2883,6 +2892,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -2904,7 +2914,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="clef" total-files="423" wild-files="417" synthetic-files="6" min-synthetic-version="3.0">
+    <element name="clef" total-files="424" wild-files="417" synthetic-files="7" min-synthetic-version="3.0">
       <attributes>
         <attribute name="number" wild-files="114" synthetic-files="2"/>
         <attribute name="color" wild-files="2" synthetic-files="2"/>
@@ -2937,65 +2947,68 @@
         <file>foundsuite/Invention 3.xml</file>
         <!-- 405 more -->
       </wild-files>
-      <synthetic-files count="6" min-version="3.0">
-        <file version="3.0">synthetic/cancel.location.3.0.xml</file>
-        <file version="3.0">synthetic/clef.3.0.xml</file>
-        <file version="3.1">synthetic/clef.3.1.xml</file>
-        <file version="3.0">synthetic/key-accidental.3.0.xml</file>
-        <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
-        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
-      </synthetic-files>
-    </element>
-    <element name="line" total-files="421" wild-files="417" synthetic-files="4" min-synthetic-version="3.0">
-      <wild-files count="417">
-        <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>custom/transposition.musicxml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <file>foundsuite/Invention 2.xml</file>
-        <file>foundsuite/Invention 3.xml</file>
-        <!-- 405 more -->
-      </wild-files>
-      <synthetic-files count="4" min-version="3.0">
-        <file version="3.0">synthetic/cancel.location.3.0.xml</file>
-        <file version="3.0">synthetic/key-accidental.3.0.xml</file>
-        <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
-        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
-      </synthetic-files>
-    </element>
-    <element name="sign" total-files="424" wild-files="417" synthetic-files="7" min-synthetic-version="3.0">
-      <wild-files count="417">
-        <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>custom/transposition.musicxml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <file>foundsuite/Invention 2.xml</file>
-        <file>foundsuite/Invention 3.xml</file>
-        <!-- 405 more -->
-      </wild-files>
       <synthetic-files count="7" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/clef.3.0.xml</file>
         <file version="3.1">synthetic/clef.3.1.xml</file>
         <file version="3.0">synthetic/key-accidental.3.0.xml</file>
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
-        <file version="4.0">synthetic/part-clef.4.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="type" total-files="427" wild-files="417" synthetic-files="10" min-synthetic-version="3.0">
+    <element name="line" total-files="422" wild-files="417" synthetic-files="5" min-synthetic-version="3.0">
+      <wild-files count="417">
+        <file>custom/musescore-slur-start-stop.musicxml</file>
+        <file>custom/systems-and-pages.xml</file>
+        <file>custom/transposition.musicxml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
+        <!-- 405 more -->
+      </wild-files>
+      <synthetic-files count="5" min-version="3.0">
+        <file version="3.0">synthetic/cancel.location.3.0.xml</file>
+        <file version="3.0">synthetic/key-accidental.3.0.xml</file>
+        <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
+      </synthetic-files>
+    </element>
+    <element name="sign" total-files="425" wild-files="417" synthetic-files="8" min-synthetic-version="3.0">
+      <wild-files count="417">
+        <file>custom/musescore-slur-start-stop.musicxml</file>
+        <file>custom/systems-and-pages.xml</file>
+        <file>custom/transposition.musicxml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
+        <!-- 405 more -->
+      </wild-files>
+      <synthetic-files count="8" min-version="3.0">
+        <file version="3.0">synthetic/cancel.location.3.0.xml</file>
+        <file version="3.0">synthetic/clef.3.0.xml</file>
+        <file version="3.1">synthetic/clef.3.1.xml</file>
+        <file version="3.0">synthetic/key-accidental.3.0.xml</file>
+        <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
+        <file version="4.0">synthetic/part-clef.4.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
+      </synthetic-files>
+    </element>
+    <element name="type" total-files="428" wild-files="417" synthetic-files="11" min-synthetic-version="3.0">
       <attributes>
         <attribute name="size" wild-files="8" synthetic-files="0"/>
       </attributes>
@@ -3014,7 +3027,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 405 more -->
       </wild-files>
-      <synthetic-files count="10" min-version="3.0">
+      <synthetic-files count="11" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/coda.3.0.xml</file>
         <file version="3.1">synthetic/coda.3.1.xml</file>
@@ -3024,10 +3037,11 @@
         <file version="3.0">synthetic/segno.3.0.xml</file>
         <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="4.0">synthetic/tied.cue.4.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="time" total-files="427" wild-files="416" synthetic-files="11" min-synthetic-version="3.0">
+    <element name="time" total-files="428" wild-files="416" synthetic-files="12" min-synthetic-version="3.0">
       <attributes>
         <attribute name="symbol" wild-files="110" synthetic-files="2"/>
         <attribute name="print-object" wild-files="3" synthetic-files="2"/>
@@ -3061,7 +3075,7 @@
         <file>foundsuite/Invention 2.xml</file>
         <!-- 404 more -->
       </wild-files>
-      <synthetic-files count="11" min-version="3.0">
+      <synthetic-files count="12" min-version="3.0">
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
@@ -3072,10 +3086,11 @@
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="beat-type" total-files="425" wild-files="415" synthetic-files="10" min-synthetic-version="3.0">
+    <element name="beat-type" total-files="426" wild-files="415" synthetic-files="11" min-synthetic-version="3.0">
       <wild-files count="415">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
@@ -3091,7 +3106,7 @@
         <file>foundsuite/Invention 2.xml</file>
         <!-- 403 more -->
       </wild-files>
-      <synthetic-files count="10" min-version="3.0">
+      <synthetic-files count="11" min-version="3.0">
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
@@ -3101,10 +3116,11 @@
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="beats" total-files="425" wild-files="415" synthetic-files="10" min-synthetic-version="3.0">
+    <element name="beats" total-files="426" wild-files="415" synthetic-files="11" min-synthetic-version="3.0">
       <wild-files count="415">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
@@ -3120,7 +3136,7 @@
         <file>foundsuite/Invention 2.xml</file>
         <!-- 403 more -->
       </wild-files>
-      <synthetic-files count="10" min-version="3.0">
+      <synthetic-files count="11" min-version="3.0">
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
@@ -3130,10 +3146,11 @@
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="voice" total-files="719" wild-files="410" synthetic-files="309" min-synthetic-version="3.0">
+    <element name="voice" total-files="720" wild-files="410" synthetic-files="310" min-synthetic-version="3.0">
       <wild-files count="410">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3149,7 +3166,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 398 more -->
       </wild-files>
-      <synthetic-files count="309" min-version="3.0">
+      <synthetic-files count="310" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -3435,6 +3452,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -3461,7 +3479,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="octave" total-files="635" wild-files="409" synthetic-files="226" min-synthetic-version="3.0">
+    <element name="octave" total-files="636" wild-files="409" synthetic-files="227" min-synthetic-version="3.0">
       <wild-files count="409">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3477,7 +3495,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 397 more -->
       </wild-files>
-      <synthetic-files count="226" min-version="3.0">
+      <synthetic-files count="227" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -3685,6 +3703,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -3706,7 +3725,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="pitch" total-files="635" wild-files="409" synthetic-files="226" min-synthetic-version="3.0">
+    <element name="pitch" total-files="636" wild-files="409" synthetic-files="227" min-synthetic-version="3.0">
       <wild-files count="409">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3722,7 +3741,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 397 more -->
       </wild-files>
-      <synthetic-files count="226" min-version="3.0">
+      <synthetic-files count="227" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -3930,6 +3949,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -3951,7 +3971,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="step" total-files="635" wild-files="409" synthetic-files="226" min-synthetic-version="3.0">
+    <element name="step" total-files="636" wild-files="409" synthetic-files="227" min-synthetic-version="3.0">
       <wild-files count="409">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3967,7 +3987,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 397 more -->
       </wild-files>
-      <synthetic-files count="226" min-version="3.0">
+      <synthetic-files count="227" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -4175,6 +4195,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -4223,7 +4244,7 @@
         <file version="3.0">synthetic/source.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="key" total-files="384" wild-files="378" synthetic-files="6" min-synthetic-version="3.0">
+    <element name="key" total-files="385" wild-files="378" synthetic-files="7" min-synthetic-version="3.0">
       <attributes>
         <attribute name="print-object" wild-files="6" synthetic-files="2"/>
         <attribute name="number" wild-files="5" synthetic-files="2"/>
@@ -4253,16 +4274,17 @@
         <file>foundsuite/Invention 2.xml</file>
         <!-- 366 more -->
       </wild-files>
-      <synthetic-files count="6" min-version="3.0">
+      <synthetic-files count="7" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/key-accidental.3.0.xml</file>
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
         <file version="3.0">synthetic/key-octave.3.0.xml</file>
         <file version="3.0">synthetic/key.3.0.xml</file>
         <file version="3.1">synthetic/key.3.1.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="fifths" total-files="380" wild-files="376" synthetic-files="4" min-synthetic-version="3.0">
+    <element name="fifths" total-files="381" wild-files="376" synthetic-files="5" min-synthetic-version="3.0">
       <wild-files count="376">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
@@ -4278,11 +4300,12 @@
         <file>foundsuite/Invention 2.xml</file>
         <!-- 364 more -->
       </wild-files>
-      <synthetic-files count="4" min-version="3.0">
+      <synthetic-files count="5" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/key-octave.3.0.xml</file>
         <file version="3.0">synthetic/key.3.0.xml</file>
         <file version="3.1">synthetic/key.3.1.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
       </synthetic-files>
     </element>
     <element name="mode" total-files="320" wild-files="319" synthetic-files="1" min-synthetic-version="3.0">
@@ -4623,7 +4646,7 @@
       <synthetic-files count="0">
       </synthetic-files>
     </element>
-    <element name="notations" total-files="338" wild-files="217" synthetic-files="121" min-synthetic-version="3.0">
+    <element name="notations" total-files="339" wild-files="217" synthetic-files="122" min-synthetic-version="3.0">
       <attributes>
         <attribute name="id" wild-files="0" synthetic-files="1"/>
         <attribute name="print-object" wild-files="0" synthetic-files="2"/>
@@ -4643,7 +4666,7 @@
         <file>foundsuite/Invention_10.xml</file>
         <!-- 205 more -->
       </wild-files>
-      <synthetic-files count="121" min-version="3.0">
+      <synthetic-files count="122" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -4754,6 +4777,7 @@
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -6990,7 +7014,49 @@
         <file version="3.0">synthetic/breath-mark.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="actual-notes" total-files="57" wild-files="56" synthetic-files="1" min-synthetic-version="3.0">
+    <element name="actual-notes" total-files="58" wild-files="56" synthetic-files="2" min-synthetic-version="3.0">
+      <wild-files count="56">
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Invention_5.xml</file>
+        <file>foundsuite/Moments Musicaux Op16 No4.xml</file>
+        <file>foundsuite/O_Holy_Night-Adam-1871.xml</file>
+        <file>foundsuite/O_Holy_Night.xml</file>
+        <file>foundsuite/SCHUBERT An die Sonne.xml</file>
+        <file>foundsuite/Απτάλικο.xml</file>
+        <file>ksuite/Bombe.xml</file>
+        <file>ksuite/k011a_Tuplets.xml</file>
+        <!-- 44 more -->
+      </wild-files>
+      <synthetic-files count="2" min-version="3.0">
+        <file version="3.0">synthetic/metronome-tuplet.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
+      </synthetic-files>
+    </element>
+    <element name="normal-notes" total-files="58" wild-files="56" synthetic-files="2" min-synthetic-version="3.0">
+      <wild-files count="56">
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Invention_5.xml</file>
+        <file>foundsuite/Moments Musicaux Op16 No4.xml</file>
+        <file>foundsuite/O_Holy_Night-Adam-1871.xml</file>
+        <file>foundsuite/O_Holy_Night.xml</file>
+        <file>foundsuite/SCHUBERT An die Sonne.xml</file>
+        <file>foundsuite/Απτάλικο.xml</file>
+        <file>ksuite/Bombe.xml</file>
+        <file>ksuite/k011a_Tuplets.xml</file>
+        <!-- 44 more -->
+      </wild-files>
+      <synthetic-files count="2" min-version="3.0">
+        <file version="3.0">synthetic/metronome-tuplet.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
+      </synthetic-files>
+    </element>
+    <element name="time-modification" total-files="57" wild-files="56" synthetic-files="1" min-synthetic-version="3.0">
       <wild-files count="56">
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/An Chloe.xml</file>
@@ -7007,46 +7073,7 @@
         <!-- 44 more -->
       </wild-files>
       <synthetic-files count="1" min-version="3.0">
-        <file version="3.0">synthetic/metronome-tuplet.3.0.xml</file>
-      </synthetic-files>
-    </element>
-    <element name="normal-notes" total-files="57" wild-files="56" synthetic-files="1" min-synthetic-version="3.0">
-      <wild-files count="56">
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Invention_5.xml</file>
-        <file>foundsuite/Moments Musicaux Op16 No4.xml</file>
-        <file>foundsuite/O_Holy_Night-Adam-1871.xml</file>
-        <file>foundsuite/O_Holy_Night.xml</file>
-        <file>foundsuite/SCHUBERT An die Sonne.xml</file>
-        <file>foundsuite/Απτάλικο.xml</file>
-        <file>ksuite/Bombe.xml</file>
-        <file>ksuite/k011a_Tuplets.xml</file>
-        <!-- 44 more -->
-      </wild-files>
-      <synthetic-files count="1" min-version="3.0">
-        <file version="3.0">synthetic/metronome-tuplet.3.0.xml</file>
-      </synthetic-files>
-    </element>
-    <element name="time-modification" total-files="56" wild-files="56" synthetic-files="0">
-      <wild-files count="56">
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Invention_5.xml</file>
-        <file>foundsuite/Moments Musicaux Op16 No4.xml</file>
-        <file>foundsuite/O_Holy_Night-Adam-1871.xml</file>
-        <file>foundsuite/O_Holy_Night.xml</file>
-        <file>foundsuite/SCHUBERT An die Sonne.xml</file>
-        <file>foundsuite/Απτάλικο.xml</file>
-        <file>ksuite/Bombe.xml</file>
-        <file>ksuite/k011a_Tuplets.xml</file>
-        <!-- 44 more -->
-      </wild-files>
-      <synthetic-files count="0">
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
       </synthetic-files>
     </element>
     <element name="rights" total-files="56" wild-files="55" synthetic-files="1" min-synthetic-version="3.0">
@@ -7072,11 +7099,11 @@
         <file version="3.0">synthetic/rights.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="tuplet" total-files="59" wild-files="54" synthetic-files="5" min-synthetic-version="3.0">
+    <element name="tuplet" total-files="60" wild-files="54" synthetic-files="6" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="type" wild-files="54" synthetic-files="5"/>
+        <attribute name="type" wild-files="54" synthetic-files="6"/>
         <attribute name="bracket" wild-files="44" synthetic-files="2"/>
-        <attribute name="number" wild-files="23" synthetic-files="2"/>
+        <attribute name="number" wild-files="23" synthetic-files="3"/>
         <attribute name="placement" wild-files="15" synthetic-files="2"/>
         <attribute name="show-number" wild-files="14" synthetic-files="2"/>
         <attribute name="show-type" wild-files="2" synthetic-files="2"/>
@@ -7102,8 +7129,9 @@
         <file>ksuite/k011a_Tuplets.xml</file>
         <!-- 42 more -->
       </wild-files>
-      <synthetic-files count="5" min-version="3.0">
+      <synthetic-files count="6" min-version="3.0">
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
         <file version="3.0">synthetic/tuplet.3.0.xml</file>
@@ -11659,26 +11687,28 @@
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="tuplet-actual" total-files="5" wild-files="2" synthetic-files="3" min-synthetic-version="3.0">
+    <element name="tuplet-actual" total-files="6" wild-files="2" synthetic-files="4" min-synthetic-version="3.0">
       <wild-files count="2">
         <file>lysuite/ly23c_Tuplet_Display_NonStandard.xml</file>
         <file>lysuite/ly23d_Tuplets_Nested.xml</file>
       </wild-files>
-      <synthetic-files count="3" min-version="3.0">
+      <synthetic-files count="4" min-version="3.0">
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="tuplet-normal" total-files="2" wild-files="2" synthetic-files="0">
+    <element name="tuplet-normal" total-files="3" wild-files="2" synthetic-files="1" min-synthetic-version="3.0">
       <wild-files count="2">
         <file>lysuite/ly23c_Tuplet_Display_NonStandard.xml</file>
         <file>lysuite/ly23d_Tuplets_Nested.xml</file>
       </wild-files>
-      <synthetic-files count="0">
+      <synthetic-files count="1" min-version="3.0">
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="tuplet-number" total-files="3" wild-files="2" synthetic-files="1" min-synthetic-version="3.0">
+    <element name="tuplet-number" total-files="4" wild-files="2" synthetic-files="2" min-synthetic-version="3.0">
       <attributes>
         <attribute name="color" wild-files="0" synthetic-files="1"/>
         <attribute name="font-family" wild-files="0" synthetic-files="1"/>
@@ -11690,11 +11720,12 @@
         <file>lysuite/ly23c_Tuplet_Display_NonStandard.xml</file>
         <file>lysuite/ly23d_Tuplets_Nested.xml</file>
       </wild-files>
-      <synthetic-files count="1" min-version="3.0">
+      <synthetic-files count="2" min-version="3.0">
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-number.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="tuplet-type" total-files="3" wild-files="2" synthetic-files="1" min-synthetic-version="3.0">
+    <element name="tuplet-type" total-files="4" wild-files="2" synthetic-files="2" min-synthetic-version="3.0">
       <attributes>
         <attribute name="color" wild-files="0" synthetic-files="1"/>
         <attribute name="font-family" wild-files="0" synthetic-files="1"/>
@@ -11706,7 +11737,8 @@
         <file>lysuite/ly23c_Tuplet_Display_NonStandard.xml</file>
         <file>lysuite/ly23d_Tuplets_Nested.xml</file>
       </wild-files>
-      <synthetic-files count="1" min-version="3.0">
+      <synthetic-files count="2" min-version="3.0">
+        <file version="3.0">synthetic/tuplet-nested.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-type.3.0.xml</file>
       </synthetic-files>
     </element>
