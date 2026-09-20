@@ -1808,8 +1808,8 @@ TEST(implicitStaffOnSingleStaffPartOmitsElement, NoteData)
 T_END;
 
 // issue #452: a <tuplet> on a dotted note whose <time-modification> does not restate the
-// normal figure guesses that figure from the note, dots included, so the tuplet written back
-// carries a tuplet-dot.
+// normal figure guesses that figure from the note, dots included. The guess repeats what the
+// note already says, so it stays out of the file unless the writer is told to state it.
 TEST(guessedTupletNormalKeepsTheNoteDots, NoteData)
 {
     const std::string xml = R"(<score-partwise version="3.0">
@@ -1852,19 +1852,33 @@ TEST(guessedTupletNormalKeepsTheNoteDots, NoteData)
     CHECK(DurationName::quarter == starts.at(0).normalDurationName);
     CHECK_EQUAL(1, starts.at(0).normalDots);
 
+    // the source stated no portions, so neither is written back
     const auto written = mxtest::toXml(score);
-    const auto normalPos = written.find("<tuplet-normal>");
-    REQUIRE(normalPos != std::string::npos);
-    const auto normalEnd = written.find("</tuplet-normal>", normalPos);
-    REQUIRE(normalEnd != std::string::npos);
-    CHECK(written.substr(normalPos, normalEnd - normalPos).find("<tuplet-dot") != std::string::npos);
+    CHECK(written.find("<tuplet-normal>") == std::string::npos);
 
     // reading the written document back reports the same dotted normal figure
     const auto reread = mxtest::fromXml(written);
     const auto &rereread =
         reread.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.tupletStarts;
     REQUIRE(1 == rereread.size());
+    CHECK(DurationName::quarter == rereread.at(0).normalDurationName);
     CHECK_EQUAL(1, rereread.at(0).normalDots);
+
+    // asking for the portion spells the dotted figure out
+    auto forced = score;
+    forced.parts.at(0)
+        .measures.at(0)
+        .staves.at(0)
+        .voices.at(0)
+        .notes.at(0)
+        .noteAttachmentData.tupletStarts.at(0)
+        .writeNormal = Bool::yes;
+    const auto forcedXml = mxtest::toXml(forced);
+    const auto normalPos = forcedXml.find("<tuplet-normal>");
+    REQUIRE(normalPos != std::string::npos);
+    const auto normalEnd = forcedXml.find("</tuplet-normal>", normalPos);
+    REQUIRE(normalEnd != std::string::npos);
+    CHECK(forcedXml.substr(normalPos, normalEnd - normalPos).find("<tuplet-dot") != std::string::npos);
 }
 
 // issue #443: the position attributes of a <tuplet> were read into TupletStart and TupletStop and

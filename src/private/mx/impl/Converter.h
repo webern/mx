@@ -13,6 +13,7 @@
 #include "mx/api/PositionData.h"
 #include "mx/api/ScoreData.h"
 #include "mx/api/SoundID.h"
+#include "mx/api/TupletData.h"
 #include "mx/core/generated/AboveBelow.h"
 #include "mx/core/generated/AccidentalValue.h"
 #include "mx/core/generated/ArticulationsChoice.h"
@@ -36,6 +37,7 @@
 #include "mx/core/generated/LeftCenterRight.h"
 #include "mx/core/generated/LeftRight.h"
 #include "mx/core/generated/LineEnd.h"
+#include "mx/core/generated/LineShape.h"
 #include "mx/core/generated/LineType.h"
 #include "mx/core/generated/MeasureNumberingValue.h"
 #include "mx/core/generated/MembraneValue.h"
@@ -163,6 +165,9 @@ class Converter
     core::LineType convert(api::LineType value) const;
     api::LineType convert(core::LineType value) const;
 
+    core::LineShape convert(api::TupletLineShape value) const;
+    api::TupletLineShape convert(core::LineShape value) const;
+
     core::WedgeType convert(api::WedgeType value) const;
     api::WedgeType convert(core::WedgeType value) const;
 
@@ -285,6 +290,7 @@ class Converter
     const static EnumMap<core::SystemRelation, api::SystemRelation> directionSystemRelationMap;
     const static EnumMap<core::StemValue, api::Stem> stemMap;
     const static EnumMap<core::LineType, api::LineType> lineType;
+    const static EnumMap<core::LineShape, api::TupletLineShape> lineShape;
     const static EnumMap<core::WedgeType, api::WedgeType> wedgeMap;
     const static EnumMap<core::BarStyle, api::BarlineType> barlineMap;
     const static EnumMap<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;

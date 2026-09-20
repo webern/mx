@@ -99,7 +99,8 @@ void notationsWriterSetMordentSpecificAttributes(const api::MarkData &mark, core
 }
 
 core::NotationsChoice notationsWriterMakeTupletStop(const api::TupletStop &inTupletStop,
-                                                    const DiagnosticsContext &diagnostics,
+                                                    const std::optional<int> &inResolvedNumber,
+                                                    const Converter &inConverter, const DiagnosticsContext &diagnostics,
                                                     const api::Location &location)
 {
     core::Tuplet tuplet;
@@ -107,14 +108,132 @@ core::NotationsChoice notationsWriterMakeTupletStop(const api::TupletStop &inTup
     setAttributesFromPositionData(inTupletStop.positionData, tuplet);
     setId(inTupletStop.id, tuplet, diagnostics, location);
 
-    if (inTupletStop.numberLevel > 0)
+    if (inResolvedNumber.has_value())
     {
-        const core::NumberLevel numberLevel{inTupletStop.numberLevel};
-        reportAdjusted(diagnostics, location, "tuplet number", inTupletStop.numberLevel, numberLevel.value());
-        tuplet.setNumber(numberLevel);
+        tuplet.setNumber(core::NumberLevel{*inResolvedNumber});
+    }
+
+    if (inTupletStop.bracket != api::Bool::unspecified)
+    {
+        tuplet.setBracket(inConverter.convert(inTupletStop.bracket));
     }
 
     return core::NotationsChoice::tuplet(tuplet);
+}
+
+// What one portion of a tuplet ratio says: how many notes, of what written value, with how many
+// dots. VALUE_UNSPECIFIED and DurationName::unspecified mean the portion leaves that part out.
+struct NotationsWriterTupletPortion
+{
+    int number;
+    api::DurationName durationName;
+    int dots;
+};
+
+// True when nothing in the portion would reach the file.
+bool notationsWriterTupletPortionIsEmpty(const NotationsWriterTupletPortion &inPortion)
+{
+    return inPortion.number == api::VALUE_UNSPECIFIED && inPortion.durationName == api::DurationName::unspecified &&
+           inPortion.dots <= 0;
+}
+
+// True when every part the portion states matches what the note's time modification already
+// says, so writing the portion would only repeat the note. MusicXML reads an absent portion
+// from the time modification, which is why the repetition can be left out.
+bool notationsWriterTupletPortionIsRedundant(const NotationsWriterTupletPortion &inPortion,
+                                             const NotationsWriterTupletPortion &inImplied)
+{
+    if (inPortion.number != api::VALUE_UNSPECIFIED && inPortion.number != inImplied.number)
+    {
+        return false;
+    }
+    if (inPortion.durationName != api::DurationName::unspecified && inPortion.durationName != inImplied.durationName)
+    {
+        return false;
+    }
+    if (inPortion.dots != api::VALUE_UNSPECIFIED && inPortion.dots != inImplied.dots)
+    {
+        return false;
+    }
+    return true;
+}
+
+// NoteWriter reads 1:1 as "this note has no time modification" and leaves the element out, so a
+// portion on such a note has nothing to repeat and is always written.
+bool notationsWriterNoteHasTimeModification(const api::DurationData &inDuration)
+{
+    return inDuration.timeModificationActualNotes > 0 && inDuration.timeModificationNormalNotes > 0 &&
+           (inDuration.timeModificationActualNotes > 1 || inDuration.timeModificationNormalNotes > 1);
+}
+
+// Decides whether one portion reaches the file. The fidelity fields force the answer; left
+// unspecified, a portion is written when it says something the note does not already say.
+bool notationsWriterWriteTupletPortion(api::Bool inFidelity, const NotationsWriterTupletPortion &inPortion,
+                                       const NotationsWriterTupletPortion &inImplied, bool inNoteHasTimeModification)
+{
+    if (inFidelity == api::Bool::yes)
+    {
+        return true;
+    }
+    if (inFidelity == api::Bool::no)
+    {
+        return false;
+    }
+    if (notationsWriterTupletPortionIsEmpty(inPortion))
+    {
+        return false;
+    }
+    if (!inNoteHasTimeModification)
+    {
+        return true;
+    }
+    return !notationsWriterTupletPortionIsRedundant(inPortion, inImplied);
+}
+
+core::TupletPortion notationsWriterMakeTupletPortion(const NotationsWriterTupletPortion &inPortion,
+                                                     const Converter &inConverter)
+{
+    core::TupletPortion outPortion;
+
+    if (inPortion.number != api::VALUE_UNSPECIFIED)
+    {
+        core::TupletNumber tupletNumber;
+        tupletNumber.setValue(inPortion.number);
+        outPortion.setTupletNumber(tupletNumber);
+    }
+
+    if (inPortion.durationName != api::DurationName::unspecified)
+    {
+        core::TupletType tupletType;
+        tupletType.setValue(inConverter.convert(inPortion.durationName));
+        outPortion.setTupletType(tupletType);
+    }
+
+    for (int dot = 0; dot < inPortion.dots; ++dot)
+    {
+        outPortion.addTupletDot(core::TupletDot{});
+    }
+
+    return outPortion;
+}
+
+// The two show-* attributes each cover a pair of api fields, one for the actual side of the
+// ratio and one for the normal side.
+std::optional<core::ShowTuplet> notationsWriterShowTuplet(api::Bool inShowActual, api::Bool inShowNormal)
+{
+    if (inShowActual == api::Bool::unspecified)
+    {
+        return std::nullopt;
+    }
+    if (inShowActual == api::Bool::no)
+    {
+        return core::ShowTuplet::none();
+    }
+    if (inShowNormal == api::Bool::yes)
+    {
+        return core::ShowTuplet::both();
+    }
+    return core::ShowTuplet::actual();
 }
 
 NotationsWriter::NotationsWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor,
@@ -226,13 +345,25 @@ core::Notations NotationsWriter::getNotations() const
     // A tuplet contained in a single note -- an inner tuplet covering exactly one note of its
     // outer tuplet, or Finale's export of a one-note tuplet -- has its start and its stop on
     // that one note, and the start must be written first (#429). So starts are written before
-    // stops, each start followed directly by the same-note stop that shares its numberLevel
+    // stops, each start followed directly by the same-note stop that carries the same number
     // when there is one, and the remaining stops (closing tuplets begun on earlier notes)
-    // follow. Matching numberLevels on one note always mean a single-note tuplet: two
-    // different tuplets can never share a note, because a note carries only one
-    // time-modification.
+    // follow. Matching numbers on one note always mean a single-note tuplet: two different
+    // tuplets can never share a note, because a note carries only one time-modification.
     const auto &tupletStops = myNoteData.noteAttachmentData.tupletStops;
     std::vector<bool> tupletStopWritten(tupletStops.size(), false);
+
+    const auto &duration = myNoteData.durationData;
+    const bool noteHasTimeModification = notationsWriterNoteHasTimeModification(duration);
+
+    // What the note's time modification already says about each side of the ratio. An absent
+    // <normal-type> means the normal notes carry the note's own written value (#428).
+    const NotationsWriterTupletPortion impliedActual{duration.timeModificationActualNotes, duration.durationName,
+                                                     duration.durationDots};
+    const bool hasNormalType = duration.timeModificationNormalType != api::DurationName::unspecified;
+    const NotationsWriterTupletPortion impliedNormal{
+        duration.timeModificationNormalNotes,
+        hasNormalType ? duration.timeModificationNormalType : duration.durationName,
+        hasNormalType ? duration.timeModificationNormalTypeDots : duration.durationDots};
 
     for (const auto &tupletStart : myNoteData.noteAttachmentData.tupletStarts)
     {
@@ -241,38 +372,24 @@ core::Notations NotationsWriter::getNotations() const
         setAttributesFromPositionData(tupletStart.positionData, tuplet);
         setId(tupletStart.id, tuplet, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
 
-        core::TupletPortion actual;
-        core::TupletNumber tn1;
-        tn1.setValue(tupletStart.actualNumber);
-        actual.setTupletNumber(tn1);
-        core::TupletType tt1;
-        tt1.setValue(myConverter.convert(tupletStart.actualDurationName));
-        actual.setTupletType(tt1);
-        for (int d = 0; d < tupletStart.actualDots; ++d)
+        const NotationsWriterTupletPortion actual{tupletStart.actualNumber, tupletStart.actualDurationName,
+                                                  tupletStart.actualDots};
+        if (notationsWriterWriteTupletPortion(tupletStart.writeActual, actual, impliedActual, noteHasTimeModification))
         {
-            actual.addTupletDot(core::TupletDot{});
+            tuplet.setTupletActual(notationsWriterMakeTupletPortion(actual, myConverter));
         }
-        tuplet.setTupletActual(actual);
 
-        core::TupletPortion normal;
-        core::TupletNumber tn2;
-        tn2.setValue(tupletStart.normalNumber);
-        normal.setTupletNumber(tn2);
-        core::TupletType tt2;
-        tt2.setValue(myConverter.convert(tupletStart.normalDurationName));
-        normal.setTupletType(tt2);
-        for (int d = 0; d < tupletStart.normalDots; ++d)
+        const NotationsWriterTupletPortion normal{tupletStart.normalNumber, tupletStart.normalDurationName,
+                                                  tupletStart.normalDots};
+        if (notationsWriterWriteTupletPortion(tupletStart.writeNormal, normal, impliedNormal, noteHasTimeModification))
         {
-            normal.addTupletDot(core::TupletDot{});
+            tuplet.setTupletNormal(notationsWriterMakeTupletPortion(normal, myConverter));
         }
-        tuplet.setTupletNormal(normal);
 
-        if (tupletStart.numberLevel > 0)
+        const auto resolvedNumber = spannerResolver.emittedNumber(tupletStart.number, &tupletStart);
+        if (resolvedNumber.has_value())
         {
-            const core::NumberLevel numberLevel{tupletStart.numberLevel};
-            reportAdjusted(myScoreWriter.getDiagnostics(), cursorLocation(myCursor), "tuplet number",
-                           tupletStart.numberLevel, numberLevel.value());
-            tuplet.setNumber(numberLevel);
+            tuplet.setNumber(core::NumberLevel{*resolvedNumber});
         }
 
         if (tupletStart.bracket != api::Bool::unspecified)
@@ -280,33 +397,24 @@ core::Notations NotationsWriter::getNotations() const
             tuplet.setBracket(myConverter.convert(tupletStart.bracket));
         }
 
-        if (tupletStart.showActualNumber != api::Bool::unspecified)
+        if (tupletStart.lineShape != api::TupletLineShape::unspecified)
         {
-            if (tupletStart.showActualNumber == api::Bool::yes)
-            {
-                if (tupletStart.showNormalNumber == api::Bool::yes)
-                {
-                    tuplet.setShowNumber(core::ShowTuplet::both());
-                }
-                else
-                {
-                    tuplet.setShowNumber(core::ShowTuplet::actual());
-                }
-            }
-            else if (tupletStart.showActualNumber == api::Bool::no)
-            {
-                tuplet.setShowNumber(core::ShowTuplet::none());
-            }
+            tuplet.setLineShape(myConverter.convert(tupletStart.lineShape));
         }
+
+        tuplet.setShowNumber(notationsWriterShowTuplet(tupletStart.showActualNumber, tupletStart.showNormalNumber));
+        tuplet.setShowType(notationsWriterShowTuplet(tupletStart.showActualType, tupletStart.showNormalType));
 
         outNotations.addChoice(core::NotationsChoice::tuplet(tuplet));
 
         for (std::size_t stopIndex = 0; stopIndex < tupletStops.size(); ++stopIndex)
         {
-            if (!tupletStopWritten[stopIndex] && tupletStops[stopIndex].numberLevel == tupletStart.numberLevel)
+            if (!tupletStopWritten[stopIndex] && tupletStops[stopIndex].number == tupletStart.number)
             {
+                const auto &tupletStop = tupletStops[stopIndex];
                 outNotations.addChoice(notationsWriterMakeTupletStop(
-                    tupletStops[stopIndex], myScoreWriter.getDiagnostics(), cursorLocation(myCursor)));
+                    tupletStop, spannerResolver.emittedNumber(tupletStop.number, &tupletStop), myConverter,
+                    myScoreWriter.getDiagnostics(), cursorLocation(myCursor)));
                 tupletStopWritten[stopIndex] = true;
                 break;
             }
@@ -317,8 +425,10 @@ core::Notations NotationsWriter::getNotations() const
     {
         if (!tupletStopWritten[stopIndex])
         {
-            outNotations.addChoice(notationsWriterMakeTupletStop(tupletStops[stopIndex], myScoreWriter.getDiagnostics(),
-                                                                 cursorLocation(myCursor)));
+            const auto &tupletStop = tupletStops[stopIndex];
+            outNotations.addChoice(
+                notationsWriterMakeTupletStop(tupletStop, spannerResolver.emittedNumber(tupletStop.number, &tupletStop),
+                                              myConverter, myScoreWriter.getDiagnostics(), cursorLocation(myCursor)));
         }
     }
 

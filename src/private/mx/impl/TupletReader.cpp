@@ -30,15 +30,21 @@ void TupletReader::parseTuplet(std::vector<api::TupletStart> &outTupletStarts,
 
     if (myTuplet.number().has_value())
     {
-        tupletStart.numberLevel = myTuplet.number()->value();
+        tupletStart.number = api::SpannerNumber{myTuplet.number()->value()};
     }
+
+    Converter converter;
 
     if (myTuplet.type() == core::StartStop::stop())
     {
         api::TupletStop tupletStop;
         tupletStop.positionData = tupletStart.positionData;
-        tupletStop.numberLevel = tupletStart.numberLevel;
+        tupletStop.number = tupletStart.number;
         tupletStop.id = getId(myTuplet);
+        if (myTuplet.bracket().has_value())
+        {
+            tupletStop.bracket = converter.convert(*myTuplet.bracket());
+        }
         outTupletStops.emplace_back(std::move(tupletStop));
         return;
     }
@@ -64,11 +70,35 @@ void TupletReader::parseTuplet(std::vector<api::TupletStart> &outTupletStarts,
         }
     }
 
-    Converter converter;
+    if (myTuplet.showType().has_value())
+    {
+        switch (myTuplet.showType()->tag())
+        {
+        case core::ShowTuplet::Tag::none:
+            tupletStart.showActualType = api::Bool::no;
+            tupletStart.showNormalType = api::Bool::no;
+            break;
+        case core::ShowTuplet::Tag::both:
+            tupletStart.showActualType = api::Bool::yes;
+            tupletStart.showNormalType = api::Bool::yes;
+            break;
+        case core::ShowTuplet::Tag::actual:
+            tupletStart.showActualType = api::Bool::yes;
+            tupletStart.showNormalType = api::Bool::no;
+            break;
+        default:
+            break;
+        }
+    }
 
     if (myTuplet.bracket().has_value())
     {
         tupletStart.bracket = converter.convert(*myTuplet.bracket());
+    }
+
+    if (myTuplet.lineShape().has_value())
+    {
+        tupletStart.lineShape = converter.convert(*myTuplet.lineShape());
     }
 
     if (myTuplet.tupletActual().has_value())
@@ -86,6 +116,10 @@ void TupletReader::parseTuplet(std::vector<api::TupletStart> &outTupletStarts,
         }
 
         tupletStart.actualDots = static_cast<int>(actual.tupletDot().size());
+
+        // The source stated the actual portion, so say it again on the way out even if the
+        // note's time modification already implies it.
+        tupletStart.writeActual = api::Bool::yes;
     }
     else
     {
@@ -107,6 +141,7 @@ void TupletReader::parseTuplet(std::vector<api::TupletStart> &outTupletStarts,
         }
 
         tupletStart.normalDots = static_cast<int>(normal.tupletDot().size());
+        tupletStart.writeNormal = api::Bool::yes;
     }
     else
     {

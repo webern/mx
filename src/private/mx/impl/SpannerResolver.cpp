@@ -26,7 +26,8 @@ namespace impl
 // independent of each other in MusicXML, so each gets its own pool.
 // GlissandoType similarly distinguishes <glissando> from <slide>, two distinct
 // elements with independent number attributes. Pedal lines number themselves
-// independently of every other family too.
+// independently of every other family too. Tuplets use the number attribute for
+// the same purpose, to tell nested tuplets apart.
 enum class SpannerNumberClass
 {
     slur,
@@ -38,7 +39,8 @@ enum class SpannerNumberClass
     pedal,
     glissando,
     slide,
-    wavyLine
+    wavyLine,
+    tuplet
 };
 
 // One start/continue/stop occurrence at its position in the serialized stream. The number is
@@ -157,6 +159,18 @@ class SpannerEventCollector
         for (const auto &start : attachments.glissandoStarts)
         {
             addGlissando(start.glissandoType, &start, start.number, true, false);
+        }
+
+        // NotationsWriter emits tuplet starts before tuplet stops, so that a tuplet living on
+        // one note opens before it closes (#429). An inner tuplet that covers a single note
+        // therefore overlaps its outer tuplet here, which is what earns it a second number.
+        for (const auto &start : attachments.tupletStarts)
+        {
+            add(SpannerNumberClass::tuplet, &start, start.number, true, false);
+        }
+        for (const auto &stop : attachments.tupletStops)
+        {
+            add(SpannerNumberClass::tuplet, &stop, stop.number, false, true);
         }
 
         // NotationsWriter emits wavy-line stops, then continues, then (after any mark-derived
@@ -526,6 +540,8 @@ static const char *spannerClassName(SpannerNumberClass inClass)
         return "slide";
     case SpannerNumberClass::wavyLine:
         return "wavy-line";
+    case SpannerNumberClass::tuplet:
+        return "tuplet";
     }
     return "spanner";
 }
@@ -569,6 +585,39 @@ static void spannerReportUnmatched(SpannerNumberClass inClass, const std::vector
         {
             diagnostics.report(api::Severity::warning, api::DiagnosticCode::unmatchedSpanner,
                                keyAndStops.second[i]->location, name + " stop has no matching start");
+        }
+    }
+}
+
+// Warns about tuplets that overlap without numbers to tell them apart. MusicXML reads a tuplet
+// with no number attribute as number 1, so a second unnumbered tuplet opening inside a first one
+// gives a reader two tuplets it cannot separate.
+static void spannerReportUnnumberedOverlap(const std::vector<SpannerNumberEvent> &inEvents,
+                                           const DiagnosticsContext &diagnostics)
+{
+    int openCount = 0;
+    for (const auto &event : inEvents)
+    {
+        if (!event.number.isUnspecified())
+        {
+            continue;
+        }
+        if (event.closes)
+        {
+            if (openCount > 0)
+            {
+                --openCount;
+            }
+            continue;
+        }
+        if (event.opens)
+        {
+            if (openCount > 0)
+            {
+                diagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted, event.location,
+                                   "two tuplets without a number are open at once; readers will default both to 1");
+            }
+            ++openCount;
         }
     }
 }
@@ -617,6 +666,10 @@ void SpannerResolver::resolvePart(const api::PartData &inPart, int partIndex, Di
             spannerClass == SpannerNumberClass::wavyLine)
         {
             spannerDetectSameNoteSpans(classAndEvents.second, mySameNoteSpanPartners);
+        }
+        if (spannerClass == SpannerNumberClass::tuplet)
+        {
+            spannerReportUnnumberedOverlap(classAndEvents.second, diagnostics);
         }
     }
 

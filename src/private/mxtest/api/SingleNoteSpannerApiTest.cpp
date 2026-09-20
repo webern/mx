@@ -38,10 +38,10 @@ inline NoteData makeGraceNote(Step inStep, int inOctave)
     return note;
 }
 
-inline TupletStart makeTripletStart(int inNumberLevel)
+inline TupletStart makeTripletStart(int inLevel)
 {
     TupletStart start;
-    start.numberLevel = inNumberLevel;
+    start.number = SpannerNumber{inLevel};
     start.actualNumber = 3;
     start.actualDurationName = DurationName::quarter;
     start.normalNumber = 2;
@@ -118,11 +118,11 @@ TEST(nestedTupletOnFinalNoteWritesInnerStartFirst, SingleNoteSpanner)
 
     voice.notes.push_back(makeGraceNote(Step::e, 4));
     TupletStop outerStop;
-    outerStop.numberLevel = 1;
+    outerStop.number = SpannerNumber{1};
     voice.notes.back().noteAttachmentData.tupletStops.push_back(outerStop);
     voice.notes.back().noteAttachmentData.tupletStarts.push_back(makeTripletStart(2));
     TupletStop innerStop;
-    innerStop.numberLevel = 2;
+    innerStop.number = SpannerNumber{2};
     voice.notes.back().noteAttachmentData.tupletStops.push_back(innerStop);
 
     const auto sequence = spannerSequence(toXml(score), 2, "tuplet");
@@ -149,14 +149,14 @@ TEST(nestedTupletOnFirstNoteWritesOuterStartFirst, SingleNoteSpanner)
     voice.notes.back().noteAttachmentData.tupletStarts.push_back(makeTripletStart(1));
     voice.notes.back().noteAttachmentData.tupletStarts.push_back(makeTripletStart(2));
     TupletStop innerStop;
-    innerStop.numberLevel = 2;
+    innerStop.number = SpannerNumber{2};
     voice.notes.back().noteAttachmentData.tupletStops.push_back(innerStop);
 
     voice.notes.push_back(makeGraceNote(Step::d, 4));
 
     voice.notes.push_back(makeGraceNote(Step::e, 4));
     TupletStop outerStop;
-    outerStop.numberLevel = 1;
+    outerStop.number = SpannerNumber{1};
     voice.notes.back().noteAttachmentData.tupletStops.push_back(outerStop);
 
     const auto sequence = spannerSequence(toXml(score), 0, "tuplet");
@@ -181,7 +181,7 @@ TEST(oneNoteTupletWritesStartThenStop, SingleNoteSpanner)
     voice.notes.push_back(makeGraceNote(Step::b, 4));
     voice.notes.back().noteAttachmentData.tupletStarts.push_back(makeTripletStart(1));
     TupletStop stop;
-    stop.numberLevel = 1;
+    stop.number = SpannerNumber{1};
     voice.notes.back().noteAttachmentData.tupletStops.push_back(stop);
 
     const auto sequence = spannerSequence(toXml(score), 0, "tuplet");

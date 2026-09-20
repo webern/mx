@@ -362,6 +362,11 @@ const Converter::EnumMap<core::LineType, api::LineType> Converter::lineType = {
     {core::LineType::wavy(), api::LineType::wavy},
 };
 
+const Converter::EnumMap<core::LineShape, api::TupletLineShape> Converter::lineShape = {
+    {core::LineShape::straight(), api::TupletLineShape::straight},
+    {core::LineShape::curved(), api::TupletLineShape::curved},
+};
+
 const Converter::EnumMap<core::WedgeType, api::WedgeType> Converter::wedgeMap = {
     {core::WedgeType::crescendo(), api::WedgeType::crescendo},
     {core::WedgeType::diminuendo(), api::WedgeType::diminuendo},
@@ -1876,6 +1881,16 @@ core::LineType Converter::convert(api::LineType value) const
 api::LineType Converter::convert(core::LineType value) const
 {
     return findApiItem(lineType, api::LineType::unspecified, value);
+}
+
+core::LineShape Converter::convert(api::TupletLineShape value) const
+{
+    return findCoreItem(lineShape, core::LineShape::straight(), value);
+}
+
+api::TupletLineShape Converter::convert(core::LineShape value) const
+{
+    return findApiItem(lineShape, api::TupletLineShape::unspecified, value);
 }
 
 core::WedgeType Converter::convert(api::WedgeType value) const
