@@ -59,12 +59,15 @@ class TupletStart
     // a triplet or the 4 in 5:4 for quintuplet
     Bool showNormalNumber;
 
-    // show the note value of the tuplet's own notes,
-    // for example the eighth note in "3 eighths"
+    // Whether the note value of the tuplet's own notes is shown beside the bracket, for example the
+    // eighth note in "3 eighths". This is optional. Left unspecified, the file does not say, and a
+    // reader leaves the note values off, which is what MusicXML asks for. Set it to yes to show
+    // them or to no to keep them off.
     Bool showActualType;
 
-    // show the note value of the 'normal' notes,
-    // for example the eighth note in "in the time of 2 eighths"
+    // Whether the note value of the 'normal' notes is shown as well, for example the eighth note in
+    // "in the time of 2 eighths". Also optional. MusicXML states both sides in a single attribute,
+    // so this field only takes effect when showActualType is yes.
     Bool showNormalType;
 
     Bool bracket;
@@ -72,12 +75,18 @@ class TupletStart
     // Whether the bracket is drawn as a straight line or in the older curved style.
     TupletLineShape lineShape;
 
-    // Most users can ignore these; leave them unspecified. They control whether the ratio is
-    // spelled out in the file alongside the note's own time modification. unspecified (the
-    // default) applies the right rule automatically: state the ratio when it differs from what
-    // the note already says, which is what an inner tuplet needs, and leave it out otherwise.
-    // yes/no force it in or out, so a writer that finds the ratio noisy can turn it off. Reading
-    // a file sets yes when the source stated the ratio.
+    // Whether the actual and normal figures above are spelled out in the file next to the notes.
+    // mx works this out on its own, so leave both unspecified; they are here for the rare case
+    // where you want to decide instead.
+    //
+    // Unspecified spells out a figure when it says something the notes do not already say. Nested
+    // tuplets are where that happens. When one tuplet is written inside another, each note counts
+    // against both tuplets at once, so the note by itself cannot tell you the inner tuplet's own
+    // ratio, and the tuplet has to state it. A tuplet standing on its own agrees with its notes and
+    // is left plain. Setting yes spells the figure out anyway, and no leaves it out.
+    //
+    // Reading a file sets yes for each figure the file spelled out, so that a score read and
+    // written back keeps what it had.
     Bool writeActual;
     Bool writeNormal;
 
