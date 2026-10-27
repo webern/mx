@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/BarlineData.h"
+#include "mx/api/ForPartData.h"
 #include "mx/api/Id.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/PartSymbolData.h"
@@ -112,6 +113,11 @@ class MeasureData
     // before this field existed.
     std::vector<TransposeData> transpositions;
 
+    // In a concert score, changes to how a transposed part is made from this one, such as a player
+    // switching to an instrument in a different key. Each takes effect at its own tick position
+    // and stays in effect until the next. See ForPartData.
+    std::vector<ForPartData> forParts;
+
     // The <measure> element's id attribute (see Id.h).
     std::optional<Id> id;
 
@@ -145,6 +151,7 @@ MXAPI_EQUALS_MEMBER(keys)
 MXAPI_EQUALS_MEMBER(barlines)
 MXAPI_EQUALS_MEMBER(partSymbol)
 MXAPI_EQUALS_MEMBER(transpositions)
+MXAPI_EQUALS_MEMBER(forParts)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(MeasureData);

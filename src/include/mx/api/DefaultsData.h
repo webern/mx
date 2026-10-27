@@ -133,9 +133,19 @@ class DefaultsData
     /// The `<lyric-font>` defaults (one per lyric line/verse).
     std::vector<LyricFontData> lyricFonts;
 
+    /// True when the score is written in concert pitch, with every instrument shown at the pitch it
+    /// sounds, even though the players read transposed parts. MusicXML calls this
+    /// `<concert-score>`. In a concert score, a transposing instrument's part is described by the
+    /// ForPartData entries on its measures rather than by TransposeData; TransposeData is only used
+    /// for octave transpositions, such as a piccolo's, which a concert score still shows.
+    ///
+    /// A score that has any ForPartData is always written as a concert score, so you only need to
+    /// set this for a concert score that has no transposing instruments.
+    bool concertScore;
+
     DefaultsData()
         : scalingMillimeters{DOUBLE_UNSPECIFIED}, scalingTenths{DOUBLE_UNSPECIFIED}, pageLayout{}, systemLayout{},
-          appearance{}, musicFont{}, wordFont{}, lyricFonts{}
+          appearance{}, musicFont{}, wordFont{}, lyricFonts{}, concertScore{false}
     {
     }
 };
@@ -146,6 +156,7 @@ MXAPI_EQUALS_MEMBER(systemLayout)
 MXAPI_EQUALS_MEMBER(appearance)
 MXAPI_EQUALS_MEMBER(musicFont)
 MXAPI_EQUALS_MEMBER(wordFont)
+MXAPI_EQUALS_MEMBER(concertScore)
 if (!areVectorsEqual(lhs.lyricFonts, rhs.lyricFonts))
 {
     MX_SHOW_UNEQUAL("DefaultsData", "lyricFonts");

@@ -158,7 +158,16 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
     }
 
     createEncoding(myScoreData.encoding, header, myDiagnostics);
-    addDefaultsData(myScoreData.defaults, header, myDiagnostics);
+    // <for-part> is only meaningful in a concert score, so a score that uses it is written as one.
+    auto defaults = myScoreData.defaults;
+    for (const auto &part : myScoreData.parts)
+    {
+        for (const auto &measure : part.measures)
+        {
+            defaults.concertScore = defaults.concertScore || !measure.forParts.empty();
+        }
+    }
+    addDefaultsData(defaults, header, myDiagnostics);
     createCredits(myScoreData, header, myDiagnostics);
 
     using PartPair = std::pair<core::ScorePart, core::PartwisePart>;
