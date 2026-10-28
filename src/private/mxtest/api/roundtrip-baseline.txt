@@ -830,3 +830,8 @@ musetrainer/Maple_Leaf_Rag_Scott_Joplin.xml
 # carries a figure across the bass notes that follow. The line was dropped on read, so a figure
 # with only an extend came back as an empty <figure/>.
 musuite/testFiguredBass2.xml
+
+# Unblocked by NoteData::noteheadParentheses and NoteData::noteheadColor. <notehead> lost its
+# parentheses and color attributes, and on a normal notehead the whole element vanished.
+lysuite/ly22d_Parenthesized_Noteheads.xml
+musuite/testNoteheads.xml
