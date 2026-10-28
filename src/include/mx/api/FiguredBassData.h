@@ -15,6 +15,33 @@ namespace mx
 {
 namespace api
 {
+// Whether a figure's continuation line begins, carries on through, or ends at this figure.
+// unspecified is a bare <extend/>: the line is drawn without saying whether it begins, continues,
+// or ends here.
+enum class FigureExtendType
+{
+    unspecified,
+    start,
+    continue_,
+    stop
+};
+
+// The continuation line drawn after a figure, showing that the figure still holds over the bass
+// notes that follow.
+struct FigureExtend
+{
+    FigureExtendType type;
+
+    FigureExtend() : type{FigureExtendType::unspecified}
+    {
+    }
+};
+
+MXAPI_EQUALS_BEGIN(FigureExtend)
+MXAPI_EQUALS_MEMBER(type)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(FigureExtend);
+
 // A single <figure> within a <figured-bass>. Each part is optional; an empty string means the
 // corresponding child element (<prefix>, <figure-number>, <suffix>) is absent.
 class FigureData
@@ -23,8 +50,10 @@ class FigureData
     std::string prefix;
     std::string figureNumber;
     std::string suffix;
+    // The figure's continuation line. Absent when the figure has none.
+    std::optional<FigureExtend> extend;
 
-    FigureData() : prefix{}, figureNumber{}, suffix{}
+    FigureData() : prefix{}, figureNumber{}, suffix{}, extend{}
     {
     }
 };
@@ -33,6 +62,7 @@ MXAPI_EQUALS_BEGIN(FigureData)
 MXAPI_EQUALS_MEMBER(prefix)
 MXAPI_EQUALS_MEMBER(figureNumber)
 MXAPI_EQUALS_MEMBER(suffix)
+MXAPI_EQUALS_MEMBER(extend)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(FigureData);
 

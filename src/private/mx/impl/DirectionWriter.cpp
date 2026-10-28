@@ -31,6 +31,7 @@
 #include "mx/core/generated/Effect.h"
 #include "mx/core/generated/Empty.h"
 #include "mx/core/generated/EmptyPrintStyleAlignID.h"
+#include "mx/core/generated/Extend.h"
 #include "mx/core/generated/Figure.h"
 #include "mx/core/generated/FiguredBass.h"
 #include "mx/core/generated/FirstFret.h"
@@ -1813,6 +1814,26 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
                 core::StyleText suffix{};
                 suffix.setValue(figureData.suffix);
                 figure.setSuffix(suffix);
+            }
+
+            if (figureData.extend.has_value())
+            {
+                core::Extend extend{};
+                switch (figureData.extend->type)
+                {
+                case api::FigureExtendType::unspecified:
+                    break;
+                case api::FigureExtendType::start:
+                    extend.setType(core::StartStopContinue::start());
+                    break;
+                case api::FigureExtendType::continue_:
+                    extend.setType(core::StartStopContinue::continue_());
+                    break;
+                case api::FigureExtendType::stop:
+                    extend.setType(core::StartStopContinue::stop());
+                    break;
+                }
+                figure.setExtend(std::move(extend));
             }
 
             if (isFirstFigure)

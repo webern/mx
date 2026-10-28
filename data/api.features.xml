@@ -304,7 +304,7 @@
       <notes>InstrumentData.soloOrEnsemble=ensemble.</notes>
     </feature>
     <feature name="extend" support="partial">
-      <notes>Lyric extend (suspected partial).</notes>
+      <notes>Lyric extend (LyricData::hasExtend) and figured-bass extend (FigureData::extend).</notes>
     </feature>
     <feature name="eyeglasses" support="none">
       <notes>Not modeled.</notes>

@@ -20,6 +20,7 @@
 #include "mx/core/generated/ClefSign.h"
 #include "mx/core/generated/Direction.h"
 #include "mx/core/generated/Ending.h"
+#include "mx/core/generated/Extend.h"
 #include "mx/core/generated/Figure.h"
 #include "mx/core/generated/FiguredBass.h"
 #include "mx/core/generated/ForPart.h"
@@ -48,6 +49,7 @@
 #include "mx/core/generated/Sound.h"
 #include "mx/core/generated/StaffDetails.h"
 #include "mx/core/generated/StaffDetailsGroup.h"
+#include "mx/core/generated/StartStopContinue.h"
 #include "mx/core/generated/StartStopDiscontinue.h"
 #include "mx/core/generated/Step.h"
 #include "mx/core/generated/StyleText.h"
@@ -114,6 +116,27 @@ api::FigureData MeasureReader::parseFigure(const core::Figure &figure)
     if (figure.suffix().has_value())
     {
         figureData.suffix = figure.suffix()->value();
+    }
+
+    if (figure.extend().has_value())
+    {
+        api::FigureExtend extend;
+        if (figure.extend()->type().has_value())
+        {
+            switch (figure.extend()->type()->tag())
+            {
+            case core::StartStopContinue::Tag::start:
+                extend.type = api::FigureExtendType::start;
+                break;
+            case core::StartStopContinue::Tag::continue_:
+                extend.type = api::FigureExtendType::continue_;
+                break;
+            case core::StartStopContinue::Tag::stop:
+                extend.type = api::FigureExtendType::stop;
+                break;
+            }
+        }
+        figureData.extend = extend;
     }
 
     return figureData;
