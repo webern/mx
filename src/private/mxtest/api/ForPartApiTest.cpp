@@ -21,6 +21,7 @@ ScoreData makeForPartScore()
     score.ticksPerQuarter = 2;
     score.parts.emplace_back();
     auto &part = score.parts.back();
+    part.uniqueId = "P1";
     part.measures.emplace_back();
     auto &measure = part.measures.back();
     measure.staves.emplace_back();
@@ -55,6 +56,26 @@ int countOccurrences(const std::string &haystack, const std::string &needle)
     }
     return count;
 }
+
+Diagnostics forPartWriteDiagnostics(const ScoreData &score)
+{
+    Diagnostics diagnostics;
+    REQUIRE(fromScore(score, diagnostics).ok());
+    return diagnostics;
+}
+
+int countDiagnostics(const Diagnostics &diagnostics, Severity severity, DiagnosticCode code)
+{
+    int count = 0;
+    for (const auto &diagnostic : diagnostics.all())
+    {
+        if (diagnostic.severity == severity && diagnostic.code == code)
+        {
+            ++count;
+        }
+    }
+    return count;
+}
 } // namespace mxtest::api::for_part_test
 
 TEST(forPartRoundTrip, ForPartData)
@@ -78,7 +99,7 @@ TEST(forPartWritesConcertScore, ForPartData)
 {
     using namespace mxtest::api::for_part_test;
     auto score = makeForPartScore();
-    CHECK(!score.defaults.concertScore);
+    CHECK(!score.concertScore);
     score.parts.front().measures.front().forParts.push_back(makeBassClarinet());
 
     const auto xml = mxtest::toXml(score);
@@ -89,7 +110,7 @@ TEST(forPartWritesConcertScore, ForPartData)
     CHECK(xml.find("<diatonic>-1</diatonic>") != std::string::npos);
 
     const auto out = mxtest::fromXml(xml);
-    CHECK(out.defaults.concertScore);
+    CHECK(out.concertScore);
 }
 
 T_END;
@@ -100,10 +121,10 @@ TEST(concertScoreWithoutForPart, ForPartData)
     auto score = makeForPartScore();
     CHECK(mxtest::toXml(score).find("<concert-score") == std::string::npos);
 
-    score.defaults.concertScore = true;
+    score.concertScore = true;
     const auto xml = mxtest::toXml(score);
     CHECK(xml.find("<concert-score") != std::string::npos);
-    CHECK(mxtest::fromXml(xml).defaults.concertScore);
+    CHECK(mxtest::fromXml(xml).concertScore);
 }
 
 T_END;
@@ -222,7 +243,7 @@ TEST(forPartReadDefaults, ForPartData)
 </score-partwise>
 )";
     const auto out = mxtest::fromXml(xml);
-    CHECK(out.defaults.concertScore);
+    CHECK(out.concertScore);
     REQUIRE(out.parts.size() == 1);
     const auto &forParts = out.parts.front().measures.front().forParts;
     REQUIRE(forParts.size() == 1);
@@ -258,10 +279,80 @@ TEST(forPartEquality, ForPartData)
     m1.forParts.push_back(a);
     CHECK(m1 != m2);
 
-    DefaultsData d1;
-    DefaultsData d2;
-    d2.concertScore = true;
-    CHECK(d1 != d2);
+    ScoreData s1;
+    ScoreData s2;
+    s2.concertScore = true;
+    CHECK(s1 != s2);
+}
+
+T_END;
+
+TEST(forPartImpliesConcertScoreReportsInfo, ForPartData)
+{
+    using namespace mxtest::api::for_part_test;
+    auto score = makeForPartScore();
+    score.parts.front().measures.front().forParts.push_back(makeBassClarinet());
+
+    const auto inferred = forPartWriteDiagnostics(score);
+    REQUIRE(1 == countDiagnostics(inferred, Severity::info, DiagnosticCode::valueAdjusted));
+    CHECK_EQUAL(0, inferred.all().front().location.partIndex);
+    CHECK_EQUAL(0, inferred.all().front().location.measureIndex);
+
+    score.concertScore = true;
+    CHECK(forPartWriteDiagnostics(score).all().empty());
+}
+
+T_END;
+
+TEST(concertScoreTransposeReportsSpecConflict, ForPartData)
+{
+    using namespace mxtest::api::for_part_test;
+    auto score = makeForPartScore();
+    score.concertScore = true;
+    score.parts.front().transposition = TransposeData{-14, -8};
+
+    const auto diagnostics = forPartWriteDiagnostics(score);
+    REQUIRE(1 == countDiagnostics(diagnostics, Severity::warning, DiagnosticCode::specConflict));
+
+    // the transposition is still written as given
+    const auto out = mxtest::fromXml(mxtest::toXml(score));
+    REQUIRE(out.parts.front().transposition.has_value());
+    CHECK_EQUAL(-14, out.parts.front().transposition->chromatic);
+}
+
+T_END;
+
+TEST(concertScoreInferredTransposeReportsSpecConflict, ForPartData)
+{
+    using namespace mxtest::api::for_part_test;
+    auto score = makeForPartScore();
+    auto &measure = score.parts.front().measures.front();
+    measure.transpositions.push_back(TransposeData{-2, -1});
+    measure.forParts.push_back(makeBassClarinet());
+
+    const auto diagnostics = forPartWriteDiagnostics(score);
+    CHECK_EQUAL(1, countDiagnostics(diagnostics, Severity::warning, DiagnosticCode::specConflict));
+}
+
+T_END;
+
+TEST(concertScoreOctaveTransposeIsAllowed, ForPartData)
+{
+    using namespace mxtest::api::for_part_test;
+    auto score = makeForPartScore();
+    score.concertScore = true;
+    score.parts.front().transposition = TransposeData{12, 7};
+    CHECK(forPartWriteDiagnostics(score).all().empty());
+}
+
+T_END;
+
+TEST(transposeWithoutConcertScoreIsAllowed, ForPartData)
+{
+    using namespace mxtest::api::for_part_test;
+    auto score = makeForPartScore();
+    score.parts.front().transposition = TransposeData{-2, -1};
+    CHECK(forPartWriteDiagnostics(score).all().empty());
 }
 
 T_END;

@@ -32,7 +32,8 @@ enum class DiagnosticCode
     missingValueDefaulted, // a required value was missing, so a default was used
     droppedData,           // data could not be read or written, so it was left out
     duplicateId,           // two elements claimed one ID, which must be unique
-    danglingIdReference    // an ID reference did not name the ID it should have
+    danglingIdReference,   // an ID reference did not name the ID it should have
+    specConflict           // the output breaks a MusicXML rule, and mx did not repair it
 };
 
 // A non-fatal problem noticed while producing a score or MusicXML document.

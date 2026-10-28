@@ -116,13 +116,6 @@ void addDefaultsData(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup
     addSystemMargins(inDefaults, outScoreHeaderGroup, diagnostics);
     addAppearance(inDefaults, outScoreHeaderGroup, diagnostics);
     addDefaultsFonts(inDefaults, outScoreHeaderGroup);
-
-    if (inDefaults.concertScore)
-    {
-        auto defaults = outScoreHeaderGroup.defaults().value_or(core::Defaults{});
-        defaults.setConcertScore(true);
-        outScoreHeaderGroup.setDefaults(defaults);
-    }
 }
 
 void addDefaultsFonts(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup)
@@ -336,7 +329,6 @@ api::DefaultsData createDefaults(const core::ScoreHeaderGroup &inScoreHeaderGrou
     addStaffLayout(inScoreHeaderGroup, defaults);
     addAppearance(inScoreHeaderGroup, defaults, diagnostics);
     addDefaultsFonts(inScoreHeaderGroup, defaults);
-    defaults.concertScore = inScoreHeaderGroup.defaults().has_value() && inScoreHeaderGroup.defaults()->concertScore();
     return defaults;
 }
 

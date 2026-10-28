@@ -39,15 +39,16 @@ MXAPI_NOT_EQUALS_AND_VECTORS(PartClefData);
 // interval its music is transposed by, and optionally the clef it is written in.
 //
 // MusicXML calls this <for-part>. It is only meaningful in a concert score, so whenever any
-// measure carries one, the score is written as a concert score (see DefaultsData::concertScore).
+// measure carries one, the score is written as a concert score (see ScoreData::concertScore).
 //
 // A ForPartData stays in effect until the next one for the same staff. To return to concert pitch
 // in the part, add one with a chromatic and diatonic of 0.
 struct ForPartData
 {
-    // The interval from concert pitch to the part's written pitch, in the same terms as
+    // The interval from the part's written pitch to the pitch it sounds, in the same terms as
     // TransposeData: chromatic is the number of semitones, diatonic the number of letter-name
-    // steps, both including any whole octaves. A Bb clarinet part is chromatic -2, diatonic -1.
+    // steps, both including any whole octaves. A written C in a Bb clarinet part sounds Bb, so
+    // its part is chromatic -2, diatonic -1.
     int chromatic = 0;
     int diatonic = 0;
 
