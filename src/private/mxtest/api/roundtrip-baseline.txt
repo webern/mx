@@ -778,3 +778,9 @@ rpatters1/tuplet_singletons-ref.xml
 synthetic/tuplet-nested.3.0.xml
 synthetic/tuplet.3.0.xml
 synthetic/tuplet.3.1.xml
+
+# Unblocked by <concert-score> and <for-part> support. The reader discarded
+# <concert-score/> in <defaults>, so the writer had nothing to emit. The three
+# synthetic <for-part> fixtures stay out: they use <for-part> without
+# <concert-score/>, which MusicXML does not allow, and the writer adds it.
+synthetic/concert-score.4.0.xml

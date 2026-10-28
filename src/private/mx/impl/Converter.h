@@ -266,6 +266,11 @@ class Converter
     static mx::core::Transpose convertToTranspose(const mx::api::TransposeData &inTransposeData);
     static mx::api::TransposeData convertToTransposeData(const mx::core::Transpose &inTranspose);
 
+    // The interval part shared by <transpose> and <part-transpose>. The returned TransposeData
+    // carries only chromatic and diatonic.
+    static mx::core::TransposeGroup convertToTransposeGroup(int inChromatic, int inDiatonic);
+    static mx::api::TransposeData convertToTransposeData(const mx::core::TransposeGroup &inTransposeGroup);
+
     const static EnumMap<core::Step, api::Step> stepMap;
     const static EnumMap<core::NoteTypeValue, api::DurationName> durationMap;
     const static EnumMap<core::NoteheadValue, api::Notehead> noteheadMap;

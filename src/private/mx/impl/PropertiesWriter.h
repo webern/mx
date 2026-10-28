@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ClefData.h"
+#include "mx/api/ForPartData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/PartSymbolData.h"
 #include "mx/api/TimeChoice.h"
@@ -62,6 +63,9 @@ class PropertiesWriter
     void writeClef(int staffIndex, const api::ClefData &inClefData);
     void writePartSymbol(const api::PartSymbolData &inPartSymbolData);
     void writeTranspose(int staffIndex, const api::TransposeData &inTransposeData);
+    // <transpose> and <for-part> cannot share an <attributes> element, so writing one while the
+    // buffer holds the other flushes the buffer first.
+    void writeForPart(const api::ForPartData &inForPartData);
     void writeMultipleRest(int measureCount, api::Bool useSymbols);
 
   private:

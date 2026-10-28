@@ -307,6 +307,7 @@ api::ScoreData ScoreReader::getScoreData() const
     if (myHeaderGroup.defaults().has_value())
     {
         myOutScoreData.defaults = createDefaults(myHeaderGroup, myDiagnostics);
+        myOutScoreData.concertScore = myHeaderGroup.defaults()->concertScore();
     }
 
     createCredits(myHeaderGroup, myOutScoreData);

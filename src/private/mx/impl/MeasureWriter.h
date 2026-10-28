@@ -204,6 +204,8 @@ class MeasureWriter
     const std::vector<api::KeyData>::const_iterator myMeasureKeysEnd;
     std::vector<api::TransposeData>::const_iterator myMeasureTransposeIter;
     const std::vector<api::TransposeData>::const_iterator myMeasureTransposeEnd;
+    std::vector<api::ForPartData>::const_iterator myMeasureForPartIter;
+    const std::vector<api::ForPartData>::const_iterator myMeasureForPartEnd;
     History myHistory;
 
   private:

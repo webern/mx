@@ -2233,17 +2233,23 @@ std::pair<int, double> Converter::convertToSemitonesAndCents(double xmlAlter)
 
 mx::core::Transpose Converter::convertToTranspose(const mx::api::TransposeData &inTransposeData)
 {
+    mx::core::Transpose transpose;
+    transpose.setTranspose(convertToTransposeGroup(inTransposeData.chromatic, inTransposeData.diatonic));
+    return transpose;
+}
+
+mx::core::TransposeGroup Converter::convertToTransposeGroup(int inChromatic, int inDiatonic)
+{
     // the transpose element uses an octave-change element for intervals larger than an octave.
     // mx::api does away with the octave-change concept. so a translation is necessary.
-    mx::core::Transpose transpose;
     mx::core::TransposeGroup group;
     int octave = 0;
 
-    if (inTransposeData.chromatic != 0)
+    if (inChromatic != 0)
     {
-        octave = inTransposeData.chromatic / 12;
-        const auto negative = inTransposeData.chromatic < 0;
-        const auto absMod = std::abs(inTransposeData.chromatic) % 12;
+        octave = inChromatic / 12;
+        const auto negative = inChromatic < 0;
+        const auto absMod = std::abs(inChromatic) % 12;
         const auto chromatic = negative ? -1 * absMod : absMod;
         if (octave != 0)
         {
@@ -2252,15 +2258,13 @@ mx::core::Transpose Converter::convertToTranspose(const mx::api::TransposeData &
         group.setChromatic(mx::core::Semitones{mx::core::Decimal{static_cast<double>(chromatic)}});
     }
 
-    auto harmonic = inTransposeData.diatonic;
+    auto harmonic = inDiatonic;
     if (octave != 0)
     {
         harmonic += octave * -7;
     }
     group.setDiatonic(harmonic);
-
-    transpose.setTranspose(std::move(group));
-    return transpose;
+    return group;
 }
 
 inline int figureOutDiatonic(int inChromatic)
@@ -2322,11 +2326,17 @@ inline int figureOutDiatonic(int inChromatic)
 
 mx::api::TransposeData Converter::convertToTransposeData(const mx::core::Transpose &inTranspose)
 {
+    auto out = convertToTransposeData(inTranspose.transpose());
+    out.id = getId(inTranspose);
+    return out;
+}
+
+mx::api::TransposeData Converter::convertToTransposeData(const mx::core::TransposeGroup &group)
+{
     // the transpose element has restrictions in its usage that are not enforced by XSD range restrictions.
     // we do our best if the transpose element is used incorrectly, or the diatonic element (which is
     // optional in musicxml) is not present. TransposeData does away with the octave-change concept and
     // requires use of the diatonic value, so we translate as necessary.
-    const auto &group = inTranspose.transpose();
     const int specifiedChromatic = static_cast<int>(group.chromatic().value().value());
     const std::optional<int> specifiedOctave = group.octaveChange();
     const std::optional<int> specifiedDiatonic = group.diatonic();
@@ -2353,9 +2363,7 @@ mx::api::TransposeData Converter::convertToTransposeData(const mx::core::Transpo
     const auto octaves = specifiedOctave.has_value() ? specifiedOctave.value() : 0;
     diatonic += octaves * 7;
     const auto chromatic = specifiedChromatic + (octaves * 12);
-    mx::api::TransposeData out{chromatic, diatonic};
-    out.id = getId(inTranspose);
-    return out;
+    return mx::api::TransposeData{chromatic, diatonic};
 }
 } // namespace impl
 } // namespace mx

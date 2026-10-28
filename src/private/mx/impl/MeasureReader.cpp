@@ -22,6 +22,7 @@
 #include "mx/core/generated/Ending.h"
 #include "mx/core/generated/Figure.h"
 #include "mx/core/generated/FiguredBass.h"
+#include "mx/core/generated/ForPart.h"
 #include "mx/core/generated/Forward.h"
 #include "mx/core/generated/Grouping.h"
 #include "mx/core/generated/Harmony.h"
@@ -36,6 +37,8 @@
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/NonTraditionalKeyGroup.h"
 #include "mx/core/generated/Note.h"
+#include "mx/core/generated/PartClef.h"
+#include "mx/core/generated/PartTranspose.h"
 #include "mx/core/generated/PartwiseMeasure.h"
 #include "mx/core/generated/PositiveDivisions.h"
 #include "mx/core/generated/Print.h"
@@ -70,6 +73,28 @@ namespace mx
 {
 namespace impl
 {
+// The line a clef sits on when MusicXML leaves <line> out: the usual line for its sign.
+static int measureReaderDefaultClefLine(api::ClefSymbol symbol)
+{
+    switch (symbol)
+    {
+    case api::ClefSymbol::g:
+        return 2;
+    case api::ClefSymbol::f:
+        return 4;
+    case api::ClefSymbol::c:
+        return 3;
+    case api::ClefSymbol::jianpu:
+        return 1;
+    case api::ClefSymbol::tab:
+        return 1;
+    case api::ClefSymbol::percussion:
+        return 3;
+    default:
+        return 3;
+    }
+}
+
 api::FigureData MeasureReader::parseFigure(const core::Figure &figure)
 {
     api::FigureData figureData;
@@ -868,7 +893,51 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
             myOutMeasureData.transpositions.emplace_back(std::move(transposeData));
         }
     }
+
+    if (inMxAttributes.choice().isForPart())
+    {
+        for (const auto &coreForPart : inMxAttributes.choice().asForPart())
+        {
+            importForPart(coreForPart);
+        }
+    }
     return transpose;
+}
+
+void MeasureReader::importForPart(const core::ForPart &inForPart) const
+{
+    const auto interval = Converter::convertToTransposeData(inForPart.partTranspose().transpose());
+    api::ForPartData forPartData;
+    forPartData.chromatic = interval.chromatic;
+    forPartData.diatonic = interval.diatonic;
+
+    if (inForPart.partClef().has_value())
+    {
+        const auto &clefGroup = inForPart.partClef()->clef();
+        api::PartClefData partClefData;
+        partClefData.symbol = myConverter.convert(clefGroup.sign());
+        partClefData.line = clefGroup.line().has_value() ? clefGroup.line()->value()
+                                                         : measureReaderDefaultClefLine(partClefData.symbol);
+        partClefData.octaveChange = clefGroup.clefOctaveChange().value_or(api::DEFAULT_CLEF_OCTAVE_CHANGE);
+        forPartData.partClef = partClefData;
+    }
+
+    if (inForPart.number().has_value())
+    {
+        forPartData.staffIndex = inForPart.number()->value() - 1;
+        if (forPartData.staffIndex > myCurrentCursor.getNumStaves() - 1)
+        {
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+                                 measureLocation(myCurrentCursor),
+                                 "for-part staff number " + std::to_string(forPartData.staffIndex + 1) +
+                                     " is out of range; applying it to all staves");
+            forPartData.staffIndex = api::INDEX_UNSPECIFIED;
+        }
+    }
+
+    forPartData.tickTimePosition = myCurrentCursor.tickTimePosition;
+    forPartData.id = getId(inForPart);
+    myOutMeasureData.forParts.emplace_back(std::move(forPartData));
 }
 
 void MeasureReader::parseHarmony(const core::Harmony &inHarmony) const
@@ -1173,30 +1242,7 @@ void MeasureReader::importClef(const core::Clef &inClef) const
     else
     {
         clefData.isLineSpecified = false;
-        switch (clefData.symbol)
-        {
-        case api::ClefSymbol::g:
-            clefData.line = 2;
-            break;
-        case api::ClefSymbol::f:
-            clefData.line = 4;
-            break;
-        case api::ClefSymbol::c:
-            clefData.line = 3;
-            break;
-        case api::ClefSymbol::jianpu:
-            clefData.line = 1;
-            break;
-        case api::ClefSymbol::tab:
-            clefData.line = 1;
-            break;
-        case api::ClefSymbol::percussion:
-            clefData.line = 3;
-            break;
-        default:
-            clefData.line = 3;
-            break;
-        }
+        clefData.line = measureReaderDefaultClefLine(clefData.symbol);
     }
 
     if (inClef.clef().clefOctaveChange().has_value())

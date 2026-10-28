@@ -33,6 +33,7 @@ class Grouping;
 class Link;
 class Bookmark;
 class Clef;
+class ForPart;
 } // namespace core
 
 namespace impl
@@ -109,6 +110,7 @@ class MeasureReader
     /// have access to the part in this function (as far as I can tell), the transpose info
     /// is returned up the call stack if measure index is zero and time index is zero.
     std::optional<api::TransposeData> parseAttributes(const core::Attributes &inMxAttributes) const;
+    void importForPart(const core::ForPart &inForPart) const;
 
     void parseHarmony(const core::Harmony &inHarmony) const;
     void parseFiguredBass(const core::FiguredBass &inMxFiguredBass, const core::Note *nextNotePtr) const;

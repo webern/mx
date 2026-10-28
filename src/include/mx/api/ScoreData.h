@@ -82,6 +82,18 @@ class ScoreData
     /// default system spacing and margins. Corresponds to the `<defaults>` MusicXML element. (Note this field
     /// used to be named `layout` and was renamed to `defaults` in v0.5.0.)
     DefaultsData defaults;
+
+    /// True when the score is written in concert pitch, with every instrument shown at the pitch it
+    /// sounds, even though the players read transposed parts. MusicXML calls this
+    /// `<concert-score>`. In a concert score, a transposing instrument's part is described by the
+    /// ForPartData entries on its measures rather than by TransposeData. TransposeData is only used
+    /// for octave transpositions, such as a piccolo's, which a concert score still shows; the writer
+    /// reports any other transposition as a diagnostic, without changing it.
+    ///
+    /// A score that has any ForPartData is always written as a concert score, so you only need to
+    /// set this for a concert score that has no transposing instruments.
+    bool concertScore;
+
     std::vector<PartData> parts;
     std::vector<PartGroupData> partGroups;
 
@@ -128,6 +140,7 @@ MXAPI_EQUALS_MEMBER(encoding)
 MXAPI_EQUALS_MEMBER(pageTextItems)
 MXAPI_EQUALS_MEMBER(pageImageItems)
 MXAPI_EQUALS_MEMBER(defaults)
+MXAPI_EQUALS_MEMBER(concertScore)
 MXAPI_EQUALS_MEMBER(parts)
 MXAPI_EQUALS_MEMBER(partGroups)
 MXAPI_EQUALS_MEMBER(ticksPerQuarter)

@@ -53,7 +53,8 @@ MeasureWriter::MeasureWriter(const api::MeasureData &inMeasureData, const Measur
       myPropertiesWriter{nullptr}, myConverter{}, myBarlinesIter{inMeasureData.barlines.cbegin()},
       myBarlinesEnd{inMeasureData.barlines.cend()}, myMeasureKeysIter{inMeasureData.keys.cbegin()},
       myMeasureKeysEnd{inMeasureData.keys.cend()}, myMeasureTransposeIter{inMeasureData.transpositions.cbegin()},
-      myMeasureTransposeEnd{inMeasureData.transpositions.cend()}, myHistory{inCursor}
+      myMeasureTransposeEnd{inMeasureData.transpositions.cend()}, myMeasureForPartIter{inMeasureData.forParts.cbegin()},
+      myMeasureForPartEnd{inMeasureData.forParts.cend()}, myHistory{inCursor}
 {
 }
 
@@ -69,6 +70,7 @@ core::PartwiseMeasure MeasureWriter::getPartwiseMeasure()
     myBarlinesEnd = myMeasureData.barlines.cend();
     myMeasureKeysIter = myMeasureData.keys.cbegin();
     myMeasureTransposeIter = myMeasureData.transpositions.cbegin();
+    myMeasureForPartIter = myMeasureData.forParts.cbegin();
 
     writeMeasureGlobals();
     writeStaves();
@@ -233,6 +235,12 @@ void MeasureWriter::writeMeasureGlobals()
     {
         myPropertiesWriter->writeTranspose(myMeasureTransposeIter->staffIndex, *myMeasureTransposeIter);
         ++myMeasureTransposeIter;
+    }
+
+    while (myMeasureForPartIter != myMeasureForPartEnd && myMeasureForPartIter->tickTimePosition == 0)
+    {
+        myPropertiesWriter->writeForPart(*myMeasureForPartIter);
+        ++myMeasureForPartIter;
     }
 
     // The transpose element goes into the measures, but for convenience we have added it to
@@ -612,6 +620,13 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
                 ++myMeasureTransposeIter;
             }
 
+            while (myMeasureForPartIter != myMeasureForPartEnd &&
+                   myMeasureForPartIter->tickTimePosition <= myHistory.getCursor().tickTimePosition)
+            {
+                myPropertiesWriter->writeForPart(*myMeasureForPartIter);
+                ++myMeasureForPartIter;
+            }
+
             while (clefIter != clefEnd && clefIter->tickTimePosition <= myHistory.getCursor().tickTimePosition)
             {
                 myPropertiesWriter->writeClef(clefStaffIndex(myHistory.getCursor().staffIndex), *clefIter);
@@ -654,8 +669,10 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
     bool areMeasureKeysRemaining = myMeasureKeysIter != myMeasureKeysEnd;
     bool areStaffKeysRemaining = staffKeyIter != staffKeyEnd;
     bool areMeasureTransposesRemaining = myMeasureTransposeIter != myMeasureTransposeEnd;
+    bool areMeasureForPartsRemaining = myMeasureForPartIter != myMeasureForPartEnd;
 
-    if (areClefsRemaining || areMeasureKeysRemaining || areStaffKeysRemaining || areMeasureTransposesRemaining)
+    if (areClefsRemaining || areMeasureKeysRemaining || areStaffKeysRemaining || areMeasureTransposesRemaining ||
+        areMeasureForPartsRemaining)
     {
         for (; clefIter != inStaff.clefs.cend(); ++clefIter)
         {
@@ -682,6 +699,11 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
         for (; myMeasureTransposeIter != myMeasureTransposeEnd; ++myMeasureTransposeIter)
         {
             myPropertiesWriter->writeTranspose(myMeasureTransposeIter->staffIndex, *myMeasureTransposeIter);
+        }
+
+        for (; myMeasureForPartIter != myMeasureForPartEnd; ++myMeasureForPartIter)
+        {
+            myPropertiesWriter->writeForPart(*myMeasureForPartIter);
         }
         myPropertiesWriter->flushBuffer();
     }

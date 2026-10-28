@@ -4,18 +4,25 @@
 
 #include "mx/impl/ScoreWriter.h"
 #include "mx/core/OneOrMore.h"
+#include "mx/core/generated/Attributes.h"
+#include "mx/core/generated/AttributesChoice.h"
+#include "mx/core/generated/Defaults.h"
 #include "mx/core/generated/GroupBarline.h"
 #include "mx/core/generated/GroupName.h"
 #include "mx/core/generated/GroupSymbol.h"
 #include "mx/core/generated/Identification.h"
+#include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/NameDisplay.h"
 #include "mx/core/generated/PartGroup.h"
 #include "mx/core/generated/PartList.h"
 #include "mx/core/generated/PartListChoice.h"
+#include "mx/core/generated/PartwiseMeasure.h"
 #include "mx/core/generated/PartwisePart.h"
 #include "mx/core/generated/ScoreHeaderGroup.h"
 #include "mx/core/generated/ScorePart.h"
 #include "mx/core/generated/ScorePartwise.h"
+#include "mx/core/generated/Transpose.h"
+#include "mx/core/generated/TransposeGroup.h"
 #include "mx/core/generated/TypedText.h"
 #include "mx/core/generated/Work.h"
 #include "mx/impl/Converter.h"
@@ -159,6 +166,34 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
 
     createEncoding(myScoreData.encoding, header, myDiagnostics);
     addDefaultsData(myScoreData.defaults, header, myDiagnostics);
+
+    // <for-part> is only allowed in a concert score, so a score that uses one is written as a
+    // concert score even when concertScore is not set.
+    bool isConcertScore = myScoreData.concertScore;
+    for (size_t p = 0; !isConcertScore && p < myScoreData.parts.size(); ++p)
+    {
+        const auto &measures = myScoreData.parts[p].measures;
+        for (size_t m = 0; !isConcertScore && m < measures.size(); ++m)
+        {
+            if (!measures[m].forParts.empty())
+            {
+                isConcertScore = true;
+                api::Location location;
+                location.partIndex = static_cast<int>(p);
+                location.measureIndex = static_cast<int>(m);
+                myDiagnostics.report(api::Severity::info, api::DiagnosticCode::valueAdjusted, std::move(location),
+                                     "a for-part is only allowed in a concert score, so the score is written as a "
+                                     "concert score");
+            }
+        }
+    }
+
+    if (isConcertScore)
+    {
+        auto defaults = header.defaults().value_or(core::Defaults{});
+        defaults.setConcertScore(true);
+        header.setDefaults(std::move(defaults));
+    }
     createCredits(myScoreData, header, myDiagnostics);
 
     using PartPair = std::pair<core::ScorePart, core::PartwisePart>;
@@ -186,6 +221,46 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
         PartWriter partWriter{partData, partIndex, myScoreData.ticksPerQuarter, *this};
         partPairs.emplace_back(std::make_pair(partWriter.getScorePart(), partWriter.getPartwisePart()));
         ++partIndex;
+    }
+
+    // A concert score may only use <transpose> for octave transpositions. Checking the <transpose>
+    // elements as written covers every way the api produces one, and the octaves have already
+    // been moved into <octave-change>.
+    if (isConcertScore)
+    {
+        for (size_t p = 0; p < partPairs.size(); ++p)
+        {
+            const auto measures = partPairs[p].second.measure();
+            for (size_t m = 0; m < measures.size(); ++m)
+            {
+                for (const auto &mdc : measures[m].musicData())
+                {
+                    if (!mdc.isAttributes() || !mdc.asAttributes().choice().isTranspose())
+                    {
+                        continue;
+                    }
+                    for (const auto &transpose : mdc.asAttributes().choice().asTranspose())
+                    {
+                        const auto &group = transpose.transpose();
+                        if (group.chromatic().value().value() == 0.0 && group.diatonic().value_or(0) == 0)
+                        {
+                            continue;
+                        }
+                        api::Location location;
+                        location.partIndex = static_cast<int>(p);
+                        location.measureIndex = static_cast<int>(m);
+                        if (transpose.number().has_value())
+                        {
+                            location.staffIndex = transpose.number()->value() - 1;
+                        }
+                        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::specConflict,
+                                             std::move(location),
+                                             "a concert score contains a transpose that changes more than the "
+                                             "octave, which MusicXML does not allow; the output was not changed");
+                    }
+                }
+            }
+        }
     }
 
     myOutScorePartwise.setScoreHeader(header);

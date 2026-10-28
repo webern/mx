@@ -11,6 +11,7 @@
 #include "mx/core/generated/Clef.h"
 #include "mx/core/generated/ClefGroup.h"
 #include "mx/core/generated/Fifths.h"
+#include "mx/core/generated/ForPart.h"
 #include "mx/core/generated/Interchangeable.h"
 #include "mx/core/generated/Key.h"
 #include "mx/core/generated/KeyAccidental.h"
@@ -21,7 +22,9 @@
 #include "mx/core/generated/MultipleRest.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/NonTraditionalKeyGroup.h"
+#include "mx/core/generated/PartClef.h"
 #include "mx/core/generated/PartSymbol.h"
+#include "mx/core/generated/PartTranspose.h"
 #include "mx/core/generated/PartwiseMeasure.h"
 #include "mx/core/generated/PositiveDivisions.h"
 #include "mx/core/generated/Semitones.h"
@@ -426,10 +429,56 @@ void PropertiesWriter::writeTranspose(int staffIndex, const api::TransposeData &
         xpose.setNumber(core::StaffNumber{staffIndex + 1});
     }
 
+    if (myAttributes.choice().isForPart() && !myAttributes.choice().asForPart().empty())
+    {
+        flushBuffer();
+    }
+
     auto vec =
         myAttributes.choice().isTranspose() ? myAttributes.choice().asTranspose() : std::vector<core::Transpose>{};
     vec.push_back(std::move(xpose));
     myAttributes.setChoice(core::AttributesChoice::transpose(std::move(vec)));
+    myHasContent = true;
+}
+
+void PropertiesWriter::writeForPart(const api::ForPartData &inForPartData)
+{
+    core::ForPart forPart;
+    impl::setId(inForPartData.id, forPart, myDiagnostics, myLocation);
+
+    if (inForPartData.staffIndex >= 0)
+    {
+        forPart.setNumber(core::StaffNumber{inForPartData.staffIndex + 1});
+    }
+
+    if (inForPartData.partClef.has_value())
+    {
+        const auto &partClefData = *inForPartData.partClef;
+        Converter converter;
+        core::ClefGroup cg{};
+        cg.setSign(converter.convert(partClefData.symbol));
+        cg.setLine(core::StaffLinePosition{partClefData.line});
+        if (partClefData.octaveChange != 0)
+        {
+            cg.setClefOctaveChange(partClefData.octaveChange);
+        }
+        core::PartClef partClef;
+        partClef.setClef(std::move(cg));
+        forPart.setPartClef(std::move(partClef));
+    }
+
+    core::PartTranspose partTranspose;
+    partTranspose.setTranspose(Converter::convertToTransposeGroup(inForPartData.chromatic, inForPartData.diatonic));
+    forPart.setPartTranspose(std::move(partTranspose));
+
+    if (myAttributes.choice().isTranspose() && !myAttributes.choice().asTranspose().empty())
+    {
+        flushBuffer();
+    }
+
+    auto vec = myAttributes.choice().isForPart() ? myAttributes.choice().asForPart() : std::vector<core::ForPart>{};
+    vec.push_back(std::move(forPart));
+    myAttributes.setChoice(core::AttributesChoice::forPart(std::move(vec)));
     myHasContent = true;
 }
 
