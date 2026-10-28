@@ -811,3 +811,9 @@ musuite/testInvisibleElements.xml
 musuite/testTablature1.xml
 musuite/testTablature2.xml
 musuite/testTablature3.xml
+
+# Unblocked by writing barlines where MusicXML puts them. A left barline was written ahead of the
+# measure's <print>, and a <barline location="middle"> was written at the end of the measure
+# instead of at its tick.
+lysuite/ly46b_MidmeasureBarline.xml
+musetrainer/Bella_Ciao.xml
