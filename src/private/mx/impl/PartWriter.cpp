@@ -6,9 +6,7 @@
 #include "mx/core/Decimal.h"
 #include "mx/core/OneOrMore.h"
 #include "mx/core/Token.h"
-#include "mx/core/generated/Empty.h"
 #include "mx/core/generated/FormattedText.h"
-#include "mx/core/generated/InstrumentSound.h"
 #include "mx/core/generated/MIDI128.h"
 #include "mx/core/generated/MIDI16.h"
 #include "mx/core/generated/MIDI16384.h"
@@ -20,20 +18,18 @@
 #include "mx/core/generated/PartwiseMeasure.h"
 #include "mx/core/generated/PartwisePart.h"
 #include "mx/core/generated/Percent.h"
-#include "mx/core/generated/PositiveIntegerOrEmpty.h"
 #include "mx/core/generated/RotationDegrees.h"
 #include "mx/core/generated/ScoreInstrument.h"
 #include "mx/core/generated/ScorePart.h"
 #include "mx/core/generated/ScorePartMIDIGroup.h"
-#include "mx/core/generated/VirtualInstrument.h"
 #include "mx/core/generated/VirtualInstrumentDataGroup.h"
-#include "mx/core/generated/VirtualInstrumentDataGroupChoice.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/MeasureCursor.h"
 #include "mx/impl/MeasureWriter.h"
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/ScoreWriter.h"
+#include "mx/impl/VirtualInstrumentFunctions.h"
 
 #include <algorithm>
 
@@ -56,6 +52,24 @@ void applyPrintObject(api::Bool printObject, core::PartName &out)
 }
 } // namespace
 
+bool partWriterHasInstrumentChange(const api::PartData &inPartData)
+{
+    for (const auto &measure : inPartData.measures)
+    {
+        for (const auto &staff : measure.staves)
+        {
+            for (const auto &direction : staff.directions)
+            {
+                if (direction.isSoundDataSpecified && direction.soundData.instrumentChange.has_value())
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 // The base of the ids given to parts that bring no instrument id of their own, e.g. "ID1000000".
 // High enough to be unlikely to collide with ids already present in a parsed score.
 constexpr int kSynthesizedInstrumentIdBase = 1000000;
@@ -63,11 +77,16 @@ constexpr int kSynthesizedInstrumentIdBase = 1000000;
 // The id the part's instrument carries, repeated by every element that refers to it. The
 // caller's InstrumentData::uniqueId when it set one; otherwise derived from the part's place in
 // the score, so the same ScoreData always writes the same file, and two parts never collide.
-core::Token PartWriter::partInstrumentId() const
+core::Token PartWriter::partInstrumentId(bool isReported) const
 {
     if (!myPartData.instrumentData.uniqueId.empty())
     {
-        return writtenToken("instrument id", myPartData.instrumentData.uniqueId);
+        if (isReported)
+        {
+            return writtenToken("instrument id", myPartData.instrumentData.uniqueId);
+        }
+        core::ValueParseOutcome outcome = core::ValueParseOutcome::valid;
+        return core::Token::parse(myPartData.instrumentData.uniqueId, outcome);
     }
     return core::Token{"ID" + std::to_string(kSynthesizedInstrumentIdBase + myPartIndex)};
 }
@@ -154,51 +173,22 @@ core::ScorePart PartWriter::getScorePart() const
         scoreInstrument.setInstrumentAbbreviation(myPartData.instrumentData.abbreviation);
     }
 
-    if (myPartData.instrumentData.soloOrEnsemble != api::SoloOrEnsemble::unspecified)
+    api::InstrumentChangeData sound{};
+    sound.soundID = myPartData.instrumentData.soundID;
+    sound.soloOrEnsemble = myPartData.instrumentData.soloOrEnsemble;
+    sound.virtualLibrary = myPartData.instrumentData.midiData.virtualLibrary;
+    sound.virtualName = myPartData.instrumentData.midiData.virtualName;
+    scoreInstrument.setVirtualInstrumentData(writeVirtualInstrumentData(sound));
+
+    if (scoreInstrument.virtualInstrumentData() != core::VirtualInstrumentDataGroup{})
     {
         addScoreInstrument = true;
-        core::VirtualInstrumentDataGroup vidg = scoreInstrument.virtualInstrumentData();
-        if (myPartData.instrumentData.soloOrEnsemble == api::SoloOrEnsemble::ensemble)
-        {
-            vidg.setChoice(
-                core::VirtualInstrumentDataGroupChoice::ensemble(core::PositiveIntegerOrEmpty::positiveInteger(0)));
-        }
-        else
-        {
-            vidg.setChoice(core::VirtualInstrumentDataGroupChoice::solo(core::Empty{}));
-        }
-        scoreInstrument.setVirtualInstrumentData(vidg);
     }
 
-    if (myPartData.instrumentData.midiData.virtualName.size() > 0 ||
-        myPartData.instrumentData.midiData.virtualLibrary.size() > 0)
+    // An instrument change refers to the part's score-instrument by id, so the part needs one.
+    if (partWriterHasInstrumentChange(myPartData))
     {
         addScoreInstrument = true;
-        core::VirtualInstrumentDataGroup vidg = scoreInstrument.virtualInstrumentData();
-        core::VirtualInstrument virtualInstrument{};
-
-        if (myPartData.instrumentData.midiData.virtualName.size() > 0)
-        {
-            virtualInstrument.setVirtualName(myPartData.instrumentData.midiData.virtualName);
-        }
-
-        if (myPartData.instrumentData.midiData.virtualLibrary.size() > 0)
-        {
-            virtualInstrument.setVirtualLibrary(myPartData.instrumentData.midiData.virtualLibrary);
-        }
-
-        vidg.setVirtualInstrument(virtualInstrument);
-        scoreInstrument.setVirtualInstrumentData(vidg);
-    }
-
-    if (myPartData.instrumentData.soundID != api::SoundID::unspecified &&
-        myPartData.instrumentData.soundID != api::SoundID::errorBadString)
-    {
-        addScoreInstrument = true;
-        Converter c;
-        core::VirtualInstrumentDataGroup vidg = scoreInstrument.virtualInstrumentData();
-        vidg.setInstrumentSound(core::InstrumentSound::soundID(c.convert(myPartData.instrumentData.soundID)));
-        scoreInstrument.setVirtualInstrumentData(vidg);
     }
 
     if (addScoreInstrument)
@@ -370,6 +360,8 @@ void PartWriter::writeMeasures(const mx::api::PartData &inPartData, core::Partwi
     cursor.measureIndex = 0;
     cursor.partIndex = myPartIndex;
     cursor.isFirstMeasureInPart = true;
+    // getScorePart reports an invalid instrument id; the instrument changes only repeat it.
+    cursor.instrumentId = partInstrumentId(false).value();
 
     // Collect all measures before setting them, to avoid the OneOrMore default-element
     // replacement logic that the old shared-ptr API required.

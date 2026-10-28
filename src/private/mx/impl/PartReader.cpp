@@ -6,7 +6,6 @@
 #include "mx/core/generated/AccidentalText.h"
 #include "mx/core/generated/AccidentalValue.h"
 #include "mx/core/generated/FormattedText.h"
-#include "mx/core/generated/InstrumentSound.h"
 #include "mx/core/generated/MIDIDevice.h"
 #include "mx/core/generated/MIDIInstrument.h"
 #include "mx/core/generated/MusicDataChoice.h"
@@ -22,15 +21,12 @@
 #include "mx/core/generated/ScorePart.h"
 #include "mx/core/generated/ScorePartMIDIGroup.h"
 #include "mx/core/generated/ScorePartwise.h"
-#include "mx/core/generated/SoundID.h"
-#include "mx/core/generated/VirtualInstrument.h"
-#include "mx/core/generated/VirtualInstrumentDataGroup.h"
-#include "mx/core/generated/VirtualInstrumentDataGroupChoice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/MeasureReader.h"
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
+#include "mx/impl/VirtualInstrumentFunctions.h"
 #include "mx/utility/Throw.h"
 #include "mx/utility/Unused.h"
 
@@ -100,6 +96,7 @@ api::PartData PartReader::getPartData()
 
     myCurrentCursor = MeasureCursor{myNumStaves, myGlobalTicksPerMeasure};
     myCurrentCursor.partIndex = myPartIndex;
+    myCurrentCursor.instrumentId = myOutPartData.instrumentData.uniqueId;
 
     if (myConstructedDivisionsValue > 0)
     {
@@ -269,56 +266,12 @@ void PartReader::parseScoreInstrument(const core::ScoreInstrument &scoreInstrume
         myOutPartData.instrumentData.abbreviation = *scoreInstrument.instrumentAbbreviation();
     }
 
-    const auto &vidg = scoreInstrument.virtualInstrumentData();
-
-    if (vidg.choice().has_value())
-    {
-        const auto &choice = *vidg.choice();
-        if (choice.isEnsemble())
-        {
-            myOutPartData.instrumentData.soloOrEnsemble = api::SoloOrEnsemble::ensemble;
-        }
-        else if (choice.isSolo())
-        {
-            myOutPartData.instrumentData.soloOrEnsemble = api::SoloOrEnsemble::solo;
-        }
-    }
-
-    if (vidg.instrumentSound().has_value())
-    {
-        const auto &instrSound = *vidg.instrumentSound();
-        if (instrSound.isSoundID())
-        {
-            Converter c;
-            myOutPartData.instrumentData.soundID = c.convert(instrSound.asSoundID());
-        }
-        else
-        {
-            api::Location location;
-            location.partIndex = myPartIndex;
-            myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, std::move(location),
-                                 "instrument-sound \"" + instrSound.asString() +
-                                     "\" is not a known sound; it is not read");
-        }
-    }
-
-    if (vidg.virtualInstrument().has_value())
-    {
-        parseVirtualInstrument(*vidg.virtualInstrument());
-    }
-}
-
-void PartReader::parseVirtualInstrument(const core::VirtualInstrument &virtualInstrument) const
-{
-    if (virtualInstrument.virtualName().has_value())
-    {
-        myOutPartData.instrumentData.midiData.virtualName = *virtualInstrument.virtualName();
-    }
-
-    if (virtualInstrument.virtualLibrary().has_value())
-    {
-        myOutPartData.instrumentData.midiData.virtualLibrary = *virtualInstrument.virtualLibrary();
-    }
+    auto sound =
+        readVirtualInstrumentData(scoreInstrument.virtualInstrumentData(), myDiagnostics, partLocation(myPartIndex));
+    myOutPartData.instrumentData.soundID = sound.soundID;
+    myOutPartData.instrumentData.soloOrEnsemble = sound.soloOrEnsemble;
+    myOutPartData.instrumentData.midiData.virtualLibrary = std::move(sound.virtualLibrary);
+    myOutPartData.instrumentData.midiData.virtualName = std::move(sound.virtualName);
 }
 
 void PartReader::parseMidiDeviceInstrumentGroup(const core::ScorePartMIDIGroup &grp) const

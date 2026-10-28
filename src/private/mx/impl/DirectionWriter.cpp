@@ -225,7 +225,8 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         if (myDirectionData.isSoundDataSpecified && myDirectionData.soundData.isSpecified())
         {
             core::Sound sound{};
-            writeSoundData(myDirectionData.soundData, sound, myDiagnostics, cursorLocation(myCursor));
+            writeSoundData(myDirectionData.soundData, sound, myCursor.instrumentId, myDiagnostics,
+                           cursorLocation(myCursor));
             direction.setSound(std::move(sound));
         }
 
@@ -235,7 +236,8 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     {
         // The direction has no other content; emit a standalone <sound> element.
         core::Sound sound{};
-        writeSoundData(myDirectionData.soundData, sound, myDiagnostics, cursorLocation(myCursor));
+        writeSoundData(myDirectionData.soundData, sound, myCursor.instrumentId, myDiagnostics,
+                       cursorLocation(myCursor));
 
         if (offset != 0)
         {

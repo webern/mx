@@ -237,7 +237,8 @@ void DirectionReader::parseValues()
 
         if (myDirection->sound().has_value())
         {
-            auto soundData = readSoundData(*myDirection->sound());
+            auto soundData =
+                readSoundData(*myDirection->sound(), myCursor.instrumentId, myDiagnostics, cursorLocation(myCursor));
             if (soundData.isSpecified())
             {
                 myOutDirectionData.isSoundDataSpecified = true;

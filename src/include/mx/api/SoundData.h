@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/Id.h"
+#include "mx/api/InstrumentChangeData.h"
 
 #include <optional>
 #include <string>
@@ -50,7 +51,8 @@ struct SwingData
 // MusicXML Documentation: The sound element contains general playback parameters. They can stand
 // alone within a part/measure, or be a component element within a direction.
 //
-// mx::api models the commonly-used scalar attributes of <sound>, plus <swing>.
+// mx::api models the commonly-used scalar attributes of <sound>, plus <swing> and
+// <instrument-change>.
 //
 // A SoundData is carried on DirectionData. When a DirectionData holds a SoundData but no other
 // direction content, it round-trips as a standalone <sound> element within the measure. When a
@@ -88,13 +90,16 @@ struct SoundData
 
     std::optional<SwingData> swing;
 
+    // A change of the part's playback sound, as when the player switches to a doubling instrument.
+    std::optional<InstrumentChangeData> instrumentChange;
+
     // The <sound> element's id attribute (see Id.h).
     std::optional<Id> id;
 
     SoundData()
         : tempo{DOUBLE_UNSPECIFIED}, dynamics{DOUBLE_UNSPECIFIED}, dacapo{Bool::unspecified},
           forwardRepeat{Bool::unspecified}, pizzicato{Bool::unspecified}, segno{}, dalsegno{}, coda{}, tocoda{}, fine{},
-          swing{}, id{}
+          swing{}, instrumentChange{}, id{}
     {
     }
 
@@ -102,7 +107,7 @@ struct SoundData
     {
         return tempo >= 0.0 || dynamics >= 0.0 || dacapo != Bool::unspecified || forwardRepeat != Bool::unspecified ||
                pizzicato != Bool::unspecified || !segno.empty() || !dalsegno.empty() || !coda.empty() ||
-               !tocoda.empty() || !fine.empty() || swing.has_value() || id.has_value();
+               !tocoda.empty() || !fine.empty() || swing.has_value() || instrumentChange.has_value() || id.has_value();
     }
 };
 
@@ -127,6 +132,7 @@ MXAPI_EQUALS_MEMBER(coda)
 MXAPI_EQUALS_MEMBER(tocoda)
 MXAPI_EQUALS_MEMBER(fine)
 MXAPI_EQUALS_MEMBER(swing)
+MXAPI_EQUALS_MEMBER(instrumentChange)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(SoundData);

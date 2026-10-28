@@ -37,6 +37,7 @@
 #include "mx/impl/DirectionWriter.h"
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
+#include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/NoteWriter.h"
 #include "mx/impl/ScoreWriter.h"
 #include "mx/utility/Throw.h"
@@ -146,6 +147,11 @@ void MeasureWriter::writeMeasureGlobals()
     if (myMeasureData.measureNumbering != api::MeasureNumbering::unspecified)
     {
         writeMeasureNumbering();
+    }
+
+    if (myMeasureData.partNameDisplay.has_value() || myMeasureData.partAbbreviationDisplay.has_value())
+    {
+        writePartNameDisplays();
     }
 
     // MusicXML puts the <print> first in a measure, then a left barline, then <attributes>. The
@@ -516,6 +522,56 @@ void MeasureWriter::writeMeasureNumbering()
     }
 
     outPrint.setMeasureNumbering(std::move(outMeasureNumbering));
+
+    if (printIndex >= 0)
+    {
+        std::vector<core::MusicDataChoice> newData;
+        newData.reserve(existingData.size());
+        int i = 0;
+        for (const auto &mdc : existingData)
+        {
+            newData.push_back(i == printIndex ? core::MusicDataChoice::print(outPrint) : mdc);
+            ++i;
+        }
+        myOutMeasure.setMusicData(std::move(newData));
+    }
+    else
+    {
+        myOutMeasure.addMusicData(core::MusicDataChoice::print(outPrint));
+    }
+}
+
+void MeasureWriter::writePartNameDisplays()
+{
+    // Same find-or-create <print> merge pattern as writeMeasureNumbering().
+    const auto existingData = myOutMeasure.musicData();
+    int printIndex = -1;
+    int idx = 0;
+    for (const auto &mdc : existingData)
+    {
+        if (mdc.isPrint())
+        {
+            printIndex = idx;
+            break;
+        }
+        ++idx;
+    }
+
+    core::Print outPrint{};
+    if (printIndex >= 0)
+    {
+        outPrint = existingData[printIndex].asPrint();
+    }
+
+    if (myMeasureData.partNameDisplay.has_value())
+    {
+        outPrint.setPartNameDisplay(makeNameDisplay(*myMeasureData.partNameDisplay));
+    }
+
+    if (myMeasureData.partAbbreviationDisplay.has_value())
+    {
+        outPrint.setPartAbbreviationDisplay(makeNameDisplay(*myMeasureData.partAbbreviationDisplay));
+    }
 
     if (printIndex >= 0)
     {

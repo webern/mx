@@ -57,6 +57,7 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionReader.h"
 #include "mx/impl/IdFunctions.h"
+#include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/NoteReader.h"
 #include "mx/impl/SoundFunctions.h"
@@ -1061,11 +1062,22 @@ void MeasureReader::parsePrint(const core::Print &inMxPrint) const
             myOutMeasureData.measureNumberingStaffIndex = measureNumbering.staff()->value() - 1;
         }
     }
+
+    if (inMxPrint.partNameDisplay().has_value())
+    {
+        myOutMeasureData.partNameDisplay = readNameDisplayData(*inMxPrint.partNameDisplay());
+    }
+
+    if (inMxPrint.partAbbreviationDisplay().has_value())
+    {
+        myOutMeasureData.partAbbreviationDisplay = readNameDisplayData(*inMxPrint.partAbbreviationDisplay());
+    }
 }
 
 void MeasureReader::parseSound(const core::Sound &inMxSound) const
 {
-    auto soundData = readSoundData(inMxSound);
+    auto soundData =
+        readSoundData(inMxSound, myCurrentCursor.instrumentId, myDiagnostics, cursorLocation(myCurrentCursor));
 
     if (!soundData.isSpecified())
     {
