@@ -804,3 +804,10 @@ musuite/testHarmony2.xml
 # Unblocked by KeyData::printObject. <key print-object="no"> (a hidden key signature) had no api
 # home, so it was written back as a plain <key> and the signature became visible.
 musuite/testInvisibleElements.xml
+
+# Unblocked by StaffData::staffTunings. <staff-details> kept <staff-lines> but dropped every
+# <staff-tuning>, so a guitar tab came back with its six lines and no record of what the strings
+# are tuned to.
+musuite/testTablature1.xml
+musuite/testTablature2.xml
+musuite/testTablature3.xml

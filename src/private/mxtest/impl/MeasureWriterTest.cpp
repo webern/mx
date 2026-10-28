@@ -410,6 +410,43 @@ TEST(staffDetailsWritesStaffLines, MeasureWriter)
 
 T_END
 
+TEST(staffDetailsWritesStaffTuning, MeasureWriter)
+{
+    mxtest::TestParameters params;
+    params.ticksPerQuarter = 101;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 1;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    auto &staff = t.measureData->staves.at(0);
+    mx::api::StaffTuningData tuning;
+    tuning.line = 3;
+    tuning.tuningStep = mx::api::Step::d;
+    tuning.tuningOctave = 3;
+    staff.staffTunings.push_back(tuning);
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    auto musicData = partwiseMeasure.musicData();
+    auto mdcIter = musicData.begin();
+    const auto mdcEnd = musicData.end();
+
+    CHECK(mdcIter != mdcEnd);
+    CHECK(mdcIter->isAttributes());
+
+    const auto &props = mdcIter->asAttributes();
+    CHECK_EQUAL(1, props.staffDetails().size());
+
+    const auto &details = props.staffDetails().front();
+    CHECK(!details.group().has_value());
+    REQUIRE(1 == details.staffTuning().size());
+    CHECK_EQUAL(3, details.staffTuning().front().line().value());
+    CHECK(mx::core::Step::Tag::d == details.staffTuning().front().tuning().tuningStep().tag());
+    CHECK_EQUAL(3, details.staffTuning().front().tuning().tuningOctave().value());
+    CHECK(!details.staffTuning().front().tuning().tuningAlter().has_value());
+}
+
+T_END
+
 TEST(staffDetailsWritesStaffSize, MeasureWriter)
 {
     mxtest::TestParameters params;
