@@ -835,3 +835,8 @@ musuite/testFiguredBass2.xml
 # parentheses and color attributes, and on a normal notehead the whole element vanished.
 lysuite/ly22d_Parenthesized_Noteheads.xml
 musuite/testNoteheads.xml
+
+# Unblocked by PageTextData::continuations. A <credit> with several <credit-words> kept only the
+# first; the rest of the credit's text is now carried along.
+musetrainer/Bach_Minuet_in_G_Major_BWV_Anh._114.xml
+musetrainer/Canon_in_D.xml

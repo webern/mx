@@ -9,6 +9,8 @@
 #include "mx/core/generated/CreditChoice.h"
 #include "mx/core/generated/CreditChoiceGroup.h"
 #include "mx/core/generated/CreditChoiceGroupChoice.h"
+#include "mx/core/generated/CreditChoiceGroupGroup.h"
+#include "mx/core/generated/CreditChoiceGroupGroupChoice.h"
 #include "mx/core/generated/FormattedTextID.h"
 #include "mx/core/generated/Image.h"
 #include "mx/core/generated/ScoreHeaderGroup.h"
@@ -74,6 +76,52 @@ core::Image makeCoreImage(const api::PageImageData &in, const DiagnosticsContext
 }
 } // namespace
 
+// The first run of a credit and each run after it are written and read the same way, so they share
+// these two helpers.
+static core::FormattedTextID pageTextWordsFromSegment(const std::string &text, const api::FontData &fontData,
+                                                      const api::PositionData &positionData,
+                                                      api::HorizontalAlignment justify, api::Enclosure enclosure)
+{
+    core::FormattedTextID words;
+    words.setValue(text);
+    setAttributesFromFontData(fontData, words);
+    setAttributesFromPositionData(positionData, words);
+
+    const Converter converter;
+    if (justify != api::HorizontalAlignment::unspecified)
+    {
+        words.setJustify(converter.convert(justify));
+    }
+
+    if (enclosure != api::Enclosure::unspecified)
+    {
+        words.setEnclosure(converter.convert(enclosure));
+    }
+
+    return words;
+}
+
+static api::PageTextSegment pageTextSegmentFromWords(const core::FormattedTextID &words)
+{
+    api::PageTextSegment segment{};
+    segment.text = words.value();
+    segment.positionData = getPositionData(words);
+    segment.fontData = getFontData(words);
+
+    const Converter converter;
+    if (words.justify().has_value())
+    {
+        segment.justify = converter.convert(*words.justify());
+    }
+
+    if (words.enclosure().has_value())
+    {
+        segment.enclosure = converter.convert(*words.enclosure());
+    }
+
+    return segment;
+}
+
 void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &outHeader,
                    const DiagnosticsContext &diagnostics)
 {
@@ -84,29 +132,22 @@ void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &ou
         // The <credit> content model requires a credit-words/credit-symbol
         // (or credit-image). Always emit a <credit-words> here; an empty
         // string preserves a metadata-only credit (one that carried only
-        // credit-type) without dropping it.
+        // credit-type) without dropping it. Any further runs of text follow
+        // as more <credit-words>.
         {
-            core::FormattedTextID words;
-            words.setValue(p.text);
-            impl::setAttributesFromFontData(p.fontData, words);
-            impl::setAttributesFromPositionData(p.positionData, words);
-
-            if (p.justify != api::HorizontalAlignment::unspecified)
-            {
-                const Converter converter;
-                words.setJustify(converter.convert(p.justify));
-            }
-
-            if (p.enclosure != api::Enclosure::unspecified)
-            {
-                const Converter converter;
-                words.setEnclosure(converter.convert(p.enclosure));
-            }
-
-            core::CreditChoiceGroupChoice groupChoice = core::CreditChoiceGroupChoice::creditWords(words);
             core::CreditChoiceGroup group;
-            group.setChoice(groupChoice);
-            credit.setChoice(core::CreditChoice::group(group));
+            group.setChoice(core::CreditChoiceGroupChoice::creditWords(
+                pageTextWordsFromSegment(p.text, p.fontData, p.positionData, p.justify, p.enclosure)));
+
+            for (const auto &segment : p.continuations)
+            {
+                core::CreditChoiceGroupGroup next;
+                next.setChoice(core::CreditChoiceGroupGroupChoice::creditWords(pageTextWordsFromSegment(
+                    segment.text, segment.fontData, segment.positionData, segment.justify, segment.enclosure)));
+                group.addGroup(std::move(next));
+            }
+
+            credit.setChoice(core::CreditChoice::group(std::move(group)));
         }
 
         // Emit every credit-type. Prefer the full list; fall back to the
@@ -157,31 +198,38 @@ void createCredits(const core::ScoreHeaderGroup &inHeader, api::ScoreData &outSc
             continue;
         }
 
-        // Otherwise this is a credit group. Capture its text (if it begins
-        // with <credit-words>) and its credit-type(s). A credit with no
-        // <credit-words> still survives as a metadata-only PageTextData.
+        // Otherwise this is a credit group. Capture its text and its
+        // credit-type(s). A credit with no <credit-words> still survives as a
+        // metadata-only PageTextData.
         api::PageTextData pageText{};
         pageText.pageNumber = pageNumber;
 
+        // Every <credit-words> of the credit, in order. A credit-symbol, link or bookmark is skipped, so
+        // the first run of text fills the PageTextData's own fields even when a symbol comes before it.
+        std::vector<api::PageTextSegment> runs;
         const auto &group = c.choice().asGroup();
         if (group.choice().isCreditWords())
         {
-            const auto &words = group.choice().asCreditWords();
-            pageText.text = words.value();
-            pageText.positionData = impl::getPositionData(words);
-            pageText.fontData = impl::getFontData(words);
+            runs.push_back(pageTextSegmentFromWords(group.choice().asCreditWords()));
+        }
 
-            if (words.justify().has_value())
+        for (const auto &next : group.group())
+        {
+            if (next.choice().isCreditWords())
             {
-                const Converter converter;
-                pageText.justify = converter.convert(*words.justify());
+                runs.push_back(pageTextSegmentFromWords(next.choice().asCreditWords()));
             }
+        }
 
-            if (words.enclosure().has_value())
-            {
-                const Converter converter;
-                pageText.enclosure = converter.convert(*words.enclosure());
-            }
+        if (!runs.empty())
+        {
+            const auto &first = runs.front();
+            pageText.text = first.text;
+            pageText.positionData = first.positionData;
+            pageText.fontData = first.fontData;
+            pageText.justify = first.justify;
+            pageText.enclosure = first.enclosure;
+            pageText.continuations.assign(runs.begin() + 1, runs.end());
         }
 
         for (const auto &ct : c.creditType())

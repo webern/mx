@@ -185,7 +185,7 @@
       <notes>Flattened to PageTextData.description; only the first credit-type kept (PageTextFunctions.cpp:76-78).</notes>
     </feature>
     <feature name="credit-words" support="partial">
-      <notes>PageTextData.text; PageTextFunctions.cpp:71-74 / 23-27.</notes>
+      <notes>PageTextData.text; further credit-words of the same credit in PageTextData.continuations; PageTextFunctions.cpp.</notes>
     </feature>
     <feature name="cue" support="partial">
       <notes>Cue note flag (suspected).</notes>
