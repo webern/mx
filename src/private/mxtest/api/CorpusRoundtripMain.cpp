@@ -211,6 +211,43 @@ void collapseEqualPageMargins(pugi::xml_node el)
     }
 }
 
+// MusicXML says a <print> is normally the first thing in a measure, and that a left barline comes
+// first aside from <print>, <bookmark> and <link>. mx writes the <print> first, then the left
+// barline, then <attributes>. A source may put the <print> after a left barline or after the
+// <attributes>. Both orders mean the same thing, so the expected side moves such a <print> to the
+// front of its measure. Only the leading run of the measure is looked at: the children before the
+// first one that is not a <print>, <attributes>, <barline>, <bookmark> or <link>. A <print> that
+// comes after notes or directions still has to match exactly.
+//
+// Must run after normalizeForComparison(): that strips inter-element whitespace, so a measure's
+// direct children are pure elements here.
+void moveLeadingPrintFirst(pugi::xml_node el)
+{
+    if (std::string_view{el.name()} == "measure")
+    {
+        const auto isLeading = [](std::string_view name) {
+            return name == "print" || name == "attributes" || name == "barline" || name == "bookmark" || name == "link";
+        };
+
+        for (pugi::xml_node c = el.first_child(); c && isLeading(c.name()); c = c.next_sibling())
+        {
+            if (std::string_view{c.name()} == "print")
+            {
+                if (c != el.first_child())
+                    el.prepend_move(c);
+                break;
+            }
+        }
+        return;
+    }
+
+    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    {
+        if (c.type() == pugi::node_element)
+            moveLeadingPrintFirst(c);
+    }
+}
+
 // mx writes every pedal mark in an explicit canonical form. A pedal line -- the change/continue/
 // discontinue/resume/sostenuto types, or start/stop carrying line="yes" -- is written as
 // line="yes"; a sign pedal (start/stop without line="yes") is written line="no" sign="yes". A
@@ -463,6 +500,10 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
     // (#277); pre-collapse the expected side to match.
     collapseEqualPageMargins(expectedDoc.document_element());
 
+    // The api writes a measure's <print> before its left barline and <attributes> (#476); move a
+    // leading <print> on the expected side to match.
+    moveLeadingPrintFirst(expectedDoc.document_element());
+
     // Canonicalize non-semantic direction spellings (bare-vs-explicit pedal defaults) on both
     // sides so only genuine differences surface. Words direction-type boxing needs no
     // canonicalization: the api models each <direction-type> run as its own wordsRun, so the
@@ -558,6 +599,7 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
     fixer.applyToExpected(expectedDoc);
     canonicalizeEncodingChildOrder(expectedDoc.document_element());
     collapseEqualPageMargins(expectedDoc.document_element());
+    moveLeadingPrintFirst(expectedDoc.document_element());
     canonicalizeDirectionSpellings(expectedDoc);
     narrowOctaveShiftSizes(expectedDoc.document_element());
     if (!expectedDoc.save_file(expectedPath.c_str()))
