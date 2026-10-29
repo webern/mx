@@ -5,14 +5,17 @@
 #include "mx/impl/SoundFunctions.h"
 #include "mx/core/Decimal.h"
 #include "mx/core/generated/Empty.h"
+#include "mx/core/generated/InstrumentChange.h"
 #include "mx/core/generated/NonNegativeDecimal.h"
 #include "mx/core/generated/Sound.h"
+#include "mx/core/generated/SoundGroup.h"
 #include "mx/core/generated/Swing.h"
 #include "mx/core/generated/SwingChoice.h"
 #include "mx/core/generated/SwingChoiceGroup.h"
 #include "mx/core/generated/SwingTypeValue.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/IdFunctions.h"
+#include "mx/impl/VirtualInstrumentFunctions.h"
 
 namespace mx
 {
@@ -97,7 +100,8 @@ core::Swing soundFunctionsToCoreSwing(const api::SwingData &inSwingData)
     return outSwing;
 }
 
-api::SoundData readSoundData(const core::Sound &inSound)
+api::SoundData readSoundData(const core::Sound &inSound, const std::string &instrumentId,
+                             const DiagnosticsContext &diagnostics, const api::Location &location)
 {
     api::SoundData out{};
 
@@ -145,13 +149,35 @@ api::SoundData readSoundData(const core::Sound &inSound)
         out.swing = soundFunctionsToApiSwingData(*inSound.swing());
     }
 
+    for (const auto &group : inSound.group())
+    {
+        if (!group.instrumentChange().has_value())
+        {
+            continue;
+        }
+
+        const auto &instrumentChange = *group.instrumentChange();
+        const auto &changedId = instrumentChange.id().value();
+
+        if (changedId != instrumentId || out.instrumentChange.has_value())
+        {
+            diagnostics.report(api::Severity::warning, api::DiagnosticCode::droppedData, location,
+                               "instrument-change refers to \"" + changedId +
+                                   "\", which is not the part's instrument, or repeats a change; it is not read");
+            continue;
+        }
+
+        out.instrumentChange =
+            readVirtualInstrumentData(instrumentChange.virtualInstrumentData(), diagnostics, location);
+    }
+
     out.id = getId(inSound);
 
     return out;
 }
 
-void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound, const DiagnosticsContext &diagnostics,
-                    const api::Location &location)
+void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound, const std::string &instrumentId,
+                    const DiagnosticsContext &diagnostics, const api::Location &location)
 {
     setId(inSoundData.id, outSound, diagnostics, location);
 
@@ -208,6 +234,17 @@ void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound, co
     if (inSoundData.swing.has_value())
     {
         outSound.setSwing(soundFunctionsToCoreSwing(*inSoundData.swing));
+    }
+
+    if (inSoundData.instrumentChange.has_value())
+    {
+        core::InstrumentChange instrumentChange{};
+        instrumentChange.setID(core::Token{instrumentId});
+        instrumentChange.setVirtualInstrumentData(writeVirtualInstrumentData(*inSoundData.instrumentChange));
+
+        core::SoundGroup group{};
+        group.setInstrumentChange(std::move(instrumentChange));
+        outSound.addGroup(std::move(group));
     }
 }
 } // namespace impl

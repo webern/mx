@@ -8,6 +8,7 @@
 #include "mx/core/generated/FormattedText.h"
 #include "mx/core/generated/NameDisplay.h"
 #include "mx/core/generated/NameDisplayChoice.h"
+#include "mx/core/generated/YesNo.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 
@@ -74,6 +75,30 @@ core::NameDisplay makeNameDisplay(const std::string &text, const api::PrintData 
     setAttributesFromPrintData(printData, ft);
     setAttributesFromPositionData(positionData, ft);
     nameDisplay.addChoice(core::NameDisplayChoice::displayText(ft));
+    return nameDisplay;
+}
+
+api::NameDisplayData readNameDisplayData(const core::NameDisplay &nameDisplay)
+{
+    api::NameDisplayData out{};
+    out.text = extractDisplayText(nameDisplay);
+    extractDisplayFormatting(nameDisplay, out.printData, out.positionData);
+    if (nameDisplay.printObject().has_value())
+    {
+        out.printData.printObject =
+            nameDisplay.printObject()->tag() == core::YesNo::Tag::yes ? api::Bool::yes : api::Bool::no;
+    }
+    return out;
+}
+
+core::NameDisplay makeNameDisplay(const api::NameDisplayData &nameDisplayData)
+{
+    auto nameDisplay = makeNameDisplay(nameDisplayData.text, nameDisplayData.printData, nameDisplayData.positionData);
+    if (nameDisplayData.printData.printObject != api::Bool::unspecified)
+    {
+        nameDisplay.setPrintObject(nameDisplayData.printData.printObject == api::Bool::yes ? core::YesNo::yes()
+                                                                                           : core::YesNo::no());
+    }
     return nameDisplay;
 }
 } // namespace impl

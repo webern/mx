@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/MeasureData.h"
+#include "mx/api/SoloOrEnsemble.h"
 #include "mx/api/SoundID.h"
 #include "mx/api/TransposeData.h"
 
@@ -17,13 +18,6 @@ namespace mx
 {
 namespace api
 {
-enum class SoloOrEnsemble
-{
-    unspecified,
-    solo,
-    ensemble
-};
-
 struct MidiData
 {
     std::string virtualLibrary;
@@ -101,9 +95,9 @@ struct MidiData
 // and we didn't find one we were happy with, so it stays one instrument per part for the time
 // being.
 //
-// One more thing worth knowing: MusicXML also lets a piece switch a part's instrument, or change
-// its playback settings, partway through the music. This library does not offer those mid-piece
-// changes. Whatever you set here is in effect for the entire part, start to finish.
+// What you set here is in effect from the start of the part. When the player switches to another
+// instrument partway through, as in a doubling, use SoundData::instrumentChange for the new sound
+// and MeasureData::partNameDisplay for the new name.
 struct InstrumentData
 {
     // Identifies the instrument within the score. You can leave it empty: the library then gives

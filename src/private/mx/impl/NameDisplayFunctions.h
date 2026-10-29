@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "mx/api/NameDisplayData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
 
@@ -43,5 +44,12 @@ core::NameDisplay makeNameDisplay(const std::string &text);
 // attributes (see api/PartData.h for the full rationale).
 core::NameDisplay makeNameDisplay(const std::string &text, const api::PrintData &printData,
                                   const api::PositionData &positionData);
+
+// core -> api: a name-display as text and formatting, with the element's print-object attribute
+// read into printData.printObject.
+api::NameDisplayData readNameDisplayData(const core::NameDisplay &nameDisplay);
+
+// api -> core: the inverse of readNameDisplayData.
+core::NameDisplay makeNameDisplay(const api::NameDisplayData &nameDisplayData);
 } // namespace impl
 } // namespace mx

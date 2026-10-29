@@ -19,7 +19,6 @@ class ScorePartwise;
 class PartwisePart;
 class ScorePart;
 class ScoreInstrument;
-class VirtualInstrument;
 class PartName;
 class NameDisplay;
 class ScorePartMIDIGroup;
@@ -62,7 +61,6 @@ class PartReader
     int calculateNumStaves(bool &outIsStavesElementPresent) const;
     void parseScorePart() const;
     void parseScoreInstrument(const core::ScoreInstrument &scoreInstrument) const;
-    void parseVirtualInstrument(const core::VirtualInstrument &virtualInstrument) const;
     void parseMidiDeviceInstrumentGroup(const core::ScorePartMIDIGroup &grp) const;
     void parseMidiInstrument(const core::MIDIInstrument &inst) const;
 

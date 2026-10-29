@@ -9,6 +9,7 @@
 #include "mx/api/ForPartData.h"
 #include "mx/api/Id.h"
 #include "mx/api/KeyData.h"
+#include "mx/api/NameDisplayData.h"
 #include "mx/api/PartSymbolData.h"
 #include "mx/api/StaffData.h"
 #include "mx/api/TimeChoice.h"
@@ -81,6 +82,13 @@ class MeasureData
     // the top staff. Meaningful only when measureNumbering != unspecified. Absent means the top staff.
     std::optional<int> measureNumberingStaffIndex;
 
+    // The part name, and the abbreviated name, shown at the left of the system from this measure
+    // onward, in place of PartData::displayName and PartData::displayAbbreviation. Set them where
+    // a player changes instrument, or where the part starts using its abbreviation. The name is
+    // shown at the next system that begins at or after this measure.
+    std::optional<NameDisplayData> partNameDisplay;
+    std::optional<NameDisplayData> partAbbreviationDisplay;
+
     // a number greater than zero indicates that this measure is the beginning of a mult-measure
     // rest that will last for the indicated number of measures. following measures will be affected
     // by this.
@@ -142,6 +150,8 @@ MXAPI_EQUALS_MEMBER(measureNumberingMultipleRestAlways)
 MXAPI_EQUALS_MEMBER(measureNumberingMultipleRestRange)
 MXAPI_EQUALS_MEMBER(measureNumberingSystemRelation)
 MXAPI_EQUALS_MEMBER(measureNumberingStaffIndex)
+MXAPI_EQUALS_MEMBER(partNameDisplay)
+MXAPI_EQUALS_MEMBER(partAbbreviationDisplay)
 MXAPI_EQUALS_MEMBER(multiMeasureRest)
 MXAPI_EQUALS_MEMBER(multiMeasureRestUseSymbols)
 MXAPI_EQUALS_MEMBER(implicit)
