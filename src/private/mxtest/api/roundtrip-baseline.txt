@@ -784,3 +784,8 @@ synthetic/tuplet.3.1.xml
 # synthetic <for-part> fixtures stay out: they use <for-part> without
 # <concert-score/>, which MusicXML does not allow, and the writer adds it.
 synthetic/concert-score.4.0.xml
+
+# Unblocked by instrument-change and measure-level part-name-display support.
+# The reader discarded the <part-name-display> and <part-abbreviation-display>
+# in the measure's <print>, which name the clarinet after its change.
+lysuite/ly72c_TransposingInstruments_Change.xml
