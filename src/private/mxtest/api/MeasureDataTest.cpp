@@ -471,4 +471,39 @@ TEST(nonPositiveMultiMeasureRestOmitsElement, MeasureData)
 
 T_END;
 
+TEST(printPrecedesLeftBarline, MeasureData)
+{
+    // MusicXML orders the start of a measure as <print>, then a left barline, then <attributes>.
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.measureNumbering = MeasureNumbering::system;
+    measure.barlines.emplace_back();
+    measure.barlines.back().barlineType = BarlineType::heavyLight;
+    measure.barlines.back().repeat = true;
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    SystemData system{};
+    system.newSystem = Bool::yes;
+    score.layout.emplace(0, LayoutData{system, PageData{}});
+
+    const auto xml = mxtest::toXml(score);
+    const auto printPos = xml.find("<print");
+    const auto barlinePos = xml.find("<barline");
+    const auto attributesPos = xml.find("<attributes");
+    REQUIRE(printPos != std::string::npos);
+    REQUIRE(barlinePos != std::string::npos);
+    REQUIRE(attributesPos != std::string::npos);
+    CHECK(xml.find("<barline location=\"left\"") == barlinePos);
+    CHECK(printPos < barlinePos);
+    CHECK(barlinePos < attributesPos);
+    CHECK(xml.find("<measure-numbering>system</measure-numbering>") != std::string::npos);
+    CHECK(xml.find("new-system=\"yes\"") != std::string::npos);
+}
+
+T_END;
+
 #endif

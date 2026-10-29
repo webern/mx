@@ -103,8 +103,6 @@ void MeasureWriter::reportMidMeasureKeyStaff() const
 
 void MeasureWriter::writeMeasureGlobals()
 {
-    writeBarlines(0);
-
     if (myMeasureData.number.size() > 0)
     {
         myOutMeasure.setNumber(myMeasureData.number);
@@ -149,6 +147,11 @@ void MeasureWriter::writeMeasureGlobals()
     {
         writeMeasureNumbering();
     }
+
+    // MusicXML puts the <print> first in a measure, then a left barline, then <attributes>. The
+    // <print> was just added above and the <attributes> are buffered until later, so the left
+    // barlines go here.
+    writeBarlines(0);
 
     if (myHistory.getCursor().isFirstMeasureInPart)
     {
