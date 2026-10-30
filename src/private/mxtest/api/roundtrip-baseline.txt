@@ -800,3 +800,7 @@ musetrainer/Happy_Birthday_To_You_C_Major.xml
 musuite/testChordDiagrams1.xml
 musuite/testHarmony1.xml
 musuite/testHarmony2.xml
+
+# Unblocked by KeyData::printObject. <key print-object="no"> (a hidden key signature) had no api
+# home, so it was written back as a plain <key> and the signature became visible.
+musuite/testInvisibleElements.xml

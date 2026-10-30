@@ -736,6 +736,131 @@ TEST(ModeNoneIsNotNonTraditional, KeyData)
     CHECK_EQUAL(std::string{"none"}, coreTraditionalKey.mode()->value());
 }
 
+TEST(PrintObjectNoRoundTrip, KeyData)
+{
+    KeyData key;
+    key.fifths = 2;
+    key.mode = KeyMode::major;
+    key.printObject = Bool::no;
+
+    const auto xml = mxtest::toXml(putKeyInScore(key));
+    CHECK(xml.find("<key print-object=\"no\">") != std::string::npos);
+
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(!score.parts.empty());
+    REQUIRE(!score.parts.at(0).measures.empty());
+    const auto &keys = score.parts.at(0).measures.at(0).keys;
+    REQUIRE(1 == keys.size());
+    CHECK(Bool::no == keys.at(0).printObject);
+    CHECK_EQUAL(2, keys.at(0).fifths);
+    CHECK_EQUAL(KeyMode::major, keys.at(0).mode);
+}
+
+TEST(PrintObjectYesRoundTrip, KeyData)
+{
+    KeyData key;
+    key.fifths = -1;
+    key.printObject = Bool::yes;
+
+    const auto xml = mxtest::toXml(putKeyInScore(key));
+    CHECK(xml.find("<key print-object=\"yes\">") != std::string::npos);
+
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(!score.parts.empty());
+    REQUIRE(!score.parts.at(0).measures.empty());
+    const auto &keys = score.parts.at(0).measures.at(0).keys;
+    REQUIRE(1 == keys.size());
+    CHECK(Bool::yes == keys.at(0).printObject);
+}
+
+TEST(PrintObjectUnspecifiedIsOmitted, KeyData)
+{
+    KeyData key;
+    key.fifths = 3;
+
+    const auto xml = mxtest::toXml(putKeyInScore(key));
+    CHECK(xml.find("<key>") != std::string::npos);
+    CHECK(xml.find("<key print-object") == std::string::npos);
+
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(!score.parts.empty());
+    REQUIRE(!score.parts.at(0).measures.empty());
+    const auto &keys = score.parts.at(0).measures.at(0).keys;
+    REQUIRE(1 == keys.size());
+    CHECK(Bool::unspecified == keys.at(0).printObject);
+}
+
+TEST(PrintObjectNonTraditionalRoundTrip, KeyData)
+{
+    KeyData key;
+    key.nonTraditional.push_back(KeyComponent{Step::c, 1, 0.0, Accidental::sharp});
+    key.printObject = Bool::no;
+
+    const auto xml = mxtest::toXml(putKeyInScore(key));
+    CHECK(xml.find("<key print-object=\"no\">") != std::string::npos);
+
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(!score.parts.empty());
+    REQUIRE(!score.parts.at(0).measures.empty());
+    const auto &keys = score.parts.at(0).measures.at(0).keys;
+    REQUIRE(1 == keys.size());
+    CHECK(Bool::no == keys.at(0).printObject);
+    CHECK_EQUAL(1, keys.at(0).nonTraditional.size());
+}
+
+TEST(PrintObjectPerStaff, KeyData)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>P</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <key number="1" print-object="no">
+          <fifths>2</fifths>
+        </key>
+        <key number="2">
+          <fifths>2</fifths>
+        </key>
+        <staves>2</staves>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+        <staff>1</staff>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(!score.parts.empty());
+    REQUIRE(!score.parts.at(0).measures.empty());
+    const auto &keys = score.parts.at(0).measures.at(0).keys;
+    REQUIRE(2 == keys.size());
+    CHECK_EQUAL(0, keys.at(0).staffIndex);
+    CHECK(Bool::no == keys.at(0).printObject);
+    CHECK_EQUAL(1, keys.at(1).staffIndex);
+    CHECK(Bool::unspecified == keys.at(1).printObject);
+
+    const auto written = mxtest::toXml(score);
+    const auto first = written.find("print-object=\"no\"");
+    REQUIRE(first != std::string::npos);
+    CHECK(written.find("print-object=", first + 1) == std::string::npos);
+    CHECK(written.find("<key number=\"1\" print-object=\"no\">") != std::string::npos);
+    CHECK(written.find("<key number=\"2\">") != std::string::npos);
+}
+
 TEST(KeyDataEquality_change_cancelLocation, KeyData)
 {
     KeyData key1;
@@ -751,6 +876,22 @@ TEST(KeyDataEquality_change_cancelLocation, KeyData)
 
     // change one thing
     key1.cancelLocation = CancelLocation::right;
+    CHECK(key1 != key2);
+    CHECK(!(key1 == key2));
+}
+
+TEST(KeyDataEquality_change_printObject, KeyData)
+{
+    KeyData key1;
+    key1.fifths = 4;
+    key1.mode = KeyMode::major;
+    key1.printObject = Bool::yes;
+    auto key2 = key1;
+    CHECK(key1 == key2);
+    CHECK(!(key1 != key2));
+
+    // change one thing
+    key1.printObject = Bool::no;
     CHECK(key1 != key2);
     CHECK(!(key1 == key2));
 }
