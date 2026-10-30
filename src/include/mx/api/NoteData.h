@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "mx/api/ColorData.h"
 #include "mx/api/CurveData.h"
 #include "mx/api/DurationData.h"
 #include "mx/api/Id.h"
@@ -159,6 +160,16 @@ class NoteData
     // names no glyph and is written the same as leaving this empty.
     std::optional<std::string> noteheadSmufl;
 
+    // The <notehead> element's parentheses attribute: whether the notehead is drawn inside
+    // parentheses, the usual way to mark a ghost note or an optional pitch. Leave it unspecified
+    // for MusicXML's default, which is no parentheses.
+    Bool noteheadParentheses;
+
+    // The <notehead> element's color attribute: a color for the notehead alone, for example a red
+    // notehead on an otherwise black note. Leave it empty to draw the notehead in the same color
+    // as the rest of the note.
+    std::optional<ColorData> noteheadColor;
+
     PitchData pitchData; // step, alter, octave, accidental, etc
 
     // How hard this note is struck on playback, as a percentage of the default forte level: 100
@@ -242,6 +253,8 @@ MXAPI_EQUALS_MEMBER(graceSlash)
 MXAPI_EQUALS_MEMBER(notehead)
 MXAPI_EQUALS_MEMBER(noteheadFilled)
 MXAPI_EQUALS_MEMBER(noteheadSmufl)
+MXAPI_EQUALS_MEMBER(noteheadParentheses)
+MXAPI_EQUALS_MEMBER(noteheadColor)
 MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(velocityStart)
 MXAPI_EQUALS_MEMBER(velocityStop)
