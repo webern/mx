@@ -267,7 +267,10 @@ class ChordData
     NumeralMode numeralMode;
 
     ChordKind chordKind;
-    std::string text;
+    // How the kind is spelled beside the root, such as "maj7" or "m". Leave absent to let the
+    // notation software choose the spelling. An empty string is different from absent: the kind is
+    // spelled with nothing, so C major is written "C" instead of "Cmaj".
+    std::optional<std::string> text;
     Bool useSymbols;
     // How the chord's degree alterations (the 'extensions' below) are laid out next to the chord
     // symbol. stackDegrees stacks them vertically instead of running them left to right;
@@ -286,6 +289,10 @@ class ChordData
     std::vector<MiscData> miscData;
     bool hasFrameData;
     FrameData frameData;
+    // Whether the chord diagram (frameData) is printed. Unspecified leaves it to the notation
+    // software. The chords of one direction share a single print-frame, so give them all the same
+    // value; when they differ, the first chord that is not unspecified is used.
+    Bool printFrame;
     PositionData positionData;
 };
 
@@ -314,6 +321,7 @@ MXAPI_EQUALS_MEMBER(extensions)
 MXAPI_EQUALS_MEMBER(miscData)
 MXAPI_EQUALS_MEMBER(hasFrameData)
 MXAPI_EQUALS_MEMBER(frameData)
+MXAPI_EQUALS_MEMBER(printFrame)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(ChordData);

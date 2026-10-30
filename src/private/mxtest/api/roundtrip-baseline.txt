@@ -789,3 +789,14 @@ synthetic/concert-score.4.0.xml
 # The reader discarded the <part-name-display> and <part-abbreviation-display>
 # in the measure's <print>, which name the clarinet after its change.
 lysuite/ly72c_TransposingInstruments_Change.xml
+
+# Unblocked by harmony print-frame and empty kind text. <harmony print-frame> had no api
+# home, so a chord symbol whose diagram was hidden lost that instruction on write, and
+# <kind text=""> (the kind spelled with nothing) lost its empty text. ChordData gains
+# printFrame, and ChordData::text becomes optional so empty is distinct from absent.
+lysuite/ly46g_PickupMeasure_Chordnames_FiguredBass.xml
+lysuite/ly71g_MultipleChordnames.xml
+musetrainer/Happy_Birthday_To_You_C_Major.xml
+musuite/testChordDiagrams1.xml
+musuite/testHarmony1.xml
+musuite/testHarmony2.xml

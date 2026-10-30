@@ -117,6 +117,8 @@
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
 
+#include <algorithm>
+
 namespace mx
 {
 namespace impl
@@ -1449,6 +1451,15 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
 
     const auto &chords = myDirectionData.chords;
 
+    // print-frame belongs to the whole <harmony>. Take it from the first chord that states it, so a
+    // value set only on a later chord is not lost.
+    const auto printFrameChord = std::find_if(
+        chords.cbegin(), chords.cend(), [](const api::ChordData &c) { return c.printFrame != api::Bool::unspecified; });
+    if (printFrameChord != chords.cend())
+    {
+        harmony.setPrintFrame(myConverter.convert(printFrameChord->printFrame));
+    }
+
     auto chordIter = chords.cbegin();
     const auto chordEnd = chords.cend();
 
@@ -1581,9 +1592,9 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
         core::Kind kind{};
         kind.setValue(k);
 
-        if (!chordIter->text.empty())
+        if (chordIter->text.has_value())
         {
-            kind.setText(chordIter->text);
+            kind.setText(*chordIter->text);
         }
 
         if (chordIter->useSymbols != api::Bool::unspecified)
