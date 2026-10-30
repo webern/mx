@@ -6,6 +6,8 @@
 #ifdef MX_COMPILE_IMPL_TESTS
 
 #include "cpul/cpulTestHarness.h"
+#include "mx/api/DirectionData.h"
+#include "mx/api/FiguredBassData.h"
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/Clef.h"
 #include "mx/core/generated/FullNoteGroup.h"
@@ -80,7 +82,7 @@ TestItems setupTestItems(TestParameters params)
 }
 
 // Letters for the kinds of music data in a written measure, in order:
-// P print, A attributes, N note, B barline, K backup, F forward.
+// P print, A attributes, N note, B barline, K backup, F forward, D direction, G figured-bass.
 std::string musicDataOrder(const core::PartwiseMeasure &measure)
 {
     std::string result;
@@ -110,6 +112,14 @@ std::string musicDataOrder(const core::PartwiseMeasure &measure)
         {
             result += 'F';
         }
+        else if (mdc.isDirection())
+        {
+            result += 'D';
+        }
+        else if (mdc.isFiguredBass())
+        {
+            result += 'G';
+        }
         else
         {
             result += '?';
@@ -124,6 +134,37 @@ void addQuarterNote(api::MeasureData &measure, int voiceIndex, int tickTimePosit
     note.tickTimePosition = tickTimePosition;
     note.durationData.durationTimeTicks = 4;
     measure.staves.at(0).voices[voiceIndex].notes.emplace_back(note);
+}
+
+// Adds a quarter note to voice 0 of the given staff.
+void addStaffQuarterNote(api::MeasureData &measure, int staffIndex, int tickTimePosition)
+{
+    api::NoteData note;
+    note.tickTimePosition = tickTimePosition;
+    note.durationData.durationTimeTicks = 4;
+    measure.staves.at(staffIndex).voices[0].notes.emplace_back(note);
+}
+
+api::DirectionData makeDynamicDirection(int tickTimePosition)
+{
+    api::DirectionData direction;
+    direction.tickTimePosition = tickTimePosition;
+    direction.isStaffValueSpecified = true;
+    direction.directionTypes.emplace_back(api::DirectionChoice{api::MarkData{api::StandardDynamic::f}});
+    return direction;
+}
+
+api::DirectionData makeFiguredBassDirection(int tickTimePosition)
+{
+    api::DirectionData direction;
+    direction.tickTimePosition = tickTimePosition;
+    direction.isStaffValueSpecified = true;
+    api::FigureData figure;
+    figure.figureNumber = "6";
+    api::FiguredBassData figuredBass;
+    figuredBass.figures.emplace_back(figure);
+    direction.figuredBasses.emplace_back(figuredBass);
+    return direction;
 }
 
 api::BarlineData makeBarline(api::HorizontalAlignment location, int tickTimePosition, api::BarlineType type)
@@ -775,6 +816,141 @@ TEST(unspecifiedLocationBarlineStaysLast, MeasureWriter)
     const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
     REQUIRE(std::string{"ANNNNB"} == mxtest::musicDataOrder(partwiseMeasure));
     CHECK(mxtest::barlineAt(partwiseMeasure, 0).location()->tag() == core::RightLeftMiddle::Tag::right);
+}
+
+T_END
+
+TEST(leadingDirectionFollowsBackup, MeasureWriter)
+{
+    // The second staff starts with a dynamic. It is written after the <backup> to the start of
+    // the measure, with no <offset> to reach there from the end of the first staff.
+    mxtest::TestParameters params = mxtest::oneStaffParameters();
+    params.numStaves = 2;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    for (int staff = 0; staff < 2; ++staff)
+    {
+        mxtest::addStaffQuarterNote(*t.measureData, staff, 0);
+        mxtest::addStaffQuarterNote(*t.measureData, staff, 4);
+    }
+    t.measureData->staves.at(1).directions.emplace_back(mxtest::makeDynamicDirection(0));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    REQUIRE(std::string{"ANNKDNN"} == mxtest::musicDataOrder(partwiseMeasure));
+    CHECK(!partwiseMeasure.musicData()[4].asDirection().offset().has_value());
+}
+
+T_END
+
+TEST(leadingDirectionFollowsBackupSingleNoteStaff, MeasureWriter)
+{
+    // The second staff has a single note, which takes a different path through writeDirections.
+    mxtest::TestParameters params = mxtest::oneStaffParameters();
+    params.numStaves = 2;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    mxtest::addStaffQuarterNote(*t.measureData, 0, 0);
+    mxtest::addStaffQuarterNote(*t.measureData, 1, 0);
+    t.measureData->staves.at(1).directions.emplace_back(mxtest::makeDynamicDirection(0));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    REQUIRE(std::string{"ANKDN"} == mxtest::musicDataOrder(partwiseMeasure));
+    CHECK(!partwiseMeasure.musicData()[3].asDirection().offset().has_value());
+}
+
+T_END
+
+TEST(leadingFiguredBassFollowsBackup, MeasureWriter)
+{
+    // A figured-bass is held as a direction, so it follows the same <backup>.
+    mxtest::TestParameters params = mxtest::oneStaffParameters();
+    params.numStaves = 2;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    mxtest::addStaffQuarterNote(*t.measureData, 0, 0);
+    mxtest::addStaffQuarterNote(*t.measureData, 1, 0);
+    t.measureData->staves.at(1).directions.emplace_back(mxtest::makeFiguredBassDirection(0));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    CHECK_EQUAL(std::string{"ANKGN"}, mxtest::musicDataOrder(partwiseMeasure));
+}
+
+T_END
+
+TEST(leadingDirectionBeforeLaterFirstNote, MeasureWriter)
+{
+    // The second staff rests for a beat before its first note. The dynamic is at the start of the
+    // measure, so the <backup> goes all the way back to it and a <forward> follows.
+    mxtest::TestParameters params = mxtest::oneStaffParameters();
+    params.numStaves = 2;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    mxtest::addStaffQuarterNote(*t.measureData, 0, 0);
+    mxtest::addStaffQuarterNote(*t.measureData, 0, 4);
+    mxtest::addStaffQuarterNote(*t.measureData, 1, 4);
+    t.measureData->staves.at(1).directions.emplace_back(mxtest::makeDynamicDirection(0));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    REQUIRE(std::string{"ANNKDFN"} == mxtest::musicDataOrder(partwiseMeasure));
+    CHECK(!partwiseMeasure.musicData()[4].asDirection().offset().has_value());
+}
+
+T_END
+
+TEST(directionAtPreviousStaffEndStaysBeforeBackup, MeasureWriter)
+{
+    // A direction at the tick where the first staff ended may belong to the end of that staff, so
+    // it is written there, ahead of the <backup>, with no <offset>.
+    mxtest::TestParameters params = mxtest::oneStaffParameters();
+    params.numStaves = 2;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    mxtest::addStaffQuarterNote(*t.measureData, 0, 0);
+    mxtest::addStaffQuarterNote(*t.measureData, 0, 4);
+    mxtest::addStaffQuarterNote(*t.measureData, 1, 0);
+    t.measureData->staves.at(1).directions.emplace_back(mxtest::makeDynamicDirection(8));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    REQUIRE(std::string{"ANNDKN"} == mxtest::musicDataOrder(partwiseMeasure));
+    CHECK(!partwiseMeasure.musicData()[3].asDirection().offset().has_value());
+}
+
+T_END
+
+TEST(directionAfterFirstNoteFollowsItsNote, MeasureWriter)
+{
+    // The dynamic is on the second note of the second staff. The <backup> goes to the first note,
+    // and the dynamic is written between the two notes.
+    mxtest::TestParameters params = mxtest::oneStaffParameters();
+    params.numStaves = 2;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    for (int staff = 0; staff < 2; ++staff)
+    {
+        mxtest::addStaffQuarterNote(*t.measureData, staff, 0);
+        mxtest::addStaffQuarterNote(*t.measureData, staff, 4);
+    }
+    t.measureData->staves.at(1).directions.emplace_back(mxtest::makeDynamicDirection(4));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    REQUIRE(std::string{"ANNKNDN"} == mxtest::musicDataOrder(partwiseMeasure));
+    CHECK(!partwiseMeasure.musicData()[5].asDirection().offset().has_value());
+}
+
+T_END
+
+TEST(middleBarlineAtStaffEndStaysBeforeBackup, MeasureWriter)
+{
+    // The middle barline is at the end of the first staff. It is written before the <backup> to
+    // the second staff's leading direction.
+    mxtest::TestParameters params = mxtest::oneStaffParameters();
+    params.numStaves = 2;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    for (int staff = 0; staff < 2; ++staff)
+    {
+        mxtest::addStaffQuarterNote(*t.measureData, staff, 0);
+        mxtest::addStaffQuarterNote(*t.measureData, staff, 4);
+    }
+    t.measureData->staves.at(1).directions.emplace_back(mxtest::makeDynamicDirection(0));
+    t.measureData->barlines.emplace_back(
+        mxtest::makeBarline(api::HorizontalAlignment::center, 8, api::BarlineType::dotted));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    CHECK_EQUAL(std::string{"ANNBKDNN"}, mxtest::musicDataOrder(partwiseMeasure));
 }
 
 T_END

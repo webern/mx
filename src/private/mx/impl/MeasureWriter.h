@@ -226,6 +226,8 @@ class MeasureWriter
     void writeBarline(const api::BarlineData &barline);
     using dirs = std::vector<api::DirectionData>;
     using dIter = dirs::const_iterator;
+    void backupToLeadingDirection(const dIter &directionIter, const dIter &directionEnd, const NoteIter &firstNote,
+                                  const NoteIter &notesEnd);
     void writeDirections(dIter &directionIter, const dIter &directionEnd, const NoteIter &inNoteIter,
                          const NoteIter &inNotesBegin, const NoteIter &inNoteEnd);
     void writeDirection(const api::DirectionData &inDirectionData);

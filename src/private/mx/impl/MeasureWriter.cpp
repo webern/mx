@@ -624,6 +624,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
 
         if (directionIter != directionEnd)
         {
+            backupToLeadingDirection(directionIter, directionEnd, noteIter, noteEnd);
             writeDirections(directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd);
         }
 
@@ -868,6 +869,35 @@ void MeasureWriter::advanceCursorIfNeeded(const api::NoteData &currentNote, cons
     {
         myHistory.log("no advance");
     }
+}
+
+void MeasureWriter::backupToLeadingDirection(const dIter &directionIter, const dIter &directionEnd,
+                                             const NoteIter &firstNote, const NoteIter &notesEnd)
+{
+    // A staff starts writing where the previous staff ended. When the staff's first direction comes
+    // no later than its first note, the <backup> into the staff goes to the direction, so that the
+    // direction follows the <backup> as it does in a MusicXML file. Without this, DirectionWriter
+    // would write the direction where the previous staff ended and add an <offset> to reach its tick.
+    //
+    // A direction later than the first note is left to the note loop, which backs up to the note
+    // first. A direction exactly where the previous staff ended is written there, ahead of the
+    // <backup>, since it may just as well belong to the end of that staff.
+    if (directionIter == directionEnd || firstNote == notesEnd || firstNote->tickTimePosition < 0)
+    {
+        return;
+    }
+
+    const int directionTick = std::max(0, directionIter->tickTimePosition);
+    const int gap = cursor().tickTimePosition - directionTick;
+    if (gap <= 0 || directionTick > firstNote->tickTimePosition)
+    {
+        return;
+    }
+
+    // A middle barline at the end of the previous staff stays ahead of this <backup>.
+    writeMidMeasureBarlines();
+    myPropertiesWriter->flushBuffer();
+    backup(gap);
 }
 
 void MeasureWriter::writeDirections(dIter &directionIter, const dIter &directionEnd, const NoteIter &inNoteIter,
