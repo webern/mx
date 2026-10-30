@@ -971,8 +971,8 @@
     <feature name="staff-size" support="partial">
       <notes>Captured on StaffData (suspected partial).</notes>
     </feature>
-    <feature name="staff-tuning" support="partial">
-      <notes>Tab tuning; tuning-step/octave/alter partially modeled (suspected).</notes>
+    <feature name="staff-tuning" support="full">
+      <notes>api::StaffData.staffTunings.</notes>
     </feature>
     <feature name="staff-type" support="none">
       <notes>Not modeled.</notes>
@@ -1089,14 +1089,14 @@
     <feature name="triple-tongue" support="full">
       <notes>MarkType.tripleTongue.</notes>
     </feature>
-    <feature name="tuning-alter" support="partial">
-      <notes>Part of staff-tuning (suspected).</notes>
+    <feature name="tuning-alter" support="full">
+      <notes>api::StaffTuningData and api::AccordData.</notes>
     </feature>
-    <feature name="tuning-octave" support="partial">
-      <notes>Part of staff-tuning (suspected).</notes>
+    <feature name="tuning-octave" support="full">
+      <notes>api::StaffTuningData and api::AccordData.</notes>
     </feature>
-    <feature name="tuning-step" support="partial">
-      <notes>Part of staff-tuning (suspected).</notes>
+    <feature name="tuning-step" support="full">
+      <notes>api::StaffTuningData and api::AccordData.</notes>
     </feature>
     <feature name="tuplet" support="full">
       <notes>api::TupletData; TupletReader/NotationsWriter.</notes>
