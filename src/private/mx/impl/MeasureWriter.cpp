@@ -230,10 +230,6 @@ void MeasureWriter::writeMeasureGlobals()
         ++localStaffCounter;
     }
 
-    // TODO - these might end up in the wrong place, figure out how
-    // to preserve location if the barline is not at the beginning or
-    // the end
-
     while (myMeasureKeysIter != myMeasureKeysEnd && myMeasureKeysIter->tickTimePosition == 0)
     {
         myPropertiesWriter->writeKey(myMeasureKeysIter->staffIndex, *myMeasureKeysIter);
@@ -637,7 +633,13 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
 
             myHistory.setChord(noteIter->isChord);
             const auto &apiNote = *noteIter;
+
+            // Middle barlines are checked before this note's <backup> or <forward>, so that one at the
+            // end of a voice stays ahead of the <backup> into the next voice, and again after it, for
+            // one that follows a <forward>.
+            writeMidMeasureBarlines();
             writeForwardOrBackupIfNeeded(apiNote);
+            writeMidMeasureBarlines();
 
             if (noteIter->isChord)
             {
@@ -954,95 +956,107 @@ void MeasureWriter::writeBarlines(int tickTimePosition)
 {
     for (; myBarlinesIter != myBarlinesEnd && myBarlinesIter->tickTimePosition <= tickTimePosition; ++myBarlinesIter)
     {
-        core::Barline barlineElement{};
+        writeBarline(*myBarlinesIter);
+    }
+}
 
-        if (myBarlinesIter->barlineType != api::BarlineType::unspecified &&
-            myBarlinesIter->barlineType != api::BarlineType::unsupported)
+void MeasureWriter::writeMidMeasureBarlines()
+{
+    while (myBarlinesIter != myBarlinesEnd && myBarlinesIter->location == api::HorizontalAlignment::center &&
+           myBarlinesIter->tickTimePosition <= cursor().tickTimePosition)
+    {
+        writeBarline(*myBarlinesIter);
+        ++myBarlinesIter;
+    }
+}
+
+void MeasureWriter::writeBarline(const api::BarlineData &barline)
+{
+    core::Barline barlineElement{};
+
+    if (barline.barlineType != api::BarlineType::unspecified && barline.barlineType != api::BarlineType::unsupported)
+    {
+        core::BarStyleColor bsc{};
+        bsc.setValue(myConverter.convert(barline.barlineType));
+        barlineElement.setBarStyle(bsc);
+    }
+
+    if (barline.ending.has_value())
+    {
+        const auto &endingData = *barline.ending;
+        core::Ending ending{};
+        ending.setType(myConverter.convert(endingData.type));
+
+        // number is a required attribute; an empty list serializes as number="", which is
+        // MusicXML's blank ending.
+        for (const int number : endingData.numbers)
         {
-            core::BarStyleColor bsc{};
-            bsc.setValue(myConverter.convert(myBarlinesIter->barlineType));
-            barlineElement.setBarStyle(bsc);
+            reportAdjusted(myScoreWriter.getDiagnostics(), measureOnlyLocation(myHistory.getCursor()), "ending number",
+                           number, std::max(number, 1));
+        }
+        ending.setNumber(core::EndingNumber{endingData.numbers});
+
+        // The text is written only when the author supplied one. Left empty, the ending
+        // displays its numbers.
+        if (!endingData.text.empty())
+        {
+            ending.setValue(endingData.text);
         }
 
-        if (myBarlinesIter->ending.has_value())
+        barlineElement.setEnding(ending);
+    }
+
+    if (barline.location != api::HorizontalAlignment::unspecified)
+    {
+        barlineElement.setLocation(myConverter.convertBarlinePlacement(barline.location));
+    }
+    else if (barline.location == api::HorizontalAlignment::left || barline.tickTimePosition == 0)
+    {
+        barlineElement.setLocation(myConverter.convertBarlinePlacement(mx::api::HorizontalAlignment::left));
+    }
+    else
+    {
+        barlineElement.setLocation(myConverter.convertBarlinePlacement(mx::api::HorizontalAlignment::right));
+    }
+
+    if (barline.repeat)
+    {
+        core::Repeat repeatElement{};
+
+        if (barline.repeatDirection != api::RepeatDirection::unspecified)
         {
-            const auto &endingData = *myBarlinesIter->ending;
-            core::Ending ending{};
-            ending.setType(myConverter.convert(endingData.type));
-
-            // number is a required attribute; an empty list serializes as number="", which is
-            // MusicXML's blank ending.
-            for (const int number : endingData.numbers)
-            {
-                reportAdjusted(myScoreWriter.getDiagnostics(), measureOnlyLocation(myHistory.getCursor()),
-                               "ending number", number, std::max(number, 1));
-            }
-            ending.setNumber(core::EndingNumber{endingData.numbers});
-
-            // The text is written only when the author supplied one. Left empty, the ending
-            // displays its numbers.
-            if (!endingData.text.empty())
-            {
-                ending.setValue(endingData.text);
-            }
-
-            barlineElement.setEnding(ending);
+            repeatElement.setDirection(myConverter.convert(barline.repeatDirection));
         }
-
-        if (myBarlinesIter->location != api::HorizontalAlignment::unspecified)
+        else if (barline.location == api::HorizontalAlignment::left || barline.tickTimePosition == 0)
         {
-            barlineElement.setLocation(myConverter.convertBarlinePlacement(myBarlinesIter->location));
-        }
-        else if (myBarlinesIter->location == api::HorizontalAlignment::left || myBarlinesIter->tickTimePosition == 0)
-        {
-            barlineElement.setLocation(myConverter.convertBarlinePlacement(mx::api::HorizontalAlignment::left));
+            repeatElement.setDirection(mx::core::BackwardForward::forward());
         }
         else
         {
-            barlineElement.setLocation(myConverter.convertBarlinePlacement(mx::api::HorizontalAlignment::right));
+            repeatElement.setDirection(mx::core::BackwardForward::backward());
         }
 
-        if (myBarlinesIter->repeat)
+        if (barline.repeatTimes > 0)
         {
-            core::Repeat repeatElement{};
-
-            if (myBarlinesIter->repeatDirection != api::RepeatDirection::unspecified)
-            {
-                repeatElement.setDirection(myConverter.convert(myBarlinesIter->repeatDirection));
-            }
-            else if (myBarlinesIter->location == api::HorizontalAlignment::left ||
-                     myBarlinesIter->tickTimePosition == 0)
-            {
-                repeatElement.setDirection(mx::core::BackwardForward::forward());
-            }
-            else
-            {
-                repeatElement.setDirection(mx::core::BackwardForward::backward());
-            }
-
-            if (myBarlinesIter->repeatTimes > 0)
-            {
-                repeatElement.setTimes(myBarlinesIter->repeatTimes);
-            }
-
-            if (myBarlinesIter->repeatAfterJump != api::Bool::unspecified)
-            {
-                repeatElement.setAfterJump(myConverter.convert(myBarlinesIter->repeatAfterJump));
-            }
-
-            if (myBarlinesIter->repeatWinged != api::RepeatWinged::unspecified)
-            {
-                repeatElement.setWinged(myConverter.convert(myBarlinesIter->repeatWinged));
-            }
-
-            barlineElement.setRepeat(repeatElement);
+            repeatElement.setTimes(barline.repeatTimes);
         }
 
-        impl::setId(myBarlinesIter->id, barlineElement, myScoreWriter.getDiagnostics(),
-                    cursorLocation(myHistory.getCursor()));
-        myOutMeasure.addMusicData(core::MusicDataChoice::barline(barlineElement));
-        myHistory.log("writeBarline");
+        if (barline.repeatAfterJump != api::Bool::unspecified)
+        {
+            repeatElement.setAfterJump(myConverter.convert(barline.repeatAfterJump));
+        }
+
+        if (barline.repeatWinged != api::RepeatWinged::unspecified)
+        {
+            repeatElement.setWinged(myConverter.convert(barline.repeatWinged));
+        }
+
+        barlineElement.setRepeat(repeatElement);
     }
+
+    impl::setId(barline.id, barlineElement, myScoreWriter.getDiagnostics(), cursorLocation(myHistory.getCursor()));
+    myOutMeasure.addMusicData(core::MusicDataChoice::barline(barlineElement));
+    myHistory.log("writeBarline");
 }
 
 void MeasureWriter::History::advanceTickTimePosition(int amount, std::string reason)

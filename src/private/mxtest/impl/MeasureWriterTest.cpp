@@ -21,6 +21,7 @@
 #include "mx/impl/ScoreWriter.h"
 
 #include <memory>
+#include <string>
 #include <vector>
 
 using namespace mx;
@@ -76,6 +77,90 @@ TestItems setupTestItems(TestParameters params)
     t.measureCursor->measureIndex = params.measureIndex;
     t.measureWriter = std::make_unique<MeasureWriter>(*t.measureData, *t.measureCursor, *t.scoreWriter);
     return t;
+}
+
+// Letters for the kinds of music data in a written measure, in order:
+// P print, A attributes, N note, B barline, K backup, F forward.
+std::string musicDataOrder(const core::PartwiseMeasure &measure)
+{
+    std::string result;
+    for (const auto &mdc : measure.musicData())
+    {
+        if (mdc.isPrint())
+        {
+            result += 'P';
+        }
+        else if (mdc.isAttributes())
+        {
+            result += 'A';
+        }
+        else if (mdc.isNote())
+        {
+            result += 'N';
+        }
+        else if (mdc.isBarline())
+        {
+            result += 'B';
+        }
+        else if (mdc.isBackup())
+        {
+            result += 'K';
+        }
+        else if (mdc.isForward())
+        {
+            result += 'F';
+        }
+        else
+        {
+            result += '?';
+        }
+    }
+    return result;
+}
+
+void addQuarterNote(api::MeasureData &measure, int voiceIndex, int tickTimePosition)
+{
+    api::NoteData note;
+    note.tickTimePosition = tickTimePosition;
+    note.durationData.durationTimeTicks = 4;
+    measure.staves.at(0).voices[voiceIndex].notes.emplace_back(note);
+}
+
+api::BarlineData makeBarline(api::HorizontalAlignment location, int tickTimePosition, api::BarlineType type)
+{
+    api::BarlineData barline;
+    barline.location = location;
+    barline.tickTimePosition = tickTimePosition;
+    barline.barlineType = type;
+    return barline;
+}
+
+TestParameters oneStaffParameters()
+{
+    TestParameters params;
+    params.ticksPerQuarter = 4;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 1;
+    return params;
+}
+
+const core::Barline &barlineAt(const core::PartwiseMeasure &measure, int barlineOrdinal)
+{
+    int count = 0;
+    for (const auto &mdc : measure.musicData())
+    {
+        if (mdc.isBarline())
+        {
+            if (count == barlineOrdinal)
+            {
+                return mdc.asBarline();
+            }
+            ++count;
+        }
+    }
+    static const core::Barline none{};
+    return none;
 }
 } // namespace mxtest
 
@@ -543,6 +628,153 @@ TEST(staffDetailsWritesStaffLinesAndStaffSize, MeasureWriter)
     CHECK(80.5 == details.staffSize()->value().value().value());
     CHECK(!details.staffSize()->scaling().has_value());
     CHECK(!details.number().has_value());
+}
+
+T_END
+
+TEST(leftBarlineFollowsPrint, MeasureWriter)
+{
+    // A left barline comes after the measure's <print>.
+    mxtest::TestItems t = mxtest::setupTestItems(mxtest::oneStaffParameters());
+    t.measureData->measureNumbering = api::MeasureNumbering::system;
+    t.measureData->barlines.emplace_back(
+        mxtest::makeBarline(api::HorizontalAlignment::left, 0, api::BarlineType::heavyLight));
+    mxtest::addQuarterNote(*t.measureData, 0, 0);
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    CHECK_EQUAL(std::string{"PBAN"}, mxtest::musicDataOrder(partwiseMeasure));
+}
+
+T_END
+
+TEST(leftBarlineWithoutPrintComesFirst, MeasureWriter)
+{
+    mxtest::TestItems t = mxtest::setupTestItems(mxtest::oneStaffParameters());
+    t.measureData->barlines.emplace_back(
+        mxtest::makeBarline(api::HorizontalAlignment::left, 0, api::BarlineType::heavyLight));
+    mxtest::addQuarterNote(*t.measureData, 0, 0);
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    CHECK_EQUAL(std::string{"BAN"}, mxtest::musicDataOrder(partwiseMeasure));
+}
+
+T_END
+
+TEST(middleBarlineWrittenAtItsTick, MeasureWriter)
+{
+    mxtest::TestItems t = mxtest::setupTestItems(mxtest::oneStaffParameters());
+    for (int tick = 0; tick < 16; tick += 4)
+    {
+        mxtest::addQuarterNote(*t.measureData, 0, tick);
+    }
+    t.measureData->barlines.emplace_back(
+        mxtest::makeBarline(api::HorizontalAlignment::center, 8, api::BarlineType::dotted));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    CHECK_EQUAL(std::string{"ANNBNN"}, mxtest::musicDataOrder(partwiseMeasure));
+
+    const auto &barline = mxtest::barlineAt(partwiseMeasure, 0);
+    REQUIRE(barline.location().has_value());
+    CHECK(barline.location()->tag() == core::RightLeftMiddle::Tag::middle);
+    REQUIRE(barline.barStyle().has_value());
+    CHECK(barline.barStyle()->value().tag() == core::BarStyle::Tag::dotted);
+}
+
+T_END
+
+TEST(middleBarlineAfterForward, MeasureWriter)
+{
+    // The note at tick 12 follows a <forward> of 8. A barline at the start of the gap comes
+    // before the <forward>. A barline at the end of the gap comes after it.
+    {
+        mxtest::TestItems t = mxtest::setupTestItems(mxtest::oneStaffParameters());
+        mxtest::addQuarterNote(*t.measureData, 0, 0);
+        mxtest::addQuarterNote(*t.measureData, 0, 12);
+        t.measureData->barlines.emplace_back(
+            mxtest::makeBarline(api::HorizontalAlignment::center, 12, api::BarlineType::dotted));
+
+        const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+        CHECK_EQUAL(std::string{"ANFBN"}, mxtest::musicDataOrder(partwiseMeasure));
+    }
+    {
+        mxtest::TestItems t = mxtest::setupTestItems(mxtest::oneStaffParameters());
+        mxtest::addQuarterNote(*t.measureData, 0, 0);
+        mxtest::addQuarterNote(*t.measureData, 0, 12);
+        t.measureData->barlines.emplace_back(
+            mxtest::makeBarline(api::HorizontalAlignment::center, 4, api::BarlineType::dotted));
+
+        const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+        CHECK_EQUAL(std::string{"ANBFN"}, mxtest::musicDataOrder(partwiseMeasure));
+    }
+}
+
+T_END
+
+TEST(middleBarlineBeforeBackupAndRightBarlineLast, MeasureWriter)
+{
+    // The middle barline is at the end of voice 0, so it is written before the <backup> into
+    // voice 1. The right barline stays at the end of the measure. A middle barline authored at
+    // exactly the end of a multi-voice measure is written the same way, after the first voice.
+    mxtest::TestItems t = mxtest::setupTestItems(mxtest::oneStaffParameters());
+    mxtest::addQuarterNote(*t.measureData, 0, 0);
+    mxtest::addQuarterNote(*t.measureData, 0, 4);
+    mxtest::addQuarterNote(*t.measureData, 1, 0);
+    t.measureData->barlines.emplace_back(
+        mxtest::makeBarline(api::HorizontalAlignment::center, 8, api::BarlineType::dotted));
+    t.measureData->barlines.emplace_back(
+        mxtest::makeBarline(api::HorizontalAlignment::right, api::TICK_TIME_INFINITY, api::BarlineType::lightHeavy));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    REQUIRE(std::string{"ANNBKNB"} == mxtest::musicDataOrder(partwiseMeasure));
+    CHECK(mxtest::barlineAt(partwiseMeasure, 0).location()->tag() == core::RightLeftMiddle::Tag::middle);
+    CHECK(mxtest::barlineAt(partwiseMeasure, 1).location()->tag() == core::RightLeftMiddle::Tag::right);
+}
+
+T_END
+
+TEST(middleBarlineNotReachedIsWrittenOnceAtEnd, MeasureWriter)
+{
+    // No note starts at or after the barline's tick, so it is written once, at the end.
+    {
+        mxtest::TestItems t = mxtest::setupTestItems(mxtest::oneStaffParameters());
+        for (int tick = 0; tick < 16; tick += 4)
+        {
+            mxtest::addQuarterNote(*t.measureData, 0, tick);
+        }
+        t.measureData->barlines.emplace_back(
+            mxtest::makeBarline(api::HorizontalAlignment::center, 16, api::BarlineType::dotted));
+
+        const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+        REQUIRE(std::string{"ANNNNB"} == mxtest::musicDataOrder(partwiseMeasure));
+        CHECK(mxtest::barlineAt(partwiseMeasure, 0).location()->tag() == core::RightLeftMiddle::Tag::middle);
+    }
+    {
+        mxtest::TestItems t = mxtest::setupTestItems(mxtest::oneStaffParameters());
+        t.measureData->barlines.emplace_back(
+            mxtest::makeBarline(api::HorizontalAlignment::center, 8, api::BarlineType::dotted));
+
+        const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+        CHECK_EQUAL(std::string{"AB"}, mxtest::musicDataOrder(partwiseMeasure));
+    }
+}
+
+T_END
+
+TEST(unspecifiedLocationBarlineStaysLast, MeasureWriter)
+{
+    // Without a location the writer does not guess "middle" from the tick. The barline goes at
+    // the end of the measure and is a right barline.
+    mxtest::TestItems t = mxtest::setupTestItems(mxtest::oneStaffParameters());
+    for (int tick = 0; tick < 16; tick += 4)
+    {
+        mxtest::addQuarterNote(*t.measureData, 0, tick);
+    }
+    t.measureData->barlines.emplace_back(
+        mxtest::makeBarline(api::HorizontalAlignment::unspecified, 8, api::BarlineType::dotted));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    REQUIRE(std::string{"ANNNNB"} == mxtest::musicDataOrder(partwiseMeasure));
+    CHECK(mxtest::barlineAt(partwiseMeasure, 0).location()->tag() == core::RightLeftMiddle::Tag::right);
 }
 
 T_END

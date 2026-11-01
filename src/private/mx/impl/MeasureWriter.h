@@ -222,6 +222,8 @@ class MeasureWriter
     bool isAdvanceNeeded(const api::NoteData &currentNote, const NoteIter &inIter, const NoteIter &inEnd);
     void advanceCursorIfNeeded(const api::NoteData &currentNote, const NoteIter &inIter, const NoteIter &inEnd);
     void writeBarlines(int tickTimePosition);
+    void writeMidMeasureBarlines();
+    void writeBarline(const api::BarlineData &barline);
     using dirs = std::vector<api::DirectionData>;
     using dIter = dirs::const_iterator;
     void writeDirections(dIter &directionIter, const dIter &directionEnd, const NoteIter &inNoteIter,
