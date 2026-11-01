@@ -62,6 +62,7 @@
 #include "mx/impl/NoteReader.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/TimeReader.h"
+#include "mx/impl/TuningFunctions.h"
 #include "mx/utility/Throw.h"
 #include "mx/utility/Unused.h"
 
@@ -1203,7 +1204,8 @@ void MeasureReader::importStaffDetails(const core::Attributes &inMxAttributes) c
 {
     for (const auto &staffDetails : inMxAttributes.staffDetails())
     {
-        if (!staffDetails.group().has_value() && !staffDetails.staffSize().has_value())
+        if (!staffDetails.group().has_value() && !staffDetails.staffSize().has_value() &&
+            staffDetails.staffTuning().empty())
         {
             continue;
         }
@@ -1226,6 +1228,17 @@ void MeasureReader::importStaffDetails(const core::Attributes &inMxAttributes) c
         if (staffDetails.group().has_value())
         {
             staffData.staffLines = staffDetails.group()->staffLines();
+        }
+        if (!staffDetails.staffTuning().empty())
+        {
+            staffData.staffTunings.clear();
+            for (const auto &staffTuning : staffDetails.staffTuning())
+            {
+                api::StaffTuningData outTuning;
+                outTuning.line = staffTuning.line().value();
+                readTuningGroup(staffTuning.tuning(), myConverter, outTuning);
+                staffData.staffTunings.emplace_back(outTuning);
+            }
         }
         if (staffDetails.staffSize().has_value())
         {

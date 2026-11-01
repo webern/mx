@@ -90,6 +90,7 @@
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
+#include "mx/impl/TuningFunctions.h"
 #include "mx/utility/Round.h"
 #include "mx/utility/StringToInt.h"
 #include "mx/utility/Unused.h"
@@ -949,15 +950,7 @@ void DirectionReader::parseScordatura(const core::DirectionType &directionType)
         {
             outAccord.stringNumber = accord.string()->value();
         }
-        outAccord.tuningStep = myConverter.convert(accord.tuning().tuningStep());
-        if (accord.tuning().tuningAlter().has_value())
-        {
-            const auto semitonesAndCents = Converter::convertToSemitonesAndCents(
-                static_cast<double>(accord.tuning().tuningAlter()->value().value()));
-            outAccord.tuningAlter = semitonesAndCents.first;
-            outAccord.tuningCents = semitonesAndCents.second;
-        }
-        outAccord.tuningOctave = accord.tuning().tuningOctave().value();
+        readTuningGroup(accord.tuning(), myConverter, outAccord);
         outScordatura.accords.emplace_back(outAccord);
     }
     outScordatura.id = getId(scordatura);

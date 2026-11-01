@@ -116,6 +116,7 @@
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
+#include "mx/impl/TuningFunctions.h"
 
 #include <algorithm>
 
@@ -1131,23 +1132,7 @@ void DirectionWriter::emitScordatura(const api::ScordaturaData &item, core::Dire
         {
             accord.setString(core::StringNumber{*accordData.stringNumber});
         }
-        core::TuningGroup tuning{};
-        if (accordData.tuningStep == api::Step::unspecified)
-        {
-            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::missingValueDefaulted,
-                                 cursorLocation(myCursor), "accord tuning-step is unspecified; using C");
-        }
-        tuning.setTuningStep(myConverter.convert(accordData.tuningStep));
-        if (accordData.tuningAlter != 0 || accordData.tuningCents != 0.0)
-        {
-            tuning.setTuningAlter(core::Semitones{
-                core::Decimal{Converter::convertToAlter(accordData.tuningAlter, accordData.tuningCents)}});
-        }
-        const core::Octave tuningOctave{accordData.tuningOctave};
-        reportAdjusted(myDiagnostics, cursorLocation(myCursor), "accord tuning-octave", accordData.tuningOctave,
-                       tuningOctave.value());
-        tuning.setTuningOctave(tuningOctave);
-        accord.setTuning(std::move(tuning));
+        accord.setTuning(makeTuningGroup(accordData, myConverter, myDiagnostics, cursorLocation(myCursor), "accord"));
         if (!isFirstAccordAdded)
         {
             scordatura.setAccord(core::OneOrMore<core::Accord>{std::move(accord)});

@@ -209,7 +209,7 @@ void MeasureWriter::writeMeasureGlobals()
 
     for (const auto &staff : myMeasureData.staves)
     {
-        if (staff.staffLines >= 0 || staff.staffSize >= 0.0)
+        if (staff.staffLines >= 0 || staff.staffSize >= 0.0 || !staff.staffTunings.empty())
         {
             int desiredStaffIndex = api::INDEX_UNSPECIFIED;
             if (myHistory.getCursor().getNumStaves() > 1)
@@ -217,7 +217,7 @@ void MeasureWriter::writeMeasureGlobals()
                 desiredStaffIndex = localStaffCounter;
             }
             myPropertiesWriter->writeStaffDetails(desiredStaffIndex, staff.staffLines, staff.staffSize,
-                                                  staff.staffScaling);
+                                                  staff.staffScaling, staff.staffTunings);
         }
 
         auto clefIter = staff.clefs.cbegin();

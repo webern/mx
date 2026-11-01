@@ -32,6 +32,7 @@
 #include "mx/core/generated/StaffDetailsGroup.h"
 #include "mx/core/generated/StaffLinePosition.h"
 #include "mx/core/generated/StaffNumber.h"
+#include "mx/core/generated/StaffTuning.h"
 #include "mx/core/generated/Time.h"
 #include "mx/core/generated/TimeChoice.h"
 #include "mx/core/generated/TimeChoiceGroup.h"
@@ -44,6 +45,7 @@
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/IdFunctions.h"
+#include "mx/impl/TuningFunctions.h"
 
 namespace mx
 {
@@ -317,6 +319,12 @@ void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double 
 
 void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling)
 {
+    writeStaffDetails(staffIndex, staffLines, staffSize, staffScaling, {});
+}
+
+void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling,
+                                         std::span<const api::StaffTuningData> staffTunings)
+{
     core::StaffDetails staffDetails{};
 
     if (staffIndex >= 0)
@@ -329,6 +337,17 @@ void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double 
         core::StaffDetailsGroup sdg{};
         sdg.setStaffLines(staffLines);
         staffDetails.setGroup(sdg);
+    }
+
+    Converter converter;
+    for (const auto &tuning : staffTunings)
+    {
+        core::StaffTuning staffTuning{};
+        const core::StaffLine line{tuning.line};
+        reportAdjusted(myDiagnostics, myLocation, "staff-tuning line", tuning.line, line.value());
+        staffTuning.setLine(line);
+        staffTuning.setTuning(makeTuningGroup(tuning, converter, myDiagnostics, myLocation, "staff-tuning"));
+        staffDetails.addStaffTuning(std::move(staffTuning));
     }
 
     if (staffSize >= 0.0)

@@ -8,12 +8,15 @@
 #include "mx/api/ForPartData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/PartSymbolData.h"
+#include "mx/api/StaffTuningData.h"
 #include "mx/api/TimeChoice.h"
 #include "mx/api/TransposeData.h"
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/Key.h"
 #include "mx/core/generated/PartwiseMeasure.h"
 #include "mx/impl/DiagnosticsContext.h"
+
+#include <span>
 
 namespace mx
 {
@@ -60,6 +63,8 @@ class PropertiesWriter
     void writeStaffDetails(int staffIndex, int staffLines);
     void writeStaffDetails(int staffIndex, int staffLines, double staffSize);
     void writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling);
+    void writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling,
+                           std::span<const api::StaffTuningData> staffTunings);
     void writeClef(int staffIndex, const api::ClefData &inClefData);
     void writePartSymbol(const api::PartSymbolData &inPartSymbolData);
     void writeTranspose(int staffIndex, const api::TransposeData &inTransposeData);

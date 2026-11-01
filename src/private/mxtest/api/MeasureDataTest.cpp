@@ -254,6 +254,176 @@ TEST(staffLinesAndStaffSizeRoundTrip, MeasureData)
 
 T_END;
 
+StaffTuningData makeStaffTuningForMeasureDataTest(int line, Step step, int octave, int alter = 0, double cents = 0.0)
+{
+    StaffTuningData tuning;
+    tuning.line = line;
+    tuning.tuningStep = step;
+    tuning.tuningOctave = octave;
+    tuning.tuningAlter = alter;
+    tuning.tuningCents = cents;
+    return tuning;
+}
+
+TEST(staffTuningRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    staff.staffLines = 6;
+    staff.staffTunings = {
+        makeStaffTuningForMeasureDataTest(1, Step::e, 2), makeStaffTuningForMeasureDataTest(2, Step::a, 2),
+        makeStaffTuningForMeasureDataTest(3, Step::d, 3), makeStaffTuningForMeasureDataTest(4, Step::g, 3),
+        makeStaffTuningForMeasureDataTest(5, Step::b, 3), makeStaffTuningForMeasureDataTest(6, Step::e, 4)};
+    staff.voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<staff-tuning line=\"1\">") != std::string::npos);
+    CHECK(xml.find("<staff-tuning line=\"6\">") != std::string::npos);
+    CHECK(xml.find("<tuning-step>E</tuning-step>") != std::string::npos);
+    CHECK(xml.find("<tuning-alter>") == std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    REQUIRE(1 == outScore.parts.size());
+    REQUIRE(1 == outScore.parts.front().measures.size());
+    REQUIRE(1 == outScore.parts.front().measures.front().staves.size());
+    const auto &outStaff = outScore.parts.front().measures.front().staves.front();
+    CHECK_EQUAL(6, outStaff.staffLines);
+    CHECK(staff.staffTunings == outStaff.staffTunings);
+}
+
+T_END;
+
+TEST(staffTuningAlterAndCentsRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    staff.staffLines = 2;
+    staff.staffTunings = {makeStaffTuningForMeasureDataTest(1, Step::f, 3, 1),
+                          makeStaffTuningForMeasureDataTest(2, Step::c, 4, 0, 50.0)};
+    staff.voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<tuning-alter>1</tuning-alter>") != std::string::npos);
+    CHECK(xml.find("<tuning-alter>0.5</tuning-alter>") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    REQUIRE(1 == outScore.parts.size());
+    REQUIRE(1 == outScore.parts.front().measures.size());
+    REQUIRE(1 == outScore.parts.front().measures.front().staves.size());
+    const auto &outStaff = outScore.parts.front().measures.front().staves.front();
+    REQUIRE(2 == outStaff.staffTunings.size());
+    CHECK_EQUAL(1, outStaff.staffTunings.at(0).tuningAlter);
+    CHECK(0.0 == outStaff.staffTunings.at(0).tuningCents);
+    CHECK_EQUAL(0, outStaff.staffTunings.at(1).tuningAlter);
+    CHECK(50.0 == outStaff.staffTunings.at(1).tuningCents);
+    CHECK(staff.staffTunings == outStaff.staffTunings);
+}
+
+T_END;
+
+TEST(staffTuningWithoutStaffLinesRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    staff.staffTunings = {makeStaffTuningForMeasureDataTest(1, Step::d, 3)};
+    staff.voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<staff-lines>") == std::string::npos);
+    CHECK(xml.find("<staff-tuning line=\"1\">") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    REQUIRE(1 == outScore.parts.size());
+    REQUIRE(1 == outScore.parts.front().measures.size());
+    REQUIRE(1 == outScore.parts.front().measures.front().staves.size());
+    const auto &outStaff = outScore.parts.front().measures.front().staves.front();
+    CHECK_EQUAL(-1, outStaff.staffLines);
+    CHECK(staff.staffTunings == outStaff.staffTunings);
+}
+
+T_END;
+
+TEST(staffTuningIsWrittenBetweenStaffLinesAndStaffSize, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    staff.staffLines = 1;
+    staff.staffSize = 80.5;
+    staff.staffTunings = {makeStaffTuningForMeasureDataTest(1, Step::a, 2)};
+    staff.voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    const auto linesPosition = xml.find("<staff-lines>");
+    const auto tuningPosition = xml.find("<staff-tuning");
+    const auto sizePosition = xml.find("<staff-size>");
+    REQUIRE(linesPosition != std::string::npos);
+    REQUIRE(tuningPosition != std::string::npos);
+    REQUIRE(sizePosition != std::string::npos);
+    CHECK(linesPosition < tuningPosition);
+    CHECK(tuningPosition < sizePosition);
+
+    const auto outScore = mxtest::fromXml(xml);
+    REQUIRE(1 == outScore.parts.size());
+    REQUIRE(1 == outScore.parts.front().measures.size());
+    REQUIRE(1 == outScore.parts.front().measures.front().staves.size());
+    const auto &outStaff = outScore.parts.front().measures.front().staves.front();
+    CHECK_EQUAL(1, outStaff.staffLines);
+    CHECK(80.5 == outStaff.staffSize);
+    CHECK(staff.staffTunings == outStaff.staffTunings);
+}
+
+T_END;
+
+TEST(staffTuningOnSecondStaffOnly, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    measure.staves.emplace_back();
+    measure.staves.at(0).voices[0].notes.emplace_back();
+    measure.staves.at(1).voices[0].notes.emplace_back();
+    measure.staves.at(1).staffLines = 4;
+    measure.staves.at(1).staffTunings = {makeStaffTuningForMeasureDataTest(1, Step::e, 1),
+                                         makeStaffTuningForMeasureDataTest(2, Step::a, 1)};
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<staff-details number=\"2\">") != std::string::npos);
+    CHECK(xml.find("<staff-details number=\"1\">") == std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    REQUIRE(1 == outScore.parts.size());
+    REQUIRE(1 == outScore.parts.front().measures.size());
+    REQUIRE(2 == outScore.parts.front().measures.front().staves.size());
+    const auto &outStaves = outScore.parts.front().measures.front().staves;
+    CHECK(outStaves.at(0).staffTunings.empty());
+    CHECK(measure.staves.at(1).staffTunings == outStaves.at(1).staffTunings);
+}
+
+T_END;
+
 TEST(measureNumberingRoundTrip, MeasureData)
 {
     ScoreData score;

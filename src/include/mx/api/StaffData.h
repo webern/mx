@@ -8,6 +8,7 @@
 #include "mx/api/ClefData.h"
 #include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
+#include "mx/api/StaffTuningData.h"
 #include "mx/api/VoiceData.h"
 
 #include <vector>
@@ -20,6 +21,11 @@ class StaffData
 {
   public:
     int staffLines = VALUE_UNSPECIFIED;
+
+    // What each string of a tablature staff is tuned to, one entry per string, written in this order.
+    // Like staffLines, set it on the measure where the tuning takes effect (usually the first) and
+    // leave it empty on the measures after it.
+    std::vector<StaffTuningData> staffTunings;
 
     // Specifies the staff space size relative the the global staff space size
     double staffSize = DOUBLE_UNSPECIFIED;
@@ -65,6 +71,7 @@ inline bool voicesAreEqual(const std::map<int, VoiceData> &l, const std::map<int
 
 MXAPI_EQUALS_BEGIN(StaffData)
 MXAPI_EQUALS_MEMBER(staffLines)
+MXAPI_EQUALS_MEMBER(staffTunings)
 MXAPI_DOUBLES_EQUALS_MEMBER(staffSize)
 MXAPI_DOUBLES_EQUALS_MEMBER(staffScaling)
 MXAPI_EQUALS_MEMBER(clefs)
