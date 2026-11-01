@@ -111,6 +111,12 @@ struct KeyData
     // is a stated mode, and it writes <mode>none</mode>.
     KeyMode mode;
 
+    // Whether the key signature is drawn on the staff, written as the print-object attribute of <key>.
+    // `no` hides it: the key still applies to the music, but notation software does not print the
+    // signature. `yes` states that it is printed. `unspecified` (the default) does not write
+    // print-object, which leaves the signature printed.
+    Bool printObject;
+
     // Supports changing the key somewhere other than at the start of a measure.
     int tickTimePosition;
 
@@ -130,7 +136,7 @@ struct KeyData
 
     KeyData()
         : fifths{0}, cancel{0}, cancelLocation{CancelLocation::unspecified}, mode{KeyMode::unspecified},
-          tickTimePosition{0}, staffIndex{INDEX_UNSPECIFIED}, nonTraditional{}, id{}
+          printObject{Bool::unspecified}, tickTimePosition{0}, staffIndex{INDEX_UNSPECIFIED}, nonTraditional{}, id{}
     {
     }
 };
@@ -140,6 +146,7 @@ MXAPI_EQUALS_MEMBER(fifths)
 MXAPI_EQUALS_MEMBER(cancel)
 MXAPI_EQUALS_MEMBER(cancelLocation)
 MXAPI_EQUALS_MEMBER(mode)
+MXAPI_EQUALS_MEMBER(printObject)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(staffIndex)
 MXAPI_EQUALS_MEMBER(nonTraditional)

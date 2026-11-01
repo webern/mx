@@ -107,6 +107,12 @@ void PropertiesWriter::writeKey(int staffIndex, const api::KeyData &inKeyData)
         key.setNumber(core::StaffNumber{staffIndex + 1});
     }
 
+    if (inKeyData.printObject != api::Bool::unspecified)
+    {
+        Converter converter;
+        key.setPrintObject(converter.convert(inKeyData.printObject));
+    }
+
     if (inKeyData.nonTraditional.empty())
     {
         writeTraditionalKey(inKeyData, key);

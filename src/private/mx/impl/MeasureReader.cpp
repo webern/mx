@@ -798,6 +798,10 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
                 keyData.nonTraditional.emplace_back(keyComponent);
             }
 
+            if (key.printObject().has_value())
+            {
+                keyData.printObject = myConverter.convert(*key.printObject());
+            }
             keyData.id = getId(key);
             myOutMeasureData.keys.emplace_back(std::move(keyData));
             continue;
@@ -835,6 +839,10 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
             keyData.mode = myConverter.convert(*traditionalKey.mode());
         }
         keyData.tickTimePosition = myCurrentCursor.tickTimePosition;
+        if (key.printObject().has_value())
+        {
+            keyData.printObject = myConverter.convert(*key.printObject());
+        }
         keyData.id = getId(key);
 
         myOutMeasureData.keys.emplace_back(std::move(keyData));

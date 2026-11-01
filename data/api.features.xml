@@ -481,7 +481,7 @@
     </feature>
     <feature name="key" support="full">
       <attributes>
-        <attribute name="print-object" support="partial"/>
+        <attribute name="print-object" support="yes"/>
       </attributes>
       <notes>api::KeyData / KeyComponent; PropertiesWriter.</notes>
     </feature>
