@@ -817,3 +817,11 @@ musuite/testTablature3.xml
 # instead of at its tick.
 lysuite/ly46b_MidmeasureBarline.xml
 musetrainer/Bella_Ciao.xml
+
+# Unblocked by backing up before a staff's leading directions. A direction at the start of the
+# second staff was written where the previous staff ended, with an invented <offset> to reach tick 0,
+# and then the backup; it now follows the backup.
+lysuite/ly43e_Multistaff_ClefDynamics.xml
+musetrainer/Canon_in_D_3.xml
+musetrainer/J._S._Bach_-_Air_on_the_G_String_Piano_arrangement.xml
+musetrainer/Maple_Leaf_Rag_Scott_Joplin.xml
