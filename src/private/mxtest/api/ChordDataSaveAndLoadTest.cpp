@@ -205,7 +205,7 @@ TEST(Load1, ChordDataSaveTest)
     CHECK(api::Step::c == chord->root);
     CHECK_EQUAL(0, chord->rootAlter);
     CHECK(ChordKind::majorSeventh == chord->chordKind);
-    CHECK_EQUAL("maj7", chord->text);
+    CHECK(chord->text == std::optional<std::string>{"maj7"});
     CHECK(Step::unspecified == chord->bass);
     CHECK_EQUAL(0, chord->bassAlter);
 }
@@ -228,7 +228,7 @@ TEST(Load2, ChordDataSaveTest)
     CHECK(api::Step::d == chord->root);
     CHECK_EQUAL(0, chord->rootAlter);
     CHECK(ChordKind::minor == chord->chordKind);
-    CHECK_EQUAL("m", chord->text);
+    CHECK(chord->text == std::optional<std::string>{"m"});
     CHECK(Step::c == chord->bass);
     CHECK_EQUAL(1, chord->bassAlter);
 }
@@ -251,7 +251,7 @@ TEST(Load3, ChordDataSaveTest)
     CHECK(api::Step::e == chord->root);
     CHECK_EQUAL(-1, chord->rootAlter);
     CHECK(ChordKind::dominant == chord->chordKind);
-    CHECK_EQUAL("7", chord->text);
+    CHECK(chord->text == std::optional<std::string>{"7"});
     CHECK(Step::unspecified == chord->bass);
     CHECK_EQUAL(0, chord->bassAlter);
 }
@@ -274,7 +274,7 @@ TEST(Load4, ChordDataSaveTest)
     CHECK(api::Step::b == chord->root);
     CHECK_EQUAL(0, chord->rootAlter);
     CHECK(ChordKind::diminishedSeventh == chord->chordKind);
-    CHECK_EQUAL("dim7", chord->text);
+    CHECK(chord->text == std::optional<std::string>{"dim7"});
     CHECK(Step::unspecified == chord->bass);
     CHECK_EQUAL(0, chord->bassAlter);
 }

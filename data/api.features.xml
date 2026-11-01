@@ -424,7 +424,7 @@
         <attribute name="default-y" support="yes"/>
         <attribute name="relative-x" support="yes"/>
         <attribute name="relative-y" support="yes"/>
-        <attribute name="print-frame" support="no"/>
+        <attribute name="print-frame" support="yes"/>
       </attributes>
       <notes>api::ChordData in DirectionData.chords; DirectionReader.parseHarmony (cpp:795) / DirectionWriter (cpp:422).</notes>
     </feature>

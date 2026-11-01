@@ -1275,10 +1275,7 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
 
     chord.chordKind = myConverter.convert(kind.value());
 
-    if (kind.text().has_value())
-    {
-        chord.text = *kind.text();
-    }
+    chord.text = kind.text();
 
     if (kind.useSymbols().has_value())
     {
@@ -1512,6 +1509,11 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
 
             chord.frameData.notes.push_back(frameNoteData);
         }
+    }
+
+    if (inHarmony.printFrame().has_value())
+    {
+        chord.printFrame = myConverter.convert(*inHarmony.printFrame());
     }
 
     chord.positionData = getPositionData(inHarmony);

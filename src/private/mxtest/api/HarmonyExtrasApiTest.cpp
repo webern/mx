@@ -349,4 +349,128 @@ TEST(harmonySystemRelationUnspecified, HarmonyExtrasApi)
 
 T_END;
 
+TEST(harmonyPrintFrameRoundTrip, HarmonyExtrasApi)
+{
+    for (const auto value : {Bool::no, Bool::yes})
+    {
+        auto score = makeScoreWithChord();
+        auto &chord = chordOf(score);
+        chord.root = Step::c;
+        chord.chordKind = ChordKind::major;
+        chord.printFrame = value;
+
+        const auto xml = mxtest::toXml(score);
+        const std::string expected = value == Bool::no ? "print-frame=\"no\"" : "print-frame=\"yes\"";
+        CHECK(xml.find(expected) != std::string::npos);
+
+        const auto out = mxtest::roundTrip(score);
+        CHECK(value == firstChord(out).printFrame);
+    }
+}
+
+T_END;
+
+TEST(harmonyPrintFrameUnspecifiedIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("print-frame") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    CHECK(Bool::unspecified == firstChord(out).printFrame);
+}
+
+T_END;
+
+// A chord symbol can hide its diagram even when it does not have one, so print-frame is written
+// without a <frame>.
+TEST(harmonyPrintFrameWithoutFrameData, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.hasFrameData = false;
+    chord.printFrame = Bool::no;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("print-frame=\"no\"") != std::string::npos);
+    CHECK(xml.find("<frame") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    CHECK(Bool::no == firstChord(out).printFrame);
+}
+
+T_END;
+
+// Two chords in one direction are one <harmony>, so print-frame is written once. It is taken from
+// the first chord that sets it and read back onto every chord.
+TEST(harmonyPrintFrameMultiChord, HarmonyExtrasApi)
+{
+    for (const int settingIndex : {0, 1})
+    {
+        auto score = makeScoreWithChord();
+        auto &direction = score.parts.front().measures.front().staves.front().directions.front();
+        direction.chords.emplace_back();
+        for (auto &chord : direction.chords)
+        {
+            chord.root = Step::c;
+            chord.chordKind = ChordKind::major;
+        }
+        direction.chords[static_cast<size_t>(settingIndex)].printFrame = Bool::no;
+
+        const auto xml = mxtest::toXml(score);
+        const auto first = xml.find("print-frame=\"no\"");
+        CHECK(first != std::string::npos);
+        CHECK(xml.find("print-frame", first + 1) == std::string::npos);
+
+        const auto out = mxtest::roundTrip(score);
+        const auto &outDirection = out.parts.front().measures.front().staves.front().directions.front();
+        REQUIRE(outDirection.chords.size() == 2);
+        CHECK(Bool::no == outDirection.chords[0].printFrame);
+        CHECK(Bool::no == outDirection.chords[1].printFrame);
+    }
+}
+
+T_END;
+
+// An empty kind text is different from an absent one: C major spelled with nothing.
+TEST(harmonyKindTextEmptyRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.text = "";
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<kind text=\"\">") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    CHECK(firstChord(out).text == std::optional<std::string>{""});
+}
+
+T_END;
+
+TEST(harmonyKindTextAbsentIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<kind>") != std::string::npos);
+    CHECK(xml.find("<kind text=") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    CHECK(!firstChord(out).text.has_value());
+}
+
+T_END;
+
 #endif
