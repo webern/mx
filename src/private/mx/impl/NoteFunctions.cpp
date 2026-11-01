@@ -112,6 +112,13 @@ api::NoteData NoteFunctions::parseNote() const
 
     myOutNoteData.noteheadSmufl = reader.getNoteheadSmufl();
 
+    if (reader.getNoteheadParentheses().has_value())
+    {
+        myOutNoteData.noteheadParentheses = converter.convert(*reader.getNoteheadParentheses());
+    }
+
+    myOutNoteData.noteheadColor = reader.getNoteheadColor();
+
     if (reader.getIsDurationTypeSpecified())
     {
         myOutNoteData.durationData.durationName = converter.convert(reader.getDurationType());

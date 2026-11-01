@@ -490,9 +490,13 @@ void NoteWriter::setNotehead() const
     // An empty glyph name names no glyph, so it is treated the same as no smufl at all.
     const bool isSmuflSpecified = myNoteData.noteheadSmufl.has_value() && !myNoteData.noteheadSmufl->empty();
 
-    // <notehead> stays out of the file for a plain notehead, but filled or smufl still needs
-    // the element even when the value itself is 'normal'.
-    if (myNoteData.notehead == api::Notehead::normal && !isFilledSpecified && !isSmuflSpecified)
+    const bool isParenthesesSpecified = myNoteData.noteheadParentheses != api::Bool::unspecified;
+    const bool isColorSpecified = myNoteData.noteheadColor.has_value();
+
+    // <notehead> stays out of the file for a plain notehead, but filled, smufl, parentheses or
+    // color still needs the element even when the value itself is 'normal'.
+    if (myNoteData.notehead == api::Notehead::normal && !isFilledSpecified && !isSmuflSpecified &&
+        !isParenthesesSpecified && !isColorSpecified)
     {
         return;
     }
@@ -508,6 +512,16 @@ void NoteWriter::setNotehead() const
     if (isSmuflSpecified)
     {
         notehead.setSmufl(core::SmuflGlyphName{*myNoteData.noteheadSmufl});
+    }
+
+    if (isParenthesesSpecified)
+    {
+        notehead.setParentheses(myConverter.convert(myNoteData.noteheadParentheses));
+    }
+
+    if (isColorSpecified)
+    {
+        setAttributesFromColorData(*myNoteData.noteheadColor, notehead);
     }
 
     myOutNote.setNotehead(std::move(notehead));

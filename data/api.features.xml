@@ -650,10 +650,10 @@
     <feature name="notehead" support="partial">
       <attributes>
         <attribute name="color" support="yes"/>
-        <attribute name="filled" support="partial"/>
-        <attribute name="parentheses" support="partial"/>
+        <attribute name="filled" support="yes"/>
+        <attribute name="parentheses" support="yes"/>
       </attributes>
-      <notes>api::Notehead via noteheadMap; enum complete (all NoteheadValue members mapped). Partial: filled/parentheses attribute support limited.</notes>
+      <notes>api::Notehead via noteheadMap; enum complete (all NoteheadValue members mapped); NoteData noteheadFilled/Smufl/Parentheses/Color. Partial: font-* attributes not modeled.</notes>
     </feature>
     <feature name="notehead-text" support="none">
       <notes>&lt;notehead-text&gt; not modeled.</notes>

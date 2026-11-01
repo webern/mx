@@ -155,10 +155,10 @@ NoteReader::NoteReader(const core::Note &mxNote)
       myIsUnpitched(false), myIsPitch(false), myIsDisplayStepOctaveSpecified(false), myDurationValue(0.0),
       myStep(core::Step::c()), myAlter(0), myCents(0.0), myOctave(4), myStaffNumber(0), myIsStaffSpecified(false),
       myVoiceNumber(0), myVoiceLabel{}, myNoteheadValue(core::NoteheadValue::normal()), myNoteheadFilled{},
-      myNoteheadSmufl{}, myDurationType(core::NoteTypeValue::maxima()), myIsDurationTypeSpecified(false), myNumDots(0),
-      myBeams(), myTimeModificationActualNotes(-1), myTimeModificationNormalNotes(-1),
-      myTimeModificationNormalType(core::NoteTypeValue::maxima()), myTimeModificationNormalTypeDots(0),
-      myIsTimeModificationNormalTypeSpecified(false), myHasAccidental(false),
+      myNoteheadSmufl{}, myNoteheadParentheses{}, myNoteheadColor{}, myDurationType(core::NoteTypeValue::maxima()),
+      myIsDurationTypeSpecified(false), myNumDots(0), myBeams(), myTimeModificationActualNotes(-1),
+      myTimeModificationNormalNotes(-1), myTimeModificationNormalType(core::NoteTypeValue::maxima()),
+      myTimeModificationNormalTypeDots(0), myIsTimeModificationNormalTypeSpecified(false), myHasAccidental(false),
       myAccidental(core::AccidentalValue::natural()), myIsAccidentalParenthetical(false),
       myIsAccidentalCautionary{false}, myIsAccidentalEditorial{false}, myIsAccidentalBracketed{false},
       myIsStemSpecified{false}, myStem{}, myIsGraceSlashSpecified{false}, myGraceSlash{}, myIsTieStart{false},
@@ -350,6 +350,12 @@ void NoteReader::setNoteheadItems()
     const auto &notehead = *myNote.notehead();
     myNoteheadValue = notehead.value();
     myNoteheadFilled = notehead.filled();
+    myNoteheadParentheses = notehead.parentheses();
+
+    if (notehead.color().has_value())
+    {
+        myNoteheadColor = getColor(notehead);
+    }
 
     if (notehead.smufl().has_value())
     {

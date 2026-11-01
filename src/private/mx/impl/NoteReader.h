@@ -151,6 +151,16 @@ class NoteReader
         return myNoteheadSmufl;
     }
 
+    inline const std::optional<core::YesNo> &getNoteheadParentheses() const
+    {
+        return myNoteheadParentheses;
+    }
+
+    inline const std::optional<api::ColorData> &getNoteheadColor() const
+    {
+        return myNoteheadColor;
+    }
+
     inline core::NoteTypeValue getDurationType() const
     {
         return myDurationType;
@@ -288,6 +298,8 @@ class NoteReader
     core::NoteheadValue myNoteheadValue;
     std::optional<core::YesNo> myNoteheadFilled;
     std::optional<std::string> myNoteheadSmufl;
+    std::optional<core::YesNo> myNoteheadParentheses;
+    std::optional<api::ColorData> myNoteheadColor;
     core::NoteTypeValue myDurationType;
     bool myIsDurationTypeSpecified;
     int myNumDots;

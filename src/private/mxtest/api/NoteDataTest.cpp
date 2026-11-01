@@ -1541,7 +1541,115 @@ TEST(noteheadFilledAndSmuflRoundtrip, NoteData)
 
 T_END;
 
-// A note that sets neither field writes no <notehead> element at all.
+// A ghost note: parentheses around an otherwise plain notehead still need the <notehead> element.
+TEST(noteheadParenthesesRoundtrip, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    note.notehead = Notehead::normal;
+    note.noteheadParentheses = Bool::yes;
+
+    const std::string xml = mxtest::toXml(score);
+    CHECK(xml.find("<notehead parentheses=\"yes\">normal</notehead>") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outNote = firstNoteheadNote(outScore);
+    CHECK(Notehead::normal == outNote.notehead);
+    CHECK(Bool::yes == outNote.noteheadParentheses);
+}
+
+T_END;
+
+// An explicit no is written, even on a normal notehead, and kept apart from unspecified.
+TEST(noteheadParenthesesNoRoundtrip, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    note.notehead = Notehead::normal;
+    note.noteheadParentheses = Bool::no;
+
+    const std::string xml = mxtest::toXml(score);
+    CHECK(xml.find("<notehead parentheses=\"no\">normal</notehead>") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outNote = firstNoteheadNote(outScore);
+    CHECK(Notehead::normal == outNote.notehead);
+    CHECK(Bool::no == outNote.noteheadParentheses);
+}
+
+T_END;
+
+TEST(noteheadColorRoundtrip, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    ColorData color;
+    color.red = 255;
+    color.green = 0;
+    color.blue = 0;
+    note.noteheadColor = color;
+
+    const std::string xml = mxtest::toXml(score);
+    CHECK(xml.find("<notehead color=\"#FF0000\">normal</notehead>") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outNote = firstNoteheadNote(outScore);
+    REQUIRE(outNote.noteheadColor.has_value());
+    CHECK(color == *outNote.noteheadColor);
+}
+
+T_END;
+
+TEST(noteheadColorWithAlphaRoundtrip, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    ColorData color;
+    color.red = 0;
+    color.green = 128;
+    color.blue = 255;
+    color.isAlphaSpecified = true;
+    color.alpha = 128;
+    note.noteheadColor = color;
+
+    const auto outScore = mxtest::fromXml(mxtest::toXml(score));
+    const auto &outNote = firstNoteheadNote(outScore);
+    REQUIRE(outNote.noteheadColor.has_value());
+    CHECK(outNote.noteheadColor->isAlphaSpecified);
+    CHECK_EQUAL(128, outNote.noteheadColor->alpha);
+    CHECK(color == *outNote.noteheadColor);
+}
+
+T_END;
+
+TEST(noteheadParenthesesColorFilledSmuflRoundtrip, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    ColorData color;
+    color.red = 10;
+    color.green = 20;
+    color.blue = 30;
+    note.notehead = Notehead::slash;
+    note.noteheadFilled = Bool::yes;
+    note.noteheadSmufl = "noteheadSlashHorizontalEnds";
+    note.noteheadParentheses = Bool::yes;
+    note.noteheadColor = color;
+
+    const auto outScore = mxtest::fromXml(mxtest::toXml(score));
+    const auto &outNote = firstNoteheadNote(outScore);
+    CHECK(Notehead::slash == outNote.notehead);
+    CHECK(Bool::yes == outNote.noteheadFilled);
+    REQUIRE(outNote.noteheadSmufl.has_value());
+    CHECK_EQUAL("noteheadSlashHorizontalEnds", *outNote.noteheadSmufl);
+    CHECK(Bool::yes == outNote.noteheadParentheses);
+    REQUIRE(outNote.noteheadColor.has_value());
+    CHECK(color == *outNote.noteheadColor);
+}
+
+T_END;
+
+// A note that sets none of the extra attributes writes no <notehead> element at all.
 TEST(noteheadAttributesDefaultToAbsent, NoteData)
 {
     const auto score = makeNoteheadScore();
@@ -1553,6 +1661,8 @@ TEST(noteheadAttributesDefaultToAbsent, NoteData)
     const auto &outNote = firstNoteheadNote(outScore);
     CHECK(Bool::unspecified == outNote.noteheadFilled);
     CHECK(!outNote.noteheadSmufl.has_value());
+    CHECK(Bool::unspecified == outNote.noteheadParentheses);
+    CHECK(!outNote.noteheadColor.has_value());
 }
 
 T_END;
@@ -1575,6 +1685,13 @@ TEST(noteheadSyntheticFileRead, NoteData)
     CHECK(Bool::yes == outNote.noteheadFilled);
     REQUIRE(outNote.noteheadSmufl.has_value());
     CHECK_EQUAL("noteheadBlack", *outNote.noteheadSmufl);
+    CHECK(Bool::yes == outNote.noteheadParentheses);
+    REQUIRE(outNote.noteheadColor.has_value());
+    CHECK_EQUAL(0, outNote.noteheadColor->red);
+    CHECK_EQUAL(0, outNote.noteheadColor->green);
+    CHECK_EQUAL(0, outNote.noteheadColor->blue);
+    CHECK(outNote.noteheadColor->isAlphaSpecified);
+    CHECK_EQUAL(255, outNote.noteheadColor->alpha);
 }
 
 T_END;
