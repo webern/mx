@@ -310,4 +310,277 @@ TEST(creditRoundTrip, enclosureAbsentStaysAbsent)
     CHECK(Enclosure::unspecified == out.pageTextItems.at(0).enclosure);
 }
 
+TEST(creditRoundTrip, continuationsSurvive)
+{
+    auto in = makeMinimalScore();
+    PageTextData credit{};
+    credit.text = "Notebooks\n";
+    credit.pageNumber = 1;
+    credit.fontData.style = FontStyle::italic;
+    credit.fontData.sizeType = FontSizeType::point;
+    credit.fontData.sizePoint = 14.0;
+    credit.justify = HorizontalAlignment::center;
+
+    PageTextSegment catalogue{};
+    catalogue.text = "BWV Anhang 114";
+    catalogue.fontData.style = FontStyle::normal;
+    credit.continuations.push_back(catalogue);
+
+    PageTextSegment last{};
+    last.text = "x";
+    last.fontData.weight = FontWeight::bold;
+    last.enclosure = Enclosure::rectangle;
+    last.positionData.defaultX = 12.5;
+    last.positionData.isDefaultXSpecified = true;
+    last.positionData.defaultY = -30.0;
+    last.positionData.isDefaultYSpecified = true;
+    last.positionData.horizontalAlignment = HorizontalAlignment::right;
+    last.justify = HorizontalAlignment::left;
+    credit.continuations.push_back(last);
+    in.pageTextItems.push_back(credit);
+
+    const auto xml = mxtest::toXml(in);
+    const auto firstWords = xml.find("<credit-words");
+    REQUIRE(firstWords != std::string::npos);
+    const auto secondWords = xml.find("<credit-words", firstWords + 1);
+    REQUIRE(secondWords != std::string::npos);
+    const auto thirdWords = xml.find("<credit-words", secondWords + 1);
+    REQUIRE(thirdWords != std::string::npos);
+    CHECK(xml.find("<credit-words", thirdWords + 1) == std::string::npos);
+    // The second run states only its style, so it does not repeat the size of the first.
+    const auto secondEnd = xml.find('>', secondWords);
+    CHECK(xml.substr(secondWords, secondEnd - secondWords).find("font-size=") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(in);
+
+    REQUIRE(out.pageTextItems.size() == 1);
+    const auto &got = out.pageTextItems.at(0);
+    CHECK_EQUAL("Notebooks\n", got.text);
+    CHECK(FontStyle::italic == got.fontData.style);
+    CHECK(HorizontalAlignment::center == got.justify);
+    REQUIRE(got.continuations.size() == 2);
+
+    const auto &gotCatalogue = got.continuations.at(0);
+    CHECK_EQUAL("BWV Anhang 114", gotCatalogue.text);
+    CHECK(FontStyle::normal == gotCatalogue.fontData.style);
+    CHECK(FontSizeType::unspecified == gotCatalogue.fontData.sizeType);
+    CHECK(FontWeight::unspecified == gotCatalogue.fontData.weight);
+    CHECK(Enclosure::unspecified == gotCatalogue.enclosure);
+
+    const auto &gotLast = got.continuations.at(1);
+    CHECK_EQUAL("x", gotLast.text);
+    CHECK(FontWeight::bold == gotLast.fontData.weight);
+    CHECK(Enclosure::rectangle == gotLast.enclosure);
+    CHECK(gotLast.positionData.isDefaultXSpecified);
+    CHECK_DOUBLES_EQUAL(12.5, gotLast.positionData.defaultX, 0.001);
+    CHECK(gotLast.positionData.isDefaultYSpecified);
+    CHECK_DOUBLES_EQUAL(-30.0, gotLast.positionData.defaultY, 0.001);
+    CHECK(HorizontalAlignment::right == gotLast.positionData.horizontalAlignment);
+    CHECK(HorizontalAlignment::left == gotLast.justify);
+
+    CHECK(got == in.pageTextItems.at(0));
+}
+
+TEST(creditRoundTrip, singleRunHasNoContinuations)
+{
+    auto in = makeMinimalScore();
+    PageTextData credit{};
+    credit.text = "Just one run";
+    credit.pageNumber = 1;
+    in.pageTextItems.push_back(credit);
+
+    const auto xml = mxtest::toXml(in);
+    const auto firstWords = xml.find("<credit-words");
+    REQUIRE(firstWords != std::string::npos);
+    CHECK(xml.find("<credit-words", firstWords + 1) == std::string::npos);
+
+    const auto out = mxtest::roundTrip(in);
+
+    REQUIRE(out.pageTextItems.size() == 1);
+    CHECK(out.pageTextItems.at(0).continuations.empty());
+}
+
+TEST(creditRoundTrip, continuationsAreReadFromXml)
+{
+    const std::string xml = R"(<score-partwise version="3.0">
+  <credit page="1">
+    <credit-type>title</credit-type>
+    <credit-words default-x="300" default-y="1500" font-size="20" justify="center">Minuet
+</credit-words>
+    <credit-words>in G</credit-words>
+    <credit-words font-weight="bold">BWV Anh. 114</credit-words>
+  </credit>
+  <part-list>
+    <score-part id="P1">
+      <part-name>Flute</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = mxtest::fromXml(xml);
+
+    REQUIRE(score.pageTextItems.size() == 1);
+    const auto &got = score.pageTextItems.at(0);
+    CHECK_EQUAL("Minuet\n", got.text);
+    CHECK(HorizontalAlignment::center == got.justify);
+    REQUIRE(got.creditTypes.size() == 1);
+    CHECK_EQUAL("title", got.creditTypes.at(0));
+
+    REQUIRE(got.continuations.size() == 2);
+    const auto &second = got.continuations.at(0);
+    CHECK_EQUAL("in G", second.text);
+    CHECK(FontSizeType::unspecified == second.fontData.sizeType);
+    CHECK(FontWeight::unspecified == second.fontData.weight);
+    CHECK(HorizontalAlignment::unspecified == second.justify);
+    CHECK(Enclosure::unspecified == second.enclosure);
+    CHECK(!second.positionData.isDefaultXSpecified);
+
+    const auto &third = got.continuations.at(1);
+    CHECK_EQUAL("BWV Anh. 114", third.text);
+    CHECK(FontWeight::bold == third.fontData.weight);
+}
+
+TEST(creditRoundTrip, continuationsParticipateInEquality)
+{
+    PageTextData a{};
+    a.text = "first";
+    PageTextSegment segment{};
+    segment.text = "second";
+    a.continuations.push_back(segment);
+
+    PageTextData b = a;
+    CHECK(a == b);
+
+    b.continuations.at(0).text = "other";
+    CHECK(a != b);
+
+    b = a;
+    b.continuations.at(0).fontData.style = FontStyle::italic;
+    CHECK(a != b);
+
+    b = a;
+    b.continuations.at(0).positionData.horizontalAlignment = HorizontalAlignment::right;
+    CHECK(a != b);
+
+    b = a;
+    b.continuations.at(0).justify = HorizontalAlignment::center;
+    CHECK(a != b);
+
+    b = a;
+    b.continuations.at(0).enclosure = Enclosure::oval;
+    CHECK(a != b);
+
+    b = a;
+    b.continuations.push_back(segment);
+    CHECK(a != b);
+}
+
+TEST(creditRoundTrip, creditSymbolBetweenWordsIsNotASegment)
+{
+    const std::string xml = R"(<score-partwise version="3.0">
+  <credit page="1">
+    <credit-words>before</credit-words>
+    <credit-symbol>segno</credit-symbol>
+    <credit-words>after</credit-words>
+  </credit>
+  <part-list>
+    <score-part id="P1">
+      <part-name>Flute</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = mxtest::fromXml(xml);
+
+    REQUIRE(score.pageTextItems.size() == 1);
+    const auto &got = score.pageTextItems.at(0);
+    CHECK_EQUAL("before", got.text);
+    REQUIRE(got.continuations.size() == 1);
+    CHECK_EQUAL("after", got.continuations.at(0).text);
+}
+
+TEST(creditRoundTrip, wordsAfterALeadingCreditSymbolAreTheText)
+{
+    const std::string xml = R"(<score-partwise version="3.0">
+  <credit page="1">
+    <credit-symbol>segno</credit-symbol>
+    <credit-words font-weight="bold">after the sign</credit-words>
+    <credit-words>more</credit-words>
+  </credit>
+  <part-list>
+    <score-part id="P1">
+      <part-name>Flute</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = mxtest::fromXml(xml);
+
+    REQUIRE(score.pageTextItems.size() == 1);
+    const auto &got = score.pageTextItems.at(0);
+    CHECK_EQUAL("after the sign", got.text);
+    CHECK(FontWeight::bold == got.fontData.weight);
+    REQUIRE(got.continuations.size() == 1);
+    CHECK_EQUAL("more", got.continuations.at(0).text);
+
+    // The symbol is not kept, and the writer does not put an empty <credit-words> in its place.
+    const auto written = mxtest::toXml(score);
+    const auto firstWords = written.find("<credit-words");
+    REQUIRE(firstWords != std::string::npos);
+    const auto secondWords = written.find("<credit-words", firstWords + 1);
+    REQUIRE(secondWords != std::string::npos);
+    CHECK(written.find("<credit-words", secondWords + 1) == std::string::npos);
+}
+
 #endif

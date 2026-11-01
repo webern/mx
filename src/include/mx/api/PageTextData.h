@@ -18,6 +18,30 @@ namespace api
 
 // distance values are in 'tenths' governed by the 'scaling' values
 
+// One more stretch of text in a credit, drawn after the text before it. A credit is usually one
+// stretch of text in one style. A title in italics followed by a catalogue number in upright type
+// is two stretches in one credit. Each field holds only what this stretch states. Font, justify and
+// enclosure left unspecified carry over from the stretch before it; position does not. See
+// PageTextData::continuations.
+class PageTextSegment
+{
+  public:
+    std::string text;
+    PositionData positionData;
+    FontData fontData;
+    HorizontalAlignment justify = HorizontalAlignment::unspecified;
+    Enclosure enclosure = Enclosure::unspecified;
+};
+
+MXAPI_EQUALS_BEGIN(PageTextSegment)
+MXAPI_EQUALS_MEMBER(text)
+MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(fontData)
+MXAPI_EQUALS_MEMBER(justify)
+MXAPI_EQUALS_MEMBER(enclosure)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(PageTextSegment);
+
 class PageTextData
 {
   public:
@@ -44,6 +68,11 @@ class PageTextData
     // A shape drawn around the text. Enclosure::unspecified draws no enclosure; Enclosure::none
     // states explicitly that there is none.
     Enclosure enclosure = Enclosure::unspecified;
+
+    // The stretches of text that follow `text` in the same credit, in order. Empty for a credit
+    // that is one stretch of text, which is the usual case. The fields above describe the first
+    // stretch; each continuation has its own font, position, justify and enclosure.
+    std::vector<PageTextSegment> continuations;
 };
 
 MXAPI_EQUALS_BEGIN(PageTextData)
@@ -59,6 +88,7 @@ if (!areVectorsEqual(lhs.creditTypes, rhs.creditTypes))
 }
 MXAPI_EQUALS_MEMBER(justify)
 MXAPI_EQUALS_MEMBER(enclosure)
+MXAPI_EQUALS_MEMBER(continuations)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PageTextData);
 } // namespace api
