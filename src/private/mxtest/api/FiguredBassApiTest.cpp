@@ -8,6 +8,11 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/ScoreData.h"
 #include "mxtest/api/RoundTrip.h"
+#include "mxtest/api/TestHelpers.h"
+#include "pugixml.hpp"
+
+#include <string>
+#include <vector>
 
 using namespace std;
 using namespace mx::api;
@@ -122,6 +127,158 @@ TEST(figuredBassEmptyFiguresOmitted, FiguredBassApi)
     const auto out = mxtest::roundTrip(score);
 
     CHECK(firstFiguredBass(out) == nullptr);
+}
+
+T_END;
+
+TEST(figuredBassExtendRoundTrip, FiguredBassApi)
+{
+    FiguredBassData fb{};
+    FigureData f0{};
+    f0.figureNumber = "6";
+    f0.extend = FigureExtend{};
+    FigureData f1{};
+    f1.figureNumber = "6";
+    f1.extend = FigureExtend{};
+    f1.extend->type = FigureExtendType::start;
+    FigureData f2{};
+    f2.figureNumber = "5";
+    fb.figures.push_back(f0);
+    fb.figures.push_back(f1);
+    fb.figures.push_back(f2);
+
+    const auto score = makeScoreWithFiguredBass(fb);
+    const auto out = mxtest::roundTrip(score);
+
+    const auto *outFb = firstFiguredBass(out);
+    REQUIRE(outFb != nullptr);
+    REQUIRE(outFb->figures.size() == 3);
+    REQUIRE(outFb->figures.at(0).extend.has_value());
+    CHECK(FigureExtendType::unspecified == outFb->figures.at(0).extend->type);
+    REQUIRE(outFb->figures.at(1).extend.has_value());
+    CHECK(FigureExtendType::start == outFb->figures.at(1).extend->type);
+    CHECK(!outFb->figures.at(2).extend.has_value());
+    CHECK_EQUAL("6", outFb->figures.at(0).figureNumber);
+    CHECK_EQUAL("5", outFb->figures.at(2).figureNumber);
+}
+
+T_END;
+
+TEST(figuredBassExtendOnlyFigure, FiguredBassApi)
+{
+    FiguredBassData fb{};
+    FigureData f0{};
+    f0.extend = FigureExtend{};
+    fb.figures.push_back(f0);
+
+    const auto score = makeScoreWithFiguredBass(fb);
+    const auto out = mxtest::roundTrip(score);
+
+    const auto *outFb = firstFiguredBass(out);
+    REQUIRE(outFb != nullptr);
+    REQUIRE(outFb->figures.size() == 1);
+    CHECK_EQUAL("", outFb->figures.at(0).prefix);
+    CHECK_EQUAL("", outFb->figures.at(0).figureNumber);
+    CHECK_EQUAL("", outFb->figures.at(0).suffix);
+    REQUIRE(outFb->figures.at(0).extend.has_value());
+    CHECK(FigureExtendType::unspecified == outFb->figures.at(0).extend->type);
+}
+
+T_END;
+
+TEST(figuredBassExtendAllTypes, FiguredBassApi)
+{
+    const FigureExtendType types[] = {FigureExtendType::start, FigureExtendType::continue_, FigureExtendType::stop,
+                                      FigureExtendType::unspecified};
+
+    for (const auto type : types)
+    {
+        FiguredBassData fb{};
+        FigureData f0{};
+        f0.figureNumber = "6";
+        f0.extend = FigureExtend{};
+        f0.extend->type = type;
+        fb.figures.push_back(f0);
+
+        const auto out = mxtest::roundTrip(makeScoreWithFiguredBass(fb));
+
+        const auto *outFb = firstFiguredBass(out);
+        REQUIRE(outFb != nullptr);
+        REQUIRE(outFb->figures.size() == 1);
+        REQUIRE(outFb->figures.at(0).extend.has_value());
+        CHECK(type == outFb->figures.at(0).extend->type);
+    }
+}
+
+T_END;
+
+TEST(figuredBassExtendWritesXml, FiguredBassApi)
+{
+    const FigureExtendType types[] = {FigureExtendType::unspecified, FigureExtendType::start,
+                                      FigureExtendType::continue_, FigureExtendType::stop};
+
+    FiguredBassData fb{};
+    for (const auto type : types)
+    {
+        FigureData figure{};
+        figure.figureNumber = "6";
+        figure.extend = FigureExtend{};
+        figure.extend->type = type;
+        fb.figures.push_back(figure);
+    }
+    FigureData none{};
+    none.figureNumber = "5";
+    fb.figures.push_back(none);
+
+    const auto xml = mxtest::toXml(makeScoreWithFiguredBass(fb));
+
+    pugi::xml_document doc;
+    REQUIRE(doc.load_string(xml.c_str()));
+    const auto figuredBass = doc.select_node("//figured-bass").node();
+    REQUIRE(!figuredBass.empty());
+
+    std::vector<pugi::xml_node> figures;
+    for (const auto figure : figuredBass.children("figure"))
+    {
+        figures.push_back(figure);
+    }
+    REQUIRE(figures.size() == 5);
+
+    const auto bareExtend = figures.at(0).child("extend");
+    REQUIRE(!bareExtend.empty());
+    CHECK(bareExtend.attribute("type").empty());
+
+    const auto startExtend = figures.at(1).child("extend");
+    REQUIRE(!startExtend.empty());
+    CHECK_EQUAL("start", std::string{startExtend.attribute("type").value()});
+
+    const auto continueExtend = figures.at(2).child("extend");
+    REQUIRE(!continueExtend.empty());
+    CHECK_EQUAL("continue", std::string{continueExtend.attribute("type").value()});
+
+    const auto stopExtend = figures.at(3).child("extend");
+    REQUIRE(!stopExtend.empty());
+    CHECK_EQUAL("stop", std::string{stopExtend.attribute("type").value()});
+
+    CHECK(figures.at(4).child("extend").empty());
+}
+
+T_END;
+
+TEST(figuredBassExtendEquality, FiguredBassApi)
+{
+    FigureData with{};
+    with.figureNumber = "6";
+    with.extend = FigureExtend{};
+    FigureData without{};
+    without.figureNumber = "6";
+
+    CHECK(with != without);
+
+    FigureData other = with;
+    CHECK(with == other);
+    other.extend->type = FigureExtendType::stop;
+    CHECK(with != other);
 }
 
 T_END;

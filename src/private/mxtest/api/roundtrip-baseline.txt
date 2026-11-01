@@ -825,3 +825,8 @@ lysuite/ly43e_Multistaff_ClefDynamics.xml
 musetrainer/Canon_in_D_3.xml
 musetrainer/J._S._Bach_-_Air_on_the_G_String_Piano_arrangement.xml
 musetrainer/Maple_Leaf_Rag_Scott_Joplin.xml
+
+# Unblocked by FigureData::extend. A figured-bass <figure> can end with <extend/>, the line that
+# carries a figure across the bass notes that follow. The line was dropped on read, so a figure
+# with only an extend came back as an empty <figure/>.
+musuite/testFiguredBass2.xml
