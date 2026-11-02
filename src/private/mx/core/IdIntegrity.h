@@ -8,9 +8,12 @@
 
 #include "mx/core/ParseContext.h"
 
-#include "mxpugi/mxpugi.hpp"
-
 #include <span>
+
+namespace mx::xml
+{
+class Document;
+}
 
 namespace mx::core
 {
@@ -50,12 +53,12 @@ std::span<const IdAttribute> idAttributes();
 /// Values are compared after Token repair, because that is what the parsed
 /// document holds. Two ids that differ in the file can therefore collide
 /// here, which is the collision reportIdRepair warns may happen.
-void checkIds(const mxpugi::xml_document &doc, const DiagnosticHandler &handler);
+void checkIds(const xml::Document &doc, const DiagnosticHandler &handler);
 
 /// The same checks for a document about to be written, renaming duplicates
 /// so we never emit a document that violates the schema. The first element
 /// to claim an id keeps it and later ones are renamed; references are left
 /// pointing at the first, because nothing says which was meant.
-void repairIds(mxpugi::xml_document &doc, const DiagnosticHandler &handler);
+void repairIds(xml::Document &doc, const DiagnosticHandler &handler);
 
 } // namespace mx::core

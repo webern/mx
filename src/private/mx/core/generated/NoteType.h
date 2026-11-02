@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -36,12 +36,12 @@ class NoteType final
     NoteTypeValue m_value{};
 };
 
-NoteType parseNoteType(mxpugi::xml_node el, const ParseContext &context);
+NoteType parseNoteType(mx::xml::Node el, const ParseContext &context);
 
-void parseNoteTypeContent(NoteType &out, mxpugi::xml_node el, const ParseContext &context);
+void parseNoteTypeContent(NoteType &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeNoteType(const NoteType &v, mxpugi::xml_node parent, const char *tag);
+void serializeNoteType(const NoteType &v, mx::xml::Node parent, const char *tag);
 
-void serializeNoteTypeContent(const NoteType &v, mxpugi::xml_node el);
+void serializeNoteTypeContent(const NoteType &v, mx::xml::Node el);
 
 } // namespace mx::core

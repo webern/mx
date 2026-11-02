@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -52,12 +52,12 @@ class BeatRepeat final
     std::optional<SlashGroup> m_slash;
 };
 
-BeatRepeat parseBeatRepeat(mxpugi::xml_node el, const ParseContext &context);
+BeatRepeat parseBeatRepeat(mx::xml::Node el, const ParseContext &context);
 
-void parseBeatRepeatContent(BeatRepeat &out, mxpugi::xml_node el, const ParseContext &context);
+void parseBeatRepeatContent(BeatRepeat &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeBeatRepeat(const BeatRepeat &v, mxpugi::xml_node parent, const char *tag);
+void serializeBeatRepeat(const BeatRepeat &v, mx::xml::Node parent, const char *tag);
 
-void serializeBeatRepeatContent(const BeatRepeat &v, mxpugi::xml_node el);
+void serializeBeatRepeatContent(const BeatRepeat &v, mx::xml::Node el);
 
 } // namespace mx::core

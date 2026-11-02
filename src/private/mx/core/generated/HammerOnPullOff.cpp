@@ -141,11 +141,11 @@ void HammerOnPullOff::setValue(std::string value)
     m_value = std::move(value);
 }
 
-HammerOnPullOff parseHammerOnPullOff(mxpugi::xml_node el, const ParseContext &context)
+HammerOnPullOff parseHammerOnPullOff(mx::xml::Node el, const ParseContext &context)
 {
     HammerOnPullOff out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -214,7 +214,7 @@ HammerOnPullOff parseHammerOnPullOff(mxpugi::xml_node el, const ParseContext &co
     return out;
 }
 
-void parseHammerOnPullOffContent(HammerOnPullOff &out, mxpugi::xml_node el, const ParseContext &context)
+void parseHammerOnPullOffContent(HammerOnPullOff &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -223,9 +223,9 @@ void parseHammerOnPullOffContent(HammerOnPullOff &out, mxpugi::xml_node el, cons
     }
 }
 
-void serializeHammerOnPullOff(const HammerOnPullOff &v, mxpugi::xml_node parent, const char *tag)
+void serializeHammerOnPullOff(const HammerOnPullOff &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -274,7 +274,7 @@ void serializeHammerOnPullOff(const HammerOnPullOff &v, mxpugi::xml_node parent,
     serializeHammerOnPullOffContent(v, el);
 }
 
-void serializeHammerOnPullOffContent(const HammerOnPullOff &v, mxpugi::xml_node el)
+void serializeHammerOnPullOffContent(const HammerOnPullOff &v, mx::xml::Node el)
 {
     setText(el, v.value());
 }

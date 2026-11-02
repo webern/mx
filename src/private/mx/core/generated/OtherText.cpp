@@ -31,10 +31,10 @@ void OtherText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherText parseOtherText(mxpugi::xml_node el, const ParseContext &context)
+OtherText parseOtherText(mx::xml::Node el, const ParseContext &context)
 {
     OtherText out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ OtherText parseOtherText(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseOtherTextContent(OtherText &out, mxpugi::xml_node el, const ParseContext &context)
+void parseOtherTextContent(OtherText &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseOtherTextContent(OtherText &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeOtherText(const OtherText &v, mxpugi::xml_node parent, const char *tag)
+void serializeOtherText(const OtherText &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -73,7 +73,7 @@ void serializeOtherText(const OtherText &v, mxpugi::xml_node parent, const char 
     serializeOtherTextContent(v, el);
 }
 
-void serializeOtherTextContent(const OtherText &v, mxpugi::xml_node el)
+void serializeOtherTextContent(const OtherText &v, mx::xml::Node el)
 {
     setText(el, v.value());
 }

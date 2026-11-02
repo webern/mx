@@ -20,9 +20,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -99,12 +99,12 @@ class Clef final
     ClefGroup m_clef{};
 };
 
-Clef parseClef(mxpugi::xml_node el, const ParseContext &context);
+Clef parseClef(mx::xml::Node el, const ParseContext &context);
 
-void parseClefContent(Clef &out, mxpugi::xml_node el, const ParseContext &context);
+void parseClefContent(Clef &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeClef(const Clef &v, mxpugi::xml_node parent, const char *tag);
+void serializeClef(const Clef &v, mx::xml::Node parent, const char *tag);
 
-void serializeClefContent(const Clef &v, mxpugi::xml_node el);
+void serializeClefContent(const Clef &v, mx::xml::Node el);
 
 } // namespace mx::core

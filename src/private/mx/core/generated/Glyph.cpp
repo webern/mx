@@ -31,11 +31,11 @@ void Glyph::setValue(SmuflGlyphName value)
     m_value = std::move(value);
 }
 
-Glyph parseGlyph(mxpugi::xml_node el, const ParseContext &context)
+Glyph parseGlyph(mx::xml::Node el, const ParseContext &context)
 {
     Glyph out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,7 +60,7 @@ Glyph parseGlyph(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseGlyphContent(Glyph &out, mxpugi::xml_node el, const ParseContext &context)
+void parseGlyphContent(Glyph &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<SmuflGlyphName>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -69,14 +69,14 @@ void parseGlyphContent(Glyph &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeGlyph(const Glyph &v, mxpugi::xml_node parent, const char *tag)
+void serializeGlyph(const Glyph &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     serializeGlyphContent(v, el);
 }
 
-void serializeGlyphContent(const Glyph &v, mxpugi::xml_node el)
+void serializeGlyphContent(const Glyph &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

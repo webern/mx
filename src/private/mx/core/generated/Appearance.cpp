@@ -86,10 +86,10 @@ void Appearance::setOtherAppearance(std::vector<OtherAppearance> value)
     m_otherAppearance = std::move(value);
 }
 
-Appearance parseAppearance(mxpugi::xml_node el, const ParseContext &context)
+Appearance parseAppearance(mx::xml::Node el, const ParseContext &context)
 {
     Appearance out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -102,9 +102,9 @@ Appearance parseAppearance(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseAppearanceContent(Appearance &out, mxpugi::xml_node el, const ParseContext &context)
+void parseAppearanceContent(Appearance &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     while (cursorIs(cursor, "line-width"))
     {
         out.addLineWidth(parseLineWidth(cursor, context));
@@ -141,13 +141,13 @@ void parseAppearanceContent(Appearance &out, mxpugi::xml_node el, const ParseCon
     }
 }
 
-void serializeAppearance(const Appearance &v, mxpugi::xml_node parent, const char *tag)
+void serializeAppearance(const Appearance &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeAppearanceContent(v, el);
 }
 
-void serializeAppearanceContent(const Appearance &v, mxpugi::xml_node el)
+void serializeAppearanceContent(const Appearance &v, mx::xml::Node el)
 {
     for (const auto &item : v.lineWidth())
     {

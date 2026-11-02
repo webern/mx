@@ -9,9 +9,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -43,12 +43,12 @@ class OtherListening final
     std::string m_value{};
 };
 
-OtherListening parseOtherListening(mxpugi::xml_node el, const ParseContext &context);
+OtherListening parseOtherListening(mx::xml::Node el, const ParseContext &context);
 
-void parseOtherListeningContent(OtherListening &out, mxpugi::xml_node el, const ParseContext &context);
+void parseOtherListeningContent(OtherListening &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeOtherListening(const OtherListening &v, mxpugi::xml_node parent, const char *tag);
+void serializeOtherListening(const OtherListening &v, mx::xml::Node parent, const char *tag);
 
-void serializeOtherListeningContent(const OtherListening &v, mxpugi::xml_node el);
+void serializeOtherListeningContent(const OtherListening &v, mx::xml::Node el);
 
 } // namespace mx::core

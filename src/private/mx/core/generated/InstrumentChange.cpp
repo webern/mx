@@ -31,11 +31,11 @@ void InstrumentChange::setVirtualInstrumentData(VirtualInstrumentDataGroup value
     m_virtualInstrumentData = std::move(value);
 }
 
-InstrumentChange parseInstrumentChange(mxpugi::xml_node el, const ParseContext &context)
+InstrumentChange parseInstrumentChange(mx::xml::Node el, const ParseContext &context)
 {
     InstrumentChange out;
     bool seen_id = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,9 +60,9 @@ InstrumentChange parseInstrumentChange(mxpugi::xml_node el, const ParseContext &
     return out;
 }
 
-void parseInstrumentChangeContent(InstrumentChange &out, mxpugi::xml_node el, const ParseContext &context)
+void parseInstrumentChangeContent(InstrumentChange &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "instrument-sound") || cursorIs(cursor, "solo") || cursorIs(cursor, "ensemble") ||
                    cursorIs(cursor, "virtual-instrument")))
     {
@@ -79,14 +79,14 @@ void parseInstrumentChangeContent(InstrumentChange &out, mxpugi::xml_node el, co
     }
 }
 
-void serializeInstrumentChange(const InstrumentChange &v, mxpugi::xml_node parent, const char *tag)
+void serializeInstrumentChange(const InstrumentChange &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "id", v.id().toString());
     serializeInstrumentChangeContent(v, el);
 }
 
-void serializeInstrumentChangeContent(const InstrumentChange &v, mxpugi::xml_node el)
+void serializeInstrumentChangeContent(const InstrumentChange &v, mx::xml::Node el)
 {
     serializeVirtualInstrumentDataGroup(v.virtualInstrumentData(), el);
 }

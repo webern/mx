@@ -14,9 +14,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -78,12 +78,12 @@ class Wedge final
     std::optional<Token> m_id;
 };
 
-Wedge parseWedge(mxpugi::xml_node el, const ParseContext &context);
+Wedge parseWedge(mx::xml::Node el, const ParseContext &context);
 
-void parseWedgeContent(Wedge &out, mxpugi::xml_node el, const ParseContext &context);
+void parseWedgeContent(Wedge &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeWedge(const Wedge &v, mxpugi::xml_node parent, const char *tag);
+void serializeWedge(const Wedge &v, mx::xml::Node parent, const char *tag);
 
-void serializeWedgeContent(const Wedge &v, mxpugi::xml_node el);
+void serializeWedgeContent(const Wedge &v, mx::xml::Node el);
 
 } // namespace mx::core

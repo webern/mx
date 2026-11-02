@@ -26,7 +26,7 @@ ArrowChoice ArrowChoice::circularArrow(CircularArrow value)
     return ArrowChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-ArrowChoice parseArrowChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+ArrowChoice parseArrowChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "arrow-direction")))
     {
@@ -45,7 +45,7 @@ ArrowChoice parseArrowChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, cons
     throwMissingElement(el, "arrow-direction");
 }
 
-void serializeArrowChoice(const ArrowChoice &v, mxpugi::xml_node el)
+void serializeArrowChoice(const ArrowChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

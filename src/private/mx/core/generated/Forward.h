@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -43,12 +43,12 @@ class Forward final
     std::optional<int> m_staff;
 };
 
-Forward parseForward(mxpugi::xml_node el, const ParseContext &context);
+Forward parseForward(mx::xml::Node el, const ParseContext &context);
 
-void parseForwardContent(Forward &out, mxpugi::xml_node el, const ParseContext &context);
+void parseForwardContent(Forward &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeForward(const Forward &v, mxpugi::xml_node parent, const char *tag);
+void serializeForward(const Forward &v, mx::xml::Node parent, const char *tag);
 
-void serializeForwardContent(const Forward &v, mxpugi::xml_node el);
+void serializeForwardContent(const Forward &v, mx::xml::Node el);
 
 } // namespace mx::core

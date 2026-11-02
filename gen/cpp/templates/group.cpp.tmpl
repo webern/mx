@@ -12,14 +12,14 @@ namespace {{vars.namespace}}
 {
 
 {{>fields_impl}}
-{{ident}} parse{{ident}}(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+{{ident}} parse{{ident}}(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     {{ident}} out;
 {{>fields_parse}}
     return out;
 }
 
-void serialize{{ident}}(const {{ident}} &v, mxpugi::xml_node el)
+void serialize{{ident}}(const {{ident}} &v, mx::xml::Node el)
 {
 {{>fields_serialize}}
 }

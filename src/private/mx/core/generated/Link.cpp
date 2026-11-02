@@ -141,11 +141,11 @@ void Link::setRelativeY(std::optional<Tenths> value)
     m_relativeY = std::move(value);
 }
 
-Link parseLink(mxpugi::xml_node el, const ParseContext &context)
+Link parseLink(mx::xml::Node el, const ParseContext &context)
 {
     Link out;
     bool seen_xlinkHref = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -218,7 +218,7 @@ Link parseLink(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseLinkContent(Link &out, mxpugi::xml_node el, const ParseContext &context)
+void parseLinkContent(Link &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -228,9 +228,9 @@ void parseLinkContent(Link &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeLink(const Link &v, mxpugi::xml_node parent, const char *tag)
+void serializeLink(const Link &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.name())
     {
         setAttribute(el, "name", *v.name());
@@ -283,7 +283,7 @@ void serializeLink(const Link &v, mxpugi::xml_node parent, const char *tag)
     serializeLinkContent(v, el);
 }
 
-void serializeLinkContent(const Link &v, mxpugi::xml_node el)
+void serializeLinkContent(const Link &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

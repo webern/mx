@@ -26,9 +26,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -121,12 +121,12 @@ class Harmony final
     std::optional<int> m_staff;
 };
 
-Harmony parseHarmony(mxpugi::xml_node el, const ParseContext &context);
+Harmony parseHarmony(mx::xml::Node el, const ParseContext &context);
 
-void parseHarmonyContent(Harmony &out, mxpugi::xml_node el, const ParseContext &context);
+void parseHarmonyContent(Harmony &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeHarmony(const Harmony &v, mxpugi::xml_node parent, const char *tag);
+void serializeHarmony(const Harmony &v, mx::xml::Node parent, const char *tag);
 
-void serializeHarmonyContent(const Harmony &v, mxpugi::xml_node el);
+void serializeHarmonyContent(const Harmony &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -107,7 +107,7 @@ const IdAttribute kIdAttributes[] = {
     {"wait", "player", kIdRefers, "player"},
 };
 
-using IdDefinitions = std::map<std::string, mxpugi::xml_node>;
+using IdDefinitions = std::map<std::string, xml::Node>;
 
 // An element name is enough to classify: no MusicXML element declares an
 // identity attribute one way in one place and the other way somewhere else.
@@ -135,17 +135,17 @@ std::string repairedIdValue(const char *text)
 }
 
 /// Visits every element carrying an identity attribute, in document order.
-template <typename Fn> void forEachIdAttribute(mxpugi::xml_node node, const Fn &fn)
+template <typename Fn> void forEachIdAttribute(xml::Node node, const Fn &fn)
 {
-    for (mxpugi::xml_node child = node.first_child(); child; child = child.next_sibling())
+    for (xml::Node child = node.firstChild(); child; child = child.nextSibling())
     {
-        if (child.type() != mxpugi::node_element)
+        if (child.type() != xml::NodeType::element)
         {
             continue;
         }
         if (const IdAttribute *entry = classifyIdAttribute(child.name()))
         {
-            if (mxpugi::xml_attribute attribute = child.attribute(entry->attribute))
+            if (xml::Attribute attribute = child.attribute(entry->attribute))
             {
                 fn(child, attribute, *entry);
             }
@@ -154,10 +154,9 @@ template <typename Fn> void forEachIdAttribute(mxpugi::xml_node node, const Fn &
     }
 }
 
-void reportDanglingIdReferences(mxpugi::xml_node root, const IdDefinitions &definitions,
-                                const DiagnosticHandler &handler)
+void reportDanglingIdReferences(xml::Node root, const IdDefinitions &definitions, const DiagnosticHandler &handler)
 {
-    forEachIdAttribute(root, [&](mxpugi::xml_node el, mxpugi::xml_attribute attribute, const IdAttribute &entry) {
+    forEachIdAttribute(root, [&](xml::Node el, xml::Attribute attribute, const IdAttribute &entry) {
         if (entry.kind != IdAttributeKind::reference)
         {
             return;
@@ -206,7 +205,7 @@ std::span<const IdAttribute> idAttributes()
     return std::span<const IdAttribute>{kIdAttributes};
 }
 
-void checkIds(const mxpugi::xml_document &doc, const DiagnosticHandler &handler)
+void checkIds(const xml::Document &doc, const DiagnosticHandler &handler)
 {
     if (!handler)
     {
@@ -216,7 +215,7 @@ void checkIds(const mxpugi::xml_document &doc, const DiagnosticHandler &handler)
     }
 
     IdDefinitions definitions;
-    forEachIdAttribute(doc, [&](mxpugi::xml_node el, mxpugi::xml_attribute attribute, const IdAttribute &entry) {
+    forEachIdAttribute(doc.root(), [&](xml::Node el, xml::Attribute attribute, const IdAttribute &entry) {
         if (entry.kind != IdAttributeKind::definition)
         {
             return;
@@ -233,15 +232,15 @@ void checkIds(const mxpugi::xml_document &doc, const DiagnosticHandler &handler)
         }
     });
 
-    reportDanglingIdReferences(doc, definitions, handler);
+    reportDanglingIdReferences(doc.root(), definitions, handler);
 }
 
-void repairIds(mxpugi::xml_document &doc, const DiagnosticHandler &handler)
+void repairIds(xml::Document &doc, const DiagnosticHandler &handler)
 {
     // Collect every id first, so a rename cannot land on one that appears
     // further down the document.
     std::set<std::string> taken;
-    forEachIdAttribute(doc, [&](mxpugi::xml_node, mxpugi::xml_attribute attribute, const IdAttribute &entry) {
+    forEachIdAttribute(doc.root(), [&](xml::Node, xml::Attribute attribute, const IdAttribute &entry) {
         if (entry.kind == IdAttributeKind::definition)
         {
             taken.insert(repairedIdValue(attribute.value()));
@@ -249,7 +248,7 @@ void repairIds(mxpugi::xml_document &doc, const DiagnosticHandler &handler)
     });
 
     IdDefinitions definitions;
-    forEachIdAttribute(doc, [&](mxpugi::xml_node el, mxpugi::xml_attribute attribute, const IdAttribute &entry) {
+    forEachIdAttribute(doc.root(), [&](xml::Node el, xml::Attribute attribute, const IdAttribute &entry) {
         if (entry.kind != IdAttributeKind::definition)
         {
             return;
@@ -260,7 +259,7 @@ void repairIds(mxpugi::xml_document &doc, const DiagnosticHandler &handler)
             return;
         }
         const std::string replacement = freshIdValue(value, taken);
-        attribute.set_value(replacement.c_str());
+        attribute.setValue(replacement);
         taken.insert(replacement);
         definitions.emplace(replacement, el);
         if (handler)
@@ -276,7 +275,7 @@ void repairIds(mxpugi::xml_document &doc, const DiagnosticHandler &handler)
 
     if (handler)
     {
-        reportDanglingIdReferences(doc, definitions, handler);
+        reportDanglingIdReferences(doc.root(), definitions, handler);
     }
 }
 

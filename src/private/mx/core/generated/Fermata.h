@@ -16,9 +16,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -72,12 +72,12 @@ class Fermata final
     FermataShape m_value{};
 };
 
-Fermata parseFermata(mxpugi::xml_node el, const ParseContext &context);
+Fermata parseFermata(mx::xml::Node el, const ParseContext &context);
 
-void parseFermataContent(Fermata &out, mxpugi::xml_node el, const ParseContext &context);
+void parseFermataContent(Fermata &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeFermata(const Fermata &v, mxpugi::xml_node parent, const char *tag);
+void serializeFermata(const Fermata &v, mx::xml::Node parent, const char *tag);
 
-void serializeFermataContent(const Fermata &v, mxpugi::xml_node el);
+void serializeFermataContent(const Fermata &v, mx::xml::Node el);
 
 } // namespace mx::core

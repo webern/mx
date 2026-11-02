@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -43,9 +43,8 @@ class EditorialVoiceGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-EditorialVoiceGroup parseEditorialVoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
-                                             const ParseContext &context);
+EditorialVoiceGroup parseEditorialVoiceGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeEditorialVoiceGroup(const EditorialVoiceGroup &v, mxpugi::xml_node el);
+void serializeEditorialVoiceGroup(const EditorialVoiceGroup &v, mx::xml::Node el);
 
 } // namespace mx::core

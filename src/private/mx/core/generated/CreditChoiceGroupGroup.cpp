@@ -51,8 +51,7 @@ void CreditChoiceGroupGroup::setChoice(CreditChoiceGroupGroupChoice value)
     m_choice = std::move(value);
 }
 
-CreditChoiceGroupGroup parseCreditChoiceGroupGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
-                                                   const ParseContext &context)
+CreditChoiceGroupGroup parseCreditChoiceGroupGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     CreditChoiceGroupGroup out;
     while (cursorIs(cursor, "link"))
@@ -76,7 +75,7 @@ CreditChoiceGroupGroup parseCreditChoiceGroupGroup(mxpugi::xml_node el, mxpugi::
     return out;
 }
 
-void serializeCreditChoiceGroupGroup(const CreditChoiceGroupGroup &v, mxpugi::xml_node el)
+void serializeCreditChoiceGroupGroup(const CreditChoiceGroupGroup &v, mx::xml::Node el)
 {
     for (const auto &item : v.link())
     {

@@ -71,10 +71,10 @@ void Extend::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-Extend parseExtend(mxpugi::xml_node el, const ParseContext &context)
+Extend parseExtend(mx::xml::Node el, const ParseContext &context)
 {
     Extend out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -114,7 +114,7 @@ Extend parseExtend(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseExtendContent(Extend &out, mxpugi::xml_node el, const ParseContext &context)
+void parseExtendContent(Extend &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -124,9 +124,9 @@ void parseExtendContent(Extend &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeExtend(const Extend &v, mxpugi::xml_node parent, const char *tag)
+void serializeExtend(const Extend &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.type())
     {
         setAttribute(el, "type", v.type()->toString());
@@ -154,7 +154,7 @@ void serializeExtend(const Extend &v, mxpugi::xml_node parent, const char *tag)
     serializeExtendContent(v, el);
 }
 
-void serializeExtendContent(const Extend &v, mxpugi::xml_node el)
+void serializeExtendContent(const Extend &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

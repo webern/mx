@@ -51,10 +51,10 @@ void ForPart::setPartTranspose(PartTranspose value)
     m_partTranspose = std::move(value);
 }
 
-ForPart parseForPart(mxpugi::xml_node el, const ParseContext &context)
+ForPart parseForPart(mx::xml::Node el, const ParseContext &context)
 {
     ForPart out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -78,9 +78,9 @@ ForPart parseForPart(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseForPartContent(ForPart &out, mxpugi::xml_node el, const ParseContext &context)
+void parseForPartContent(ForPart &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "part-clef"))
     {
         out.setPartClef(parsePartClef(cursor, context));
@@ -105,9 +105,9 @@ void parseForPartContent(ForPart &out, mxpugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeForPart(const ForPart &v, mxpugi::xml_node parent, const char *tag)
+void serializeForPart(const ForPart &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -119,7 +119,7 @@ void serializeForPart(const ForPart &v, mxpugi::xml_node parent, const char *tag
     serializeForPartContent(v, el);
 }
 
-void serializeForPartContent(const ForPart &v, mxpugi::xml_node el)
+void serializeForPartContent(const ForPart &v, mx::xml::Node el)
 {
     if (v.partClef())
     {

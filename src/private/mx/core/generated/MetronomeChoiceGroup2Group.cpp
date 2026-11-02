@@ -36,7 +36,7 @@ void MetronomeChoiceGroup2Group::setMetronomeNote(OneOrMore<MetronomeNote> value
     m_metronomeNote = std::move(value);
 }
 
-MetronomeChoiceGroup2Group parseMetronomeChoiceGroup2Group(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+MetronomeChoiceGroup2Group parseMetronomeChoiceGroup2Group(mx::xml::Node el, mx::xml::Node &cursor,
                                                            const ParseContext &context)
 {
     MetronomeChoiceGroup2Group out;
@@ -63,7 +63,7 @@ MetronomeChoiceGroup2Group parseMetronomeChoiceGroup2Group(mxpugi::xml_node el, 
     return out;
 }
 
-void serializeMetronomeChoiceGroup2Group(const MetronomeChoiceGroup2Group &v, mxpugi::xml_node el)
+void serializeMetronomeChoiceGroup2Group(const MetronomeChoiceGroup2Group &v, mx::xml::Node el)
 {
     writeTextElement(el, "metronome-relation", v.metronomeRelation());
     for (const auto &item : v.metronomeNote())

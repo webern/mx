@@ -21,11 +21,11 @@ void MetronomeTied::setType(StartStop value)
     m_type = std::move(value);
 }
 
-MetronomeTied parseMetronomeTied(mxpugi::xml_node el, const ParseContext &context)
+MetronomeTied parseMetronomeTied(mx::xml::Node el, const ParseContext &context)
 {
     MetronomeTied out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -50,7 +50,7 @@ MetronomeTied parseMetronomeTied(mxpugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseMetronomeTiedContent(MetronomeTied &out, mxpugi::xml_node el, const ParseContext &context)
+void parseMetronomeTiedContent(MetronomeTied &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -60,14 +60,14 @@ void parseMetronomeTiedContent(MetronomeTied &out, mxpugi::xml_node el, const Pa
     }
 }
 
-void serializeMetronomeTied(const MetronomeTied &v, mxpugi::xml_node parent, const char *tag)
+void serializeMetronomeTied(const MetronomeTied &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     serializeMetronomeTiedContent(v, el);
 }
 
-void serializeMetronomeTiedContent(const MetronomeTied &v, mxpugi::xml_node el)
+void serializeMetronomeTiedContent(const MetronomeTied &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

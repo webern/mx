@@ -14,9 +14,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -67,12 +67,12 @@ class Caesura final
     CaesuraValue m_value{};
 };
 
-Caesura parseCaesura(mxpugi::xml_node el, const ParseContext &context);
+Caesura parseCaesura(mx::xml::Node el, const ParseContext &context);
 
-void parseCaesuraContent(Caesura &out, mxpugi::xml_node el, const ParseContext &context);
+void parseCaesuraContent(Caesura &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeCaesura(const Caesura &v, mxpugi::xml_node parent, const char *tag);
+void serializeCaesura(const Caesura &v, mx::xml::Node parent, const char *tag);
 
-void serializeCaesuraContent(const Caesura &v, mxpugi::xml_node el);
+void serializeCaesuraContent(const Caesura &v, mx::xml::Node el);
 
 } // namespace mx::core

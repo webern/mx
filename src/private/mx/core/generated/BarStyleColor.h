@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -33,12 +33,12 @@ class BarStyleColor final
     BarStyle m_value{};
 };
 
-BarStyleColor parseBarStyleColor(mxpugi::xml_node el, const ParseContext &context);
+BarStyleColor parseBarStyleColor(mx::xml::Node el, const ParseContext &context);
 
-void parseBarStyleColorContent(BarStyleColor &out, mxpugi::xml_node el, const ParseContext &context);
+void parseBarStyleColorContent(BarStyleColor &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeBarStyleColor(const BarStyleColor &v, mxpugi::xml_node parent, const char *tag);
+void serializeBarStyleColor(const BarStyleColor &v, mx::xml::Node parent, const char *tag);
 
-void serializeBarStyleColorContent(const BarStyleColor &v, mxpugi::xml_node el);
+void serializeBarStyleColorContent(const BarStyleColor &v, mx::xml::Node el);
 
 } // namespace mx::core

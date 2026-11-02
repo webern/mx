@@ -13,22 +13,17 @@
 #include "mx/core/generated/ScorePartwise.h"
 #include "mx/core/generated/ScoreTimewise.h"
 
-#include "mxpugi/mxpugi.hpp"
-
 #include <utility>
 #include <vector>
 
 namespace mx::core
 {
 
-namespace
-{
-
 // Rebuild the score header's <encoding> with exactly one mx stamp: drop any
 // prior mx stamp (matched by prefix) and append the current one. Preserves the
 // user's own software entries and every other encoding child. Works on either
 // root because both expose scoreHeader()/setScoreHeader().
-template <typename Score> Score withStamp(Score score)
+template <typename Score> Score withAttributionStamp(Score score)
 {
     ScoreHeaderGroup header = score.scoreHeader();
     Identification identification = header.identification().value_or(Identification{});
@@ -53,25 +48,23 @@ template <typename Score> Score withStamp(Score score)
     return score;
 }
 
-} // namespace
-
 std::string mxSoftwareAttribution()
 {
     return std::string{kMxSoftwareMarker} + " version=" + gitSha;
 }
 
-void serializeWithAttribution(const Document &d, mxpugi::xml_document &out)
+void serializeWithAttribution(const Document &d, xml::Document &out)
 {
     // Stamp the typed model and let the generated serializer place
     // <identification>/<encoding> in their schema-correct slots for free.
     Document stamped = d;
     if (stamped.isScorePartwise())
     {
-        stamped.setRoot(Document::Root{withStamp(stamped.asScorePartwise())});
+        stamped.setRoot(Document::Root{withAttributionStamp(stamped.asScorePartwise())});
     }
     else
     {
-        stamped.setRoot(Document::Root{withStamp(stamped.asScoreTimewise())});
+        stamped.setRoot(Document::Root{withAttributionStamp(stamped.asScoreTimewise())});
     }
     serialize(stamped, out);
 }

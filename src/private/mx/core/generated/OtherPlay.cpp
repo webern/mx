@@ -31,11 +31,11 @@ void OtherPlay::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherPlay parseOtherPlay(mxpugi::xml_node el, const ParseContext &context)
+OtherPlay parseOtherPlay(mx::xml::Node el, const ParseContext &context)
 {
     OtherPlay out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,7 +60,7 @@ OtherPlay parseOtherPlay(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseOtherPlayContent(OtherPlay &out, mxpugi::xml_node el, const ParseContext &context)
+void parseOtherPlayContent(OtherPlay &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -69,14 +69,14 @@ void parseOtherPlayContent(OtherPlay &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeOtherPlay(const OtherPlay &v, mxpugi::xml_node parent, const char *tag)
+void serializeOtherPlay(const OtherPlay &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type());
     serializeOtherPlayContent(v, el);
 }
 
-void serializeOtherPlayContent(const OtherPlay &v, mxpugi::xml_node el)
+void serializeOtherPlayContent(const OtherPlay &v, mx::xml::Node el)
 {
     setText(el, v.value());
 }

@@ -12,7 +12,7 @@ namespace {{vars.namespace}}
 {
 
 {{>attributes_impl}}
-{{ident}} parse{{ident}}(mxpugi::xml_node el, const ParseContext &context)
+{{ident}} parse{{ident}}(mx::xml::Node el, const ParseContext &context)
 {
     {{ident}} out;
 {{>attributes_parse}}
@@ -20,9 +20,9 @@ namespace {{vars.namespace}}
     return out;
 }
 
-void serialize{{ident}}(const {{ident}} &v, mxpugi::xml_node parent, const char *tag)
+void serialize{{ident}}(const {{ident}} &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
 {{>attributes_serialize}}
     serialize{{base.ident}}Content(v, el);
 }

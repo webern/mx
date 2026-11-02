@@ -7,9 +7,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -30,12 +30,12 @@ class Timpani final
     std::optional<SmuflPictogramGlyphName> m_smufl;
 };
 
-Timpani parseTimpani(mxpugi::xml_node el, const ParseContext &context);
+Timpani parseTimpani(mx::xml::Node el, const ParseContext &context);
 
-void parseTimpaniContent(Timpani &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTimpaniContent(Timpani &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTimpani(const Timpani &v, mxpugi::xml_node parent, const char *tag);
+void serializeTimpani(const Timpani &v, mx::xml::Node parent, const char *tag);
 
-void serializeTimpaniContent(const Timpani &v, mxpugi::xml_node el);
+void serializeTimpaniContent(const Timpani &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -42,8 +42,8 @@ class AllMarginsGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-AllMarginsGroup parseAllMarginsGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
+AllMarginsGroup parseAllMarginsGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeAllMarginsGroup(const AllMarginsGroup &v, mxpugi::xml_node el);
+void serializeAllMarginsGroup(const AllMarginsGroup &v, mx::xml::Node el);
 
 } // namespace mx::core

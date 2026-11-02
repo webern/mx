@@ -17,9 +17,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -76,12 +76,12 @@ class Segno final
     std::optional<Token> m_id;
 };
 
-Segno parseSegno(mxpugi::xml_node el, const ParseContext &context);
+Segno parseSegno(mx::xml::Node el, const ParseContext &context);
 
-void parseSegnoContent(Segno &out, mxpugi::xml_node el, const ParseContext &context);
+void parseSegnoContent(Segno &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeSegno(const Segno &v, mxpugi::xml_node parent, const char *tag);
+void serializeSegno(const Segno &v, mx::xml::Node parent, const char *tag);
 
-void serializeSegnoContent(const Segno &v, mxpugi::xml_node el);
+void serializeSegnoContent(const Segno &v, mx::xml::Node el);
 
 } // namespace mx::core

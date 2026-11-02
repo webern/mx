@@ -41,7 +41,7 @@ EncodingChoice EncodingChoice::supports(Supports value)
     return EncodingChoice{Storage{std::in_place_index<4>, std::move(value)}};
 }
 
-EncodingChoice parseEncodingChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+EncodingChoice parseEncodingChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "encoding-date")))
     {
@@ -80,7 +80,7 @@ EncodingChoice parseEncodingChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor
     throwMissingElement(el, "encoding-date");
 }
 
-void serializeEncodingChoice(const EncodingChoice &v, mxpugi::xml_node el)
+void serializeEncodingChoice(const EncodingChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

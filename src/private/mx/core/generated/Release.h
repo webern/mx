@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -35,8 +35,8 @@ class Release : public Empty
     std::optional<Divisions> m_offset;
 };
 
-Release parseRelease(mxpugi::xml_node el, const ParseContext &context);
+Release parseRelease(mx::xml::Node el, const ParseContext &context);
 
-void serializeRelease(const Release &v, mxpugi::xml_node parent, const char *tag);
+void serializeRelease(const Release &v, mx::xml::Node parent, const char *tag);
 
 } // namespace mx::core

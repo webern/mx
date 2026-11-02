@@ -26,7 +26,7 @@ DirectionTypeChoiceChoice DirectionTypeChoiceChoice::symbol(FormattedSymbolID va
     return DirectionTypeChoiceChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(mx::xml::Node el, mx::xml::Node &cursor,
                                                          const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "words")))
@@ -48,7 +48,7 @@ DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(mxpugi::xml_node el, mx
     throwMissingElement(el, "words");
 }
 
-void serializeDirectionTypeChoiceChoice(const DirectionTypeChoiceChoice &v, mxpugi::xml_node el)
+void serializeDirectionTypeChoiceChoice(const DirectionTypeChoiceChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

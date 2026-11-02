@@ -41,8 +41,7 @@ void NonTraditionalKeyGroup::setKeyAccidental(std::optional<KeyAccidental> value
     m_keyAccidental = std::move(value);
 }
 
-NonTraditionalKeyGroup parseNonTraditionalKeyGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
-                                                   const ParseContext &context)
+NonTraditionalKeyGroup parseNonTraditionalKeyGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     NonTraditionalKeyGroup out;
     if (cursorIs(cursor, "key-step"))
@@ -71,7 +70,7 @@ NonTraditionalKeyGroup parseNonTraditionalKeyGroup(mxpugi::xml_node el, mxpugi::
     return out;
 }
 
-void serializeNonTraditionalKeyGroup(const NonTraditionalKeyGroup &v, mxpugi::xml_node el)
+void serializeNonTraditionalKeyGroup(const NonTraditionalKeyGroup &v, mx::xml::Node el)
 {
     writeTextElement(el, "key-step", v.keyStep().toString());
     writeTextElement(el, "key-alter", v.keyAlter().toString());

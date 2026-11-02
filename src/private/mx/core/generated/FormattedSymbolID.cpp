@@ -231,10 +231,10 @@ void FormattedSymbolID::setValue(SmuflGlyphName value)
     m_value = std::move(value);
 }
 
-FormattedSymbolID parseFormattedSymbolID(mxpugi::xml_node el, const ParseContext &context)
+FormattedSymbolID parseFormattedSymbolID(mx::xml::Node el, const ParseContext &context)
 {
     FormattedSymbolID out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -334,7 +334,7 @@ FormattedSymbolID parseFormattedSymbolID(mxpugi::xml_node el, const ParseContext
     return out;
 }
 
-void parseFormattedSymbolIDContent(FormattedSymbolID &out, mxpugi::xml_node el, const ParseContext &context)
+void parseFormattedSymbolIDContent(FormattedSymbolID &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<SmuflGlyphName>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -343,9 +343,9 @@ void parseFormattedSymbolIDContent(FormattedSymbolID &out, mxpugi::xml_node el, 
     }
 }
 
-void serializeFormattedSymbolID(const FormattedSymbolID &v, mxpugi::xml_node parent, const char *tag)
+void serializeFormattedSymbolID(const FormattedSymbolID &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.justify())
     {
         setAttribute(el, "justify", v.justify()->toString());
@@ -433,7 +433,7 @@ void serializeFormattedSymbolID(const FormattedSymbolID &v, mxpugi::xml_node par
     serializeFormattedSymbolIDContent(v, el);
 }
 
-void serializeFormattedSymbolIDContent(const FormattedSymbolID &v, mxpugi::xml_node el)
+void serializeFormattedSymbolIDContent(const FormattedSymbolID &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

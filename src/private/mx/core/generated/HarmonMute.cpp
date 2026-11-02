@@ -121,10 +121,10 @@ void HarmonMute::setHarmonClosed(HarmonClosed value)
     m_harmonClosed = std::move(value);
 }
 
-HarmonMute parseHarmonMute(mxpugi::xml_node el, const ParseContext &context)
+HarmonMute parseHarmonMute(mx::xml::Node el, const ParseContext &context)
 {
     HarmonMute out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,9 +180,9 @@ HarmonMute parseHarmonMute(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseHarmonMuteContent(HarmonMute &out, mxpugi::xml_node el, const ParseContext &context)
+void parseHarmonMuteContent(HarmonMute &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "harmon-closed"))
     {
         out.setHarmonClosed(parseHarmonClosed(cursor, context));
@@ -202,9 +202,9 @@ void parseHarmonMuteContent(HarmonMute &out, mxpugi::xml_node el, const ParseCon
     }
 }
 
-void serializeHarmonMute(const HarmonMute &v, mxpugi::xml_node parent, const char *tag)
+void serializeHarmonMute(const HarmonMute &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -248,7 +248,7 @@ void serializeHarmonMute(const HarmonMute &v, mxpugi::xml_node parent, const cha
     serializeHarmonMuteContent(v, el);
 }
 
-void serializeHarmonMuteContent(const HarmonMute &v, mxpugi::xml_node el)
+void serializeHarmonMuteContent(const HarmonMute &v, mx::xml::Node el)
 {
     serializeHarmonClosed(v.harmonClosed(), el, "harmon-closed");
 }

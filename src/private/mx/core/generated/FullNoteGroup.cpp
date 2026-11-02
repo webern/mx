@@ -31,7 +31,7 @@ void FullNoteGroup::setChoice(FullNoteGroupChoice value)
     m_choice = std::move(value);
 }
 
-FullNoteGroup parseFullNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+FullNoteGroup parseFullNoteGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     FullNoteGroup out;
     if (cursorIs(cursor, "chord"))
@@ -51,11 +51,11 @@ FullNoteGroup parseFullNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, 
     return out;
 }
 
-void serializeFullNoteGroup(const FullNoteGroup &v, mxpugi::xml_node el)
+void serializeFullNoteGroup(const FullNoteGroup &v, mx::xml::Node el)
 {
     if (v.chord())
     {
-        el.append_child("chord");
+        el.appendChild("chord");
     }
     serializeFullNoteGroupChoice(v.choice(), el);
 }

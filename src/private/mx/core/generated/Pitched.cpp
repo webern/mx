@@ -31,10 +31,10 @@ void Pitched::setValue(PitchedValue value)
     m_value = std::move(value);
 }
 
-Pitched parsePitched(mxpugi::xml_node el, const ParseContext &context)
+Pitched parsePitched(mx::xml::Node el, const ParseContext &context)
 {
     Pitched out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ Pitched parsePitched(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePitchedContent(Pitched &out, mxpugi::xml_node el, const ParseContext &context)
+void parsePitchedContent(Pitched &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<PitchedValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parsePitchedContent(Pitched &out, mxpugi::xml_node el, const ParseContext &
     }
 }
 
-void serializePitched(const Pitched &v, mxpugi::xml_node parent, const char *tag)
+void serializePitched(const Pitched &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -73,7 +73,7 @@ void serializePitched(const Pitched &v, mxpugi::xml_node parent, const char *tag
     serializePitchedContent(v, el);
 }
 
-void serializePitchedContent(const Pitched &v, mxpugi::xml_node el)
+void serializePitchedContent(const Pitched &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

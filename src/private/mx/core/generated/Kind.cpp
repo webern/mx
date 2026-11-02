@@ -181,10 +181,10 @@ void Kind::setValue(KindValue value)
     m_value = std::move(value);
 }
 
-Kind parseKind(mxpugi::xml_node el, const ParseContext &context)
+Kind parseKind(mx::xml::Node el, const ParseContext &context)
 {
     Kind out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -264,7 +264,7 @@ Kind parseKind(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseKindContent(Kind &out, mxpugi::xml_node el, const ParseContext &context)
+void parseKindContent(Kind &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<KindValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -273,9 +273,9 @@ void parseKindContent(Kind &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeKind(const Kind &v, mxpugi::xml_node parent, const char *tag)
+void serializeKind(const Kind &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.useSymbols())
     {
         setAttribute(el, "use-symbols", v.useSymbols()->toString());
@@ -343,7 +343,7 @@ void serializeKind(const Kind &v, mxpugi::xml_node parent, const char *tag)
     serializeKindContent(v, el);
 }
 
-void serializeKindContent(const Kind &v, mxpugi::xml_node el)
+void serializeKindContent(const Kind &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

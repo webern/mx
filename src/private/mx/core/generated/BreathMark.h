@@ -14,9 +14,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -66,12 +66,12 @@ class BreathMark final
     BreathMarkValue m_value{};
 };
 
-BreathMark parseBreathMark(mxpugi::xml_node el, const ParseContext &context);
+BreathMark parseBreathMark(mx::xml::Node el, const ParseContext &context);
 
-void parseBreathMarkContent(BreathMark &out, mxpugi::xml_node el, const ParseContext &context);
+void parseBreathMarkContent(BreathMark &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeBreathMark(const BreathMark &v, mxpugi::xml_node parent, const char *tag);
+void serializeBreathMark(const BreathMark &v, mx::xml::Node parent, const char *tag);
 
-void serializeBreathMarkContent(const BreathMark &v, mxpugi::xml_node el);
+void serializeBreathMarkContent(const BreathMark &v, mx::xml::Node el);
 
 } // namespace mx::core

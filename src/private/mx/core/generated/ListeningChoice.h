@@ -10,9 +10,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -82,8 +82,8 @@ class ListeningChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-ListeningChoice parseListeningChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
+ListeningChoice parseListeningChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeListeningChoice(const ListeningChoice &v, mxpugi::xml_node el);
+void serializeListeningChoice(const ListeningChoice &v, mx::xml::Node el);
 
 } // namespace mx::core

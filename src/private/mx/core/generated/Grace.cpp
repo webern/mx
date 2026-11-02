@@ -51,10 +51,10 @@ void Grace::setSlash(std::optional<YesNo> value)
     m_slash = std::move(value);
 }
 
-Grace parseGrace(mxpugi::xml_node el, const ParseContext &context)
+Grace parseGrace(mx::xml::Node el, const ParseContext &context)
 {
     Grace out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -86,7 +86,7 @@ Grace parseGrace(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseGraceContent(Grace &out, mxpugi::xml_node el, const ParseContext &context)
+void parseGraceContent(Grace &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -96,9 +96,9 @@ void parseGraceContent(Grace &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeGrace(const Grace &v, mxpugi::xml_node parent, const char *tag)
+void serializeGrace(const Grace &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.stealTimePrevious())
     {
         setAttribute(el, "steal-time-previous", v.stealTimePrevious()->toString());
@@ -118,7 +118,7 @@ void serializeGrace(const Grace &v, mxpugi::xml_node parent, const char *tag)
     serializeGraceContent(v, el);
 }
 
-void serializeGraceContent(const Grace &v, mxpugi::xml_node el)
+void serializeGraceContent(const Grace &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

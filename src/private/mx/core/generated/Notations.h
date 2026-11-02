@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -50,12 +50,12 @@ class Notations final
     std::vector<NotationsChoice> m_choice;
 };
 
-Notations parseNotations(mxpugi::xml_node el, const ParseContext &context);
+Notations parseNotations(mx::xml::Node el, const ParseContext &context);
 
-void parseNotationsContent(Notations &out, mxpugi::xml_node el, const ParseContext &context);
+void parseNotationsContent(Notations &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeNotations(const Notations &v, mxpugi::xml_node parent, const char *tag);
+void serializeNotations(const Notations &v, mx::xml::Node parent, const char *tag);
 
-void serializeNotationsContent(const Notations &v, mxpugi::xml_node el);
+void serializeNotationsContent(const Notations &v, mx::xml::Node el);
 
 } // namespace mx::core

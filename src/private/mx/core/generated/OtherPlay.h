@@ -5,9 +5,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -31,12 +31,12 @@ class OtherPlay final
     std::string m_value{};
 };
 
-OtherPlay parseOtherPlay(mxpugi::xml_node el, const ParseContext &context);
+OtherPlay parseOtherPlay(mx::xml::Node el, const ParseContext &context);
 
-void parseOtherPlayContent(OtherPlay &out, mxpugi::xml_node el, const ParseContext &context);
+void parseOtherPlayContent(OtherPlay &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeOtherPlay(const OtherPlay &v, mxpugi::xml_node parent, const char *tag);
+void serializeOtherPlay(const OtherPlay &v, mx::xml::Node parent, const char *tag);
 
-void serializeOtherPlayContent(const OtherPlay &v, mxpugi::xml_node el);
+void serializeOtherPlayContent(const OtherPlay &v, mx::xml::Node el);
 
 } // namespace mx::core

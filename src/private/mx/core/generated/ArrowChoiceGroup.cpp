@@ -41,7 +41,7 @@ void ArrowChoiceGroup::setArrowhead(bool value) noexcept
     m_arrowhead = value;
 }
 
-ArrowChoiceGroup parseArrowChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+ArrowChoiceGroup parseArrowChoiceGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     ArrowChoiceGroup out;
     if (cursorIs(cursor, "arrow-direction"))
@@ -67,7 +67,7 @@ ArrowChoiceGroup parseArrowChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cu
     return out;
 }
 
-void serializeArrowChoiceGroup(const ArrowChoiceGroup &v, mxpugi::xml_node el)
+void serializeArrowChoiceGroup(const ArrowChoiceGroup &v, mx::xml::Node el)
 {
     writeTextElement(el, "arrow-direction", v.arrowDirection().toString());
     if (v.arrowStyle())
@@ -76,7 +76,7 @@ void serializeArrowChoiceGroup(const ArrowChoiceGroup &v, mxpugi::xml_node el)
     }
     if (v.arrowhead())
     {
-        el.append_child("arrowhead");
+        el.appendChild("arrowhead");
     }
 }
 

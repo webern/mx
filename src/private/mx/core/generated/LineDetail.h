@@ -11,9 +11,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -51,12 +51,12 @@ class LineDetail final
     std::optional<YesNo> m_printObject;
 };
 
-LineDetail parseLineDetail(mxpugi::xml_node el, const ParseContext &context);
+LineDetail parseLineDetail(mx::xml::Node el, const ParseContext &context);
 
-void parseLineDetailContent(LineDetail &out, mxpugi::xml_node el, const ParseContext &context);
+void parseLineDetailContent(LineDetail &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeLineDetail(const LineDetail &v, mxpugi::xml_node parent, const char *tag);
+void serializeLineDetail(const LineDetail &v, mx::xml::Node parent, const char *tag);
 
-void serializeLineDetailContent(const LineDetail &v, mxpugi::xml_node el);
+void serializeLineDetailContent(const LineDetail &v, mx::xml::Node el);
 
 } // namespace mx::core

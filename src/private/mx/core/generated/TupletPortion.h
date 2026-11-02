@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -45,12 +45,12 @@ class TupletPortion final
     std::vector<TupletDot> m_tupletDot;
 };
 
-TupletPortion parseTupletPortion(mxpugi::xml_node el, const ParseContext &context);
+TupletPortion parseTupletPortion(mx::xml::Node el, const ParseContext &context);
 
-void parseTupletPortionContent(TupletPortion &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTupletPortionContent(TupletPortion &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTupletPortion(const TupletPortion &v, mxpugi::xml_node parent, const char *tag);
+void serializeTupletPortion(const TupletPortion &v, mx::xml::Node parent, const char *tag);
 
-void serializeTupletPortionContent(const TupletPortion &v, mxpugi::xml_node el);
+void serializeTupletPortionContent(const TupletPortion &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -12,8 +12,7 @@
 #include "mx/impl/ScoreReader.h"
 #include "mx/impl/ScoreWriter.h"
 #include "mx/impl/WriteRefusal.h"
-
-#include "mxpugi/mxpugi.hpp"
+#include "mx/xml/Xml.h"
 
 #include <sstream>
 
@@ -190,16 +189,16 @@ Result<MusicXml> MusicXml::fromFile(const std::string &filePath, Diagnostics &di
 {
     try
     {
-        mxpugi::xml_document xdoc;
-        const mxpugi::xml_parse_result loaded =
-            xdoc.load_file(filePath.c_str(), mxpugi::parse_default | mxpugi::parse_doctype);
+        xml::Document xdoc;
+        const xml::ParseResult loaded = xdoc.loadFile(filePath.c_str());
         if (!loaded)
         {
-            if (loaded.status == mxpugi::status_file_not_found || loaded.status == mxpugi::status_io_error ||
-                loaded.status == mxpugi::status_out_of_memory)
+            // Anything other than a parse failure is a problem with the
+            // file itself.
+            if (loaded.status != xml::ParseStatus::malformed)
             {
                 return ApiError{ResultCode::ioError, Location{},
-                                "could not read '" + filePath + "' (" + loaded.description() + ")"};
+                                "could not read '" + filePath + "' (" + loaded.description + ")"};
             }
             Location location;
             location.byteOffset = loaded.offset;
@@ -207,10 +206,10 @@ Result<MusicXml> MusicXml::fromFile(const std::string &filePath, Diagnostics &di
             {
                 std::stringstream ss;
                 ss << "it looks like you are trying to parse a compressed musicxml file, which is currently "
-                   << "unsupported. https://github.com/webern/mx/issues/66 (" << loaded.description() << ")";
+                   << "unsupported. https://github.com/webern/mx/issues/66 (" << loaded.description << ")";
                 return ApiError{ResultCode::xmlSyntaxError, location, ss.str()};
             }
-            return ApiError{ResultCode::xmlSyntaxError, location, loaded.description()};
+            return ApiError{ResultCode::xmlSyntaxError, location, loaded.description};
         }
 
         auto parsed = core::parse(xdoc, parseContextReportingTo(diagnostics));
@@ -249,13 +248,13 @@ Result<MusicXml> MusicXml::fromStream(std::istream &stream, Diagnostics &diagnos
 {
     try
     {
-        mxpugi::xml_document xdoc;
-        const mxpugi::xml_parse_result loaded = xdoc.load(stream, mxpugi::parse_default | mxpugi::parse_doctype);
+        xml::Document xdoc;
+        const xml::ParseResult loaded = xdoc.load(stream);
         if (!loaded)
         {
             Location location;
             location.byteOffset = loaded.offset;
-            return ApiError{ResultCode::xmlSyntaxError, location, loaded.description()};
+            return ApiError{ResultCode::xmlSyntaxError, location, loaded.description};
         }
 
         auto parsed = core::parse(xdoc, parseContextReportingTo(diagnostics));
@@ -294,7 +293,7 @@ Result<void> MusicXml::writeToFile(const std::string &filePath, Diagnostics &dia
 {
     try
     {
-        mxpugi::xml_document xdoc;
+        xml::Document xdoc;
         const core::Document toWrite = withWriteVersion(myImpl->document);
         if (myImpl->writeMxVersion)
         {
@@ -305,7 +304,7 @@ Result<void> MusicXml::writeToFile(const std::string &filePath, Diagnostics &dia
             core::serialize(toWrite, xdoc);
         }
         core::repairIds(xdoc, handlerReportingTo(diagnostics));
-        if (!xdoc.save_file(filePath.c_str(), "  "))
+        if (!xdoc.saveFile(filePath.c_str(), "  "))
         {
             return ApiError{ResultCode::ioError, Location{}, "writeToFile: could not write '" + filePath + "'"};
         }
@@ -335,7 +334,7 @@ Result<void> MusicXml::writeToStream(std::ostream &stream, Diagnostics &diagnost
 {
     try
     {
-        mxpugi::xml_document xdoc;
+        xml::Document xdoc;
         const core::Document toWrite = withWriteVersion(myImpl->document);
         if (myImpl->writeMxVersion)
         {

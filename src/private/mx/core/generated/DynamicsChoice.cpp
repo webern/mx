@@ -151,7 +151,7 @@ DynamicsChoice DynamicsChoice::otherDynamics(OtherText value)
     return DynamicsChoice{Storage{std::in_place_index<26>, std::move(value)}};
 }
 
-DynamicsChoice parseDynamicsChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+DynamicsChoice parseDynamicsChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "p")))
     {
@@ -322,7 +322,7 @@ DynamicsChoice parseDynamicsChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor
     throwMissingElement(el, "p");
 }
 
-void serializeDynamicsChoice(const DynamicsChoice &v, mxpugi::xml_node el)
+void serializeDynamicsChoice(const DynamicsChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

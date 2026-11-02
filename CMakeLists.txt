@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
 project(mx CXX)
 
-# The mx::core C++ typed model: mx's private copy of pugixml (mxpugi) + the
-# generated src/private/mx/core (emitted by `python3 -m gen gen/cpp/config.toml`,
-# committed) + its hand-written runtime, plus the corert/unit test binaries.
-# See AGENTS.md and docs/ai/design/mx-core-plan.md.
+# The mx::core C++ typed model: the generated src/private/mx/core (emitted by
+# `python3 -m gen gen/cpp/config.toml`, committed) + its hand-written runtime
+# + the mx::xml seam over the XML library (src/private/mx/xml, backed by mx's
+# private copy of pugixml, mxpugi), plus the corert/unit test binaries.
+# See AGENTS.md, docs/ai/design/mx-core-plan.md and docs/ai/design/xml-backend.md.
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -49,18 +50,22 @@ endif()
 set(PRIVATE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/private")
 set(PUBLIC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/include")
 
-# mxpugi: the XML layer the generated mx::core consumes directly (plan §2.1).
-# It is pugixml, vendored at src/private/mxpugi by scripts/vendor_pugixml.py
-# with its namespace renamed from `pugi` to `mxpugi` (stock pugiconfig). The
-# private copy exists so that mx does not define any `pugi::` symbol: a
-# consumer that links its own pugixml does not get duplicates from mx. An
-# option to build mx against a different XML library is coming in 0.7.
+# mxpugi: the XML library behind mx::core's XML seam (plan §2.1 chose
+# pugixml). It is pugixml, vendored at src/private/mxpugi by
+# scripts/vendor_pugixml.py with its namespace renamed from `pugi` to `mxpugi`
+# (stock pugiconfig). The private copy exists so that mx does not define any
+# `pugi::` symbol: a consumer that links its own pugixml does not get
+# duplicates from mx. Only the adapter in src/private/mx/xml/pugixml includes
+# it; the rest of mx::core sees mx::xml (docs/ai/design/xml-backend.md). A
+# configure-time option to build against another XML library is the next step.
 add_library(mxpugi STATIC ${PRIVATE_DIR}/mxpugi/mxpugi.cpp)
 target_include_directories(mxpugi PUBLIC ${PRIVATE_DIR})
 
 # mx_core: the generated C++ typed model plus its hand-written runtime
 # (Decimal, Result, Error, Lexical, ParseContext, Token, NameToken, Language,
-# OneOrMore, Xml). The generated per-type sources live in
+# OneOrMore, Xml) and the mx::xml seam (src/private/mx/xml: the value handles
+# in Xml.h, the XmlBackend concept, and the pugixml adapter). The generated
+# per-type sources live in
 # src/private/mx/core/generated/
 # (their own directory, so generator-owned code is recognizable at a glance)
 # and arrive via sources.cmake (emitted by `python3 -m gen gen/cpp/config.toml`).
@@ -85,7 +90,12 @@ set(MX_CORE_RUNTIME_SOURCES
     ${PRIVATE_DIR}/mx/core/Token.cpp
     ${PRIVATE_DIR}/mx/core/Token.h
     ${PRIVATE_DIR}/mx/core/Xml.cpp
-    ${PRIVATE_DIR}/mx/core/Xml.h)
+    ${PRIVATE_DIR}/mx/core/Xml.h
+    ${PRIVATE_DIR}/mx/xml/Backend.h
+    ${PRIVATE_DIR}/mx/xml/Concept.h
+    ${PRIVATE_DIR}/mx/xml/Xml.h
+    ${PRIVATE_DIR}/mx/xml/pugixml/Backend.cpp
+    ${PRIVATE_DIR}/mx/xml/pugixml/Backend.h)
 set(MX_CORE_GENERATED_SOURCES "")
 include(${PRIVATE_DIR}/mx/core/generated/sources.cmake OPTIONAL)
 
@@ -130,8 +140,10 @@ endif()
 
 if(MX_CORE_DEV)
 
-    # corert: round-trips each data/ file through mx::core (mxpugi-backed)
-    # and compares against a normalized, fixup-adjusted form of the input.
+    # corert: round-trips each data/ file through mx::core and compares
+    # against a normalized, fixup-adjusted form of the input. The harness
+    # does its own DOM work with mxpugi and hands mx::core XML text, the way
+    # a consumer with a different XML backend would.
     # Fixer applies .fixup.xml sidecars; cpul is the Catch test runner
     # (main); the import/ helpers normalize whitespace, decimals,
     # comma-separated-text spacing, and attribute order.

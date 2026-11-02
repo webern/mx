@@ -71,11 +71,11 @@ void Opus::setXlinkActuate(std::optional<ActuateType> value)
     m_xlinkActuate = std::move(value);
 }
 
-Opus parseOpus(mxpugi::xml_node el, const ParseContext &context)
+Opus parseOpus(mx::xml::Node el, const ParseContext &context)
 {
     Opus out;
     bool seen_xlinkHref = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -120,7 +120,7 @@ Opus parseOpus(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseOpusContent(Opus &out, mxpugi::xml_node el, const ParseContext &context)
+void parseOpusContent(Opus &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -130,9 +130,9 @@ void parseOpusContent(Opus &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeOpus(const Opus &v, mxpugi::xml_node parent, const char *tag)
+void serializeOpus(const Opus &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "xlink:href", v.xlinkHref());
     if (v.xlinkType())
     {
@@ -157,7 +157,7 @@ void serializeOpus(const Opus &v, mxpugi::xml_node parent, const char *tag)
     serializeOpusContent(v, el);
 }
 
-void serializeOpusContent(const Opus &v, mxpugi::xml_node el)
+void serializeOpusContent(const Opus &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

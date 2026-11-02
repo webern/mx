@@ -51,10 +51,10 @@ void EmptyFont::setFontWeight(std::optional<FontWeight> value)
     m_fontWeight = std::move(value);
 }
 
-EmptyFont parseEmptyFont(mxpugi::xml_node el, const ParseContext &context)
+EmptyFont parseEmptyFont(mx::xml::Node el, const ParseContext &context)
 {
     EmptyFont out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -86,7 +86,7 @@ EmptyFont parseEmptyFont(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseEmptyFontContent(EmptyFont &out, mxpugi::xml_node el, const ParseContext &context)
+void parseEmptyFontContent(EmptyFont &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -96,9 +96,9 @@ void parseEmptyFontContent(EmptyFont &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeEmptyFont(const EmptyFont &v, mxpugi::xml_node parent, const char *tag)
+void serializeEmptyFont(const EmptyFont &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.fontFamily())
     {
         setAttribute(el, "font-family", v.fontFamily()->toString());
@@ -118,7 +118,7 @@ void serializeEmptyFont(const EmptyFont &v, mxpugi::xml_node parent, const char 
     serializeEmptyFontContent(v, el);
 }
 
-void serializeEmptyFontContent(const EmptyFont &v, mxpugi::xml_node el)
+void serializeEmptyFontContent(const EmptyFont &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

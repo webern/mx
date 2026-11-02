@@ -14,9 +14,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -71,12 +71,12 @@ class PartName final
     std::string m_value{};
 };
 
-PartName parsePartName(mxpugi::xml_node el, const ParseContext &context);
+PartName parsePartName(mx::xml::Node el, const ParseContext &context);
 
-void parsePartNameContent(PartName &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePartNameContent(PartName &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePartName(const PartName &v, mxpugi::xml_node parent, const char *tag);
+void serializePartName(const PartName &v, mx::xml::Node parent, const char *tag);
 
-void serializePartNameContent(const PartName &v, mxpugi::xml_node el);
+void serializePartNameContent(const PartName &v, mx::xml::Node el);
 
 } // namespace mx::core

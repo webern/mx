@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -33,8 +33,8 @@ class StrongAccent : public EmptyPlacement
     std::optional<UpDown> m_type;
 };
 
-StrongAccent parseStrongAccent(mxpugi::xml_node el, const ParseContext &context);
+StrongAccent parseStrongAccent(mx::xml::Node el, const ParseContext &context);
 
-void serializeStrongAccent(const StrongAccent &v, mxpugi::xml_node parent, const char *tag);
+void serializeStrongAccent(const StrongAccent &v, mx::xml::Node parent, const char *tag);
 
 } // namespace mx::core

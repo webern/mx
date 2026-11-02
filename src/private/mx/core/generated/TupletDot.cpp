@@ -61,10 +61,10 @@ void TupletDot::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-TupletDot parseTupletDot(mxpugi::xml_node el, const ParseContext &context)
+TupletDot parseTupletDot(mx::xml::Node el, const ParseContext &context)
 {
     TupletDot out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -100,7 +100,7 @@ TupletDot parseTupletDot(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTupletDotContent(TupletDot &out, mxpugi::xml_node el, const ParseContext &context)
+void parseTupletDotContent(TupletDot &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -110,9 +110,9 @@ void parseTupletDotContent(TupletDot &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeTupletDot(const TupletDot &v, mxpugi::xml_node parent, const char *tag)
+void serializeTupletDot(const TupletDot &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.fontFamily())
     {
         setAttribute(el, "font-family", v.fontFamily()->toString());
@@ -136,7 +136,7 @@ void serializeTupletDot(const TupletDot &v, mxpugi::xml_node parent, const char 
     serializeTupletDotContent(v, el);
 }
 
-void serializeTupletDotContent(const TupletDot &v, mxpugi::xml_node el)
+void serializeTupletDotContent(const TupletDot &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

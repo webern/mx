@@ -21,10 +21,10 @@ void BeatUnitTied::setBeatUnit(BeatUnitGroup value)
     m_beatUnit = std::move(value);
 }
 
-BeatUnitTied parseBeatUnitTied(mxpugi::xml_node el, const ParseContext &context)
+BeatUnitTied parseBeatUnitTied(mx::xml::Node el, const ParseContext &context)
 {
     BeatUnitTied out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -37,9 +37,9 @@ BeatUnitTied parseBeatUnitTied(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBeatUnitTiedContent(BeatUnitTied &out, mxpugi::xml_node el, const ParseContext &context)
+void parseBeatUnitTiedContent(BeatUnitTied &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "beat-unit")))
     {
         out.setBeatUnit(parseBeatUnitGroup(el, cursor, context));
@@ -58,13 +58,13 @@ void parseBeatUnitTiedContent(BeatUnitTied &out, mxpugi::xml_node el, const Pars
     }
 }
 
-void serializeBeatUnitTied(const BeatUnitTied &v, mxpugi::xml_node parent, const char *tag)
+void serializeBeatUnitTied(const BeatUnitTied &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeBeatUnitTiedContent(v, el);
 }
 
-void serializeBeatUnitTiedContent(const BeatUnitTied &v, mxpugi::xml_node el)
+void serializeBeatUnitTiedContent(const BeatUnitTied &v, mx::xml::Node el)
 {
     serializeBeatUnitGroup(v.beatUnit(), el);
 }

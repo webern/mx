@@ -11,9 +11,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_document;
+class Document;
 }
 
 namespace mx::core
@@ -103,12 +103,12 @@ class Document final
 /// The parse error boundary (plan §2.5): strict on names and structure,
 /// lenient on values; a root declaring a version newer than
 /// SupportedMusicXMLVersion is rejected with unsupportedVersion.
-Result<Document> parse(const mxpugi::xml_document &doc, const ParseContext &context);
+Result<Document> parse(const mx::xml::Document &doc, const ParseContext &context);
 
 // TODO: document the unique ID exception
 /// Total for every Document (§1.1 guarantees validity): writes the XML
 /// declaration, the matching DOCTYPE, the preserved root namespace
 /// declarations, and the typed tree.
-void serialize(const Document &d, mxpugi::xml_document &out);
+void serialize(const Document &d, mx::xml::Document &out);
 
 } // namespace mx::core

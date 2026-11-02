@@ -181,10 +181,10 @@ void Time::setChoice(TimeChoice value)
     m_choice = std::move(value);
 }
 
-Time parseTime(mxpugi::xml_node el, const ParseContext &context)
+Time parseTime(mx::xml::Node el, const ParseContext &context)
 {
     Time out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -264,9 +264,9 @@ Time parseTime(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTimeContent(Time &out, mxpugi::xml_node el, const ParseContext &context)
+void parseTimeContent(Time &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "beats") || cursorIs(cursor, "senza-misura")))
     {
         out.setChoice(parseTimeChoice(el, cursor, context));
@@ -286,9 +286,9 @@ void parseTimeContent(Time &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeTime(const Time &v, mxpugi::xml_node parent, const char *tag)
+void serializeTime(const Time &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -356,7 +356,7 @@ void serializeTime(const Time &v, mxpugi::xml_node parent, const char *tag)
     serializeTimeContent(v, el);
 }
 
-void serializeTimeContent(const Time &v, mxpugi::xml_node el)
+void serializeTimeContent(const Time &v, mx::xml::Node el)
 {
     serializeTimeChoice(v.choice(), el);
 }

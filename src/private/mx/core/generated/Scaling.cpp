@@ -31,10 +31,10 @@ void Scaling::setTenths(Tenths value)
     m_tenths = std::move(value);
 }
 
-Scaling parseScaling(mxpugi::xml_node el, const ParseContext &context)
+Scaling parseScaling(mx::xml::Node el, const ParseContext &context)
 {
     Scaling out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -47,9 +47,9 @@ Scaling parseScaling(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseScalingContent(Scaling &out, mxpugi::xml_node el, const ParseContext &context)
+void parseScalingContent(Scaling &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "millimeters"))
     {
         out.setMillimeters(parseValue<Millimeters>(childText(cursor), context, cursor, nullptr));
@@ -78,13 +78,13 @@ void parseScalingContent(Scaling &out, mxpugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeScaling(const Scaling &v, mxpugi::xml_node parent, const char *tag)
+void serializeScaling(const Scaling &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeScalingContent(v, el);
 }
 
-void serializeScalingContent(const Scaling &v, mxpugi::xml_node el)
+void serializeScalingContent(const Scaling &v, mx::xml::Node el)
 {
     writeTextElement(el, "millimeters", v.millimeters().toString());
     writeTextElement(el, "tenths", v.tenths().toString());

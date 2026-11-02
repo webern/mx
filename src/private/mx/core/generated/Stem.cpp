@@ -71,10 +71,10 @@ void Stem::setValue(StemValue value)
     m_value = std::move(value);
 }
 
-Stem parseStem(mxpugi::xml_node el, const ParseContext &context)
+Stem parseStem(mx::xml::Node el, const ParseContext &context)
 {
     Stem out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -110,7 +110,7 @@ Stem parseStem(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseStemContent(Stem &out, mxpugi::xml_node el, const ParseContext &context)
+void parseStemContent(Stem &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<StemValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -119,9 +119,9 @@ void parseStemContent(Stem &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeStem(const Stem &v, mxpugi::xml_node parent, const char *tag)
+void serializeStem(const Stem &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -145,7 +145,7 @@ void serializeStem(const Stem &v, mxpugi::xml_node parent, const char *tag)
     serializeStemContent(v, el);
 }
 
-void serializeStemContent(const Stem &v, mxpugi::xml_node el)
+void serializeStemContent(const Stem &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -35,12 +35,12 @@ class Pitched final
     PitchedValue m_value{};
 };
 
-Pitched parsePitched(mxpugi::xml_node el, const ParseContext &context);
+Pitched parsePitched(mx::xml::Node el, const ParseContext &context);
 
-void parsePitchedContent(Pitched &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePitchedContent(Pitched &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePitched(const Pitched &v, mxpugi::xml_node parent, const char *tag);
+void serializePitched(const Pitched &v, mx::xml::Node parent, const char *tag);
 
-void serializePitchedContent(const Pitched &v, mxpugi::xml_node el);
+void serializePitchedContent(const Pitched &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -131,10 +131,10 @@ void Arrow::setChoice(ArrowChoice value)
     m_choice = std::move(value);
 }
 
-Arrow parseArrow(mxpugi::xml_node el, const ParseContext &context)
+Arrow parseArrow(mx::xml::Node el, const ParseContext &context)
 {
     Arrow out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -194,9 +194,9 @@ Arrow parseArrow(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseArrowContent(Arrow &out, mxpugi::xml_node el, const ParseContext &context)
+void parseArrowContent(Arrow &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "arrow-direction") || cursorIs(cursor, "circular-arrow")))
     {
         out.setChoice(parseArrowChoice(el, cursor, context));
@@ -216,9 +216,9 @@ void parseArrowContent(Arrow &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeArrow(const Arrow &v, mxpugi::xml_node parent, const char *tag)
+void serializeArrow(const Arrow &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -266,7 +266,7 @@ void serializeArrow(const Arrow &v, mxpugi::xml_node parent, const char *tag)
     serializeArrowContent(v, el);
 }
 
-void serializeArrowContent(const Arrow &v, mxpugi::xml_node el)
+void serializeArrowContent(const Arrow &v, mx::xml::Node el)
 {
     serializeArrowChoice(v.choice(), el);
 }

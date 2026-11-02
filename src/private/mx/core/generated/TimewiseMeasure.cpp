@@ -86,11 +86,11 @@ void TimewiseMeasure::setPart(OneOrMore<TimewisePart> value)
     m_part = std::move(value);
 }
 
-TimewiseMeasure parseTimewiseMeasure(mxpugi::xml_node el, const ParseContext &context)
+TimewiseMeasure parseTimewiseMeasure(mx::xml::Node el, const ParseContext &context)
 {
     TimewiseMeasure out;
     bool seen_number = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -135,9 +135,9 @@ TimewiseMeasure parseTimewiseMeasure(mxpugi::xml_node el, const ParseContext &co
     return out;
 }
 
-void parseTimewiseMeasureContent(TimewiseMeasure &out, mxpugi::xml_node el, const ParseContext &context)
+void parseTimewiseMeasureContent(TimewiseMeasure &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (!cursorIs(cursor, "part"))
     {
         throwMissingOrMisplaced(el, cursor, "part");
@@ -159,9 +159,9 @@ void parseTimewiseMeasureContent(TimewiseMeasure &out, mxpugi::xml_node el, cons
     }
 }
 
-void serializeTimewiseMeasure(const TimewiseMeasure &v, mxpugi::xml_node parent, const char *tag)
+void serializeTimewiseMeasure(const TimewiseMeasure &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "number", v.number());
     if (v.text())
     {
@@ -186,7 +186,7 @@ void serializeTimewiseMeasure(const TimewiseMeasure &v, mxpugi::xml_node parent,
     serializeTimewiseMeasureContent(v, el);
 }
 
-void serializeTimewiseMeasureContent(const TimewiseMeasure &v, mxpugi::xml_node el)
+void serializeTimewiseMeasureContent(const TimewiseMeasure &v, mx::xml::Node el)
 {
     for (const auto &item : v.part())
     {

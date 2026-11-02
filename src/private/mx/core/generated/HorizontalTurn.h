@@ -19,9 +19,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -94,12 +94,12 @@ class HorizontalTurn final
     std::optional<Percent> m_lastBeat;
 };
 
-HorizontalTurn parseHorizontalTurn(mxpugi::xml_node el, const ParseContext &context);
+HorizontalTurn parseHorizontalTurn(mx::xml::Node el, const ParseContext &context);
 
-void parseHorizontalTurnContent(HorizontalTurn &out, mxpugi::xml_node el, const ParseContext &context);
+void parseHorizontalTurnContent(HorizontalTurn &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeHorizontalTurn(const HorizontalTurn &v, mxpugi::xml_node parent, const char *tag);
+void serializeHorizontalTurn(const HorizontalTurn &v, mx::xml::Node parent, const char *tag);
 
-void serializeHorizontalTurnContent(const HorizontalTurn &v, mxpugi::xml_node el);
+void serializeHorizontalTurnContent(const HorizontalTurn &v, mx::xml::Node el);
 
 } // namespace mx::core

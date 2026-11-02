@@ -12,9 +12,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -46,12 +46,12 @@ class FrameNote final
     std::optional<Barre> m_barre;
 };
 
-FrameNote parseFrameNote(mxpugi::xml_node el, const ParseContext &context);
+FrameNote parseFrameNote(mx::xml::Node el, const ParseContext &context);
 
-void parseFrameNoteContent(FrameNote &out, mxpugi::xml_node el, const ParseContext &context);
+void parseFrameNoteContent(FrameNote &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeFrameNote(const FrameNote &v, mxpugi::xml_node parent, const char *tag);
+void serializeFrameNote(const FrameNote &v, mx::xml::Node parent, const char *tag);
 
-void serializeFrameNoteContent(const FrameNote &v, mxpugi::xml_node el);
+void serializeFrameNoteContent(const FrameNote &v, mx::xml::Node el);
 
 } // namespace mx::core

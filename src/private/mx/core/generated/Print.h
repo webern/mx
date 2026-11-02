@@ -16,9 +16,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -75,12 +75,12 @@ class Print final
     std::optional<NameDisplay> m_partAbbreviationDisplay;
 };
 
-Print parsePrint(mxpugi::xml_node el, const ParseContext &context);
+Print parsePrint(mx::xml::Node el, const ParseContext &context);
 
-void parsePrintContent(Print &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePrintContent(Print &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePrint(const Print &v, mxpugi::xml_node parent, const char *tag);
+void serializePrint(const Print &v, mx::xml::Node parent, const char *tag);
 
-void serializePrintContent(const Print &v, mxpugi::xml_node el);
+void serializePrintContent(const Print &v, mx::xml::Node el);
 
 } // namespace mx::core

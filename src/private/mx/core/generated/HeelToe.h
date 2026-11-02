@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -33,8 +33,8 @@ class HeelToe : public EmptyPlacement
     std::optional<YesNo> m_substitution;
 };
 
-HeelToe parseHeelToe(mxpugi::xml_node el, const ParseContext &context);
+HeelToe parseHeelToe(mx::xml::Node el, const ParseContext &context);
 
-void serializeHeelToe(const HeelToe &v, mxpugi::xml_node parent, const char *tag);
+void serializeHeelToe(const HeelToe &v, mx::xml::Node parent, const char *tag);
 
 } // namespace mx::core

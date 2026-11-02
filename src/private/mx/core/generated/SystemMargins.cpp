@@ -21,10 +21,10 @@ void SystemMargins::setLeftRightMargins(LeftRightMarginsGroup value)
     m_leftRightMargins = std::move(value);
 }
 
-SystemMargins parseSystemMargins(mxpugi::xml_node el, const ParseContext &context)
+SystemMargins parseSystemMargins(mx::xml::Node el, const ParseContext &context)
 {
     SystemMargins out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -37,9 +37,9 @@ SystemMargins parseSystemMargins(mxpugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseSystemMarginsContent(SystemMargins &out, mxpugi::xml_node el, const ParseContext &context)
+void parseSystemMarginsContent(SystemMargins &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "left-margin")))
     {
         out.setLeftRightMargins(parseLeftRightMarginsGroup(el, cursor, context));
@@ -58,13 +58,13 @@ void parseSystemMarginsContent(SystemMargins &out, mxpugi::xml_node el, const Pa
     }
 }
 
-void serializeSystemMargins(const SystemMargins &v, mxpugi::xml_node parent, const char *tag)
+void serializeSystemMargins(const SystemMargins &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeSystemMarginsContent(v, el);
 }
 
-void serializeSystemMarginsContent(const SystemMargins &v, mxpugi::xml_node el)
+void serializeSystemMarginsContent(const SystemMargins &v, mx::xml::Node el)
 {
     serializeLeftRightMarginsGroup(v.leftRightMargins(), el);
 }

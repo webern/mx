@@ -31,10 +31,10 @@ void KeyAccidental::setValue(AccidentalValue value)
     m_value = std::move(value);
 }
 
-KeyAccidental parseKeyAccidental(mxpugi::xml_node el, const ParseContext &context)
+KeyAccidental parseKeyAccidental(mx::xml::Node el, const ParseContext &context)
 {
     KeyAccidental out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ KeyAccidental parseKeyAccidental(mxpugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseKeyAccidentalContent(KeyAccidental &out, mxpugi::xml_node el, const ParseContext &context)
+void parseKeyAccidentalContent(KeyAccidental &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<AccidentalValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseKeyAccidentalContent(KeyAccidental &out, mxpugi::xml_node el, const Pa
     }
 }
 
-void serializeKeyAccidental(const KeyAccidental &v, mxpugi::xml_node parent, const char *tag)
+void serializeKeyAccidental(const KeyAccidental &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -73,7 +73,7 @@ void serializeKeyAccidental(const KeyAccidental &v, mxpugi::xml_node parent, con
     serializeKeyAccidentalContent(v, el);
 }
 
-void serializeKeyAccidentalContent(const KeyAccidental &v, mxpugi::xml_node el)
+void serializeKeyAccidentalContent(const KeyAccidental &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

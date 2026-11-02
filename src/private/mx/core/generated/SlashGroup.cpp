@@ -36,7 +36,7 @@ void SlashGroup::setExceptVoice(std::vector<std::string> value)
     m_exceptVoice = std::move(value);
 }
 
-SlashGroup parseSlashGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+SlashGroup parseSlashGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     SlashGroup out;
     if (cursor && (cursorIs(cursor, "slash-type")))
@@ -51,7 +51,7 @@ SlashGroup parseSlashGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const 
     return out;
 }
 
-void serializeSlashGroup(const SlashGroup &v, mxpugi::xml_node el)
+void serializeSlashGroup(const SlashGroup &v, mx::xml::Node el)
 {
     if (v.group())
     {

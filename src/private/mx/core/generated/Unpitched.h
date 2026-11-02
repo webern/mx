@@ -9,9 +9,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -36,12 +36,12 @@ class Unpitched final
     std::optional<DisplayStepOctaveGroup> m_displayStepOctave;
 };
 
-Unpitched parseUnpitched(mxpugi::xml_node el, const ParseContext &context);
+Unpitched parseUnpitched(mx::xml::Node el, const ParseContext &context);
 
-void parseUnpitchedContent(Unpitched &out, mxpugi::xml_node el, const ParseContext &context);
+void parseUnpitchedContent(Unpitched &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeUnpitched(const Unpitched &v, mxpugi::xml_node parent, const char *tag);
+void serializeUnpitched(const Unpitched &v, mx::xml::Node parent, const char *tag);
 
-void serializeUnpitchedContent(const Unpitched &v, mxpugi::xml_node el);
+void serializeUnpitchedContent(const Unpitched &v, mx::xml::Node el);
 
 } // namespace mx::core

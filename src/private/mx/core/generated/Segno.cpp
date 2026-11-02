@@ -141,10 +141,10 @@ void Segno::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Segno parseSegno(mxpugi::xml_node el, const ParseContext &context)
+Segno parseSegno(mx::xml::Node el, const ParseContext &context)
 {
     Segno out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -212,7 +212,7 @@ Segno parseSegno(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseSegnoContent(Segno &out, mxpugi::xml_node el, const ParseContext &context)
+void parseSegnoContent(Segno &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -222,9 +222,9 @@ void parseSegnoContent(Segno &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeSegno(const Segno &v, mxpugi::xml_node parent, const char *tag)
+void serializeSegno(const Segno &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -280,7 +280,7 @@ void serializeSegno(const Segno &v, mxpugi::xml_node parent, const char *tag)
     serializeSegnoContent(v, el);
 }
 
-void serializeSegnoContent(const Segno &v, mxpugi::xml_node el)
+void serializeSegnoContent(const Segno &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

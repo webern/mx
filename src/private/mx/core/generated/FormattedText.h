@@ -21,9 +21,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -109,12 +109,12 @@ class FormattedText final
     std::string m_value{};
 };
 
-FormattedText parseFormattedText(mxpugi::xml_node el, const ParseContext &context);
+FormattedText parseFormattedText(mx::xml::Node el, const ParseContext &context);
 
-void parseFormattedTextContent(FormattedText &out, mxpugi::xml_node el, const ParseContext &context);
+void parseFormattedTextContent(FormattedText &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeFormattedText(const FormattedText &v, mxpugi::xml_node parent, const char *tag);
+void serializeFormattedText(const FormattedText &v, mx::xml::Node parent, const char *tag);
 
-void serializeFormattedTextContent(const FormattedText &v, mxpugi::xml_node el);
+void serializeFormattedTextContent(const FormattedText &v, mx::xml::Node el);
 
 } // namespace mx::core

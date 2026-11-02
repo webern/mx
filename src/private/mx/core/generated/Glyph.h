@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -39,12 +39,12 @@ class Glyph final
     SmuflGlyphName m_value{};
 };
 
-Glyph parseGlyph(mxpugi::xml_node el, const ParseContext &context);
+Glyph parseGlyph(mx::xml::Node el, const ParseContext &context);
 
-void parseGlyphContent(Glyph &out, mxpugi::xml_node el, const ParseContext &context);
+void parseGlyphContent(Glyph &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeGlyph(const Glyph &v, mxpugi::xml_node parent, const char *tag);
+void serializeGlyph(const Glyph &v, mx::xml::Node parent, const char *tag);
 
-void serializeGlyphContent(const Glyph &v, mxpugi::xml_node el);
+void serializeGlyphContent(const Glyph &v, mx::xml::Node el);
 
 } // namespace mx::core

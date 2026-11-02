@@ -20,9 +20,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -84,12 +84,12 @@ class HarpPedals final
     OneOrMore<PedalTuning> m_pedalTuning;
 };
 
-HarpPedals parseHarpPedals(mxpugi::xml_node el, const ParseContext &context);
+HarpPedals parseHarpPedals(mx::xml::Node el, const ParseContext &context);
 
-void parseHarpPedalsContent(HarpPedals &out, mxpugi::xml_node el, const ParseContext &context);
+void parseHarpPedalsContent(HarpPedals &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeHarpPedals(const HarpPedals &v, mxpugi::xml_node parent, const char *tag);
+void serializeHarpPedals(const HarpPedals &v, mx::xml::Node parent, const char *tag);
 
-void serializeHarpPedalsContent(const HarpPedals &v, mxpugi::xml_node el);
+void serializeHarpPedalsContent(const HarpPedals &v, mx::xml::Node el);
 
 } // namespace mx::core

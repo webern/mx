@@ -171,10 +171,10 @@ void Lyric::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-Lyric parseLyric(mxpugi::xml_node el, const ParseContext &context)
+Lyric parseLyric(mx::xml::Node el, const ParseContext &context)
 {
     Lyric out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -238,9 +238,9 @@ Lyric parseLyric(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseLyricContent(Lyric &out, mxpugi::xml_node el, const ParseContext &context)
+void parseLyricContent(Lyric &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "syllabic") || cursorIs(cursor, "text") || cursorIs(cursor, "extend") ||
                    cursorIs(cursor, "laughing") || cursorIs(cursor, "humming")))
     {
@@ -279,9 +279,9 @@ void parseLyricContent(Lyric &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeLyric(const Lyric &v, mxpugi::xml_node parent, const char *tag)
+void serializeLyric(const Lyric &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -333,16 +333,16 @@ void serializeLyric(const Lyric &v, mxpugi::xml_node parent, const char *tag)
     serializeLyricContent(v, el);
 }
 
-void serializeLyricContent(const Lyric &v, mxpugi::xml_node el)
+void serializeLyricContent(const Lyric &v, mx::xml::Node el)
 {
     serializeLyricChoice(v.choice(), el);
     if (v.endLine())
     {
-        el.append_child("end-line");
+        el.appendChild("end-line");
     }
     if (v.endParagraph())
     {
-        el.append_child("end-paragraph");
+        el.appendChild("end-paragraph");
     }
     serializeEditorialGroup(v.editorial(), el);
 }

@@ -31,11 +31,11 @@ void Tie::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Tie parseTie(mxpugi::xml_node el, const ParseContext &context)
+Tie parseTie(mx::xml::Node el, const ParseContext &context)
 {
     Tie out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -64,7 +64,7 @@ Tie parseTie(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTieContent(Tie &out, mxpugi::xml_node el, const ParseContext &context)
+void parseTieContent(Tie &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -74,9 +74,9 @@ void parseTieContent(Tie &out, mxpugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeTie(const Tie &v, mxpugi::xml_node parent, const char *tag)
+void serializeTie(const Tie &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.timeOnly())
     {
@@ -85,7 +85,7 @@ void serializeTie(const Tie &v, mxpugi::xml_node parent, const char *tag)
     serializeTieContent(v, el);
 }
 
-void serializeTieContent(const Tie &v, mxpugi::xml_node el)
+void serializeTieContent(const Tie &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

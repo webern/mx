@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -69,12 +69,12 @@ class Credit final
     CreditChoice m_choice{};
 };
 
-Credit parseCredit(mxpugi::xml_node el, const ParseContext &context);
+Credit parseCredit(mx::xml::Node el, const ParseContext &context);
 
-void parseCreditContent(Credit &out, mxpugi::xml_node el, const ParseContext &context);
+void parseCreditContent(Credit &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeCredit(const Credit &v, mxpugi::xml_node parent, const char *tag);
+void serializeCredit(const Credit &v, mx::xml::Node parent, const char *tag);
 
-void serializeCreditContent(const Credit &v, mxpugi::xml_node el);
+void serializeCreditContent(const Credit &v, mx::xml::Node el);
 
 } // namespace mx::core

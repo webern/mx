@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -50,12 +50,12 @@ class ForPart final
     PartTranspose m_partTranspose{};
 };
 
-ForPart parseForPart(mxpugi::xml_node el, const ParseContext &context);
+ForPart parseForPart(mx::xml::Node el, const ParseContext &context);
 
-void parseForPartContent(ForPart &out, mxpugi::xml_node el, const ParseContext &context);
+void parseForPartContent(ForPart &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeForPart(const ForPart &v, mxpugi::xml_node parent, const char *tag);
+void serializeForPart(const ForPart &v, mx::xml::Node parent, const char *tag);
 
-void serializeForPartContent(const ForPart &v, mxpugi::xml_node el);
+void serializeForPartContent(const ForPart &v, mx::xml::Node el);
 
 } // namespace mx::core

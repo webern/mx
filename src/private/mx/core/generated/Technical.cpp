@@ -36,10 +36,10 @@ void Technical::setChoice(std::vector<TechnicalChoice> value)
     m_choice = std::move(value);
 }
 
-Technical parseTechnical(mxpugi::xml_node el, const ParseContext &context)
+Technical parseTechnical(mx::xml::Node el, const ParseContext &context)
 {
     Technical out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -59,9 +59,9 @@ Technical parseTechnical(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTechnicalContent(Technical &out, mxpugi::xml_node el, const ParseContext &context)
+void parseTechnicalContent(Technical &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     while (cursor &&
            (cursorIs(cursor, "up-bow") || cursorIs(cursor, "down-bow") || cursorIs(cursor, "harmonic") ||
             cursorIs(cursor, "open-string") || cursorIs(cursor, "thumb-position") || cursorIs(cursor, "fingering") ||
@@ -97,9 +97,9 @@ void parseTechnicalContent(Technical &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeTechnical(const Technical &v, mxpugi::xml_node parent, const char *tag)
+void serializeTechnical(const Technical &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.id())
     {
         setAttribute(el, "id", v.id()->toString());
@@ -107,7 +107,7 @@ void serializeTechnical(const Technical &v, mxpugi::xml_node parent, const char 
     serializeTechnicalContent(v, el);
 }
 
-void serializeTechnicalContent(const Technical &v, mxpugi::xml_node el)
+void serializeTechnicalContent(const Technical &v, mx::xml::Node el)
 {
     for (const auto &item : v.choice())
     {

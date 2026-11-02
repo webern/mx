@@ -10,9 +10,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -82,9 +82,9 @@ class DirectionTypeChoiceChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+DirectionTypeChoiceChoice parseDirectionTypeChoiceChoice(mx::xml::Node el, mx::xml::Node &cursor,
                                                          const ParseContext &context);
 
-void serializeDirectionTypeChoiceChoice(const DirectionTypeChoiceChoice &v, mxpugi::xml_node el);
+void serializeDirectionTypeChoiceChoice(const DirectionTypeChoiceChoice &v, mx::xml::Node el);
 
 } // namespace mx::core

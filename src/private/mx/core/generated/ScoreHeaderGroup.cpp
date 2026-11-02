@@ -86,7 +86,7 @@ void ScoreHeaderGroup::setPartList(PartList value)
     m_partList = std::move(value);
 }
 
-ScoreHeaderGroup parseScoreHeaderGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+ScoreHeaderGroup parseScoreHeaderGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     ScoreHeaderGroup out;
     if (cursorIs(cursor, "work"))
@@ -131,7 +131,7 @@ ScoreHeaderGroup parseScoreHeaderGroup(mxpugi::xml_node el, mxpugi::xml_node &cu
     return out;
 }
 
-void serializeScoreHeaderGroup(const ScoreHeaderGroup &v, mxpugi::xml_node el)
+void serializeScoreHeaderGroup(const ScoreHeaderGroup &v, mx::xml::Node el)
 {
     if (v.work())
     {

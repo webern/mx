@@ -10,9 +10,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -47,12 +47,12 @@ class PerMinute final
     std::string m_value{};
 };
 
-PerMinute parsePerMinute(mxpugi::xml_node el, const ParseContext &context);
+PerMinute parsePerMinute(mx::xml::Node el, const ParseContext &context);
 
-void parsePerMinuteContent(PerMinute &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePerMinuteContent(PerMinute &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePerMinute(const PerMinute &v, mxpugi::xml_node parent, const char *tag);
+void serializePerMinute(const PerMinute &v, mx::xml::Node parent, const char *tag);
 
-void serializePerMinuteContent(const PerMinute &v, mxpugi::xml_node el);
+void serializePerMinuteContent(const PerMinute &v, mx::xml::Node el);
 
 } // namespace mx::core

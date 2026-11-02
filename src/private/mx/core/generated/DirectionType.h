@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -40,12 +40,12 @@ class DirectionType final
     DirectionTypeChoice m_choice{};
 };
 
-DirectionType parseDirectionType(mxpugi::xml_node el, const ParseContext &context);
+DirectionType parseDirectionType(mx::xml::Node el, const ParseContext &context);
 
-void parseDirectionTypeContent(DirectionType &out, mxpugi::xml_node el, const ParseContext &context);
+void parseDirectionTypeContent(DirectionType &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeDirectionType(const DirectionType &v, mxpugi::xml_node parent, const char *tag);
+void serializeDirectionType(const DirectionType &v, mx::xml::Node parent, const char *tag);
 
-void serializeDirectionTypeContent(const DirectionType &v, mxpugi::xml_node el);
+void serializeDirectionTypeContent(const DirectionType &v, mx::xml::Node el);
 
 } // namespace mx::core

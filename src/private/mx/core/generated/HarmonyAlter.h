@@ -15,9 +15,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -74,12 +74,12 @@ class HarmonyAlter final
     Semitones m_value{};
 };
 
-HarmonyAlter parseHarmonyAlter(mxpugi::xml_node el, const ParseContext &context);
+HarmonyAlter parseHarmonyAlter(mx::xml::Node el, const ParseContext &context);
 
-void parseHarmonyAlterContent(HarmonyAlter &out, mxpugi::xml_node el, const ParseContext &context);
+void parseHarmonyAlterContent(HarmonyAlter &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeHarmonyAlter(const HarmonyAlter &v, mxpugi::xml_node parent, const char *tag);
+void serializeHarmonyAlter(const HarmonyAlter &v, mx::xml::Node parent, const char *tag);
 
-void serializeHarmonyAlterContent(const HarmonyAlter &v, mxpugi::xml_node el);
+void serializeHarmonyAlterContent(const HarmonyAlter &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -16,9 +16,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -83,12 +83,12 @@ class OctaveShift final
     std::optional<Token> m_id;
 };
 
-OctaveShift parseOctaveShift(mxpugi::xml_node el, const ParseContext &context);
+OctaveShift parseOctaveShift(mx::xml::Node el, const ParseContext &context);
 
-void parseOctaveShiftContent(OctaveShift &out, mxpugi::xml_node el, const ParseContext &context);
+void parseOctaveShiftContent(OctaveShift &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeOctaveShift(const OctaveShift &v, mxpugi::xml_node parent, const char *tag);
+void serializeOctaveShift(const OctaveShift &v, mx::xml::Node parent, const char *tag);
 
-void serializeOctaveShiftContent(const OctaveShift &v, mxpugi::xml_node el);
+void serializeOctaveShiftContent(const OctaveShift &v, mx::xml::Node el);
 
 } // namespace mx::core

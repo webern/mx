@@ -10,11 +10,11 @@
 namespace mx::core
 {
 
-mxpugi::xml_node firstElement(mxpugi::xml_node parent)
+xml::Node firstElement(xml::Node parent)
 {
-    for (mxpugi::xml_node n = parent.first_child(); n; n = n.next_sibling())
+    for (xml::Node n = parent.firstChild(); n; n = n.nextSibling())
     {
-        if (n.type() == mxpugi::node_element)
+        if (n.type() == xml::NodeType::element)
         {
             return n;
         }
@@ -22,11 +22,11 @@ mxpugi::xml_node firstElement(mxpugi::xml_node parent)
     return {};
 }
 
-mxpugi::xml_node nextElement(mxpugi::xml_node node)
+xml::Node nextElement(xml::Node node)
 {
-    for (mxpugi::xml_node n = node.next_sibling(); n; n = n.next_sibling())
+    for (xml::Node n = node.nextSibling(); n; n = n.nextSibling())
     {
-        if (n.type() == mxpugi::node_element)
+        if (n.type() == xml::NodeType::element)
         {
             return n;
         }
@@ -34,14 +34,14 @@ mxpugi::xml_node nextElement(mxpugi::xml_node node)
     return {};
 }
 
-bool cursorIs(mxpugi::xml_node node, std::string_view name)
+bool cursorIs(xml::Node node, std::string_view name)
 {
     return node && std::string_view{node.name()} == name;
 }
 
-const char *childText(mxpugi::xml_node el)
+const char *childText(xml::Node el)
 {
-    return el.text().get();
+    return el.text();
 }
 
 bool isNamespaceDecl(std::string_view attribute_name)
@@ -53,26 +53,24 @@ bool isNamespaceDecl(std::string_view attribute_name)
     return attribute_name.size() > 6 && attribute_name.substr(0, 6) == "xmlns:";
 }
 
-namespace
-{
-
-// XML 1.0 forbids the C0 control characters other than tab/LF/CR; pugixml
-// would escape them as character references that are THEMSELVES illegal
-// (&#01;), producing a non-well-formed document. Every generated write
-// funnels through the helpers below, so dropping the illegal characters
-// here makes them unrepresentable through any string-typed setter (the
-// §2.2.2 deterministic-repair policy applied at the serialization door).
-bool isIllegalXmlChar(char c) noexcept
+// XML 1.0 forbids the C0 control characters other than tab/LF/CR; an XML
+// writer would escape them as character references that are THEMSELVES
+// illegal (&#01;), producing a non-well-formed document. Every generated
+// write funnels through the helpers below, so dropping the illegal
+// characters here makes them unrepresentable through any string-typed
+// setter (the §2.2.2 deterministic-repair policy applied at the
+// serialization door).
+bool xmlIsIllegalChar(char c) noexcept
 {
     const auto u = static_cast<unsigned char>(c);
     return u < 0x20 && c != '\t' && c != '\n' && c != '\r';
 }
 
-bool needsXmlSanitize(std::string_view text) noexcept
+bool xmlNeedsSanitize(std::string_view text) noexcept
 {
     for (const char c : text)
     {
-        if (isIllegalXmlChar(c))
+        if (xmlIsIllegalChar(c))
         {
             return true;
         }
@@ -86,7 +84,7 @@ std::string xmlSanitized(std::string_view text)
     out.reserve(text.size());
     for (const char c : text)
     {
-        if (!isIllegalXmlChar(c))
+        if (!xmlIsIllegalChar(c))
         {
             out.push_back(c);
         }
@@ -94,49 +92,45 @@ std::string xmlSanitized(std::string_view text)
     return out;
 }
 
-} // namespace
-
-void setAttribute(mxpugi::xml_node el, const char *name, std::string_view value)
+void setAttribute(xml::Node el, const char *name, std::string_view value)
 {
-    if (needsXmlSanitize(value))
+    if (xmlNeedsSanitize(value))
     {
-        const std::string clean = xmlSanitized(value);
-        el.append_attribute(name).set_value(clean.data(), clean.size());
+        el.appendAttribute(name).setValue(xmlSanitized(value));
         return;
     }
-    el.append_attribute(name).set_value(value.data(), value.size());
+    el.appendAttribute(name).setValue(value);
 }
 
-void writeTextElement(mxpugi::xml_node parent, const char *tag, std::string_view text)
+void writeTextElement(xml::Node parent, const char *tag, std::string_view text)
 {
-    setText(parent.append_child(tag), text);
+    setText(parent.appendChild(tag), text);
 }
 
-void setText(mxpugi::xml_node el, std::string_view text)
+void setText(xml::Node el, std::string_view text)
 {
     if (text.empty())
     {
         return;
     }
-    if (needsXmlSanitize(text))
+    if (xmlNeedsSanitize(text))
     {
-        const std::string clean = xmlSanitized(text);
-        el.append_child(mxpugi::node_pcdata).set_value(clean.data(), clean.size());
+        el.appendChild(xml::NodeType::pcdata).setValue(xmlSanitized(text));
         return;
     }
-    el.append_child(mxpugi::node_pcdata).set_value(text.data(), text.size());
+    el.appendChild(xml::NodeType::pcdata).setValue(text);
 }
 
-std::string nodePath(mxpugi::xml_node node)
+std::string nodePath(xml::Node node)
 {
     std::string path;
-    for (mxpugi::xml_node n = node; n && n.type() == mxpugi::node_element; n = n.parent())
+    for (xml::Node n = node; n && n.type() == xml::NodeType::element; n = n.parent())
     {
         int ordinal = 1;
         bool repeated = false;
-        for (mxpugi::xml_node s = n.previous_sibling(); s; s = s.previous_sibling())
+        for (xml::Node s = n.previousSibling(); s; s = s.previousSibling())
         {
-            if (s.type() == mxpugi::node_element && std::string_view{s.name()} == n.name())
+            if (s.type() == xml::NodeType::element && std::string_view{s.name()} == n.name())
             {
                 ++ordinal;
                 repeated = true;
@@ -144,9 +138,9 @@ std::string nodePath(mxpugi::xml_node node)
         }
         if (!repeated)
         {
-            for (mxpugi::xml_node s = n.next_sibling(); s; s = s.next_sibling())
+            for (xml::Node s = n.nextSibling(); s; s = s.nextSibling())
             {
-                if (s.type() == mxpugi::node_element && std::string_view{s.name()} == n.name())
+                if (s.type() == xml::NodeType::element && std::string_view{s.name()} == n.name())
                 {
                     repeated = true;
                     break;
@@ -166,35 +160,35 @@ std::string nodePath(mxpugi::xml_node node)
     return path.empty() ? "/" : path;
 }
 
-[[noreturn]] void throwUnknownElement(mxpugi::xml_node el)
+[[noreturn]] void throwUnknownElement(xml::Node el)
 {
     throw ParseError{
         Error{ErrorCode::unknownElement, nodePath(el), std::string{"unknown element <"} + el.name() + ">"}};
 }
 
-[[noreturn]] void throwMisplacedElement(mxpugi::xml_node el)
+[[noreturn]] void throwMisplacedElement(xml::Node el)
 {
     throw ParseError{
         Error{ErrorCode::wrongElementOrder, nodePath(el), std::string{"element <"} + el.name() + "> is out of order"}};
 }
 
-[[noreturn]] void throwUnknownAttribute(mxpugi::xml_node el, const char *attribute_name)
+[[noreturn]] void throwUnknownAttribute(xml::Node el, const char *attribute_name)
 {
     throw ParseError{Error{ErrorCode::unknownAttribute, nodePath(el),
                            std::string{"unknown attribute \""} + attribute_name + "\" on <" + el.name() + ">"}};
 }
 
-[[noreturn]] void throwMissingElement(mxpugi::xml_node parent, const char *missing)
+[[noreturn]] void throwMissingElement(xml::Node parent, const char *missing)
 {
     throw ParseError{Error{ErrorCode::missingRequiredElement, nodePath(parent),
                            std::string{"missing required element <"} + missing + "> in <" + parent.name() + ">"}};
 }
 
-[[noreturn]] void throwMissingOrMisplaced(mxpugi::xml_node parent, mxpugi::xml_node cursor, const char *missing)
+[[noreturn]] void throwMissingOrMisplaced(xml::Node parent, xml::Node cursor, const char *missing)
 {
-    for (mxpugi::xml_node n = cursor; n; n = n.next_sibling())
+    for (xml::Node n = cursor; n; n = n.nextSibling())
     {
-        if (n.type() == mxpugi::node_element && std::string_view{n.name()} == missing)
+        if (n.type() == xml::NodeType::element && std::string_view{n.name()} == missing)
         {
             throwMisplacedElement(n);
         }
@@ -202,14 +196,14 @@ std::string nodePath(mxpugi::xml_node node)
     throwMissingElement(parent, missing);
 }
 
-[[noreturn]] void throwMissingAttribute(mxpugi::xml_node el, const char *attribute_name)
+[[noreturn]] void throwMissingAttribute(xml::Node el, const char *attribute_name)
 {
     throw ParseError{
         Error{ErrorCode::missingRequiredAttribute, nodePath(el),
               std::string{"missing required attribute \""} + attribute_name + "\" on <" + el.name() + ">"}};
 }
 
-[[noreturn]] void throwTooManyElements(mxpugi::xml_node el)
+[[noreturn]] void throwTooManyElements(xml::Node el)
 {
     throw ParseError{
         Error{ErrorCode::tooManyElements, nodePath(el), std::string{"too many <"} + el.name() + "> elements"}};

@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -44,12 +44,12 @@ class MeasureRepeat final
     PositiveIntegerOrEmpty m_value{};
 };
 
-MeasureRepeat parseMeasureRepeat(mxpugi::xml_node el, const ParseContext &context);
+MeasureRepeat parseMeasureRepeat(mx::xml::Node el, const ParseContext &context);
 
-void parseMeasureRepeatContent(MeasureRepeat &out, mxpugi::xml_node el, const ParseContext &context);
+void parseMeasureRepeatContent(MeasureRepeat &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeMeasureRepeat(const MeasureRepeat &v, mxpugi::xml_node parent, const char *tag);
+void serializeMeasureRepeat(const MeasureRepeat &v, mx::xml::Node parent, const char *tag);
 
-void serializeMeasureRepeatContent(const MeasureRepeat &v, mxpugi::xml_node el);
+void serializeMeasureRepeatContent(const MeasureRepeat &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -41,7 +41,7 @@ void CueNoteGroup::setDuration(PositiveDivisions value)
     m_duration = std::move(value);
 }
 
-CueNoteGroup parseCueNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+CueNoteGroup parseCueNoteGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     CueNoteGroup out;
     if (cursorIs(cursor, "cue"))
@@ -74,7 +74,7 @@ CueNoteGroup parseCueNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, co
     return out;
 }
 
-void serializeCueNoteGroup(const CueNoteGroup &v, mxpugi::xml_node el)
+void serializeCueNoteGroup(const CueNoteGroup &v, mx::xml::Node el)
 {
     serializeEmpty(v.cue(), el, "cue");
     serializeFullNoteGroup(v.fullNote(), el);

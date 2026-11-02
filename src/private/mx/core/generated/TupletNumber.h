@@ -11,9 +11,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -48,12 +48,12 @@ class TupletNumber final
     int m_value{};
 };
 
-TupletNumber parseTupletNumber(mxpugi::xml_node el, const ParseContext &context);
+TupletNumber parseTupletNumber(mx::xml::Node el, const ParseContext &context);
 
-void parseTupletNumberContent(TupletNumber &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTupletNumberContent(TupletNumber &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTupletNumber(const TupletNumber &v, mxpugi::xml_node parent, const char *tag);
+void serializeTupletNumber(const TupletNumber &v, mx::xml::Node parent, const char *tag);
 
-void serializeTupletNumberContent(const TupletNumber &v, mxpugi::xml_node el);
+void serializeTupletNumberContent(const TupletNumber &v, mx::xml::Node el);
 
 } // namespace mx::core

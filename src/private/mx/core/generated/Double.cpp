@@ -21,10 +21,10 @@ void Double::setAbove(std::optional<YesNo> value)
     m_above = std::move(value);
 }
 
-Double parseDouble(mxpugi::xml_node el, const ParseContext &context)
+Double parseDouble(mx::xml::Node el, const ParseContext &context)
 {
     Double out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -44,7 +44,7 @@ Double parseDouble(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseDoubleContent(Double &out, mxpugi::xml_node el, const ParseContext &context)
+void parseDoubleContent(Double &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -54,9 +54,9 @@ void parseDoubleContent(Double &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeDouble(const Double &v, mxpugi::xml_node parent, const char *tag)
+void serializeDouble(const Double &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.above())
     {
         setAttribute(el, "above", v.above()->toString());
@@ -64,7 +64,7 @@ void serializeDouble(const Double &v, mxpugi::xml_node parent, const char *tag)
     serializeDoubleContent(v, el);
 }
 
-void serializeDoubleContent(const Double &v, mxpugi::xml_node el)
+void serializeDoubleContent(const Double &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -38,12 +38,12 @@ class Accord final
     TuningGroup m_tuning{};
 };
 
-Accord parseAccord(mxpugi::xml_node el, const ParseContext &context);
+Accord parseAccord(mx::xml::Node el, const ParseContext &context);
 
-void parseAccordContent(Accord &out, mxpugi::xml_node el, const ParseContext &context);
+void parseAccordContent(Accord &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeAccord(const Accord &v, mxpugi::xml_node parent, const char *tag);
+void serializeAccord(const Accord &v, mx::xml::Node parent, const char *tag);
 
-void serializeAccordContent(const Accord &v, mxpugi::xml_node el);
+void serializeAccordContent(const Accord &v, mx::xml::Node el);
 
 } // namespace mx::core

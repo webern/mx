@@ -19,9 +19,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -141,12 +141,12 @@ class Sound final
     std::optional<Offset> m_offset;
 };
 
-Sound parseSound(mxpugi::xml_node el, const ParseContext &context);
+Sound parseSound(mx::xml::Node el, const ParseContext &context);
 
-void parseSoundContent(Sound &out, mxpugi::xml_node el, const ParseContext &context);
+void parseSoundContent(Sound &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeSound(const Sound &v, mxpugi::xml_node parent, const char *tag);
+void serializeSound(const Sound &v, mx::xml::Node parent, const char *tag);
 
-void serializeSoundContent(const Sound &v, mxpugi::xml_node el);
+void serializeSoundContent(const Sound &v, mx::xml::Node el);
 
 } // namespace mx::core

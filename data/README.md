@@ -90,14 +90,17 @@ both so the comparison is canonical-against-canonical. The pipeline lives in
 1. Pin the root `version` attribute to the harness baseline (`3.0`).
 2. Strip whitespace-only text nodes from every element. Pretty-printing indentation is not content
    (MusicXML has no mixed content), and the rule is applied to both sides, so it stays symmetric.
-3. Strip trailing zeros from decimal fields: `mx` serializes the shortest round-trip form, so a
+3. Fold line ends in text nodes to LF. An XML parser does this to raw text on input, and the
+   harness hands `mx::core` its documents as text (see `docs/ai/design/xml-backend.md`), so a CR
+   that a file spells as `&#xd;` survives on the expected side only. Both sides fold.
+4. Strip trailing zeros from decimal fields: `mx` serializes the shortest round-trip form, so a
    trailing-zero decimal like `40.00000` in a source file would otherwise mismatch. The field list
    lives in `DecimalFields.h`.
-4. Re-space comma-separated-text fields (e.g. `font-family`) to `"item, item"`: the type allows
+5. Re-space comma-separated-text fields (e.g. `font-family`) to `"item, item"`: the type allows
    `"x,y"` or `"x, y"` on the wire and a parsed-but-unmutated value keeps its exact spelling on
    write, but `mx`'s api round trip always re-serializes as `"x, y"`. The field list lives in
    `CommaSeparatedFields.h`.
-5. Sort each element's attributes alphabetically by qualified name (`xlink:href`, not `href`); it
+6. Sort each element's attributes alphabetically by qualified name (`xlink:href`, not `href`); it
    runs last.
 
 Comparison rules that took debugging to get right:

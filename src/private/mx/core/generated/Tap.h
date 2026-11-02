@@ -14,9 +14,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -73,12 +73,12 @@ class Tap final
     std::string m_value{};
 };
 
-Tap parseTap(mxpugi::xml_node el, const ParseContext &context);
+Tap parseTap(mx::xml::Node el, const ParseContext &context);
 
-void parseTapContent(Tap &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTapContent(Tap &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTap(const Tap &v, mxpugi::xml_node parent, const char *tag);
+void serializeTap(const Tap &v, mx::xml::Node parent, const char *tag);
 
-void serializeTapContent(const Tap &v, mxpugi::xml_node el);
+void serializeTapContent(const Tap &v, mx::xml::Node el);
 
 } // namespace mx::core

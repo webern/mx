@@ -9,9 +9,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -37,12 +37,12 @@ class LyricLanguage final
     Language m_xmlLang{};
 };
 
-LyricLanguage parseLyricLanguage(mxpugi::xml_node el, const ParseContext &context);
+LyricLanguage parseLyricLanguage(mx::xml::Node el, const ParseContext &context);
 
-void parseLyricLanguageContent(LyricLanguage &out, mxpugi::xml_node el, const ParseContext &context);
+void parseLyricLanguageContent(LyricLanguage &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeLyricLanguage(const LyricLanguage &v, mxpugi::xml_node parent, const char *tag);
+void serializeLyricLanguage(const LyricLanguage &v, mx::xml::Node parent, const char *tag);
 
-void serializeLyricLanguageContent(const LyricLanguage &v, mxpugi::xml_node el);
+void serializeLyricLanguageContent(const LyricLanguage &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -31,11 +31,11 @@ void LineWidth::setValue(Tenths value)
     m_value = std::move(value);
 }
 
-LineWidth parseLineWidth(mxpugi::xml_node el, const ParseContext &context)
+LineWidth parseLineWidth(mx::xml::Node el, const ParseContext &context)
 {
     LineWidth out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,7 +60,7 @@ LineWidth parseLineWidth(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseLineWidthContent(LineWidth &out, mxpugi::xml_node el, const ParseContext &context)
+void parseLineWidthContent(LineWidth &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<Tenths>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -69,14 +69,14 @@ void parseLineWidthContent(LineWidth &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeLineWidth(const LineWidth &v, mxpugi::xml_node parent, const char *tag)
+void serializeLineWidth(const LineWidth &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     serializeLineWidthContent(v, el);
 }
 
-void serializeLineWidthContent(const LineWidth &v, mxpugi::xml_node el)
+void serializeLineWidthContent(const LineWidth &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

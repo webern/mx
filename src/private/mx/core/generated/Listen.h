@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -38,12 +38,12 @@ class Listen final
     OneOrMore<ListenChoice> m_choice;
 };
 
-Listen parseListen(mxpugi::xml_node el, const ParseContext &context);
+Listen parseListen(mx::xml::Node el, const ParseContext &context);
 
-void parseListenContent(Listen &out, mxpugi::xml_node el, const ParseContext &context);
+void parseListenContent(Listen &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeListen(const Listen &v, mxpugi::xml_node parent, const char *tag);
+void serializeListen(const Listen &v, mx::xml::Node parent, const char *tag);
 
-void serializeListenContent(const Listen &v, mxpugi::xml_node el);
+void serializeListenContent(const Listen &v, mx::xml::Node el);
 
 } // namespace mx::core

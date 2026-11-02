@@ -101,11 +101,11 @@ void NonArpeggiate::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-NonArpeggiate parseNonArpeggiate(mxpugi::xml_node el, const ParseContext &context)
+NonArpeggiate parseNonArpeggiate(mx::xml::Node el, const ParseContext &context)
 {
     NonArpeggiate out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -162,7 +162,7 @@ NonArpeggiate parseNonArpeggiate(mxpugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseNonArpeggiateContent(NonArpeggiate &out, mxpugi::xml_node el, const ParseContext &context)
+void parseNonArpeggiateContent(NonArpeggiate &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -172,9 +172,9 @@ void parseNonArpeggiateContent(NonArpeggiate &out, mxpugi::xml_node el, const Pa
     }
 }
 
-void serializeNonArpeggiate(const NonArpeggiate &v, mxpugi::xml_node parent, const char *tag)
+void serializeNonArpeggiate(const NonArpeggiate &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -211,7 +211,7 @@ void serializeNonArpeggiate(const NonArpeggiate &v, mxpugi::xml_node parent, con
     serializeNonArpeggiateContent(v, el);
 }
 
-void serializeNonArpeggiateContent(const NonArpeggiate &v, mxpugi::xml_node el)
+void serializeNonArpeggiateContent(const NonArpeggiate &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

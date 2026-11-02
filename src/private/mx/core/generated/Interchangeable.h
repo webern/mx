@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -49,12 +49,12 @@ class Interchangeable final
     OneOrMore<TimeSignatureGroup> m_timeSignature;
 };
 
-Interchangeable parseInterchangeable(mxpugi::xml_node el, const ParseContext &context);
+Interchangeable parseInterchangeable(mx::xml::Node el, const ParseContext &context);
 
-void parseInterchangeableContent(Interchangeable &out, mxpugi::xml_node el, const ParseContext &context);
+void parseInterchangeableContent(Interchangeable &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeInterchangeable(const Interchangeable &v, mxpugi::xml_node parent, const char *tag);
+void serializeInterchangeable(const Interchangeable &v, mx::xml::Node parent, const char *tag);
 
-void serializeInterchangeableContent(const Interchangeable &v, mxpugi::xml_node el);
+void serializeInterchangeableContent(const Interchangeable &v, mx::xml::Node el);
 
 } // namespace mx::core

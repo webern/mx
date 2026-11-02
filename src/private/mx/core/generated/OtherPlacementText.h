@@ -14,9 +14,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -71,12 +71,12 @@ class OtherPlacementText final
     std::string m_value{};
 };
 
-OtherPlacementText parseOtherPlacementText(mxpugi::xml_node el, const ParseContext &context);
+OtherPlacementText parseOtherPlacementText(mx::xml::Node el, const ParseContext &context);
 
-void parseOtherPlacementTextContent(OtherPlacementText &out, mxpugi::xml_node el, const ParseContext &context);
+void parseOtherPlacementTextContent(OtherPlacementText &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeOtherPlacementText(const OtherPlacementText &v, mxpugi::xml_node parent, const char *tag);
+void serializeOtherPlacementText(const OtherPlacementText &v, mx::xml::Node parent, const char *tag);
 
-void serializeOtherPlacementTextContent(const OtherPlacementText &v, mxpugi::xml_node el);
+void serializeOtherPlacementTextContent(const OtherPlacementText &v, mx::xml::Node el);
 
 } // namespace mx::core

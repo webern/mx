@@ -121,10 +121,10 @@ void DegreeAlter::setValue(Semitones value)
     m_value = std::move(value);
 }
 
-DegreeAlter parseDegreeAlter(mxpugi::xml_node el, const ParseContext &context)
+DegreeAlter parseDegreeAlter(mx::xml::Node el, const ParseContext &context)
 {
     DegreeAlter out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ DegreeAlter parseDegreeAlter(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseDegreeAlterContent(DegreeAlter &out, mxpugi::xml_node el, const ParseContext &context)
+void parseDegreeAlterContent(DegreeAlter &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<Semitones>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseDegreeAlterContent(DegreeAlter &out, mxpugi::xml_node el, const ParseC
     }
 }
 
-void serializeDegreeAlter(const DegreeAlter &v, mxpugi::xml_node parent, const char *tag)
+void serializeDegreeAlter(const DegreeAlter &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.plusMinus())
     {
         setAttribute(el, "plus-minus", v.plusMinus()->toString());
@@ -235,7 +235,7 @@ void serializeDegreeAlter(const DegreeAlter &v, mxpugi::xml_node parent, const c
     serializeDegreeAlterContent(v, el);
 }
 
-void serializeDegreeAlterContent(const DegreeAlter &v, mxpugi::xml_node el)
+void serializeDegreeAlterContent(const DegreeAlter &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

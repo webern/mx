@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -37,12 +37,12 @@ class Cancel final
     Fifths m_value{};
 };
 
-Cancel parseCancel(mxpugi::xml_node el, const ParseContext &context);
+Cancel parseCancel(mx::xml::Node el, const ParseContext &context);
 
-void parseCancelContent(Cancel &out, mxpugi::xml_node el, const ParseContext &context);
+void parseCancelContent(Cancel &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeCancel(const Cancel &v, mxpugi::xml_node parent, const char *tag);
+void serializeCancel(const Cancel &v, mx::xml::Node parent, const char *tag);
 
-void serializeCancelContent(const Cancel &v, mxpugi::xml_node el);
+void serializeCancelContent(const Cancel &v, mx::xml::Node el);
 
 } // namespace mx::core

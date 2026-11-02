@@ -41,11 +41,11 @@ void LyricLanguage::setXMLLang(Language value)
     m_xmlLang = std::move(value);
 }
 
-LyricLanguage parseLyricLanguage(mxpugi::xml_node el, const ParseContext &context)
+LyricLanguage parseLyricLanguage(mx::xml::Node el, const ParseContext &context)
 {
     LyricLanguage out;
     bool seen_xmlLang = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -80,7 +80,7 @@ LyricLanguage parseLyricLanguage(mxpugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseLyricLanguageContent(LyricLanguage &out, mxpugi::xml_node el, const ParseContext &context)
+void parseLyricLanguageContent(LyricLanguage &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -90,9 +90,9 @@ void parseLyricLanguageContent(LyricLanguage &out, mxpugi::xml_node el, const Pa
     }
 }
 
-void serializeLyricLanguage(const LyricLanguage &v, mxpugi::xml_node parent, const char *tag)
+void serializeLyricLanguage(const LyricLanguage &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -105,7 +105,7 @@ void serializeLyricLanguage(const LyricLanguage &v, mxpugi::xml_node parent, con
     serializeLyricLanguageContent(v, el);
 }
 
-void serializeLyricLanguageContent(const LyricLanguage &v, mxpugi::xml_node el)
+void serializeLyricLanguageContent(const LyricLanguage &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

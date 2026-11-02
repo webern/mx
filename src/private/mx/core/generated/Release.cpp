@@ -21,10 +21,10 @@ void Release::setOffset(std::optional<Divisions> value)
     m_offset = std::move(value);
 }
 
-Release parseRelease(mxpugi::xml_node el, const ParseContext &context)
+Release parseRelease(mx::xml::Node el, const ParseContext &context)
 {
     Release out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -44,9 +44,9 @@ Release parseRelease(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void serializeRelease(const Release &v, mxpugi::xml_node parent, const char *tag)
+void serializeRelease(const Release &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.offset())
     {
         setAttribute(el, "offset", v.offset()->toString());

@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -39,12 +39,12 @@ class Player final
     std::string m_playerName{};
 };
 
-Player parsePlayer(mxpugi::xml_node el, const ParseContext &context);
+Player parsePlayer(mx::xml::Node el, const ParseContext &context);
 
-void parsePlayerContent(Player &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePlayerContent(Player &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePlayer(const Player &v, mxpugi::xml_node parent, const char *tag);
+void serializePlayer(const Player &v, mx::xml::Node parent, const char *tag);
 
-void serializePlayerContent(const Player &v, mxpugi::xml_node el);
+void serializePlayerContent(const Player &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -20,9 +20,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -90,12 +90,12 @@ class AccordionRegistration final
     bool m_accordionLow{false};
 };
 
-AccordionRegistration parseAccordionRegistration(mxpugi::xml_node el, const ParseContext &context);
+AccordionRegistration parseAccordionRegistration(mx::xml::Node el, const ParseContext &context);
 
-void parseAccordionRegistrationContent(AccordionRegistration &out, mxpugi::xml_node el, const ParseContext &context);
+void parseAccordionRegistrationContent(AccordionRegistration &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeAccordionRegistration(const AccordionRegistration &v, mxpugi::xml_node parent, const char *tag);
+void serializeAccordionRegistration(const AccordionRegistration &v, mx::xml::Node parent, const char *tag);
 
-void serializeAccordionRegistrationContent(const AccordionRegistration &v, mxpugi::xml_node el);
+void serializeAccordionRegistrationContent(const AccordionRegistration &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -5,9 +5,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -32,12 +32,12 @@ class OtherAppearance final
     std::string m_value{};
 };
 
-OtherAppearance parseOtherAppearance(mxpugi::xml_node el, const ParseContext &context);
+OtherAppearance parseOtherAppearance(mx::xml::Node el, const ParseContext &context);
 
-void parseOtherAppearanceContent(OtherAppearance &out, mxpugi::xml_node el, const ParseContext &context);
+void parseOtherAppearanceContent(OtherAppearance &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeOtherAppearance(const OtherAppearance &v, mxpugi::xml_node parent, const char *tag);
+void serializeOtherAppearance(const OtherAppearance &v, mx::xml::Node parent, const char *tag);
 
-void serializeOtherAppearanceContent(const OtherAppearance &v, mxpugi::xml_node el);
+void serializeOtherAppearanceContent(const OtherAppearance &v, mx::xml::Node el);
 
 } // namespace mx::core

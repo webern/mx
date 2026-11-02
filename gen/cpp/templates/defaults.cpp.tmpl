@@ -18,17 +18,17 @@ void roundTripDefaults()
 {
 {{#complex_types}}
     {
-        mxpugi::xml_document doc;
-        serialize{{ident}}({{ident}}{}, doc, "probe");
-        parse{{ident}}(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serialize{{ident}}({{ident}}{}, doc.root(), "probe");
+        parse{{ident}}(doc.documentElement(), ParseContext{});
     }
 {{/complex_types}}
 {{#groups}}
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serialize{{ident}}({{ident}}{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parse{{ident}}(el, cursor, ParseContext{});
         }

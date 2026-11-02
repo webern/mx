@@ -41,7 +41,7 @@ void TuningGroup::setTuningOctave(Octave value)
     m_tuningOctave = std::move(value);
 }
 
-TuningGroup parseTuningGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+TuningGroup parseTuningGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     TuningGroup out;
     if (cursorIs(cursor, "tuning-step"))
@@ -70,7 +70,7 @@ TuningGroup parseTuningGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, cons
     return out;
 }
 
-void serializeTuningGroup(const TuningGroup &v, mxpugi::xml_node el)
+void serializeTuningGroup(const TuningGroup &v, mx::xml::Node el)
 {
     writeTextElement(el, "tuning-step", v.tuningStep().toString());
     if (v.tuningAlter())

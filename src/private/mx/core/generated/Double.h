@@ -7,9 +7,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -32,12 +32,12 @@ class Double final
     std::optional<YesNo> m_above;
 };
 
-Double parseDouble(mxpugi::xml_node el, const ParseContext &context);
+Double parseDouble(mx::xml::Node el, const ParseContext &context);
 
-void parseDoubleContent(Double &out, mxpugi::xml_node el, const ParseContext &context);
+void parseDoubleContent(Double &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeDouble(const Double &v, mxpugi::xml_node parent, const char *tag);
+void serializeDouble(const Double &v, mx::xml::Node parent, const char *tag);
 
-void serializeDoubleContent(const Double &v, mxpugi::xml_node el);
+void serializeDoubleContent(const Double &v, mx::xml::Node el);
 
 } // namespace mx::core

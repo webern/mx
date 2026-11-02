@@ -60,6 +60,8 @@ promise is redundant (target swappability lives in the generator, not inside C++
 - The corert harness, `mxtest/import` normalization utilities (sort attributes, strip decimal
   zeros), and the Fixer are ported to pugixml. Once no client remains, delete
   `src/private/mx/ezxml/`.
+- Later (0.7): the core now reaches pugixml through the inline `mx::xml` seam, which keeps this
+  decision's performance while making the XML library a build-time choice; see `xml-backend.md`.
 
 ### 2.2 Value types: structural unrepresentability first, then clamp
 

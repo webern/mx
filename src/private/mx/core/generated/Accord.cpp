@@ -31,10 +31,10 @@ void Accord::setTuning(TuningGroup value)
     m_tuning = std::move(value);
 }
 
-Accord parseAccord(mxpugi::xml_node el, const ParseContext &context)
+Accord parseAccord(mx::xml::Node el, const ParseContext &context)
 {
     Accord out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,9 +54,9 @@ Accord parseAccord(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseAccordContent(Accord &out, mxpugi::xml_node el, const ParseContext &context)
+void parseAccordContent(Accord &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "tuning-step")))
     {
         out.setTuning(parseTuningGroup(el, cursor, context));
@@ -75,9 +75,9 @@ void parseAccordContent(Accord &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeAccord(const Accord &v, mxpugi::xml_node parent, const char *tag)
+void serializeAccord(const Accord &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.string())
     {
         setAttribute(el, "string", v.string()->toString());
@@ -85,7 +85,7 @@ void serializeAccord(const Accord &v, mxpugi::xml_node parent, const char *tag)
     serializeAccordContent(v, el);
 }
 
-void serializeAccordContent(const Accord &v, mxpugi::xml_node el)
+void serializeAccordContent(const Accord &v, mx::xml::Node el)
 {
     serializeTuningGroup(v.tuning(), el);
 }

@@ -9,9 +9,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -34,12 +34,12 @@ class PartTranspose final
     TransposeGroup m_transpose{};
 };
 
-PartTranspose parsePartTranspose(mxpugi::xml_node el, const ParseContext &context);
+PartTranspose parsePartTranspose(mx::xml::Node el, const ParseContext &context);
 
-void parsePartTransposeContent(PartTranspose &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePartTransposeContent(PartTranspose &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePartTranspose(const PartTranspose &v, mxpugi::xml_node parent, const char *tag);
+void serializePartTranspose(const PartTranspose &v, mx::xml::Node parent, const char *tag);
 
-void serializePartTransposeContent(const PartTranspose &v, mxpugi::xml_node el);
+void serializePartTransposeContent(const PartTranspose &v, mx::xml::Node el);
 
 } // namespace mx::core

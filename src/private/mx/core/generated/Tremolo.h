@@ -16,9 +16,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -86,12 +86,12 @@ class Tremolo final
     TremoloMarks m_value{};
 };
 
-Tremolo parseTremolo(mxpugi::xml_node el, const ParseContext &context);
+Tremolo parseTremolo(mx::xml::Node el, const ParseContext &context);
 
-void parseTremoloContent(Tremolo &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTremoloContent(Tremolo &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTremolo(const Tremolo &v, mxpugi::xml_node parent, const char *tag);
+void serializeTremolo(const Tremolo &v, mx::xml::Node parent, const char *tag);
 
-void serializeTremoloContent(const Tremolo &v, mxpugi::xml_node el);
+void serializeTremoloContent(const Tremolo &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -51,12 +51,12 @@ class ScoreInstrument final
     VirtualInstrumentDataGroup m_virtualInstrumentData{};
 };
 
-ScoreInstrument parseScoreInstrument(mxpugi::xml_node el, const ParseContext &context);
+ScoreInstrument parseScoreInstrument(mx::xml::Node el, const ParseContext &context);
 
-void parseScoreInstrumentContent(ScoreInstrument &out, mxpugi::xml_node el, const ParseContext &context);
+void parseScoreInstrumentContent(ScoreInstrument &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeScoreInstrument(const ScoreInstrument &v, mxpugi::xml_node parent, const char *tag);
+void serializeScoreInstrument(const ScoreInstrument &v, mx::xml::Node parent, const char *tag);
 
-void serializeScoreInstrumentContent(const ScoreInstrument &v, mxpugi::xml_node el);
+void serializeScoreInstrumentContent(const ScoreInstrument &v, mx::xml::Node el);
 
 } // namespace mx::core

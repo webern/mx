@@ -2,9 +2,9 @@
 
 #pragma once
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -22,12 +22,12 @@ class Empty
     bool operator==(const Empty &) const noexcept = default;
 };
 
-Empty parseEmpty(mxpugi::xml_node el, const ParseContext &context);
+Empty parseEmpty(mx::xml::Node el, const ParseContext &context);
 
-void parseEmptyContent(Empty &out, mxpugi::xml_node el, const ParseContext &context);
+void parseEmptyContent(Empty &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeEmpty(const Empty &v, mxpugi::xml_node parent, const char *tag);
+void serializeEmpty(const Empty &v, mx::xml::Node parent, const char *tag);
 
-void serializeEmptyContent(const Empty &v, mxpugi::xml_node el);
+void serializeEmptyContent(const Empty &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -34,12 +34,12 @@ class Membrane final
     MembraneValue m_value{};
 };
 
-Membrane parseMembrane(mxpugi::xml_node el, const ParseContext &context);
+Membrane parseMembrane(mx::xml::Node el, const ParseContext &context);
 
-void parseMembraneContent(Membrane &out, mxpugi::xml_node el, const ParseContext &context);
+void parseMembraneContent(Membrane &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeMembrane(const Membrane &v, mxpugi::xml_node parent, const char *tag);
+void serializeMembrane(const Membrane &v, mx::xml::Node parent, const char *tag);
 
-void serializeMembraneContent(const Membrane &v, mxpugi::xml_node el);
+void serializeMembraneContent(const Membrane &v, mx::xml::Node el);
 
 } // namespace mx::core

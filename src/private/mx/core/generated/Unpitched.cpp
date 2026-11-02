@@ -21,10 +21,10 @@ void Unpitched::setDisplayStepOctave(std::optional<DisplayStepOctaveGroup> value
     m_displayStepOctave = std::move(value);
 }
 
-Unpitched parseUnpitched(mxpugi::xml_node el, const ParseContext &context)
+Unpitched parseUnpitched(mx::xml::Node el, const ParseContext &context)
 {
     Unpitched out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -37,9 +37,9 @@ Unpitched parseUnpitched(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseUnpitchedContent(Unpitched &out, mxpugi::xml_node el, const ParseContext &context)
+void parseUnpitchedContent(Unpitched &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "display-step")))
     {
         out.setDisplayStepOctave(parseDisplayStepOctaveGroup(el, cursor, context));
@@ -54,13 +54,13 @@ void parseUnpitchedContent(Unpitched &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeUnpitched(const Unpitched &v, mxpugi::xml_node parent, const char *tag)
+void serializeUnpitched(const Unpitched &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeUnpitchedContent(v, el);
 }
 
-void serializeUnpitchedContent(const Unpitched &v, mxpugi::xml_node el)
+void serializeUnpitchedContent(const Unpitched &v, mx::xml::Node el)
 {
     if (v.displayStepOctave())
     {

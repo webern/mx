@@ -41,10 +41,10 @@ void NumeralKey::setNumeralMode(NumeralMode value)
     m_numeralMode = std::move(value);
 }
 
-NumeralKey parseNumeralKey(mxpugi::xml_node el, const ParseContext &context)
+NumeralKey parseNumeralKey(mx::xml::Node el, const ParseContext &context)
 {
     NumeralKey out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -64,9 +64,9 @@ NumeralKey parseNumeralKey(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseNumeralKeyContent(NumeralKey &out, mxpugi::xml_node el, const ParseContext &context)
+void parseNumeralKeyContent(NumeralKey &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "numeral-fifths"))
     {
         out.setNumeralFifths(parseValue<Fifths>(childText(cursor), context, cursor, nullptr));
@@ -95,9 +95,9 @@ void parseNumeralKeyContent(NumeralKey &out, mxpugi::xml_node el, const ParseCon
     }
 }
 
-void serializeNumeralKey(const NumeralKey &v, mxpugi::xml_node parent, const char *tag)
+void serializeNumeralKey(const NumeralKey &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.printObject())
     {
         setAttribute(el, "print-object", v.printObject()->toString());
@@ -105,7 +105,7 @@ void serializeNumeralKey(const NumeralKey &v, mxpugi::xml_node parent, const cha
     serializeNumeralKeyContent(v, el);
 }
 
-void serializeNumeralKeyContent(const NumeralKey &v, mxpugi::xml_node el)
+void serializeNumeralKeyContent(const NumeralKey &v, mx::xml::Node el)
 {
     writeTextElement(el, "numeral-fifths", v.numeralFifths().toString());
     writeTextElement(el, "numeral-mode", v.numeralMode().toString());

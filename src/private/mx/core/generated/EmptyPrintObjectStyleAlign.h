@@ -15,9 +15,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -71,13 +71,13 @@ class EmptyPrintObjectStyleAlign final
     std::optional<Valign> m_valign;
 };
 
-EmptyPrintObjectStyleAlign parseEmptyPrintObjectStyleAlign(mxpugi::xml_node el, const ParseContext &context);
+EmptyPrintObjectStyleAlign parseEmptyPrintObjectStyleAlign(mx::xml::Node el, const ParseContext &context);
 
-void parseEmptyPrintObjectStyleAlignContent(EmptyPrintObjectStyleAlign &out, mxpugi::xml_node el,
+void parseEmptyPrintObjectStyleAlignContent(EmptyPrintObjectStyleAlign &out, mx::xml::Node el,
                                             const ParseContext &context);
 
-void serializeEmptyPrintObjectStyleAlign(const EmptyPrintObjectStyleAlign &v, mxpugi::xml_node parent, const char *tag);
+void serializeEmptyPrintObjectStyleAlign(const EmptyPrintObjectStyleAlign &v, mx::xml::Node parent, const char *tag);
 
-void serializeEmptyPrintObjectStyleAlignContent(const EmptyPrintObjectStyleAlign &v, mxpugi::xml_node el);
+void serializeEmptyPrintObjectStyleAlignContent(const EmptyPrintObjectStyleAlign &v, mx::xml::Node el);
 
 } // namespace mx::core

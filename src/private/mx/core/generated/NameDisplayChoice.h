@@ -10,9 +10,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -82,8 +82,8 @@ class NameDisplayChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-NameDisplayChoice parseNameDisplayChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
+NameDisplayChoice parseNameDisplayChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeNameDisplayChoice(const NameDisplayChoice &v, mxpugi::xml_node el);
+void serializeNameDisplayChoice(const NameDisplayChoice &v, mx::xml::Node el);
 
 } // namespace mx::core

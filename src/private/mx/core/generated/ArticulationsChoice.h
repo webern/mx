@@ -14,9 +14,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -298,9 +298,8 @@ class ArticulationsChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-ArticulationsChoice parseArticulationsChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
-                                             const ParseContext &context);
+ArticulationsChoice parseArticulationsChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeArticulationsChoice(const ArticulationsChoice &v, mxpugi::xml_node el);
+void serializeArticulationsChoice(const ArticulationsChoice &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -41,10 +41,10 @@ void Mordent::setDeparture(std::optional<AboveBelow> value)
     m_departure = std::move(value);
 }
 
-Mordent parseMordent(mxpugi::xml_node el, const ParseContext &context)
+Mordent parseMordent(mx::xml::Node el, const ParseContext &context)
 {
     Mordent out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -140,9 +140,9 @@ Mordent parseMordent(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void serializeMordent(const Mordent &v, mxpugi::xml_node parent, const char *tag)
+void serializeMordent(const Mordent &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());

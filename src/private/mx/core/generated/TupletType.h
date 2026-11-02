@@ -12,9 +12,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -50,12 +50,12 @@ class TupletType final
     NoteTypeValue m_value{};
 };
 
-TupletType parseTupletType(mxpugi::xml_node el, const ParseContext &context);
+TupletType parseTupletType(mx::xml::Node el, const ParseContext &context);
 
-void parseTupletTypeContent(TupletType &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTupletTypeContent(TupletType &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTupletType(const TupletType &v, mxpugi::xml_node parent, const char *tag);
+void serializeTupletType(const TupletType &v, mx::xml::Node parent, const char *tag);
 
-void serializeTupletTypeContent(const TupletType &v, mxpugi::xml_node el);
+void serializeTupletTypeContent(const TupletType &v, mx::xml::Node el);
 
 } // namespace mx::core

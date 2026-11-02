@@ -226,10 +226,10 @@ void Sound::setOffset(std::optional<Offset> value)
     m_offset = std::move(value);
 }
 
-Sound parseSound(mxpugi::xml_node el, const ParseContext &context)
+Sound parseSound(mx::xml::Node el, const ParseContext &context)
 {
     Sound out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -317,9 +317,9 @@ Sound parseSound(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseSoundContent(Sound &out, mxpugi::xml_node el, const ParseContext &context)
+void parseSoundContent(Sound &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "instrument-change") || cursorIs(cursor, "midi-device") ||
                       cursorIs(cursor, "midi-instrument") || cursorIs(cursor, "play")))
     {
@@ -347,9 +347,9 @@ void parseSoundContent(Sound &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeSound(const Sound &v, mxpugi::xml_node parent, const char *tag)
+void serializeSound(const Sound &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.tempo())
     {
         setAttribute(el, "tempo", v.tempo()->toString());
@@ -425,7 +425,7 @@ void serializeSound(const Sound &v, mxpugi::xml_node parent, const char *tag)
     serializeSoundContent(v, el);
 }
 
-void serializeSoundContent(const Sound &v, mxpugi::xml_node el)
+void serializeSoundContent(const Sound &v, mx::xml::Node el)
 {
     for (const auto &item : v.group())
     {

@@ -9,9 +9,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -49,12 +49,12 @@ class Swing final
     std::optional<std::string> m_swingStyle;
 };
 
-Swing parseSwing(mxpugi::xml_node el, const ParseContext &context);
+Swing parseSwing(mx::xml::Node el, const ParseContext &context);
 
-void parseSwingContent(Swing &out, mxpugi::xml_node el, const ParseContext &context);
+void parseSwingContent(Swing &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeSwing(const Swing &v, mxpugi::xml_node parent, const char *tag);
+void serializeSwing(const Swing &v, mx::xml::Node parent, const char *tag);
 
-void serializeSwingContent(const Swing &v, mxpugi::xml_node el);
+void serializeSwingContent(const Swing &v, mx::xml::Node el);
 
 } // namespace mx::core

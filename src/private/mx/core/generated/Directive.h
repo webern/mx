@@ -13,9 +13,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -64,12 +64,12 @@ class Directive final
     std::string m_value{};
 };
 
-Directive parseDirective(mxpugi::xml_node el, const ParseContext &context);
+Directive parseDirective(mx::xml::Node el, const ParseContext &context);
 
-void parseDirectiveContent(Directive &out, mxpugi::xml_node el, const ParseContext &context);
+void parseDirectiveContent(Directive &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeDirective(const Directive &v, mxpugi::xml_node parent, const char *tag);
+void serializeDirective(const Directive &v, mx::xml::Node parent, const char *tag);
 
-void serializeDirectiveContent(const Directive &v, mxpugi::xml_node el);
+void serializeDirectiveContent(const Directive &v, mx::xml::Node el);
 
 } // namespace mx::core

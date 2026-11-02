@@ -21,10 +21,10 @@ void Timpani::setSmufl(std::optional<SmuflPictogramGlyphName> value)
     m_smufl = std::move(value);
 }
 
-Timpani parseTimpani(mxpugi::xml_node el, const ParseContext &context)
+Timpani parseTimpani(mx::xml::Node el, const ParseContext &context)
 {
     Timpani out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -44,7 +44,7 @@ Timpani parseTimpani(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTimpaniContent(Timpani &out, mxpugi::xml_node el, const ParseContext &context)
+void parseTimpaniContent(Timpani &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -54,9 +54,9 @@ void parseTimpaniContent(Timpani &out, mxpugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeTimpani(const Timpani &v, mxpugi::xml_node parent, const char *tag)
+void serializeTimpani(const Timpani &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -64,7 +64,7 @@ void serializeTimpani(const Timpani &v, mxpugi::xml_node parent, const char *tag
     serializeTimpaniContent(v, el);
 }
 
-void serializeTimpaniContent(const Timpani &v, mxpugi::xml_node el)
+void serializeTimpaniContent(const Timpani &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

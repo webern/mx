@@ -13,9 +13,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -61,12 +61,12 @@ class NonArpeggiate final
     std::optional<Token> m_id;
 };
 
-NonArpeggiate parseNonArpeggiate(mxpugi::xml_node el, const ParseContext &context);
+NonArpeggiate parseNonArpeggiate(mx::xml::Node el, const ParseContext &context);
 
-void parseNonArpeggiateContent(NonArpeggiate &out, mxpugi::xml_node el, const ParseContext &context);
+void parseNonArpeggiateContent(NonArpeggiate &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeNonArpeggiate(const NonArpeggiate &v, mxpugi::xml_node parent, const char *tag);
+void serializeNonArpeggiate(const NonArpeggiate &v, mx::xml::Node parent, const char *tag);
 
-void serializeNonArpeggiateContent(const NonArpeggiate &v, mxpugi::xml_node el);
+void serializeNonArpeggiateContent(const NonArpeggiate &v, mx::xml::Node el);
 
 } // namespace mx::core

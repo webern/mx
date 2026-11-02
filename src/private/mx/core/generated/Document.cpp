@@ -14,11 +14,11 @@
 namespace mx::core
 {
 
-Result<Document> parse(const mxpugi::xml_document &doc, const ParseContext &context)
+Result<Document> parse(const mx::xml::Document &doc, const ParseContext &context)
 {
     try
     {
-        mxpugi::xml_node root = doc.document_element();
+        mx::xml::Node root = doc.documentElement();
         if (!root)
         {
             return Error{ErrorCode::invalidDocument, "/", "document has no root element"};
@@ -31,7 +31,7 @@ Result<Document> parse(const mxpugi::xml_document &doc, const ParseContext &cont
                              std::string{SupportedMusicXMLVersion}};
         }
         std::vector<RootNamespace> namespaces;
-        for (mxpugi::xml_attribute a : root.attributes())
+        for (mx::xml::Attribute a : root.attributes())
         {
             if (isNamespaceDecl(a.name()))
             {
@@ -61,25 +61,25 @@ Result<Document> parse(const mxpugi::xml_document &doc, const ParseContext &cont
     }
 }
 
-void serialize(const Document &d, mxpugi::xml_document &out)
+void serialize(const Document &d, mx::xml::Document &out)
 {
     out.reset();
-    mxpugi::xml_node decl = out.append_child(mxpugi::node_declaration);
-    decl.append_attribute("version").set_value("1.0");
-    decl.append_attribute("encoding").set_value("UTF-8");
-    decl.append_attribute("standalone").set_value("no");
-    mxpugi::xml_node doctype = out.append_child(mxpugi::node_doctype);
+    mx::xml::Node decl = out.root().appendChild(mx::xml::NodeType::declaration);
+    decl.appendAttribute("version").setValue("1.0");
+    decl.appendAttribute("encoding").setValue("UTF-8");
+    decl.appendAttribute("standalone").setValue("no");
+    mx::xml::Node doctype = out.root().appendChild(mx::xml::NodeType::doctype);
     if (d.isScorePartwise())
     {
-        doctype.set_value(std::string{DoctypeScorePartwise}.c_str());
-        serializeScorePartwise(d.asScorePartwise(), out, "score-partwise");
+        doctype.setValue(DoctypeScorePartwise);
+        serializeScorePartwise(d.asScorePartwise(), out.root(), "score-partwise");
     }
     else if (d.isScoreTimewise())
     {
-        doctype.set_value(std::string{DoctypeScoreTimewise}.c_str());
-        serializeScoreTimewise(d.asScoreTimewise(), out, "score-timewise");
+        doctype.setValue(DoctypeScoreTimewise);
+        serializeScoreTimewise(d.asScoreTimewise(), out.root(), "score-timewise");
     }
-    mxpugi::xml_node root = out.document_element();
+    mx::xml::Node root = out.documentElement();
     for (const auto &ns : d.rootNamespaces())
     {
         // Only actual namespace declarations are written back: anything

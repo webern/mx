@@ -9,9 +9,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -42,12 +42,12 @@ class SystemDividers final
     EmptyPrintObjectStyleAlign m_rightDivider{};
 };
 
-SystemDividers parseSystemDividers(mxpugi::xml_node el, const ParseContext &context);
+SystemDividers parseSystemDividers(mx::xml::Node el, const ParseContext &context);
 
-void parseSystemDividersContent(SystemDividers &out, mxpugi::xml_node el, const ParseContext &context);
+void parseSystemDividersContent(SystemDividers &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeSystemDividers(const SystemDividers &v, mxpugi::xml_node parent, const char *tag);
+void serializeSystemDividers(const SystemDividers &v, mx::xml::Node parent, const char *tag);
 
-void serializeSystemDividersContent(const SystemDividers &v, mxpugi::xml_node el);
+void serializeSystemDividersContent(const SystemDividers &v, mx::xml::Node el);
 
 } // namespace mx::core

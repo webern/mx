@@ -66,11 +66,11 @@ void Grouping::setFeature(std::vector<Feature> value)
     m_feature = std::move(value);
 }
 
-Grouping parseGrouping(mxpugi::xml_node el, const ParseContext &context)
+Grouping parseGrouping(mx::xml::Node el, const ParseContext &context)
 {
     Grouping out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -107,9 +107,9 @@ Grouping parseGrouping(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseGroupingContent(Grouping &out, mxpugi::xml_node el, const ParseContext &context)
+void parseGroupingContent(Grouping &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     while (cursorIs(cursor, "feature"))
     {
         out.addFeature(parseFeature(cursor, context));
@@ -125,9 +125,9 @@ void parseGroupingContent(Grouping &out, mxpugi::xml_node el, const ParseContext
     }
 }
 
-void serializeGrouping(const Grouping &v, mxpugi::xml_node parent, const char *tag)
+void serializeGrouping(const Grouping &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -144,7 +144,7 @@ void serializeGrouping(const Grouping &v, mxpugi::xml_node parent, const char *t
     serializeGroupingContent(v, el);
 }
 
-void serializeGroupingContent(const Grouping &v, mxpugi::xml_node el)
+void serializeGroupingContent(const Grouping &v, mx::xml::Node el)
 {
     for (const auto &item : v.feature())
     {

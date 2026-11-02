@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -51,12 +51,12 @@ class MetronomeNote final
     std::optional<MetronomeTuplet> m_metronomeTuplet;
 };
 
-MetronomeNote parseMetronomeNote(mxpugi::xml_node el, const ParseContext &context);
+MetronomeNote parseMetronomeNote(mx::xml::Node el, const ParseContext &context);
 
-void parseMetronomeNoteContent(MetronomeNote &out, mxpugi::xml_node el, const ParseContext &context);
+void parseMetronomeNoteContent(MetronomeNote &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeMetronomeNote(const MetronomeNote &v, mxpugi::xml_node parent, const char *tag);
+void serializeMetronomeNote(const MetronomeNote &v, mx::xml::Node parent, const char *tag);
 
-void serializeMetronomeNoteContent(const MetronomeNote &v, mxpugi::xml_node el);
+void serializeMetronomeNoteContent(const MetronomeNote &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -8,10 +8,10 @@
 namespace {{vars.namespace}}
 {
 
-{{ident}} parse{{ident}}(mxpugi::xml_node el, const ParseContext &context)
+{{ident}} parse{{ident}}(mx::xml::Node el, const ParseContext &context)
 {
     {{ident}} out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -24,7 +24,7 @@ namespace {{vars.namespace}}
     return out;
 }
 
-void parse{{ident}}Content({{ident}} &out, mxpugi::xml_node el, const ParseContext &context)
+void parse{{ident}}Content({{ident}} &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -34,13 +34,13 @@ void parse{{ident}}Content({{ident}} &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serialize{{ident}}(const {{ident}} &v, mxpugi::xml_node parent, const char *tag)
+void serialize{{ident}}(const {{ident}} &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serialize{{ident}}Content(v, el);
 }
 
-void serialize{{ident}}Content(const {{ident}} &v, mxpugi::xml_node el)
+void serialize{{ident}}Content(const {{ident}} &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

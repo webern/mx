@@ -131,10 +131,10 @@ void EmptyPrintStyleAlignID::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(mxpugi::xml_node el, const ParseContext &context)
+EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(mx::xml::Node el, const ParseContext &context)
 {
     EmptyPrintStyleAlignID out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -198,7 +198,7 @@ EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(mxpugi::xml_node el, const Pa
     return out;
 }
 
-void parseEmptyPrintStyleAlignIDContent(EmptyPrintStyleAlignID &out, mxpugi::xml_node el, const ParseContext &context)
+void parseEmptyPrintStyleAlignIDContent(EmptyPrintStyleAlignID &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -208,9 +208,9 @@ void parseEmptyPrintStyleAlignIDContent(EmptyPrintStyleAlignID &out, mxpugi::xml
     }
 }
 
-void serializeEmptyPrintStyleAlignID(const EmptyPrintStyleAlignID &v, mxpugi::xml_node parent, const char *tag)
+void serializeEmptyPrintStyleAlignID(const EmptyPrintStyleAlignID &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -262,7 +262,7 @@ void serializeEmptyPrintStyleAlignID(const EmptyPrintStyleAlignID &v, mxpugi::xm
     serializeEmptyPrintStyleAlignIDContent(v, el);
 }
 
-void serializeEmptyPrintStyleAlignIDContent(const EmptyPrintStyleAlignID &v, mxpugi::xml_node el)
+void serializeEmptyPrintStyleAlignIDContent(const EmptyPrintStyleAlignID &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

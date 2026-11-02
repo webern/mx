@@ -31,10 +31,10 @@ void Glass::setValue(GlassValue value)
     m_value = std::move(value);
 }
 
-Glass parseGlass(mxpugi::xml_node el, const ParseContext &context)
+Glass parseGlass(mx::xml::Node el, const ParseContext &context)
 {
     Glass out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ Glass parseGlass(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseGlassContent(Glass &out, mxpugi::xml_node el, const ParseContext &context)
+void parseGlassContent(Glass &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<GlassValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseGlassContent(Glass &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeGlass(const Glass &v, mxpugi::xml_node parent, const char *tag)
+void serializeGlass(const Glass &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -73,7 +73,7 @@ void serializeGlass(const Glass &v, mxpugi::xml_node parent, const char *tag)
     serializeGlassContent(v, el);
 }
 
-void serializeGlassContent(const Glass &v, mxpugi::xml_node el)
+void serializeGlassContent(const Glass &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

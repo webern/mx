@@ -9,9 +9,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -95,8 +95,8 @@ class HarmonicChoice2 final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-HarmonicChoice2 parseHarmonicChoice2(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
+HarmonicChoice2 parseHarmonicChoice2(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeHarmonicChoice2(const HarmonicChoice2 &v, mxpugi::xml_node el);
+void serializeHarmonicChoice2(const HarmonicChoice2 &v, mx::xml::Node el);
 
 } // namespace mx::core

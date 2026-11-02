@@ -31,7 +31,7 @@ HarmonyChordGroupChoice HarmonyChordGroupChoice::function(StyleText value)
     return HarmonyChordGroupChoice{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-HarmonyChordGroupChoice parseHarmonyChordGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+HarmonyChordGroupChoice parseHarmonyChordGroupChoice(mx::xml::Node el, mx::xml::Node &cursor,
                                                      const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "root")))
@@ -59,7 +59,7 @@ HarmonyChordGroupChoice parseHarmonyChordGroupChoice(mxpugi::xml_node el, mxpugi
     throwMissingElement(el, "root");
 }
 
-void serializeHarmonyChordGroupChoice(const HarmonyChordGroupChoice &v, mxpugi::xml_node el)
+void serializeHarmonyChordGroupChoice(const HarmonyChordGroupChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

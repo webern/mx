@@ -151,11 +151,11 @@ void Tuplet::setTupletNormal(std::optional<TupletPortion> value)
     m_tupletNormal = std::move(value);
 }
 
-Tuplet parseTuplet(mxpugi::xml_node el, const ParseContext &context)
+Tuplet parseTuplet(mx::xml::Node el, const ParseContext &context)
 {
     Tuplet out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -224,9 +224,9 @@ Tuplet parseTuplet(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTupletContent(Tuplet &out, mxpugi::xml_node el, const ParseContext &context)
+void parseTupletContent(Tuplet &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "tuplet-actual"))
     {
         out.setTupletActual(parseTupletPortion(cursor, context));
@@ -247,9 +247,9 @@ void parseTupletContent(Tuplet &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeTuplet(const Tuplet &v, mxpugi::xml_node parent, const char *tag)
+void serializeTuplet(const Tuplet &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -298,7 +298,7 @@ void serializeTuplet(const Tuplet &v, mxpugi::xml_node parent, const char *tag)
     serializeTupletContent(v, el);
 }
 
-void serializeTupletContent(const Tuplet &v, mxpugi::xml_node el)
+void serializeTupletContent(const Tuplet &v, mx::xml::Node el)
 {
     if (v.tupletActual())
     {

@@ -26,10 +26,10 @@ void Listen::setChoice(OneOrMore<ListenChoice> value)
     m_choice = std::move(value);
 }
 
-Listen parseListen(mxpugi::xml_node el, const ParseContext &context)
+Listen parseListen(mx::xml::Node el, const ParseContext &context)
 {
     Listen out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -42,9 +42,9 @@ Listen parseListen(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseListenContent(Listen &out, mxpugi::xml_node el, const ParseContext &context)
+void parseListenContent(Listen &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (!(cursor && (cursorIs(cursor, "assess") || cursorIs(cursor, "wait") || cursorIs(cursor, "other-listen"))))
     {
         throwMissingElement(el, "assess");
@@ -64,13 +64,13 @@ void parseListenContent(Listen &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeListen(const Listen &v, mxpugi::xml_node parent, const char *tag)
+void serializeListen(const Listen &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeListenContent(v, el);
 }
 
-void serializeListenContent(const Listen &v, mxpugi::xml_node el)
+void serializeListenContent(const Listen &v, mx::xml::Node el)
 {
     for (const auto &item : v.choice())
     {

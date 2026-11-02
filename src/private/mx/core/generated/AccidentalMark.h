@@ -19,9 +19,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -87,12 +87,12 @@ class AccidentalMark final
     AccidentalValue m_value{};
 };
 
-AccidentalMark parseAccidentalMark(mxpugi::xml_node el, const ParseContext &context);
+AccidentalMark parseAccidentalMark(mx::xml::Node el, const ParseContext &context);
 
-void parseAccidentalMarkContent(AccidentalMark &out, mxpugi::xml_node el, const ParseContext &context);
+void parseAccidentalMarkContent(AccidentalMark &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeAccidentalMark(const AccidentalMark &v, mxpugi::xml_node parent, const char *tag);
+void serializeAccidentalMark(const AccidentalMark &v, mx::xml::Node parent, const char *tag);
 
-void serializeAccidentalMarkContent(const AccidentalMark &v, mxpugi::xml_node el);
+void serializeAccidentalMarkContent(const AccidentalMark &v, mx::xml::Node el);
 
 } // namespace mx::core

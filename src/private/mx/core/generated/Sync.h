@@ -11,9 +11,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -47,12 +47,12 @@ class Sync final
     std::optional<TimeOnly> m_timeOnly;
 };
 
-Sync parseSync(mxpugi::xml_node el, const ParseContext &context);
+Sync parseSync(mx::xml::Node el, const ParseContext &context);
 
-void parseSyncContent(Sync &out, mxpugi::xml_node el, const ParseContext &context);
+void parseSyncContent(Sync &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeSync(const Sync &v, mxpugi::xml_node parent, const char *tag);
+void serializeSync(const Sync &v, mx::xml::Node parent, const char *tag);
 
-void serializeSyncContent(const Sync &v, mxpugi::xml_node el);
+void serializeSyncContent(const Sync &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -179,7 +179,7 @@ MusicDataChoice MusicDataChoice::bookmark(Bookmark value)
     return MusicDataChoice{Storage{std::in_place_index<13>, std::make_unique<Bookmark>(std::move(value))}};
 }
 
-MusicDataChoice parseMusicDataChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+MusicDataChoice parseMusicDataChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursorIs(cursor, "note"))
     {
@@ -272,7 +272,7 @@ MusicDataChoice parseMusicDataChoice(mxpugi::xml_node el, mxpugi::xml_node &curs
     throwMissingElement(el, "note");
 }
 
-void serializeMusicDataChoice(const MusicDataChoice &v, mxpugi::xml_node el)
+void serializeMusicDataChoice(const MusicDataChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

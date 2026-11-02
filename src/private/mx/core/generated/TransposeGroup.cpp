@@ -51,7 +51,7 @@ void TransposeGroup::setDouble(std::optional<Double> value)
     m_double_ = std::move(value);
 }
 
-TransposeGroup parseTransposeGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+TransposeGroup parseTransposeGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     TransposeGroup out;
     if (cursorIs(cursor, "diatonic"))
@@ -81,7 +81,7 @@ TransposeGroup parseTransposeGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor
     return out;
 }
 
-void serializeTransposeGroup(const TransposeGroup &v, mxpugi::xml_node el)
+void serializeTransposeGroup(const TransposeGroup &v, mx::xml::Node el)
 {
     if (v.diatonic())
     {

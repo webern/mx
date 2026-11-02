@@ -9,9 +9,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -43,12 +43,12 @@ class TimeModification
     std::optional<TimeModificationGroup> m_group;
 };
 
-TimeModification parseTimeModification(mxpugi::xml_node el, const ParseContext &context);
+TimeModification parseTimeModification(mx::xml::Node el, const ParseContext &context);
 
-void parseTimeModificationContent(TimeModification &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTimeModificationContent(TimeModification &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTimeModification(const TimeModification &v, mxpugi::xml_node parent, const char *tag);
+void serializeTimeModification(const TimeModification &v, mx::xml::Node parent, const char *tag);
 
-void serializeTimeModificationContent(const TimeModification &v, mxpugi::xml_node el);
+void serializeTimeModificationContent(const TimeModification &v, mx::xml::Node el);
 
 } // namespace mx::core

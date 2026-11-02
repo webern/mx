@@ -19,9 +19,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -97,12 +97,12 @@ class Lyric final
     EditorialGroup m_editorial{};
 };
 
-Lyric parseLyric(mxpugi::xml_node el, const ParseContext &context);
+Lyric parseLyric(mx::xml::Node el, const ParseContext &context);
 
-void parseLyricContent(Lyric &out, mxpugi::xml_node el, const ParseContext &context);
+void parseLyricContent(Lyric &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeLyric(const Lyric &v, mxpugi::xml_node parent, const char *tag);
+void serializeLyric(const Lyric &v, mx::xml::Node parent, const char *tag);
 
-void serializeLyricContent(const Lyric &v, mxpugi::xml_node el);
+void serializeLyricContent(const Lyric &v, mx::xml::Node el);
 
 } // namespace mx::core

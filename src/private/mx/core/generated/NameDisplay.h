@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -41,12 +41,12 @@ class NameDisplay final
     std::vector<NameDisplayChoice> m_choice;
 };
 
-NameDisplay parseNameDisplay(mxpugi::xml_node el, const ParseContext &context);
+NameDisplay parseNameDisplay(mx::xml::Node el, const ParseContext &context);
 
-void parseNameDisplayContent(NameDisplay &out, mxpugi::xml_node el, const ParseContext &context);
+void parseNameDisplayContent(NameDisplay &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeNameDisplay(const NameDisplay &v, mxpugi::xml_node parent, const char *tag);
+void serializeNameDisplay(const NameDisplay &v, mx::xml::Node parent, const char *tag);
 
-void serializeNameDisplayContent(const NameDisplay &v, mxpugi::xml_node el);
+void serializeNameDisplayContent(const NameDisplay &v, mx::xml::Node el);
 
 } // namespace mx::core

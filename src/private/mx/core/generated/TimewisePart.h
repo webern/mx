@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -38,12 +38,12 @@ class TimewisePart final
     std::vector<MusicDataChoice> m_musicData;
 };
 
-TimewisePart parseTimewisePart(mxpugi::xml_node el, const ParseContext &context);
+TimewisePart parseTimewisePart(mx::xml::Node el, const ParseContext &context);
 
-void parseTimewisePartContent(TimewisePart &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTimewisePartContent(TimewisePart &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTimewisePart(const TimewisePart &v, mxpugi::xml_node parent, const char *tag);
+void serializeTimewisePart(const TimewisePart &v, mx::xml::Node parent, const char *tag);
 
-void serializeTimewisePartContent(const TimewisePart &v, mxpugi::xml_node el);
+void serializeTimewisePartContent(const TimewisePart &v, mx::xml::Node el);
 
 } // namespace mx::core

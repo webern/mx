@@ -31,10 +31,10 @@ void GroupBarline::setValue(GroupBarlineValue value)
     m_value = std::move(value);
 }
 
-GroupBarline parseGroupBarline(mxpugi::xml_node el, const ParseContext &context)
+GroupBarline parseGroupBarline(mx::xml::Node el, const ParseContext &context)
 {
     GroupBarline out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ GroupBarline parseGroupBarline(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseGroupBarlineContent(GroupBarline &out, mxpugi::xml_node el, const ParseContext &context)
+void parseGroupBarlineContent(GroupBarline &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<GroupBarlineValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseGroupBarlineContent(GroupBarline &out, mxpugi::xml_node el, const Pars
     }
 }
 
-void serializeGroupBarline(const GroupBarline &v, mxpugi::xml_node parent, const char *tag)
+void serializeGroupBarline(const GroupBarline &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.color())
     {
         setAttribute(el, "color", v.color()->toString());
@@ -73,7 +73,7 @@ void serializeGroupBarline(const GroupBarline &v, mxpugi::xml_node parent, const
     serializeGroupBarlineContent(v, el);
 }
 
-void serializeGroupBarlineContent(const GroupBarline &v, mxpugi::xml_node el)
+void serializeGroupBarlineContent(const GroupBarline &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }
