@@ -140,8 +140,3 @@ structure (fill the numbers and signatures from Step 2; do not invent them):
 Be honest about caveats: the comparison is strict full-DOM, and if the pinned baseline
 (`roundtrip-baseline.txt`) is ungrown, almost the whole corpus shows as failing — these are the raw
 landscape, not a regression.
-
-## Hand-off Fixes (if requested)
-
-- To fix a dropped/under-supported element or a crash: use the `mx-api-add-feature` skill.
-- The findings belong under the tracking issue #208; file specifics with the `mx-open-issue` skill.
