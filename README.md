@@ -41,7 +41,9 @@ use. Set `MX_RUNNING_IN_DOCKER=1` to run natively with your host toolchain inste
 ### Build Targets
 
 The CMake options are `MX_CORE_DEV` (test binaries), `MX_API` (the product library, default `ON`),
-and `MX_COVERAGE` (gcov instrumentation). The useful workflows are exposed as Makefile targets:
+`MX_COVERAGE` (gcov instrumentation) and `MX_XML_BACKEND` (which XML library sits under `mx::core`;
+see [Bringing your own XML library](#bringing-your-own-xml-library)). The useful workflows are
+exposed as Makefile targets:
 
 | Target                      | What it does                                                       |
 |-----------------------------|--------------------------------------------------------------------|
@@ -56,6 +58,7 @@ and `MX_COVERAGE` (gcov instrumentation). The useful workflows are exposed as Ma
 | `make core-unit`            | run the `mx::core` unit tests (values, shapes, rejection suite)   |
 | `make core-coverage`        | instrumented core build + gcovr report (manual; also `/coverage`) |
 | `make api-coverage`         | instrumented api build + gcovr report (manual; also `/coverage`)  |
+| `make backend-pugixml-test` | build mx against a stock pugixml (`MX_XML_BACKEND=pugixml`), run the core suites (CI gate) |
 
 `make clean` removes the build tree. Knobs: `JOBS` (parallelism, auto-detected), `BUILD_TYPE`
 (default `Debug`), and `ARGS` (forwarded to test binaries, e.g.
@@ -63,7 +66,10 @@ and `MX_COVERAGE` (gcov instrumentation). The useful workflows are exposed as Ma
 
 ### Build Tenets
 
-* `mx` should not depend on any outside libraries (no deps).
+* `mx` should not depend on any outside libraries (no deps). A consumer may opt in to building
+  `mx` against their own XML library (see
+  [Bringing your own XML library](#bringing-your-own-xml-library)), but the default build never
+  does.
 * `mx` third-party code should be kept to a minimum.
 * `mx` third-party code should be checked into the `mx` repo and compiled as part of the `mx`
   library.
@@ -181,6 +187,58 @@ cmake .. && make -j10
 # run your executable
 ./my-musicxml-proj
 ```
+
+#### Bringing your own XML library
+
+`mx::core` reads and writes XML through a small seam (`src/private/mx/xml/`), and the CMake option
+`MX_XML_BACKEND` chooses what sits under it. It has three values:
+
+- `vendored` (the default, always): mx's private copy of pugixml, compiled under the `mxpugi`
+  namespace (`src/private/mxpugi/`). Nothing to install, and mx does not define a `pugi::` symbol,
+  so it links cleanly next to a pugixml you already have.
+- `pugixml`: mx's pugixml adapter compiled against your own pugixml. `MX_PUGIXML_TARGET` (default
+  `pugixml`, the target upstream pugixml's CMake defines) names its CMake target. The target has
+  to exist before `add_subdirectory(mx)`; mx's configure fails with a message saying so otherwise.
+- `custom`: a backend you wrote for another XML library. Set `MX_XML_BACKEND_HEADER` to the include
+  path of a header that defines `struct mx::xml::Backend`, and `MX_XML_BACKEND_TARGET` to a CMake
+  target (INTERFACE or library) that carries the header's include directory, any sources, and the
+  link to the XML library. mx links the target and does not compile its pugixml adapter. The
+  target is created before `add_subdirectory(mx)`, so a source file on it that includes
+  `mx/xml/Concept.h` needs mx's `src/private` on its own include path; a header-only backend
+  avoids that.
+
+The default is never chosen by detection: mx only leaves its vendored copy when you say so. The
+`pugixml` mode looks like this in a consumer project. `find_package(pugixml)` works in place of
+FetchContent; a versioned `find_package(pugixml 1.11)` or newer defines only `pugixml::pugixml`,
+so set `MX_PUGIXML_TARGET=pugixml::pugixml` with it:
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(pugixml
+    GIT_REPOSITORY https://github.com/zeux/pugixml.git
+    GIT_TAG v1.16)
+FetchContent_MakeAvailable(pugixml)          # defines the `pugixml` target
+
+set(MX_XML_BACKEND pugixml CACHE STRING "" FORCE)
+add_subdirectory(mx)
+target_link_libraries(my-musicxml-proj mx)
+```
+
+`cmake/backend-pugixml/CMakeLists.txt` is a complete project of this shape;
+`make backend-pugixml-test` builds it and CI runs it.
+
+For `custom`, the header must define `struct mx::xml::Backend` satisfying the C++20 concept
+`mx::xml::XmlBackend` in `src/private/mx/xml/Concept.h`: three handle types (a node, an attribute
+and a document) and the static functions the seam forwards to, each listed with its signature. The
+`static_assert` in `src/private/mx/xml/Xml.h` checks the struct against the concept, so a missing or
+mistyped member fails to compile with a message naming it. The pugixml adapter in
+`src/private/mx/xml/pugixml/Backend.{h,cpp}` is the worked example. There is no CI job for this
+mode; the concept is the contract.
+
+The Swift package (`Package.swift`) and the release XCFramework always build the vendored copy;
+there is no switch for them. The test binaries do their own DOM work with mxpugi in every mode
+and hand `mx::core` XML text, so a pugixml-mode build compiles both `pugixml.hpp` and
+`mxpugi.hpp` in the test translation units (the CI job proves that works).
 
 # Code Generation
 
@@ -508,7 +566,8 @@ backend mx ships is an adapter over the vendored [pugixml](http://pugixml.org/)
 (`src/private/mxpugi/`), in keeping with the build tenets [above](#build-tenets); the earlier
 `ezxml` abstraction layer is retired. mx compiles its copy of pugixml under the private `mxpugi`
 namespace, so it does not define a `pugi::` symbol and can be linked alongside a consumer's own
-pugixml. A configure-time option for choosing another backend is the next step; see
+pugixml. The CMake option `MX_XML_BACKEND` builds `mx::core` against a consumer's own pugixml or a
+backend they wrote instead; see [Bringing your own XML library](#bringing-your-own-xml-library) and
 `docs/ai/design/xml-backend.md`.
 
 ##### `mx::impl`

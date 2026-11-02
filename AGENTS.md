@@ -15,6 +15,8 @@ mx/
   AGENTS.md             <- you are here
   .claude/skills/       <- agent skills; every skill name starts with mx-
   Makefile              <- top-level build driver
+  cmake/                <- CMake helpers: GitSha.cmake, and the backend-pugixml consumer project
+                           that `make backend-pugixml-test` builds (mx against a stock pugixml)
   scripts/              <- maintenance scripts (vendor_pugixml.py refreshes src/private/mxpugi)
   Dockerfile            <- mx-sdk image with toolchains and dev tools
   CMakeLists.txt        <- C++ project
@@ -148,6 +150,9 @@ Adding/removing a `data/` file: bump the pinned count in `CoreRoundtripTest.cpp`
 `ApiLoadSmokeTest` proves a file imports without crashing, not that the data is correct; the read→write→read gate (`make api-roundtrip` / `roundtrip-baseline.txt`) is the correctness check — pin a fixture there to defend a feature.
 `make wasm-test` builds `mx::api` for Emscripten and runs the examples under Node — CI's check that mx
 still compiles and works client-side in a browser (a consumer, denigma, depends on this; issue #386).
+`make backend-pugixml-test` builds mx against a stock pugixml (`MX_XML_BACKEND=pugixml`, see the
+README's "Bringing your own XML library") and runs the core suites — CI's check that the XML backend
+option works; `make symbol-check` only applies to the default vendored build.
 
 Look at what will run in CI `.github/workflows/ci.yaml` and anticipate issues there when coding
 locally. Code coverage is not part of the normal CI run; trigger it on demand with a `/coverage`

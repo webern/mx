@@ -139,6 +139,39 @@ jobs:
       - name: mx::api under Node (wasm)
         run: make wasm-test
 
+  # mx built against a stock pugixml instead of its private copy
+  # (MX_XML_BACKEND=pugixml, issue #478). cmake/backend-pugixml fetches
+  # pugixml 1.16, adds mx as a subdirectory, runs the core suites, and checks
+  # that libmx_core.a references pugi:: and does not hold an mxpugi:: symbol. The
+  # test binaries link both pugixml copies, so this is also the proof that a
+  # stock pugixml.hpp and mxpugi.hpp compile in one translation unit.
+  backend-pugixml:
+    name: "backend: pugixml"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Create bind-backed build volume
+        run: |
+          mkdir -p build/docker
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: build/docker/.ccache
+          key: ccache-${{ runner.os }}-backend-pugixml-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-backend-pugixml-
+
+      - name: Core suites against a stock pugixml (MX_XML_BACKEND=pugixml)
+        run: make backend-pugixml-test
+
   # The api product surface, built natively with AppleClang. macOS is a
   # portability check on the product tier only (the core suites run on Linux in
   # test-linux); this is the only C++ job off the pinned toolchain, by design,
