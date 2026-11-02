@@ -89,6 +89,7 @@ in `mx::api`, such as the need to manage beam starts and stops explicitly.
 #include <iostream>
 #include <cstdint>
 #include <sstream>
+#include <utility>
 
 #include "mx/api/MusicXml.h"
 #include "mx/api/ScoreData.h"
@@ -126,8 +127,7 @@ int main(int argc, const char * argv[])
     // add a measure
     part.measures.emplace_back( MeasureData{} );
     auto& measure = part.measures.back();
-    measure.timeSignature.beats = "4";
-    measure.timeSignature.beatType = "4";
+    measure.timeSignature = TimeChoice( TimeSignatureData{ "4", "4" } );
     measure.timeSignature.isImplicit = false;
 
     // add a staff
@@ -198,7 +198,7 @@ int main(int argc, const char * argv[])
 
     // a MusicXml document is created from the score data and owns the
     // underlying MusicXML model, which is hidden from us when using mx::api
-    const auto docResult = fromScore( score );
+    auto docResult = fromScore( score );
     if( !docResult.ok() ) { return 1; }
     const auto document = std::move( docResult ).value();
 
@@ -227,6 +227,7 @@ int main(int argc, const char * argv[])
 #include <iostream>
 #include <cstdint>
 #include <sstream>
+#include <utility>
 
 #define MX_IS_A_SUCCESS 0
 #define MX_IS_A_FAILURE 1
@@ -279,7 +280,7 @@ int main(int argc, const char * argv[])
     std::istringstream istr{ xml };
 
     // parse the XML into a MusicXml document that we own
-    const auto docResult = MusicXml::fromStream( istr );
+    auto docResult = MusicXml::fromStream( istr );
     if( !docResult.ok() ) { return MX_IS_A_FAILURE; }
 
     // take the score out of the document. intoScore also consumes the
@@ -342,6 +343,7 @@ class ScoreData
 {
 public:
     MusicXmlVersion musicXmlVersion;
+    std::string declaredMusicXmlVersion;
     std::string musicXmlType;
     std::string workTitle;
     std::string workNumber;
@@ -352,9 +354,13 @@ public:
     std::string arranger;
     std::string publisher;
     std::string copyright;
+    std::optional<std::string> copyrightType;
+    std::optional<std::string> source;
     EncodingData encoding;
     std::vector<PageTextData> pageTextItems;
+    std::vector<PageImageData> pageImageItems;
     DefaultsData defaults;
+    bool concertScore;
     std::vector<PartData> parts;
     std::vector<PartGroupData> partGroups;
     int ticksPerQuarter;
