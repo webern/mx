@@ -67,7 +67,7 @@ FIND_CPP := find src \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
 .DEFAULT_GOAL := help
-.PHONY: help sdk fmt fmt-check test-all symbol-check vendor-pugixml \
+.PHONY: help sdk fmt fmt-check test-all symbol-check vendor-pugixml backend-pugixml-test \
         core-build core-roundtrip-test core-unit core-coverage \
         api-lib api-build api-test api-examples api-roundtrip \
         api-roundtrip-discover api-roundtrip-dump api-roundtrip-classify api-coverage \
@@ -85,6 +85,7 @@ help:
 	@echo '  Everything C++ (the default deep gate, run in CI on Linux):'
 	@echo '  make test-all       core-roundtrip-test + core-unit + api-test + api-roundtrip.'
 	@echo '  make symbol-check   Fail if a built archive exports a global pugi:: symbol (CI gate).'
+	@echo '  make backend-pugixml-test  Build mx against a stock pugixml (MX_XML_BACKEND=pugixml) and run the core suites (CI gate).'
 	@echo ''
 	@echo '  Product surface (mx::api / mx::impl):'
 	@echo '  make api-lib             Build the mx static library (MX_API=ON).'
@@ -179,7 +180,10 @@ test-all: core-roundtrip-test core-unit api-test api-roundtrip
 # This gate reads every archive the api and core-dev builds produced and
 # fails on any symbol in the stock `pugi::` namespace. The mxpugi:: count is
 # printed, and must be non-zero, so an empty or stale archive cannot pass.
-# `nm -g | c++filt` is the same on GNU and Apple toolchains.
+# `nm -g | c++filt` is the same on GNU and Apple toolchains. The check only
+# makes sense for the default MX_XML_BACKEND=vendored build, which is what
+# build/api and build/core-dev hold; a pugixml-mode build references pugi::
+# on purpose (see backend-pugixml-test).
 SYMBOL_CHECK_ARCHIVES := \
 	$(BUILD_ROOT)/api/libmx.a \
 	$(BUILD_ROOT)/api/libmx_core.a \
@@ -212,6 +216,31 @@ symbol-check:
 	fi; \
 	[ "$$status" -eq 0 ] || exit 1; \
 	echo "symbol-check passed: $$found archives, $$total mxpugi:: symbols, 0 pugi:: symbols."
+
+# mx against a stock pugixml (MX_XML_BACKEND=pugixml). The consumer project
+# in cmake/backend-pugixml fetches pugixml 1.16 and adds mx as a
+# subdirectory; mx's CMakeLists puts the binaries at the top of that build
+# tree. After the core suites, nm proves the mode took: libmx_core.a must
+# reference pugi:: and must not contain an mxpugi:: symbol. The test binaries
+# still link mxpugi, which is why the archive, not the binaries, is checked.
+BACKEND_PUGIXML_DIR := $(BUILD_ROOT)/backend-pugixml
+
+backend-pugixml-test:
+	$(CMAKE) -S cmake/backend-pugixml -B $(BACKEND_PUGIXML_DIR) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
+	$(CMAKE) --build $(BACKEND_PUGIXML_DIR) --parallel $(JOBS)
+	$(BACKEND_PUGIXML_DIR)/mxtest-core-dev --allow-running-no-tests $(ARGS)
+	$(BACKEND_PUGIXML_DIR)/mxtest-core
+	@archive=$(BACKEND_PUGIXML_DIR)/libmx_core.a; \
+	symbols=$$(nm -g "$$archive" | c++filt); \
+	ours=$$(printf '%s\n' "$$symbols" | grep -c 'mxpugi::' || true); \
+	theirs=$$(printf '%s\n' "$$symbols" | grep -cE '(^|[^A-Za-z0-9_])pugi::' || true); \
+	if [ "$$ours" -ne 0 ]; then \
+	  echo "backend-pugixml-test: $$archive still has $$ours mxpugi:: symbols; the pugixml backend did not take"; exit 1; \
+	fi; \
+	if [ "$$theirs" -eq 0 ]; then \
+	  echo "backend-pugixml-test: $$archive does not reference a pugi:: symbol; the pugixml backend did not take"; exit 1; \
+	fi; \
+	echo "backend-pugixml-test passed: $$archive references $$theirs pugi:: symbols and 0 mxpugi:: symbols."
 
 api-lib:
 	$(CMAKE) -S . -B $(BUILD_ROOT)/api -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DMX_API=on
@@ -440,6 +469,9 @@ test-all: $(DOCKER_STAMP) docker-volume
 
 symbol-check: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make symbol-check BUILD_TYPE=$(BUILD_TYPE)
+
+backend-pugixml-test: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make backend-pugixml-test BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
 
 api-lib: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make api-lib BUILD_TYPE=$(BUILD_TYPE)
