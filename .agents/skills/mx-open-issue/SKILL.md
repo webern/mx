@@ -34,4 +34,10 @@ to related issues and/or PRs (if any are related). If it is a child of another i
 tracking issue body to add it to the list of tracked issues and also make it a sub-issue of the
 tracker.
 
-No self-attribution in the issue body; add the `ai` label instead.
+Do not pretend to be the user. Instead start the issue like this to make it clear that it was AI written (and add the `ai` label):
+
+```markdown
+> Written on behalf of the user by AI...
+
+{{issue-body}}
+```
