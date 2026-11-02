@@ -17,7 +17,7 @@
 #include "mx/core/generated/Tuplet.h"
 #include "mx/core/generated/TupletNumber.h"
 #include "mx/core/generated/TupletPortion.h"
-#include "mx/impl/Cursor.h"
+#include "mx/impl/MeasureCursor.h"
 #include "mx/impl/TupletReader.h"
 
 using namespace mx;
@@ -44,7 +44,7 @@ TEST(guessesMissingNormalWithoutClobberingExplicitActual, TupletReader)
     core::Note note;
     note.setTimeModification(timeMod);
 
-    Cursor cursor{1, 480};
+    MeasureCursor cursor{1, 480};
     TupletReader reader{tuplet, cursor, note};
 
     std::vector<api::TupletStart> starts;
@@ -80,7 +80,7 @@ TEST(guessesMissingActualWithoutClobberingExplicitNormal, TupletReader)
     core::Note note;
     note.setTimeModification(timeMod);
 
-    Cursor cursor{1, 480};
+    MeasureCursor cursor{1, 480};
     TupletReader reader{tuplet, cursor, note};
 
     std::vector<api::TupletStart> starts;
@@ -112,7 +112,7 @@ TEST(guessesBothFromTimeModificationWhenBothAbsent, TupletReader)
     core::Note note;
     note.setTimeModification(timeMod);
 
-    Cursor cursor{1, 480};
+    MeasureCursor cursor{1, 480};
     TupletReader reader{tuplet, cursor, note};
 
     std::vector<api::TupletStart> starts;
@@ -126,11 +126,11 @@ TEST(guessesBothFromTimeModificationWhenBothAbsent, TupletReader)
 
 T_END
 
-// issue #440 (third bullet): time-modification's normal-type/normal-dot describe only the
-// normal side; there is no actual-type. So when normal-type differs from the note's own
-// written type (3 eighths in the time of 2 quarters), the guessed actual duration must come
-// from the note's own <type>/<dot>, not from normal-type.
-TEST(guessesActualDurationFromNoteTypeNotFromNormalType, TupletReader)
+// issue #485, fixing a bug from #449: the schema counts both actual-notes and normal-notes in
+// the normal-type, whatever the note's own written type. An eighth note with 3:2 and a
+// normal-type of quarter is an eighth inside a quarter-note triplet, 3 quarters in the time of 2
+// quarters, so the guessed actual figure is the quarter, not the note's eighth.
+TEST(guessesActualDurationFromNormalTypeNotFromNoteType, TupletReader)
 {
     core::Tuplet tuplet;
     tuplet.setType(core::StartStop::start());
@@ -151,7 +151,7 @@ TEST(guessesActualDurationFromNoteTypeNotFromNormalType, TupletReader)
     note.setType(noteType);
     note.setTimeModification(timeMod);
 
-    Cursor cursor{1, 480};
+    MeasureCursor cursor{1, 480};
     TupletReader reader{tuplet, cursor, note};
 
     std::vector<api::TupletStart> starts;
@@ -159,7 +159,8 @@ TEST(guessesActualDurationFromNoteTypeNotFromNormalType, TupletReader)
     reader.parseTuplet(starts, stops);
 
     REQUIRE(starts.size() == 1);
-    CHECK(api::DurationName::eighth == starts.front().actualDurationName);
+    CHECK(api::DurationName::quarter == starts.front().actualDurationName);
+    CHECK_EQUAL(0, starts.front().actualDots);
     CHECK(api::DurationName::quarter == starts.front().normalDurationName);
 }
 
@@ -184,7 +185,7 @@ TEST(guessesNormalDotsFromNoteDots, TupletReader)
     note.setTimeModification(timeMod);
     note.addDot(core::EmptyPlacement{});
 
-    Cursor cursor{1, 480};
+    MeasureCursor cursor{1, 480};
     TupletReader reader{tuplet, cursor, note};
 
     std::vector<api::TupletStart> starts;
@@ -218,7 +219,7 @@ TEST(guessesTwoNormalDotsFromTwoNoteDots, TupletReader)
     note.addDot(core::EmptyPlacement{});
     note.addDot(core::EmptyPlacement{});
 
-    Cursor cursor{1, 480};
+    MeasureCursor cursor{1, 480};
     TupletReader reader{tuplet, cursor, note};
 
     std::vector<api::TupletStart> starts;
@@ -256,7 +257,7 @@ TEST(explicitNormalDotsWinOverNoteDots, TupletReader)
     note.addDot(core::EmptyPlacement{});
     note.addDot(core::EmptyPlacement{});
 
-    Cursor cursor{1, 480};
+    MeasureCursor cursor{1, 480};
     TupletReader reader{tuplet, cursor, note};
 
     std::vector<api::TupletStart> starts;
@@ -266,6 +267,9 @@ TEST(explicitNormalDotsWinOverNoteDots, TupletReader)
     REQUIRE(starts.size() == 1);
     CHECK(api::DurationName::half == starts.front().normalDurationName);
     CHECK_EQUAL(1, starts.front().normalDots);
+    // the actual notes are counted in the same dotted half (#485)
+    CHECK(api::DurationName::half == starts.front().actualDurationName);
+    CHECK_EQUAL(1, starts.front().actualDots);
 }
 
 T_END
@@ -288,7 +292,7 @@ TEST(guessesZeroNormalDotsWhenNoteHasNoDots, TupletReader)
     note.setType(noteType);
     note.setTimeModification(timeMod);
 
-    Cursor cursor{1, 480};
+    MeasureCursor cursor{1, 480};
     TupletReader reader{tuplet, cursor, note};
 
     std::vector<api::TupletStart> starts;

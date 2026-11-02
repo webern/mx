@@ -356,14 +356,15 @@ core::Notations NotationsWriter::getNotations() const
     const bool noteHasTimeModification = notationsWriterNoteHasTimeModification(duration);
 
     // What the note's time modification already says about each side of the ratio. An absent
-    // <normal-type> means the normal notes carry the note's own written value (#428).
-    const NotationsWriterTupletPortion impliedActual{duration.timeModificationActualNotes, duration.durationName,
-                                                     duration.durationDots};
+    // <normal-type> means the normal notes carry the note's own written value (#428). The actual
+    // notes are counted in that same unit, so both sides share one figure (#485).
     const bool hasNormalType = duration.timeModificationNormalType != api::DurationName::unspecified;
-    const NotationsWriterTupletPortion impliedNormal{
-        duration.timeModificationNormalNotes,
-        hasNormalType ? duration.timeModificationNormalType : duration.durationName,
-        hasNormalType ? duration.timeModificationNormalTypeDots : duration.durationDots};
+    const auto impliedDurationName = hasNormalType ? duration.timeModificationNormalType : duration.durationName;
+    const auto impliedDots = hasNormalType ? duration.timeModificationNormalTypeDots : duration.durationDots;
+    const NotationsWriterTupletPortion impliedActual{duration.timeModificationActualNotes, impliedDurationName,
+                                                     impliedDots};
+    const NotationsWriterTupletPortion impliedNormal{duration.timeModificationNormalNotes, impliedDurationName,
+                                                     impliedDots};
 
     for (const auto &tupletStart : myNoteData.noteAttachmentData.tupletStarts)
     {
