@@ -211,11 +211,11 @@ void Slide::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Slide parseSlide(mxpugi::xml_node el, const ParseContext &context)
+Slide parseSlide(mx::xml::Node el, const ParseContext &context)
 {
     Slide out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -312,7 +312,7 @@ Slide parseSlide(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseSlideContent(Slide &out, mxpugi::xml_node el, const ParseContext &context)
+void parseSlideContent(Slide &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -321,9 +321,9 @@ void parseSlideContent(Slide &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeSlide(const Slide &v, mxpugi::xml_node parent, const char *tag)
+void serializeSlide(const Slide &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -400,7 +400,7 @@ void serializeSlide(const Slide &v, mxpugi::xml_node parent, const char *tag)
     serializeSlideContent(v, el);
 }
 
-void serializeSlideContent(const Slide &v, mxpugi::xml_node el)
+void serializeSlideContent(const Slide &v, mx::xml::Node el)
 {
     setText(el, v.value());
 }

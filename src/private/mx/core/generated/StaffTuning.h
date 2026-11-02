@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -37,12 +37,12 @@ class StaffTuning final
     TuningGroup m_tuning{};
 };
 
-StaffTuning parseStaffTuning(mxpugi::xml_node el, const ParseContext &context);
+StaffTuning parseStaffTuning(mx::xml::Node el, const ParseContext &context);
 
-void parseStaffTuningContent(StaffTuning &out, mxpugi::xml_node el, const ParseContext &context);
+void parseStaffTuningContent(StaffTuning &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeStaffTuning(const StaffTuning &v, mxpugi::xml_node parent, const char *tag);
+void serializeStaffTuning(const StaffTuning &v, mx::xml::Node parent, const char *tag);
 
-void serializeStaffTuningContent(const StaffTuning &v, mxpugi::xml_node el);
+void serializeStaffTuningContent(const StaffTuning &v, mx::xml::Node el);
 
 } // namespace mx::core

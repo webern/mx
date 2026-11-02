@@ -41,10 +41,10 @@ void Work::setOpus(std::optional<Opus> value)
     m_opus = std::move(value);
 }
 
-Work parseWork(mxpugi::xml_node el, const ParseContext &context)
+Work parseWork(mx::xml::Node el, const ParseContext &context)
 {
     Work out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -57,9 +57,9 @@ Work parseWork(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseWorkContent(Work &out, mxpugi::xml_node el, const ParseContext &context)
+void parseWorkContent(Work &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "work-number"))
     {
         out.setWorkNumber(std::string{childText(cursor)});
@@ -85,13 +85,13 @@ void parseWorkContent(Work &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeWork(const Work &v, mxpugi::xml_node parent, const char *tag)
+void serializeWork(const Work &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeWorkContent(v, el);
 }
 
-void serializeWorkContent(const Work &v, mxpugi::xml_node el)
+void serializeWorkContent(const Work &v, mx::xml::Node el)
 {
     if (v.workNumber())
     {

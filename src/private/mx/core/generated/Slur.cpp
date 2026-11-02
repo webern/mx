@@ -201,11 +201,11 @@ void Slur::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Slur parseSlur(mxpugi::xml_node el, const ParseContext &context)
+Slur parseSlur(mx::xml::Node el, const ParseContext &context)
 {
     Slur out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -302,7 +302,7 @@ Slur parseSlur(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseSlurContent(Slur &out, mxpugi::xml_node el, const ParseContext &context)
+void parseSlurContent(Slur &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -312,9 +312,9 @@ void parseSlurContent(Slur &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeSlur(const Slur &v, mxpugi::xml_node parent, const char *tag)
+void serializeSlur(const Slur &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -391,7 +391,7 @@ void serializeSlur(const Slur &v, mxpugi::xml_node parent, const char *tag)
     serializeSlurContent(v, el);
 }
 
-void serializeSlurContent(const Slur &v, mxpugi::xml_node el)
+void serializeSlurContent(const Slur &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

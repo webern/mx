@@ -15,9 +15,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -271,9 +271,8 @@ class OrnamentsGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-OrnamentsGroupChoice parseOrnamentsGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
-                                               const ParseContext &context);
+OrnamentsGroupChoice parseOrnamentsGroupChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeOrnamentsGroupChoice(const OrnamentsGroupChoice &v, mxpugi::xml_node el);
+void serializeOrnamentsGroupChoice(const OrnamentsGroupChoice &v, mx::xml::Node el);
 
 } // namespace mx::core

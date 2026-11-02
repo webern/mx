@@ -181,10 +181,10 @@ void EmptyTrillSound::setLastBeat(std::optional<Percent> value)
     m_lastBeat = std::move(value);
 }
 
-EmptyTrillSound parseEmptyTrillSound(mxpugi::xml_node el, const ParseContext &context)
+EmptyTrillSound parseEmptyTrillSound(mx::xml::Node el, const ParseContext &context)
 {
     EmptyTrillSound out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -268,7 +268,7 @@ EmptyTrillSound parseEmptyTrillSound(mxpugi::xml_node el, const ParseContext &co
     return out;
 }
 
-void parseEmptyTrillSoundContent(EmptyTrillSound &out, mxpugi::xml_node el, const ParseContext &context)
+void parseEmptyTrillSoundContent(EmptyTrillSound &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -278,9 +278,9 @@ void parseEmptyTrillSoundContent(EmptyTrillSound &out, mxpugi::xml_node el, cons
     }
 }
 
-void serializeEmptyTrillSound(const EmptyTrillSound &v, mxpugi::xml_node parent, const char *tag)
+void serializeEmptyTrillSound(const EmptyTrillSound &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -352,7 +352,7 @@ void serializeEmptyTrillSound(const EmptyTrillSound &v, mxpugi::xml_node parent,
     serializeEmptyTrillSoundContent(v, el);
 }
 
-void serializeEmptyTrillSoundContent(const EmptyTrillSound &v, mxpugi::xml_node el)
+void serializeEmptyTrillSoundContent(const EmptyTrillSound &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

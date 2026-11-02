@@ -31,10 +31,10 @@ void Wood::setValue(WoodValue value)
     m_value = std::move(value);
 }
 
-Wood parseWood(mxpugi::xml_node el, const ParseContext &context)
+Wood parseWood(mx::xml::Node el, const ParseContext &context)
 {
     Wood out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ Wood parseWood(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseWoodContent(Wood &out, mxpugi::xml_node el, const ParseContext &context)
+void parseWoodContent(Wood &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<WoodValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseWoodContent(Wood &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeWood(const Wood &v, mxpugi::xml_node parent, const char *tag)
+void serializeWood(const Wood &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -73,7 +73,7 @@ void serializeWood(const Wood &v, mxpugi::xml_node parent, const char *tag)
     serializeWoodContent(v, el);
 }
 
-void serializeWoodContent(const Wood &v, mxpugi::xml_node el)
+void serializeWoodContent(const Wood &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

@@ -41,11 +41,11 @@ void Assess::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Assess parseAssess(mxpugi::xml_node el, const ParseContext &context)
+Assess parseAssess(mx::xml::Node el, const ParseContext &context)
 {
     Assess out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -78,7 +78,7 @@ Assess parseAssess(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseAssessContent(Assess &out, mxpugi::xml_node el, const ParseContext &context)
+void parseAssessContent(Assess &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -88,9 +88,9 @@ void parseAssessContent(Assess &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeAssess(const Assess &v, mxpugi::xml_node parent, const char *tag)
+void serializeAssess(const Assess &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.player())
     {
@@ -103,7 +103,7 @@ void serializeAssess(const Assess &v, mxpugi::xml_node parent, const char *tag)
     serializeAssessContent(v, el);
 }
 
-void serializeAssessContent(const Assess &v, mxpugi::xml_node el)
+void serializeAssessContent(const Assess &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

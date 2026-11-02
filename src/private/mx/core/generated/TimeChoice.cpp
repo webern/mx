@@ -26,7 +26,7 @@ TimeChoice TimeChoice::senzaMisura(std::string value)
     return TimeChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-TimeChoice parseTimeChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+TimeChoice parseTimeChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "beats")))
     {
@@ -45,7 +45,7 @@ TimeChoice parseTimeChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const 
     throwMissingElement(el, "beats");
 }
 
-void serializeTimeChoice(const TimeChoice &v, mxpugi::xml_node el)
+void serializeTimeChoice(const TimeChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

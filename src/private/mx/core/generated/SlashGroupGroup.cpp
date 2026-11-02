@@ -36,7 +36,7 @@ void SlashGroupGroup::setSlashDot(std::vector<Empty> value)
     m_slashDot = std::move(value);
 }
 
-SlashGroupGroup parseSlashGroupGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+SlashGroupGroup parseSlashGroupGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     SlashGroupGroup out;
     if (cursorIs(cursor, "slash-type"))
@@ -56,7 +56,7 @@ SlashGroupGroup parseSlashGroupGroup(mxpugi::xml_node el, mxpugi::xml_node &curs
     return out;
 }
 
-void serializeSlashGroupGroup(const SlashGroupGroup &v, mxpugi::xml_node el)
+void serializeSlashGroupGroup(const SlashGroupGroup &v, mx::xml::Node el)
 {
     writeTextElement(el, "slash-type", v.slashType().toString());
     for (const auto &item : v.slashDot())

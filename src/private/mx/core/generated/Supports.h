@@ -9,9 +9,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -45,12 +45,12 @@ class Supports final
     std::optional<std::string> m_value;
 };
 
-Supports parseSupports(mxpugi::xml_node el, const ParseContext &context);
+Supports parseSupports(mx::xml::Node el, const ParseContext &context);
 
-void parseSupportsContent(Supports &out, mxpugi::xml_node el, const ParseContext &context);
+void parseSupportsContent(Supports &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeSupports(const Supports &v, mxpugi::xml_node parent, const char *tag);
+void serializeSupports(const Supports &v, mx::xml::Node parent, const char *tag);
 
-void serializeSupportsContent(const Supports &v, mxpugi::xml_node el);
+void serializeSupportsContent(const Supports &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -51,10 +51,10 @@ void FrameNote::setBarre(std::optional<Barre> value)
     m_barre = std::move(value);
 }
 
-FrameNote parseFrameNote(mxpugi::xml_node el, const ParseContext &context)
+FrameNote parseFrameNote(mx::xml::Node el, const ParseContext &context)
 {
     FrameNote out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -67,9 +67,9 @@ FrameNote parseFrameNote(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFrameNoteContent(FrameNote &out, mxpugi::xml_node el, const ParseContext &context)
+void parseFrameNoteContent(FrameNote &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "string"))
     {
         out.setString(parseString(cursor, context));
@@ -109,13 +109,13 @@ void parseFrameNoteContent(FrameNote &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeFrameNote(const FrameNote &v, mxpugi::xml_node parent, const char *tag)
+void serializeFrameNote(const FrameNote &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeFrameNoteContent(v, el);
 }
 
-void serializeFrameNoteContent(const FrameNote &v, mxpugi::xml_node el)
+void serializeFrameNoteContent(const FrameNote &v, mx::xml::Node el)
 {
     serializeString(v.string(), el, "string");
     serializeFret(v.fret(), el, "fret");

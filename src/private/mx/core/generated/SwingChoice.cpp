@@ -26,7 +26,7 @@ SwingChoice SwingChoice::group(SwingChoiceGroup value)
     return SwingChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-SwingChoice parseSwingChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+SwingChoice parseSwingChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "straight")))
     {
@@ -45,7 +45,7 @@ SwingChoice parseSwingChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, cons
     throwMissingElement(el, "straight");
 }
 
-void serializeSwingChoice(const SwingChoice &v, mxpugi::xml_node el)
+void serializeSwingChoice(const SwingChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

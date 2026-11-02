@@ -106,10 +106,10 @@ void StaffDetails::setStaffSize(std::optional<StaffSize> value)
     m_staffSize = std::move(value);
 }
 
-StaffDetails parseStaffDetails(mxpugi::xml_node el, const ParseContext &context)
+StaffDetails parseStaffDetails(mx::xml::Node el, const ParseContext &context)
 {
     StaffDetails out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -141,9 +141,9 @@ StaffDetails parseStaffDetails(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseStaffDetailsContent(StaffDetails &out, mxpugi::xml_node el, const ParseContext &context)
+void parseStaffDetailsContent(StaffDetails &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "staff-type"))
     {
         out.setStaffType(parseValue<StaffType>(childText(cursor), context, cursor, nullptr));
@@ -179,9 +179,9 @@ void parseStaffDetailsContent(StaffDetails &out, mxpugi::xml_node el, const Pars
     }
 }
 
-void serializeStaffDetails(const StaffDetails &v, mxpugi::xml_node parent, const char *tag)
+void serializeStaffDetails(const StaffDetails &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -201,7 +201,7 @@ void serializeStaffDetails(const StaffDetails &v, mxpugi::xml_node parent, const
     serializeStaffDetailsContent(v, el);
 }
 
-void serializeStaffDetailsContent(const StaffDetails &v, mxpugi::xml_node el)
+void serializeStaffDetailsContent(const StaffDetails &v, mx::xml::Node el)
 {
     if (v.staffType())
     {

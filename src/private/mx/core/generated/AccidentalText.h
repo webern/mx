@@ -23,9 +23,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -115,12 +115,12 @@ class AccidentalText final
     AccidentalValue m_value{};
 };
 
-AccidentalText parseAccidentalText(mxpugi::xml_node el, const ParseContext &context);
+AccidentalText parseAccidentalText(mx::xml::Node el, const ParseContext &context);
 
-void parseAccidentalTextContent(AccidentalText &out, mxpugi::xml_node el, const ParseContext &context);
+void parseAccidentalTextContent(AccidentalText &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeAccidentalText(const AccidentalText &v, mxpugi::xml_node parent, const char *tag);
+void serializeAccidentalText(const AccidentalText &v, mx::xml::Node parent, const char *tag);
 
-void serializeAccidentalTextContent(const AccidentalText &v, mxpugi::xml_node el);
+void serializeAccidentalTextContent(const AccidentalText &v, mx::xml::Node el);
 
 } // namespace mx::core

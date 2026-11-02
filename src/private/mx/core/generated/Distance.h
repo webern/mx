@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -35,12 +35,12 @@ class Distance final
     Tenths m_value{};
 };
 
-Distance parseDistance(mxpugi::xml_node el, const ParseContext &context);
+Distance parseDistance(mx::xml::Node el, const ParseContext &context);
 
-void parseDistanceContent(Distance &out, mxpugi::xml_node el, const ParseContext &context);
+void parseDistanceContent(Distance &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeDistance(const Distance &v, mxpugi::xml_node parent, const char *tag);
+void serializeDistance(const Distance &v, mx::xml::Node parent, const char *tag);
 
-void serializeDistanceContent(const Distance &v, mxpugi::xml_node el);
+void serializeDistanceContent(const Distance &v, mx::xml::Node el);
 
 } // namespace mx::core

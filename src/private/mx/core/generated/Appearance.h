@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -57,12 +57,12 @@ class Appearance final
     std::vector<OtherAppearance> m_otherAppearance;
 };
 
-Appearance parseAppearance(mxpugi::xml_node el, const ParseContext &context);
+Appearance parseAppearance(mx::xml::Node el, const ParseContext &context);
 
-void parseAppearanceContent(Appearance &out, mxpugi::xml_node el, const ParseContext &context);
+void parseAppearanceContent(Appearance &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeAppearance(const Appearance &v, mxpugi::xml_node parent, const char *tag);
+void serializeAppearance(const Appearance &v, mx::xml::Node parent, const char *tag);
 
-void serializeAppearanceContent(const Appearance &v, mxpugi::xml_node el);
+void serializeAppearanceContent(const Appearance &v, mx::xml::Node el);
 
 } // namespace mx::core

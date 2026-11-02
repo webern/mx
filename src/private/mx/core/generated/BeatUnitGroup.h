@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -41,8 +41,8 @@ class BeatUnitGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-BeatUnitGroup parseBeatUnitGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
+BeatUnitGroup parseBeatUnitGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeBeatUnitGroup(const BeatUnitGroup &v, mxpugi::xml_node el);
+void serializeBeatUnitGroup(const BeatUnitGroup &v, mx::xml::Node el);
 
 } // namespace mx::core

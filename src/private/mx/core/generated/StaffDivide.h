@@ -17,9 +17,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -76,12 +76,12 @@ class StaffDivide final
     std::optional<Token> m_id;
 };
 
-StaffDivide parseStaffDivide(mxpugi::xml_node el, const ParseContext &context);
+StaffDivide parseStaffDivide(mx::xml::Node el, const ParseContext &context);
 
-void parseStaffDivideContent(StaffDivide &out, mxpugi::xml_node el, const ParseContext &context);
+void parseStaffDivideContent(StaffDivide &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeStaffDivide(const StaffDivide &v, mxpugi::xml_node parent, const char *tag);
+void serializeStaffDivide(const StaffDivide &v, mx::xml::Node parent, const char *tag);
 
-void serializeStaffDivideContent(const StaffDivide &v, mxpugi::xml_node el);
+void serializeStaffDivideContent(const StaffDivide &v, mx::xml::Node el);
 
 } // namespace mx::core

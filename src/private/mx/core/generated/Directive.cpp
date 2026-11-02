@@ -121,10 +121,10 @@ void Directive::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Directive parseDirective(mxpugi::xml_node el, const ParseContext &context)
+Directive parseDirective(mx::xml::Node el, const ParseContext &context)
 {
     Directive out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ Directive parseDirective(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseDirectiveContent(Directive &out, mxpugi::xml_node el, const ParseContext &context)
+void parseDirectiveContent(Directive &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseDirectiveContent(Directive &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeDirective(const Directive &v, mxpugi::xml_node parent, const char *tag)
+void serializeDirective(const Directive &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.xmlLang())
     {
         setAttribute(el, "xml:lang", v.xmlLang()->toString());
@@ -235,7 +235,7 @@ void serializeDirective(const Directive &v, mxpugi::xml_node parent, const char 
     serializeDirectiveContent(v, el);
 }
 
-void serializeDirectiveContent(const Directive &v, mxpugi::xml_node el)
+void serializeDirectiveContent(const Directive &v, mx::xml::Node el)
 {
     setText(el, v.value());
 }

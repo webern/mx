@@ -31,11 +31,11 @@ void Barre::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-Barre parseBarre(mxpugi::xml_node el, const ParseContext &context)
+Barre parseBarre(mx::xml::Node el, const ParseContext &context)
 {
     Barre out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -64,7 +64,7 @@ Barre parseBarre(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBarreContent(Barre &out, mxpugi::xml_node el, const ParseContext &context)
+void parseBarreContent(Barre &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -74,9 +74,9 @@ void parseBarreContent(Barre &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeBarre(const Barre &v, mxpugi::xml_node parent, const char *tag)
+void serializeBarre(const Barre &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.color())
     {
@@ -85,7 +85,7 @@ void serializeBarre(const Barre &v, mxpugi::xml_node parent, const char *tag)
     serializeBarreContent(v, el);
 }
 
-void serializeBarreContent(const Barre &v, mxpugi::xml_node el)
+void serializeBarreContent(const Barre &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

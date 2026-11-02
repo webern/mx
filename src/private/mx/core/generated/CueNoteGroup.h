@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -43,8 +43,8 @@ class CueNoteGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-CueNoteGroup parseCueNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
+CueNoteGroup parseCueNoteGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeCueNoteGroup(const CueNoteGroup &v, mxpugi::xml_node el);
+void serializeCueNoteGroup(const CueNoteGroup &v, mx::xml::Node el);
 
 } // namespace mx::core

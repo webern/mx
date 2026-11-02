@@ -111,11 +111,11 @@ void PartGroup::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-PartGroup parsePartGroup(mxpugi::xml_node el, const ParseContext &context)
+PartGroup parsePartGroup(mx::xml::Node el, const ParseContext &context)
 {
     PartGroup out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -144,9 +144,9 @@ PartGroup parsePartGroup(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePartGroupContent(PartGroup &out, mxpugi::xml_node el, const ParseContext &context)
+void parsePartGroupContent(PartGroup &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "group-name"))
     {
         out.setGroupName(parseGroupName(cursor, context));
@@ -200,9 +200,9 @@ void parsePartGroupContent(PartGroup &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializePartGroup(const PartGroup &v, mxpugi::xml_node parent, const char *tag)
+void serializePartGroup(const PartGroup &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -211,7 +211,7 @@ void serializePartGroup(const PartGroup &v, mxpugi::xml_node parent, const char 
     serializePartGroupContent(v, el);
 }
 
-void serializePartGroupContent(const PartGroup &v, mxpugi::xml_node el)
+void serializePartGroupContent(const PartGroup &v, mx::xml::Node el)
 {
     if (v.groupName())
     {
@@ -239,7 +239,7 @@ void serializePartGroupContent(const PartGroup &v, mxpugi::xml_node el)
     }
     if (v.groupTime())
     {
-        el.append_child("group-time");
+        el.appendChild("group-time");
     }
     serializeEditorialGroup(v.editorial(), el);
 }

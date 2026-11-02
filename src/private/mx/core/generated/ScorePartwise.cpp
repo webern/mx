@@ -46,10 +46,10 @@ void ScorePartwise::setPart(OneOrMore<PartwisePart> value)
     m_part = std::move(value);
 }
 
-ScorePartwise parseScorePartwise(mxpugi::xml_node el, const ParseContext &context)
+ScorePartwise parseScorePartwise(mx::xml::Node el, const ParseContext &context)
 {
     ScorePartwise out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -69,9 +69,9 @@ ScorePartwise parseScorePartwise(mxpugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseScorePartwiseContent(ScorePartwise &out, mxpugi::xml_node el, const ParseContext &context)
+void parseScorePartwiseContent(ScorePartwise &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "work") || cursorIs(cursor, "movement-number") ||
                    cursorIs(cursor, "movement-title") || cursorIs(cursor, "identification") ||
                    cursorIs(cursor, "defaults") || cursorIs(cursor, "credit") || cursorIs(cursor, "part-list")))
@@ -105,9 +105,9 @@ void parseScorePartwiseContent(ScorePartwise &out, mxpugi::xml_node el, const Pa
     }
 }
 
-void serializeScorePartwise(const ScorePartwise &v, mxpugi::xml_node parent, const char *tag)
+void serializeScorePartwise(const ScorePartwise &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.version())
     {
         setAttribute(el, "version", *v.version());
@@ -115,7 +115,7 @@ void serializeScorePartwise(const ScorePartwise &v, mxpugi::xml_node parent, con
     serializeScorePartwiseContent(v, el);
 }
 
-void serializeScorePartwiseContent(const ScorePartwise &v, mxpugi::xml_node el)
+void serializeScorePartwiseContent(const ScorePartwise &v, mx::xml::Node el)
 {
     serializeScoreHeaderGroup(v.scoreHeader(), el);
     for (const auto &item : v.part())

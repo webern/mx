@@ -121,10 +121,10 @@ void String::setValue(StringNumber value)
     m_value = std::move(value);
 }
 
-String parseString(mxpugi::xml_node el, const ParseContext &context)
+String parseString(mx::xml::Node el, const ParseContext &context)
 {
     String out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ String parseString(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseStringContent(String &out, mxpugi::xml_node el, const ParseContext &context)
+void parseStringContent(String &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<StringNumber>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseStringContent(String &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeString(const String &v, mxpugi::xml_node parent, const char *tag)
+void serializeString(const String &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -235,7 +235,7 @@ void serializeString(const String &v, mxpugi::xml_node parent, const char *tag)
     serializeStringContent(v, el);
 }
 
-void serializeStringContent(const String &v, mxpugi::xml_node el)
+void serializeStringContent(const String &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

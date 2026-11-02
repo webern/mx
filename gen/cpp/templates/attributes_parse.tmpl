@@ -3,7 +3,7 @@
     bool seen_{{ident}} = false;
 {{/is_required}}
 {{/merged_attributes}}
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))

@@ -36,8 +36,7 @@ void TimeModificationGroup::setNormalDot(std::vector<Empty> value)
     m_normalDot = std::move(value);
 }
 
-TimeModificationGroup parseTimeModificationGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
-                                                 const ParseContext &context)
+TimeModificationGroup parseTimeModificationGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     TimeModificationGroup out;
     if (cursorIs(cursor, "normal-type"))
@@ -57,7 +56,7 @@ TimeModificationGroup parseTimeModificationGroup(mxpugi::xml_node el, mxpugi::xm
     return out;
 }
 
-void serializeTimeModificationGroup(const TimeModificationGroup &v, mxpugi::xml_node el)
+void serializeTimeModificationGroup(const TimeModificationGroup &v, mx::xml::Node el)
 {
     writeTextElement(el, "normal-type", v.normalType().toString());
     for (const auto &item : v.normalDot())

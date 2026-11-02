@@ -12,9 +12,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -49,12 +49,12 @@ class LyricFont final
     std::optional<FontWeight> m_fontWeight;
 };
 
-LyricFont parseLyricFont(mxpugi::xml_node el, const ParseContext &context);
+LyricFont parseLyricFont(mx::xml::Node el, const ParseContext &context);
 
-void parseLyricFontContent(LyricFont &out, mxpugi::xml_node el, const ParseContext &context);
+void parseLyricFontContent(LyricFont &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeLyricFont(const LyricFont &v, mxpugi::xml_node parent, const char *tag);
+void serializeLyricFont(const LyricFont &v, mx::xml::Node parent, const char *tag);
 
-void serializeLyricFontContent(const LyricFont &v, mxpugi::xml_node el);
+void serializeLyricFontContent(const LyricFont &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -31,7 +31,7 @@ void ScorePartMIDIGroup::setMIDIInstrument(std::optional<MIDIInstrument> value)
     m_midiInstrument = std::move(value);
 }
 
-ScorePartMIDIGroup parseScorePartMIDIGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+ScorePartMIDIGroup parseScorePartMIDIGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     ScorePartMIDIGroup out;
     if (cursorIs(cursor, "midi-device"))
@@ -47,7 +47,7 @@ ScorePartMIDIGroup parseScorePartMIDIGroup(mxpugi::xml_node el, mxpugi::xml_node
     return out;
 }
 
-void serializeScorePartMIDIGroup(const ScorePartMIDIGroup &v, mxpugi::xml_node el)
+void serializeScorePartMIDIGroup(const ScorePartMIDIGroup &v, mx::xml::Node el)
 {
     if (v.midiDevice())
     {

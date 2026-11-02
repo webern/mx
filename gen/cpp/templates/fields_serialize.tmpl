@@ -7,7 +7,7 @@
     if (v.{{ident}}())
     {
 {{#presence}}
-        el.append_child({{tag_q}});
+        el.appendChild({{tag_q}});
 {{/presence}}
 {{^presence}}
         {{#type_ref.is_complex}}serialize{{type_ref.ident}}(*v.{{ident}}(), el, {{tag_q}});{{/type_ref.is_complex}}{{#type_ref.is_value}}writeTextElement(el, {{tag_q}}, v.{{ident}}()->toString());{{/type_ref.is_value}}{{#type_ref.is_primitive_string}}writeTextElement(el, {{tag_q}}, *v.{{ident}}());{{/type_ref.is_primitive_string}}{{#type_ref.is_primitive_integer}}writeTextElement(el, {{tag_q}}, formatInt(*v.{{ident}}()));{{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_decimal}}writeTextElement(el, {{tag_q}}, v.{{ident}}()->toString());{{/type_ref.is_primitive_decimal}}

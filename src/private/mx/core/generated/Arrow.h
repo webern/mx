@@ -17,9 +17,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -78,12 +78,12 @@ class Arrow final
     ArrowChoice m_choice{};
 };
 
-Arrow parseArrow(mxpugi::xml_node el, const ParseContext &context);
+Arrow parseArrow(mx::xml::Node el, const ParseContext &context);
 
-void parseArrowContent(Arrow &out, mxpugi::xml_node el, const ParseContext &context);
+void parseArrowContent(Arrow &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeArrow(const Arrow &v, mxpugi::xml_node parent, const char *tag);
+void serializeArrow(const Arrow &v, mx::xml::Node parent, const char *tag);
 
-void serializeArrowContent(const Arrow &v, mxpugi::xml_node el);
+void serializeArrowContent(const Arrow &v, mx::xml::Node el);
 
 } // namespace mx::core

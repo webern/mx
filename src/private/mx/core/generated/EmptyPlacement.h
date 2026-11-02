@@ -13,9 +13,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -62,12 +62,12 @@ class EmptyPlacement
     std::optional<AboveBelow> m_placement;
 };
 
-EmptyPlacement parseEmptyPlacement(mxpugi::xml_node el, const ParseContext &context);
+EmptyPlacement parseEmptyPlacement(mx::xml::Node el, const ParseContext &context);
 
-void parseEmptyPlacementContent(EmptyPlacement &out, mxpugi::xml_node el, const ParseContext &context);
+void parseEmptyPlacementContent(EmptyPlacement &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeEmptyPlacement(const EmptyPlacement &v, mxpugi::xml_node parent, const char *tag);
+void serializeEmptyPlacement(const EmptyPlacement &v, mx::xml::Node parent, const char *tag);
 
-void serializeEmptyPlacementContent(const EmptyPlacement &v, mxpugi::xml_node el);
+void serializeEmptyPlacementContent(const EmptyPlacement &v, mx::xml::Node el);
 
 } // namespace mx::core

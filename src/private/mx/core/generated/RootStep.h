@@ -13,9 +13,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -67,12 +67,12 @@ class RootStep final
     Step m_value{};
 };
 
-RootStep parseRootStep(mxpugi::xml_node el, const ParseContext &context);
+RootStep parseRootStep(mx::xml::Node el, const ParseContext &context);
 
-void parseRootStepContent(RootStep &out, mxpugi::xml_node el, const ParseContext &context);
+void parseRootStepContent(RootStep &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeRootStep(const RootStep &v, mxpugi::xml_node parent, const char *tag);
+void serializeRootStep(const RootStep &v, mx::xml::Node parent, const char *tag);
 
-void serializeRootStepContent(const RootStep &v, mxpugi::xml_node el);
+void serializeRootStepContent(const RootStep &v, mx::xml::Node el);
 
 } // namespace mx::core

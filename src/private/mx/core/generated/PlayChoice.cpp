@@ -36,7 +36,7 @@ PlayChoice PlayChoice::otherPlay(OtherPlay value)
     return PlayChoice{Storage{std::in_place_index<3>, std::move(value)}};
 }
 
-PlayChoice parsePlayChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+PlayChoice parsePlayChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "ipa")))
     {
@@ -69,7 +69,7 @@ PlayChoice parsePlayChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const 
     throwMissingElement(el, "ipa");
 }
 
-void serializePlayChoice(const PlayChoice &v, mxpugi::xml_node el)
+void serializePlayChoice(const PlayChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

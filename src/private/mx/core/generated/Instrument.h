@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -33,12 +33,12 @@ class Instrument final
     Token m_id{};
 };
 
-Instrument parseInstrument(mxpugi::xml_node el, const ParseContext &context);
+Instrument parseInstrument(mx::xml::Node el, const ParseContext &context);
 
-void parseInstrumentContent(Instrument &out, mxpugi::xml_node el, const ParseContext &context);
+void parseInstrumentContent(Instrument &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeInstrument(const Instrument &v, mxpugi::xml_node parent, const char *tag);
+void serializeInstrument(const Instrument &v, mx::xml::Node parent, const char *tag);
 
-void serializeInstrumentContent(const Instrument &v, mxpugi::xml_node el);
+void serializeInstrumentContent(const Instrument &v, mx::xml::Node el);
 
 } // namespace mx::core

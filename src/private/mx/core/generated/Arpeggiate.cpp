@@ -111,10 +111,10 @@ void Arpeggiate::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Arpeggiate parseArpeggiate(mxpugi::xml_node el, const ParseContext &context)
+Arpeggiate parseArpeggiate(mx::xml::Node el, const ParseContext &context)
 {
     Arpeggiate out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -170,7 +170,7 @@ Arpeggiate parseArpeggiate(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseArpeggiateContent(Arpeggiate &out, mxpugi::xml_node el, const ParseContext &context)
+void parseArpeggiateContent(Arpeggiate &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -180,9 +180,9 @@ void parseArpeggiateContent(Arpeggiate &out, mxpugi::xml_node el, const ParseCon
     }
 }
 
-void serializeArpeggiate(const Arpeggiate &v, mxpugi::xml_node parent, const char *tag)
+void serializeArpeggiate(const Arpeggiate &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -226,7 +226,7 @@ void serializeArpeggiate(const Arpeggiate &v, mxpugi::xml_node parent, const cha
     serializeArpeggiateContent(v, el);
 }
 
-void serializeArpeggiateContent(const Arpeggiate &v, mxpugi::xml_node el)
+void serializeArpeggiateContent(const Arpeggiate &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

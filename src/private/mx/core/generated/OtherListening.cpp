@@ -51,11 +51,11 @@ void OtherListening::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherListening parseOtherListening(mxpugi::xml_node el, const ParseContext &context)
+OtherListening parseOtherListening(mx::xml::Node el, const ParseContext &context)
 {
     OtherListening out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -88,7 +88,7 @@ OtherListening parseOtherListening(mxpugi::xml_node el, const ParseContext &cont
     return out;
 }
 
-void parseOtherListeningContent(OtherListening &out, mxpugi::xml_node el, const ParseContext &context)
+void parseOtherListeningContent(OtherListening &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -97,9 +97,9 @@ void parseOtherListeningContent(OtherListening &out, mxpugi::xml_node el, const 
     }
 }
 
-void serializeOtherListening(const OtherListening &v, mxpugi::xml_node parent, const char *tag)
+void serializeOtherListening(const OtherListening &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type());
     if (v.player())
     {
@@ -112,7 +112,7 @@ void serializeOtherListening(const OtherListening &v, mxpugi::xml_node parent, c
     serializeOtherListeningContent(v, el);
 }
 
-void serializeOtherListeningContent(const OtherListening &v, mxpugi::xml_node el)
+void serializeOtherListeningContent(const OtherListening &v, mx::xml::Node el)
 {
     setText(el, v.value());
 }

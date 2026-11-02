@@ -171,10 +171,10 @@ void MeasureNumbering::setValue(MeasureNumberingValue value)
     m_value = std::move(value);
 }
 
-MeasureNumbering parseMeasureNumbering(mxpugi::xml_node el, const ParseContext &context)
+MeasureNumbering parseMeasureNumbering(mx::xml::Node el, const ParseContext &context)
 {
     MeasureNumbering out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -250,7 +250,7 @@ MeasureNumbering parseMeasureNumbering(mxpugi::xml_node el, const ParseContext &
     return out;
 }
 
-void parseMeasureNumberingContent(MeasureNumbering &out, mxpugi::xml_node el, const ParseContext &context)
+void parseMeasureNumberingContent(MeasureNumbering &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<MeasureNumberingValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -259,9 +259,9 @@ void parseMeasureNumberingContent(MeasureNumbering &out, mxpugi::xml_node el, co
     }
 }
 
-void serializeMeasureNumbering(const MeasureNumbering &v, mxpugi::xml_node parent, const char *tag)
+void serializeMeasureNumbering(const MeasureNumbering &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.system())
     {
         setAttribute(el, "system", v.system()->toString());
@@ -325,7 +325,7 @@ void serializeMeasureNumbering(const MeasureNumbering &v, mxpugi::xml_node paren
     serializeMeasureNumberingContent(v, el);
 }
 
-void serializeMeasureNumberingContent(const MeasureNumbering &v, mxpugi::xml_node el)
+void serializeMeasureNumberingContent(const MeasureNumbering &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

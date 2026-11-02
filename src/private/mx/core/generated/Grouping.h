@@ -12,9 +12,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -55,12 +55,12 @@ class Grouping final
     std::vector<Feature> m_feature;
 };
 
-Grouping parseGrouping(mxpugi::xml_node el, const ParseContext &context);
+Grouping parseGrouping(mx::xml::Node el, const ParseContext &context);
 
-void parseGroupingContent(Grouping &out, mxpugi::xml_node el, const ParseContext &context);
+void parseGroupingContent(Grouping &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeGrouping(const Grouping &v, mxpugi::xml_node parent, const char *tag);
+void serializeGrouping(const Grouping &v, mx::xml::Node parent, const char *tag);
 
-void serializeGroupingContent(const Grouping &v, mxpugi::xml_node el);
+void serializeGroupingContent(const Grouping &v, mx::xml::Node el);
 
 } // namespace mx::core

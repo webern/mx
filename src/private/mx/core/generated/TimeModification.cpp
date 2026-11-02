@@ -41,10 +41,10 @@ void TimeModification::setGroup(std::optional<TimeModificationGroup> value)
     m_group = std::move(value);
 }
 
-TimeModification parseTimeModification(mxpugi::xml_node el, const ParseContext &context)
+TimeModification parseTimeModification(mx::xml::Node el, const ParseContext &context)
 {
     TimeModification out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -57,9 +57,9 @@ TimeModification parseTimeModification(mxpugi::xml_node el, const ParseContext &
     return out;
 }
 
-void parseTimeModificationContent(TimeModification &out, mxpugi::xml_node el, const ParseContext &context)
+void parseTimeModificationContent(TimeModification &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "actual-notes"))
     {
         out.setActualNotes(parseIntegerValue(childText(cursor), context, cursor, nullptr));
@@ -93,13 +93,13 @@ void parseTimeModificationContent(TimeModification &out, mxpugi::xml_node el, co
     }
 }
 
-void serializeTimeModification(const TimeModification &v, mxpugi::xml_node parent, const char *tag)
+void serializeTimeModification(const TimeModification &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeTimeModificationContent(v, el);
 }
 
-void serializeTimeModificationContent(const TimeModification &v, mxpugi::xml_node el)
+void serializeTimeModificationContent(const TimeModification &v, mx::xml::Node el)
 {
     writeTextElement(el, "actual-notes", formatInt(v.actualNotes()));
     writeTextElement(el, "normal-notes", formatInt(v.normalNotes()));

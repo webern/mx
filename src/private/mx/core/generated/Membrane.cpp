@@ -31,10 +31,10 @@ void Membrane::setValue(MembraneValue value)
     m_value = std::move(value);
 }
 
-Membrane parseMembrane(mxpugi::xml_node el, const ParseContext &context)
+Membrane parseMembrane(mx::xml::Node el, const ParseContext &context)
 {
     Membrane out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ Membrane parseMembrane(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseMembraneContent(Membrane &out, mxpugi::xml_node el, const ParseContext &context)
+void parseMembraneContent(Membrane &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<MembraneValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseMembraneContent(Membrane &out, mxpugi::xml_node el, const ParseContext
     }
 }
 
-void serializeMembrane(const Membrane &v, mxpugi::xml_node parent, const char *tag)
+void serializeMembrane(const Membrane &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -73,7 +73,7 @@ void serializeMembrane(const Membrane &v, mxpugi::xml_node parent, const char *t
     serializeMembraneContent(v, el);
 }
 
-void serializeMembraneContent(const Membrane &v, mxpugi::xml_node el)
+void serializeMembraneContent(const Membrane &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

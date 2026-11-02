@@ -71,10 +71,10 @@ void Fret::setValue(int value)
     m_value = std::move(value);
 }
 
-Fret parseFret(mxpugi::xml_node el, const ParseContext &context)
+Fret parseFret(mx::xml::Node el, const ParseContext &context)
 {
     Fret out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -110,7 +110,7 @@ Fret parseFret(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFretContent(Fret &out, mxpugi::xml_node el, const ParseContext &context)
+void parseFretContent(Fret &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -119,9 +119,9 @@ void parseFretContent(Fret &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeFret(const Fret &v, mxpugi::xml_node parent, const char *tag)
+void serializeFret(const Fret &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.fontFamily())
     {
         setAttribute(el, "font-family", v.fontFamily()->toString());
@@ -145,7 +145,7 @@ void serializeFret(const Fret &v, mxpugi::xml_node parent, const char *tag)
     serializeFretContent(v, el);
 }
 
-void serializeFretContent(const Fret &v, mxpugi::xml_node el)
+void serializeFretContent(const Fret &v, mx::xml::Node el)
 {
     setText(el, formatInt(v.value()));
 }

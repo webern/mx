@@ -26,7 +26,7 @@ PartListChoice PartListChoice::scorePart(ScorePart value)
     return PartListChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-PartListChoice parsePartListChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+PartListChoice parsePartListChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "part-group")))
     {
@@ -47,7 +47,7 @@ PartListChoice parsePartListChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor
     throwMissingElement(el, "part-group");
 }
 
-void serializePartListChoice(const PartListChoice &v, mxpugi::xml_node el)
+void serializePartListChoice(const PartListChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

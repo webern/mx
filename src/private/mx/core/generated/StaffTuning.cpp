@@ -31,11 +31,11 @@ void StaffTuning::setTuning(TuningGroup value)
     m_tuning = std::move(value);
 }
 
-StaffTuning parseStaffTuning(mxpugi::xml_node el, const ParseContext &context)
+StaffTuning parseStaffTuning(mx::xml::Node el, const ParseContext &context)
 {
     StaffTuning out;
     bool seen_line = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,9 +60,9 @@ StaffTuning parseStaffTuning(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseStaffTuningContent(StaffTuning &out, mxpugi::xml_node el, const ParseContext &context)
+void parseStaffTuningContent(StaffTuning &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "tuning-step")))
     {
         out.setTuning(parseTuningGroup(el, cursor, context));
@@ -81,14 +81,14 @@ void parseStaffTuningContent(StaffTuning &out, mxpugi::xml_node el, const ParseC
     }
 }
 
-void serializeStaffTuning(const StaffTuning &v, mxpugi::xml_node parent, const char *tag)
+void serializeStaffTuning(const StaffTuning &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "line", v.line().toString());
     serializeStaffTuningContent(v, el);
 }
 
-void serializeStaffTuningContent(const StaffTuning &v, mxpugi::xml_node el)
+void serializeStaffTuningContent(const StaffTuning &v, mx::xml::Node el)
 {
     serializeTuningGroup(v.tuning(), el);
 }

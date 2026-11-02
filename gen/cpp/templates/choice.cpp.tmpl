@@ -27,7 +27,7 @@ namespace {{vars.namespace}}
 }
 
 {{/alternatives}}
-{{ident}} parse{{ident}}(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+{{ident}} parse{{ident}}(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
 {{#alternatives}}
     if ({{>field_first_match}})
@@ -90,7 +90,7 @@ namespace {{vars.namespace}}
     throwMissingElement(el, {{#element_names}}{{#is_first}}{{value_q}}{{/is_first}}{{/element_names}});
 }
 
-void serialize{{ident}}(const {{ident}} &v, mxpugi::xml_node el)
+void serialize{{ident}}(const {{ident}} &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

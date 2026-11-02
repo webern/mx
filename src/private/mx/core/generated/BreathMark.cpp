@@ -121,10 +121,10 @@ void BreathMark::setValue(BreathMarkValue value)
     m_value = std::move(value);
 }
 
-BreathMark parseBreathMark(mxpugi::xml_node el, const ParseContext &context)
+BreathMark parseBreathMark(mx::xml::Node el, const ParseContext &context)
 {
     BreathMark out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ BreathMark parseBreathMark(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBreathMarkContent(BreathMark &out, mxpugi::xml_node el, const ParseContext &context)
+void parseBreathMarkContent(BreathMark &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<BreathMarkValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseBreathMarkContent(BreathMark &out, mxpugi::xml_node el, const ParseCon
     }
 }
 
-void serializeBreathMark(const BreathMark &v, mxpugi::xml_node parent, const char *tag)
+void serializeBreathMark(const BreathMark &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -235,7 +235,7 @@ void serializeBreathMark(const BreathMark &v, mxpugi::xml_node parent, const cha
     serializeBreathMarkContent(v, el);
 }
 
-void serializeBreathMarkContent(const BreathMark &v, mxpugi::xml_node el)
+void serializeBreathMarkContent(const BreathMark &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

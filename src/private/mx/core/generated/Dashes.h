@@ -12,9 +12,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -61,12 +61,12 @@ class Dashes final
     std::optional<Token> m_id;
 };
 
-Dashes parseDashes(mxpugi::xml_node el, const ParseContext &context);
+Dashes parseDashes(mx::xml::Node el, const ParseContext &context);
 
-void parseDashesContent(Dashes &out, mxpugi::xml_node el, const ParseContext &context);
+void parseDashesContent(Dashes &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeDashes(const Dashes &v, mxpugi::xml_node parent, const char *tag);
+void serializeDashes(const Dashes &v, mx::xml::Node parent, const char *tag);
 
-void serializeDashesContent(const Dashes &v, mxpugi::xml_node el);
+void serializeDashesContent(const Dashes &v, mx::xml::Node el);
 
 } // namespace mx::core

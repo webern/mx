@@ -31,10 +31,10 @@ void Wait::setTimeOnly(std::optional<TimeOnly> value)
     m_timeOnly = std::move(value);
 }
 
-Wait parseWait(mxpugi::xml_node el, const ParseContext &context)
+Wait parseWait(mx::xml::Node el, const ParseContext &context)
 {
     Wait out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -58,7 +58,7 @@ Wait parseWait(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseWaitContent(Wait &out, mxpugi::xml_node el, const ParseContext &context)
+void parseWaitContent(Wait &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -68,9 +68,9 @@ void parseWaitContent(Wait &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeWait(const Wait &v, mxpugi::xml_node parent, const char *tag)
+void serializeWait(const Wait &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.player())
     {
         setAttribute(el, "player", v.player()->toString());
@@ -82,7 +82,7 @@ void serializeWait(const Wait &v, mxpugi::xml_node parent, const char *tag)
     serializeWaitContent(v, el);
 }
 
-void serializeWaitContent(const Wait &v, mxpugi::xml_node el)
+void serializeWaitContent(const Wait &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

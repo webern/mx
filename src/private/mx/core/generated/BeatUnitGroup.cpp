@@ -36,7 +36,7 @@ void BeatUnitGroup::setBeatUnitDot(std::vector<Empty> value)
     m_beatUnitDot = std::move(value);
 }
 
-BeatUnitGroup parseBeatUnitGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+BeatUnitGroup parseBeatUnitGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     BeatUnitGroup out;
     if (cursorIs(cursor, "beat-unit"))
@@ -56,7 +56,7 @@ BeatUnitGroup parseBeatUnitGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, 
     return out;
 }
 
-void serializeBeatUnitGroup(const BeatUnitGroup &v, mxpugi::xml_node el)
+void serializeBeatUnitGroup(const BeatUnitGroup &v, mx::xml::Node el)
 {
     writeTextElement(el, "beat-unit", v.beatUnit().toString());
     for (const auto &item : v.beatUnitDot())

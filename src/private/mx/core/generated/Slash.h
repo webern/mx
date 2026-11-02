@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -48,12 +48,12 @@ class Slash final
     std::optional<SlashGroup> m_slash;
 };
 
-Slash parseSlash(mxpugi::xml_node el, const ParseContext &context);
+Slash parseSlash(mx::xml::Node el, const ParseContext &context);
 
-void parseSlashContent(Slash &out, mxpugi::xml_node el, const ParseContext &context);
+void parseSlashContent(Slash &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeSlash(const Slash &v, mxpugi::xml_node parent, const char *tag);
+void serializeSlash(const Slash &v, mx::xml::Node parent, const char *tag);
 
-void serializeSlashContent(const Slash &v, mxpugi::xml_node el);
+void serializeSlashContent(const Slash &v, mx::xml::Node el);
 
 } // namespace mx::core

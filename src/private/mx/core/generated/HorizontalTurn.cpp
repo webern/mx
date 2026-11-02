@@ -191,10 +191,10 @@ void HorizontalTurn::setLastBeat(std::optional<Percent> value)
     m_lastBeat = std::move(value);
 }
 
-HorizontalTurn parseHorizontalTurn(mxpugi::xml_node el, const ParseContext &context)
+HorizontalTurn parseHorizontalTurn(mx::xml::Node el, const ParseContext &context)
 {
     HorizontalTurn out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -282,7 +282,7 @@ HorizontalTurn parseHorizontalTurn(mxpugi::xml_node el, const ParseContext &cont
     return out;
 }
 
-void parseHorizontalTurnContent(HorizontalTurn &out, mxpugi::xml_node el, const ParseContext &context)
+void parseHorizontalTurnContent(HorizontalTurn &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -292,9 +292,9 @@ void parseHorizontalTurnContent(HorizontalTurn &out, mxpugi::xml_node el, const 
     }
 }
 
-void serializeHorizontalTurn(const HorizontalTurn &v, mxpugi::xml_node parent, const char *tag)
+void serializeHorizontalTurn(const HorizontalTurn &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.slash())
     {
         setAttribute(el, "slash", v.slash()->toString());
@@ -370,7 +370,7 @@ void serializeHorizontalTurn(const HorizontalTurn &v, mxpugi::xml_node parent, c
     serializeHorizontalTurnContent(v, el);
 }
 
-void serializeHorizontalTurnContent(const HorizontalTurn &v, mxpugi::xml_node el)
+void serializeHorizontalTurnContent(const HorizontalTurn &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

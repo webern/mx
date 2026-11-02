@@ -41,7 +41,7 @@ void EditorialVoiceGroup::setVoice(std::optional<std::string> value)
     m_voice = std::move(value);
 }
 
-EditorialVoiceGroup parseEditorialVoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+EditorialVoiceGroup parseEditorialVoiceGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     EditorialVoiceGroup out;
     if (cursorIs(cursor, "footnote"))
@@ -62,7 +62,7 @@ EditorialVoiceGroup parseEditorialVoiceGroup(mxpugi::xml_node el, mxpugi::xml_no
     return out;
 }
 
-void serializeEditorialVoiceGroup(const EditorialVoiceGroup &v, mxpugi::xml_node el)
+void serializeEditorialVoiceGroup(const EditorialVoiceGroup &v, mx::xml::Node el)
 {
     if (v.footnote())
     {

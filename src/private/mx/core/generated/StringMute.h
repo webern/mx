@@ -17,9 +17,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -75,12 +75,12 @@ class StringMute final
     std::optional<Token> m_id;
 };
 
-StringMute parseStringMute(mxpugi::xml_node el, const ParseContext &context);
+StringMute parseStringMute(mx::xml::Node el, const ParseContext &context);
 
-void parseStringMuteContent(StringMute &out, mxpugi::xml_node el, const ParseContext &context);
+void parseStringMuteContent(StringMute &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeStringMute(const StringMute &v, mxpugi::xml_node parent, const char *tag);
+void serializeStringMute(const StringMute &v, mx::xml::Node parent, const char *tag);
 
-void serializeStringMuteContent(const StringMute &v, mxpugi::xml_node el);
+void serializeStringMuteContent(const StringMute &v, mx::xml::Node el);
 
 } // namespace mx::core

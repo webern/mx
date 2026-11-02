@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -35,12 +35,12 @@ class Glass final
     GlassValue m_value{};
 };
 
-Glass parseGlass(mxpugi::xml_node el, const ParseContext &context);
+Glass parseGlass(mx::xml::Node el, const ParseContext &context);
 
-void parseGlassContent(Glass &out, mxpugi::xml_node el, const ParseContext &context);
+void parseGlassContent(Glass &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeGlass(const Glass &v, mxpugi::xml_node parent, const char *tag);
+void serializeGlass(const Glass &v, mx::xml::Node parent, const char *tag);
 
-void serializeGlassContent(const Glass &v, mxpugi::xml_node el);
+void serializeGlassContent(const Glass &v, mx::xml::Node el);
 
 } // namespace mx::core

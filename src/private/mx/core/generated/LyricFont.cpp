@@ -71,10 +71,10 @@ void LyricFont::setFontWeight(std::optional<FontWeight> value)
     m_fontWeight = std::move(value);
 }
 
-LyricFont parseLyricFont(mxpugi::xml_node el, const ParseContext &context)
+LyricFont parseLyricFont(mx::xml::Node el, const ParseContext &context)
 {
     LyricFont out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -114,7 +114,7 @@ LyricFont parseLyricFont(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseLyricFontContent(LyricFont &out, mxpugi::xml_node el, const ParseContext &context)
+void parseLyricFontContent(LyricFont &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -124,9 +124,9 @@ void parseLyricFontContent(LyricFont &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeLyricFont(const LyricFont &v, mxpugi::xml_node parent, const char *tag)
+void serializeLyricFont(const LyricFont &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -154,7 +154,7 @@ void serializeLyricFont(const LyricFont &v, mxpugi::xml_node parent, const char 
     serializeLyricFontContent(v, el);
 }
 
-void serializeLyricFontContent(const LyricFont &v, mxpugi::xml_node el)
+void serializeLyricFontContent(const LyricFont &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

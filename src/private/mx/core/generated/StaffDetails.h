@@ -15,9 +15,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -69,12 +69,12 @@ class StaffDetails final
     std::optional<StaffSize> m_staffSize;
 };
 
-StaffDetails parseStaffDetails(mxpugi::xml_node el, const ParseContext &context);
+StaffDetails parseStaffDetails(mx::xml::Node el, const ParseContext &context);
 
-void parseStaffDetailsContent(StaffDetails &out, mxpugi::xml_node el, const ParseContext &context);
+void parseStaffDetailsContent(StaffDetails &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeStaffDetails(const StaffDetails &v, mxpugi::xml_node parent, const char *tag);
+void serializeStaffDetails(const StaffDetails &v, mx::xml::Node parent, const char *tag);
 
-void serializeStaffDetailsContent(const StaffDetails &v, mxpugi::xml_node el);
+void serializeStaffDetailsContent(const StaffDetails &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -15,9 +15,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -65,12 +65,12 @@ class Defaults final
     std::vector<LyricLanguage> m_lyricLanguage;
 };
 
-Defaults parseDefaults(mxpugi::xml_node el, const ParseContext &context);
+Defaults parseDefaults(mx::xml::Node el, const ParseContext &context);
 
-void parseDefaultsContent(Defaults &out, mxpugi::xml_node el, const ParseContext &context);
+void parseDefaultsContent(Defaults &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeDefaults(const Defaults &v, mxpugi::xml_node parent, const char *tag);
+void serializeDefaults(const Defaults &v, mx::xml::Node parent, const char *tag);
 
-void serializeDefaultsContent(const Defaults &v, mxpugi::xml_node el);
+void serializeDefaultsContent(const Defaults &v, mx::xml::Node el);
 
 } // namespace mx::core

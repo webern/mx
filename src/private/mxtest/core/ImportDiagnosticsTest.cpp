@@ -10,7 +10,7 @@
 #include "mx/core/ParseContext.h"
 #include "mx/core/generated/Document.h"
 
-#include "mxpugi/mxpugi.hpp"
+#include "mx/xml/Xml.h"
 
 #include <string>
 #include <utility>
@@ -46,8 +46,8 @@ inline std::string importDiagnosticsNote(const std::string &octave, const std::s
 inline ImportDiagnosticsParse importDiagnosticsParse(const std::string &xml)
 {
     ImportDiagnosticsParse out;
-    mxpugi::xml_document doc;
-    CHECK(doc.load_string(xml.c_str()));
+    mx::xml::Document doc;
+    CHECK(doc.loadString(xml.c_str()));
     const ParseContext context{[&out](const Diagnostic &diagnostic) { out.diagnostics.push_back(diagnostic); }};
     auto result = parse(doc, context);
     out.ok = result.ok();
@@ -177,8 +177,8 @@ TEST(SilentParseProducesTheSameDocument, ImportDiagnostics)
     REQUIRE(reported.ok);
     CHECK(!reported.diagnostics.empty());
 
-    mxpugi::xml_document doc;
-    REQUIRE(doc.load_string(xml.c_str()));
+    mx::xml::Document doc;
+    REQUIRE(doc.loadString(xml.c_str()));
     const auto silent = parse(doc, ParseContext{});
     REQUIRE(silent.ok());
     CHECK(silent.value() == reported.document);

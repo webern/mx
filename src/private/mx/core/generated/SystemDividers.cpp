@@ -31,10 +31,10 @@ void SystemDividers::setRightDivider(EmptyPrintObjectStyleAlign value)
     m_rightDivider = std::move(value);
 }
 
-SystemDividers parseSystemDividers(mxpugi::xml_node el, const ParseContext &context)
+SystemDividers parseSystemDividers(mx::xml::Node el, const ParseContext &context)
 {
     SystemDividers out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -47,9 +47,9 @@ SystemDividers parseSystemDividers(mxpugi::xml_node el, const ParseContext &cont
     return out;
 }
 
-void parseSystemDividersContent(SystemDividers &out, mxpugi::xml_node el, const ParseContext &context)
+void parseSystemDividersContent(SystemDividers &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "left-divider"))
     {
         out.setLeftDivider(parseEmptyPrintObjectStyleAlign(cursor, context));
@@ -78,13 +78,13 @@ void parseSystemDividersContent(SystemDividers &out, mxpugi::xml_node el, const 
     }
 }
 
-void serializeSystemDividers(const SystemDividers &v, mxpugi::xml_node parent, const char *tag)
+void serializeSystemDividers(const SystemDividers &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeSystemDividersContent(v, el);
 }
 
-void serializeSystemDividersContent(const SystemDividers &v, mxpugi::xml_node el)
+void serializeSystemDividersContent(const SystemDividers &v, mx::xml::Node el)
 {
     serializeEmptyPrintObjectStyleAlign(v.leftDivider(), el, "left-divider");
     serializeEmptyPrintObjectStyleAlign(v.rightDivider(), el, "right-divider");

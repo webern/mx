@@ -65,6 +65,7 @@ void normalizeForComparison(mxpugi::xml_document &doc)
 {
     setRootMusicXmlVersion(doc, kMusicXmlVersionBaseline);
     stripInterElementWhitespace(doc);
+    normalizeLineEnds(doc);
     stripZerosFromDecimalFields(doc);
     normalizeCommaSeparatedFields(doc);
     sortAttributes(doc); // must be last

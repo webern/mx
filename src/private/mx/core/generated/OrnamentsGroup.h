@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -40,8 +40,8 @@ class OrnamentsGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-OrnamentsGroup parseOrnamentsGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
+OrnamentsGroup parseOrnamentsGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeOrnamentsGroup(const OrnamentsGroup &v, mxpugi::xml_node el);
+void serializeOrnamentsGroup(const OrnamentsGroup &v, mx::xml::Node el);
 
 } // namespace mx::core

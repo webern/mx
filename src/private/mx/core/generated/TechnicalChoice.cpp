@@ -171,7 +171,7 @@ TechnicalChoice TechnicalChoice::otherTechnical(OtherPlacementText value)
     return TechnicalChoice{Storage{std::in_place_index<30>, std::move(value)}};
 }
 
-TechnicalChoice parseTechnicalChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+TechnicalChoice parseTechnicalChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "up-bow")))
     {
@@ -366,7 +366,7 @@ TechnicalChoice parseTechnicalChoice(mxpugi::xml_node el, mxpugi::xml_node &curs
     throwMissingElement(el, "up-bow");
 }
 
-void serializeTechnicalChoice(const TechnicalChoice &v, mxpugi::xml_node el)
+void serializeTechnicalChoice(const TechnicalChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

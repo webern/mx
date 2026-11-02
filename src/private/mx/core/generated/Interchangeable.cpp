@@ -56,10 +56,10 @@ void Interchangeable::setTimeSignature(OneOrMore<TimeSignatureGroup> value)
     m_timeSignature = std::move(value);
 }
 
-Interchangeable parseInterchangeable(mxpugi::xml_node el, const ParseContext &context)
+Interchangeable parseInterchangeable(mx::xml::Node el, const ParseContext &context)
 {
     Interchangeable out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -83,9 +83,9 @@ Interchangeable parseInterchangeable(mxpugi::xml_node el, const ParseContext &co
     return out;
 }
 
-void parseInterchangeableContent(Interchangeable &out, mxpugi::xml_node el, const ParseContext &context)
+void parseInterchangeableContent(Interchangeable &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "time-relation"))
     {
         out.setTimeRelation(parseValue<TimeRelation>(childText(cursor), context, cursor, nullptr));
@@ -110,9 +110,9 @@ void parseInterchangeableContent(Interchangeable &out, mxpugi::xml_node el, cons
     }
 }
 
-void serializeInterchangeable(const Interchangeable &v, mxpugi::xml_node parent, const char *tag)
+void serializeInterchangeable(const Interchangeable &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.symbol())
     {
         setAttribute(el, "symbol", v.symbol()->toString());
@@ -124,7 +124,7 @@ void serializeInterchangeable(const Interchangeable &v, mxpugi::xml_node parent,
     serializeInterchangeableContent(v, el);
 }
 
-void serializeInterchangeableContent(const Interchangeable &v, mxpugi::xml_node el)
+void serializeInterchangeableContent(const Interchangeable &v, mx::xml::Node el)
 {
     if (v.timeRelation())
     {

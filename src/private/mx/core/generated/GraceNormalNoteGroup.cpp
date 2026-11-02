@@ -41,8 +41,7 @@ void GraceNormalNoteGroup::clearTie() noexcept
     m_tie.clear();
 }
 
-GraceNormalNoteGroup parseGraceNormalNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
-                                               const ParseContext &context)
+GraceNormalNoteGroup parseGraceNormalNoteGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     GraceNormalNoteGroup out;
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
@@ -65,7 +64,7 @@ GraceNormalNoteGroup parseGraceNormalNoteGroup(mxpugi::xml_node el, mxpugi::xml_
     return out;
 }
 
-void serializeGraceNormalNoteGroup(const GraceNormalNoteGroup &v, mxpugi::xml_node el)
+void serializeGraceNormalNoteGroup(const GraceNormalNoteGroup &v, mx::xml::Node el)
 {
     serializeFullNoteGroup(v.fullNote(), el);
     for (const auto &item : v.tie())

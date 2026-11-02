@@ -51,10 +51,10 @@ void Degree::setDegreeType(DegreeType value)
     m_degreeType = std::move(value);
 }
 
-Degree parseDegree(mxpugi::xml_node el, const ParseContext &context)
+Degree parseDegree(mx::xml::Node el, const ParseContext &context)
 {
     Degree out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -74,9 +74,9 @@ Degree parseDegree(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseDegreeContent(Degree &out, mxpugi::xml_node el, const ParseContext &context)
+void parseDegreeContent(Degree &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "degree-value"))
     {
         out.setDegreeValue(parseDegreeValue(cursor, context));
@@ -114,9 +114,9 @@ void parseDegreeContent(Degree &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeDegree(const Degree &v, mxpugi::xml_node parent, const char *tag)
+void serializeDegree(const Degree &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.printObject())
     {
         setAttribute(el, "print-object", v.printObject()->toString());
@@ -124,7 +124,7 @@ void serializeDegree(const Degree &v, mxpugi::xml_node parent, const char *tag)
     serializeDegreeContent(v, el);
 }
 
-void serializeDegreeContent(const Degree &v, mxpugi::xml_node el)
+void serializeDegreeContent(const Degree &v, mx::xml::Node el)
 {
     serializeDegreeValue(v.degreeValue(), el, "degree-value");
     serializeDegreeAlter(v.degreeAlter(), el, "degree-alter");

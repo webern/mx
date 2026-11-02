@@ -13,7 +13,7 @@ namespace {{vars.namespace}}
 
 {{>attributes_impl}}
 {{>fields_impl}}
-{{ident}} parse{{ident}}(mxpugi::xml_node el, const ParseContext &context)
+{{ident}} parse{{ident}}(mx::xml::Node el, const ParseContext &context)
 {
     {{ident}} out;
 {{>attributes_parse}}
@@ -21,9 +21,9 @@ namespace {{vars.namespace}}
     return out;
 }
 
-void parse{{ident}}Content({{ident}} &out, mxpugi::xml_node el, const ParseContext &context)
+void parse{{ident}}Content({{ident}} &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
 {{>fields_parse}}
     if (cursor)
     {
@@ -35,14 +35,14 @@ void parse{{ident}}Content({{ident}} &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serialize{{ident}}(const {{ident}} &v, mxpugi::xml_node parent, const char *tag)
+void serialize{{ident}}(const {{ident}} &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
 {{>attributes_serialize}}
     serialize{{ident}}Content(v, el);
 }
 
-void serialize{{ident}}Content(const {{ident}} &v, mxpugi::xml_node el)
+void serialize{{ident}}Content(const {{ident}} &v, mx::xml::Node el)
 {
 {{>fields_serialize}}
 }

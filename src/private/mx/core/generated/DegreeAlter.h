@@ -14,9 +14,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -71,12 +71,12 @@ class DegreeAlter final
     Semitones m_value{};
 };
 
-DegreeAlter parseDegreeAlter(mxpugi::xml_node el, const ParseContext &context);
+DegreeAlter parseDegreeAlter(mx::xml::Node el, const ParseContext &context);
 
-void parseDegreeAlterContent(DegreeAlter &out, mxpugi::xml_node el, const ParseContext &context);
+void parseDegreeAlterContent(DegreeAlter &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeDegreeAlter(const DegreeAlter &v, mxpugi::xml_node parent, const char *tag);
+void serializeDegreeAlter(const DegreeAlter &v, mx::xml::Node parent, const char *tag);
 
-void serializeDegreeAlterContent(const DegreeAlter &v, mxpugi::xml_node el);
+void serializeDegreeAlterContent(const DegreeAlter &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -26,7 +26,7 @@ KeyChoice KeyChoice::nonTraditionalKey(std::vector<NonTraditionalKeyGroup> value
     return KeyChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-KeyChoice parseKeyChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+KeyChoice parseKeyChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "cancel") || cursorIs(cursor, "fifths")))
     {
@@ -48,7 +48,7 @@ KeyChoice parseKeyChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const Pa
     throwMissingElement(el, "cancel");
 }
 
-void serializeKeyChoice(const KeyChoice &v, mxpugi::xml_node el)
+void serializeKeyChoice(const KeyChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

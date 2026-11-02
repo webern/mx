@@ -14,9 +14,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -67,12 +67,12 @@ class EmptyPlacementSmufl final
     std::optional<SmuflGlyphName> m_smufl;
 };
 
-EmptyPlacementSmufl parseEmptyPlacementSmufl(mxpugi::xml_node el, const ParseContext &context);
+EmptyPlacementSmufl parseEmptyPlacementSmufl(mx::xml::Node el, const ParseContext &context);
 
-void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, mxpugi::xml_node el, const ParseContext &context);
+void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeEmptyPlacementSmufl(const EmptyPlacementSmufl &v, mxpugi::xml_node parent, const char *tag);
+void serializeEmptyPlacementSmufl(const EmptyPlacementSmufl &v, mx::xml::Node parent, const char *tag);
 
-void serializeEmptyPlacementSmuflContent(const EmptyPlacementSmufl &v, mxpugi::xml_node el);
+void serializeEmptyPlacementSmuflContent(const EmptyPlacementSmufl &v, mx::xml::Node el);
 
 } // namespace mx::core

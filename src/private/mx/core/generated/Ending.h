@@ -16,9 +16,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -100,12 +100,12 @@ class Ending final
     std::string m_value{};
 };
 
-Ending parseEnding(mxpugi::xml_node el, const ParseContext &context);
+Ending parseEnding(mx::xml::Node el, const ParseContext &context);
 
-void parseEndingContent(Ending &out, mxpugi::xml_node el, const ParseContext &context);
+void parseEndingContent(Ending &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeEnding(const Ending &v, mxpugi::xml_node parent, const char *tag);
+void serializeEnding(const Ending &v, mx::xml::Node parent, const char *tag);
 
-void serializeEndingContent(const Ending &v, mxpugi::xml_node el);
+void serializeEndingContent(const Ending &v, mx::xml::Node el);
 
 } // namespace mx::core

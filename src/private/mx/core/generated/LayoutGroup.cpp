@@ -46,7 +46,7 @@ void LayoutGroup::setStaffLayout(std::vector<StaffLayout> value)
     m_staffLayout = std::move(value);
 }
 
-LayoutGroup parseLayoutGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+LayoutGroup parseLayoutGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     LayoutGroup out;
     if (cursorIs(cursor, "page-layout"))
@@ -67,7 +67,7 @@ LayoutGroup parseLayoutGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, cons
     return out;
 }
 
-void serializeLayoutGroup(const LayoutGroup &v, mxpugi::xml_node el)
+void serializeLayoutGroup(const LayoutGroup &v, mx::xml::Node el)
 {
     if (v.pageLayout())
     {

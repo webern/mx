@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -45,9 +45,9 @@ class CreditChoiceGroupGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-CreditChoiceGroupGroup parseCreditChoiceGroupGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+CreditChoiceGroupGroup parseCreditChoiceGroupGroup(mx::xml::Node el, mx::xml::Node &cursor,
                                                    const ParseContext &context);
 
-void serializeCreditChoiceGroupGroup(const CreditChoiceGroupGroup &v, mxpugi::xml_node el);
+void serializeCreditChoiceGroupGroup(const CreditChoiceGroupGroup &v, mx::xml::Node el);
 
 } // namespace mx::core

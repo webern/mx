@@ -31,10 +31,10 @@ void Metal::setValue(MetalValue value)
     m_value = std::move(value);
 }
 
-Metal parseMetal(mxpugi::xml_node el, const ParseContext &context)
+Metal parseMetal(mx::xml::Node el, const ParseContext &context)
 {
     Metal out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ Metal parseMetal(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseMetalContent(Metal &out, mxpugi::xml_node el, const ParseContext &context)
+void parseMetalContent(Metal &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<MetalValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseMetalContent(Metal &out, mxpugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeMetal(const Metal &v, mxpugi::xml_node parent, const char *tag)
+void serializeMetal(const Metal &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -73,7 +73,7 @@ void serializeMetal(const Metal &v, mxpugi::xml_node parent, const char *tag)
     serializeMetalContent(v, el);
 }
 
-void serializeMetalContent(const Metal &v, mxpugi::xml_node el)
+void serializeMetalContent(const Metal &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

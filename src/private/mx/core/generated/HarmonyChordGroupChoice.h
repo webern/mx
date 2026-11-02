@@ -11,9 +11,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -97,9 +97,9 @@ class HarmonyChordGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-HarmonyChordGroupChoice parseHarmonyChordGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+HarmonyChordGroupChoice parseHarmonyChordGroupChoice(mx::xml::Node el, mx::xml::Node &cursor,
                                                      const ParseContext &context);
 
-void serializeHarmonyChordGroupChoice(const HarmonyChordGroupChoice &v, mxpugi::xml_node el);
+void serializeHarmonyChordGroupChoice(const HarmonyChordGroupChoice &v, mx::xml::Node el);
 
 } // namespace mx::core

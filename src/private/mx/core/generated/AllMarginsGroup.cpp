@@ -41,7 +41,7 @@ void AllMarginsGroup::setBottomMargin(Tenths value)
     m_bottomMargin = std::move(value);
 }
 
-AllMarginsGroup parseAllMarginsGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+AllMarginsGroup parseAllMarginsGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     AllMarginsGroup out;
     if (cursor && (cursorIs(cursor, "left-margin")))
@@ -73,7 +73,7 @@ AllMarginsGroup parseAllMarginsGroup(mxpugi::xml_node el, mxpugi::xml_node &curs
     return out;
 }
 
-void serializeAllMarginsGroup(const AllMarginsGroup &v, mxpugi::xml_node el)
+void serializeAllMarginsGroup(const AllMarginsGroup &v, mx::xml::Node el)
 {
     serializeLeftRightMarginsGroup(v.leftRightMargins(), el);
     writeTextElement(el, "top-margin", v.topMargin().toString());

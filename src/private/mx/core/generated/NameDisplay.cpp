@@ -36,10 +36,10 @@ void NameDisplay::setChoice(std::vector<NameDisplayChoice> value)
     m_choice = std::move(value);
 }
 
-NameDisplay parseNameDisplay(mxpugi::xml_node el, const ParseContext &context)
+NameDisplay parseNameDisplay(mx::xml::Node el, const ParseContext &context)
 {
     NameDisplay out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -59,9 +59,9 @@ NameDisplay parseNameDisplay(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseNameDisplayContent(NameDisplay &out, mxpugi::xml_node el, const ParseContext &context)
+void parseNameDisplayContent(NameDisplay &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "display-text") || cursorIs(cursor, "accidental-text")))
     {
         out.addChoice(parseNameDisplayChoice(el, cursor, context));
@@ -76,9 +76,9 @@ void parseNameDisplayContent(NameDisplay &out, mxpugi::xml_node el, const ParseC
     }
 }
 
-void serializeNameDisplay(const NameDisplay &v, mxpugi::xml_node parent, const char *tag)
+void serializeNameDisplay(const NameDisplay &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.printObject())
     {
         setAttribute(el, "print-object", v.printObject()->toString());
@@ -86,7 +86,7 @@ void serializeNameDisplay(const NameDisplay &v, mxpugi::xml_node parent, const c
     serializeNameDisplayContent(v, el);
 }
 
-void serializeNameDisplayContent(const NameDisplay &v, mxpugi::xml_node el)
+void serializeNameDisplayContent(const NameDisplay &v, mx::xml::Node el)
 {
     for (const auto &item : v.choice())
     {

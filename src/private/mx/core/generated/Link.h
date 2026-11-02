@@ -12,9 +12,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -72,12 +72,12 @@ class Link final
     std::optional<Tenths> m_relativeY;
 };
 
-Link parseLink(mxpugi::xml_node el, const ParseContext &context);
+Link parseLink(mx::xml::Node el, const ParseContext &context);
 
-void parseLinkContent(Link &out, mxpugi::xml_node el, const ParseContext &context);
+void parseLinkContent(Link &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeLink(const Link &v, mxpugi::xml_node parent, const char *tag);
+void serializeLink(const Link &v, mx::xml::Node parent, const char *tag);
 
-void serializeLinkContent(const Link &v, mxpugi::xml_node el);
+void serializeLinkContent(const Link &v, mx::xml::Node el);
 
 } // namespace mx::core

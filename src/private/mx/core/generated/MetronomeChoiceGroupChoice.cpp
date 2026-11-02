@@ -26,7 +26,7 @@ MetronomeChoiceGroupChoice MetronomeChoiceGroupChoice::group(MetronomeChoiceGrou
     return MetronomeChoiceGroupChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-MetronomeChoiceGroupChoice parseMetronomeChoiceGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+MetronomeChoiceGroupChoice parseMetronomeChoiceGroupChoice(mx::xml::Node el, mx::xml::Node &cursor,
                                                            const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "per-minute")))
@@ -46,7 +46,7 @@ MetronomeChoiceGroupChoice parseMetronomeChoiceGroupChoice(mxpugi::xml_node el, 
     throwMissingElement(el, "per-minute");
 }
 
-void serializeMetronomeChoiceGroupChoice(const MetronomeChoiceGroupChoice &v, mxpugi::xml_node el)
+void serializeMetronomeChoiceGroupChoice(const MetronomeChoiceGroupChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

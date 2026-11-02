@@ -16,9 +16,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -72,12 +72,12 @@ class EmptyPrintStyleAlignID final
     std::optional<Token> m_id;
 };
 
-EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(mxpugi::xml_node el, const ParseContext &context);
+EmptyPrintStyleAlignID parseEmptyPrintStyleAlignID(mx::xml::Node el, const ParseContext &context);
 
-void parseEmptyPrintStyleAlignIDContent(EmptyPrintStyleAlignID &out, mxpugi::xml_node el, const ParseContext &context);
+void parseEmptyPrintStyleAlignIDContent(EmptyPrintStyleAlignID &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeEmptyPrintStyleAlignID(const EmptyPrintStyleAlignID &v, mxpugi::xml_node parent, const char *tag);
+void serializeEmptyPrintStyleAlignID(const EmptyPrintStyleAlignID &v, mx::xml::Node parent, const char *tag);
 
-void serializeEmptyPrintStyleAlignIDContent(const EmptyPrintStyleAlignID &v, mxpugi::xml_node el);
+void serializeEmptyPrintStyleAlignIDContent(const EmptyPrintStyleAlignID &v, mx::xml::Node el);
 
 } // namespace mx::core

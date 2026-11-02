@@ -21,6 +21,15 @@ void setRootMusicXmlVersion(mxpugi::xml_document &doc, const char *version);
 // applies to both sides, so it stays symmetric.
 void stripInterElementWhitespace(mxpugi::xml_document &doc);
 
+// Fold the line ends in text nodes to a single LF. An XML parser does this
+// to raw text on input (XML 1.0 section 2.11), so a document that reaches
+// the comparison as text has already lost any CR that was spelled raw. The
+// harness carries documents across the mx::xml seam as text, so a CR that a
+// corpus file spells as &#xd; survives on the side read straight from the
+// file and not on the side that mx wrote. Folding both sides keeps the
+// comparison about content.
+void normalizeLineEnds(mxpugi::xml_document &doc);
+
 // Strip trailing zeros from the decimal fields listed in DecimalFields.h
 // (element text and attribute values alike).
 void stripZerosFromDecimalFields(mxpugi::xml_document &doc);

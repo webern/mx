@@ -7,9 +7,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -42,12 +42,12 @@ class StaffSize final
     NonNegativeDecimal m_value{};
 };
 
-StaffSize parseStaffSize(mxpugi::xml_node el, const ParseContext &context);
+StaffSize parseStaffSize(mx::xml::Node el, const ParseContext &context);
 
-void parseStaffSizeContent(StaffSize &out, mxpugi::xml_node el, const ParseContext &context);
+void parseStaffSizeContent(StaffSize &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeStaffSize(const StaffSize &v, mxpugi::xml_node parent, const char *tag);
+void serializeStaffSize(const StaffSize &v, mx::xml::Node parent, const char *tag);
 
-void serializeStaffSizeContent(const StaffSize &v, mxpugi::xml_node el);
+void serializeStaffSizeContent(const StaffSize &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -161,10 +161,10 @@ void EmptyLine::setPlacement(std::optional<AboveBelow> value)
     m_placement = std::move(value);
 }
 
-EmptyLine parseEmptyLine(mxpugi::xml_node el, const ParseContext &context)
+EmptyLine parseEmptyLine(mx::xml::Node el, const ParseContext &context)
 {
     EmptyLine out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -240,7 +240,7 @@ EmptyLine parseEmptyLine(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseEmptyLineContent(EmptyLine &out, mxpugi::xml_node el, const ParseContext &context)
+void parseEmptyLineContent(EmptyLine &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -250,9 +250,9 @@ void parseEmptyLineContent(EmptyLine &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeEmptyLine(const EmptyLine &v, mxpugi::xml_node parent, const char *tag)
+void serializeEmptyLine(const EmptyLine &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.lineShape())
     {
         setAttribute(el, "line-shape", v.lineShape()->toString());
@@ -316,7 +316,7 @@ void serializeEmptyLine(const EmptyLine &v, mxpugi::xml_node parent, const char 
     serializeEmptyLineContent(v, el);
 }
 
-void serializeEmptyLineContent(const EmptyLine &v, mxpugi::xml_node el)
+void serializeEmptyLineContent(const EmptyLine &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

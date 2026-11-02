@@ -19,9 +19,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -90,12 +90,12 @@ class EmptyTrillSound
     std::optional<Percent> m_lastBeat;
 };
 
-EmptyTrillSound parseEmptyTrillSound(mxpugi::xml_node el, const ParseContext &context);
+EmptyTrillSound parseEmptyTrillSound(mx::xml::Node el, const ParseContext &context);
 
-void parseEmptyTrillSoundContent(EmptyTrillSound &out, mxpugi::xml_node el, const ParseContext &context);
+void parseEmptyTrillSoundContent(EmptyTrillSound &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeEmptyTrillSound(const EmptyTrillSound &v, mxpugi::xml_node parent, const char *tag);
+void serializeEmptyTrillSound(const EmptyTrillSound &v, mx::xml::Node parent, const char *tag);
 
-void serializeEmptyTrillSoundContent(const EmptyTrillSound &v, mxpugi::xml_node el);
+void serializeEmptyTrillSoundContent(const EmptyTrillSound &v, mx::xml::Node el);
 
 } // namespace mx::core

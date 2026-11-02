@@ -3,10 +3,14 @@
 // Distributed under the MIT License
 
 // Hand-written runtime for the generated mx::core model; never regenerated.
+//
+// Everything mx::core does with XML goes through mx::xml (the seam over the
+// XML library, see mx/xml/Xml.h). This header includes it in full so that a
+// generated source gets the complete types from the one include.
 
 #pragma once
 
-#include "mxpugi/mxpugi.hpp"
+#include "mx/xml/Xml.h"
 
 #include <string>
 #include <string_view>
@@ -19,14 +23,14 @@ namespace mx::core
 // end); text and comment nodes are not content (MusicXML has no mixed
 // content) and are skipped.
 
-mxpugi::xml_node firstElement(mxpugi::xml_node parent);
+xml::Node firstElement(xml::Node parent);
 
-mxpugi::xml_node nextElement(mxpugi::xml_node node);
+xml::Node nextElement(xml::Node node);
 
-bool cursorIs(mxpugi::xml_node node, std::string_view name);
+bool cursorIs(xml::Node node, std::string_view name);
 
 /// The element's DIRECT text content (first pcdata/cdata child), never null.
-const char *childText(mxpugi::xml_node el);
+const char *childText(xml::Node el);
 
 /// True for XML namespace declarations (`xmlns`, `xmlns:*`): they are
 /// document plumbing, not schema attributes; the strict attribute loop
@@ -35,34 +39,34 @@ bool isNamespaceDecl(std::string_view attribute_name);
 
 // Writing helpers.
 
-void setAttribute(mxpugi::xml_node el, const char *name, std::string_view value);
+void setAttribute(xml::Node el, const char *name, std::string_view value);
 
-void writeTextElement(mxpugi::xml_node parent, const char *tag, std::string_view text);
+void writeTextElement(xml::Node parent, const char *tag, std::string_view text);
 
-void setText(mxpugi::xml_node el, std::string_view text);
+void setText(xml::Node el, std::string_view text);
 
 /// The slash path of a node for error messages, with 1-based ordinals among
 /// same-name siblings: /score-partwise/part[1]/measure[3]/note[2].
-std::string nodePath(mxpugi::xml_node node);
+std::string nodePath(xml::Node node);
 
 // Error throwers for the generated parsers (internal throw, converted to
 // Result at the document boundary -- plan §2.5).
 
-[[noreturn]] void throwUnknownElement(mxpugi::xml_node el);
+[[noreturn]] void throwUnknownElement(xml::Node el);
 
-[[noreturn]] void throwMisplacedElement(mxpugi::xml_node el);
+[[noreturn]] void throwMisplacedElement(xml::Node el);
 
-[[noreturn]] void throwUnknownAttribute(mxpugi::xml_node el, const char *attribute_name);
+[[noreturn]] void throwUnknownAttribute(xml::Node el, const char *attribute_name);
 
-[[noreturn]] void throwMissingElement(mxpugi::xml_node parent, const char *missing);
+[[noreturn]] void throwMissingElement(xml::Node parent, const char *missing);
 
 /// A required element was not at the cursor: wrongElementOrder when it
 /// occurs among the remaining siblings (it exists, out of order),
 /// missingRequiredElement otherwise.
-[[noreturn]] void throwMissingOrMisplaced(mxpugi::xml_node parent, mxpugi::xml_node cursor, const char *missing);
+[[noreturn]] void throwMissingOrMisplaced(xml::Node parent, xml::Node cursor, const char *missing);
 
-[[noreturn]] void throwMissingAttribute(mxpugi::xml_node el, const char *attribute_name);
+[[noreturn]] void throwMissingAttribute(xml::Node el, const char *attribute_name);
 
-[[noreturn]] void throwTooManyElements(mxpugi::xml_node el);
+[[noreturn]] void throwTooManyElements(xml::Node el);
 
 } // namespace mx::core

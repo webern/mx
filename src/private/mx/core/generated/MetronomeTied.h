@@ -7,9 +7,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -31,12 +31,12 @@ class MetronomeTied final
     StartStop m_type{};
 };
 
-MetronomeTied parseMetronomeTied(mxpugi::xml_node el, const ParseContext &context);
+MetronomeTied parseMetronomeTied(mx::xml::Node el, const ParseContext &context);
 
-void parseMetronomeTiedContent(MetronomeTied &out, mxpugi::xml_node el, const ParseContext &context);
+void parseMetronomeTiedContent(MetronomeTied &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeMetronomeTied(const MetronomeTied &v, mxpugi::xml_node parent, const char *tag);
+void serializeMetronomeTied(const MetronomeTied &v, mx::xml::Node parent, const char *tag);
 
-void serializeMetronomeTiedContent(const MetronomeTied &v, mxpugi::xml_node el);
+void serializeMetronomeTiedContent(const MetronomeTied &v, mx::xml::Node el);
 
 } // namespace mx::core

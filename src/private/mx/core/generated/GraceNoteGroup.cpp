@@ -31,7 +31,7 @@ void GraceNoteGroup::setGraceNoteChoice(GraceNoteChoice value)
     m_graceNoteChoice = std::move(value);
 }
 
-GraceNoteGroup parseGraceNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+GraceNoteGroup parseGraceNoteGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     GraceNoteGroup out;
     if (cursorIs(cursor, "grace"))
@@ -55,7 +55,7 @@ GraceNoteGroup parseGraceNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor
     return out;
 }
 
-void serializeGraceNoteGroup(const GraceNoteGroup &v, mxpugi::xml_node el)
+void serializeGraceNoteGroup(const GraceNoteGroup &v, mx::xml::Node el)
 {
     serializeGrace(v.grace(), el, "grace");
     serializeGraceNoteChoice(v.graceNoteChoice(), el);

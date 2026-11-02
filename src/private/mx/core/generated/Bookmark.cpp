@@ -51,11 +51,11 @@ void Bookmark::setPosition(std::optional<int> value)
     m_position = std::move(value);
 }
 
-Bookmark parseBookmark(mxpugi::xml_node el, const ParseContext &context)
+Bookmark parseBookmark(mx::xml::Node el, const ParseContext &context)
 {
     Bookmark out;
     bool seen_id = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -92,7 +92,7 @@ Bookmark parseBookmark(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBookmarkContent(Bookmark &out, mxpugi::xml_node el, const ParseContext &context)
+void parseBookmarkContent(Bookmark &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -102,9 +102,9 @@ void parseBookmarkContent(Bookmark &out, mxpugi::xml_node el, const ParseContext
     }
 }
 
-void serializeBookmark(const Bookmark &v, mxpugi::xml_node parent, const char *tag)
+void serializeBookmark(const Bookmark &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "id", v.id().toString());
     if (v.name())
     {
@@ -121,7 +121,7 @@ void serializeBookmark(const Bookmark &v, mxpugi::xml_node parent, const char *t
     serializeBookmarkContent(v, el);
 }
 
-void serializeBookmarkContent(const Bookmark &v, mxpugi::xml_node el)
+void serializeBookmarkContent(const Bookmark &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

@@ -151,10 +151,10 @@ void Barline::setRepeat(std::optional<Repeat> value)
     m_repeat = std::move(value);
 }
 
-Barline parseBarline(mxpugi::xml_node el, const ParseContext &context)
+Barline parseBarline(mx::xml::Node el, const ParseContext &context)
 {
     Barline out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -190,9 +190,9 @@ Barline parseBarline(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBarlineContent(Barline &out, mxpugi::xml_node el, const ParseContext &context)
+void parseBarlineContent(Barline &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "bar-style"))
     {
         out.setBarStyle(parseBarStyleColor(cursor, context));
@@ -247,9 +247,9 @@ void parseBarlineContent(Barline &out, mxpugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeBarline(const Barline &v, mxpugi::xml_node parent, const char *tag)
+void serializeBarline(const Barline &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.location())
     {
         setAttribute(el, "location", v.location()->toString());
@@ -273,7 +273,7 @@ void serializeBarline(const Barline &v, mxpugi::xml_node parent, const char *tag
     serializeBarlineContent(v, el);
 }
 
-void serializeBarlineContent(const Barline &v, mxpugi::xml_node el)
+void serializeBarlineContent(const Barline &v, mx::xml::Node el)
 {
     if (v.barStyle())
     {

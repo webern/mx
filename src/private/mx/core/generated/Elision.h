@@ -12,9 +12,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -58,12 +58,12 @@ class Elision final
     std::string m_value{};
 };
 
-Elision parseElision(mxpugi::xml_node el, const ParseContext &context);
+Elision parseElision(mx::xml::Node el, const ParseContext &context);
 
-void parseElisionContent(Elision &out, mxpugi::xml_node el, const ParseContext &context);
+void parseElisionContent(Elision &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeElision(const Elision &v, mxpugi::xml_node parent, const char *tag);
+void serializeElision(const Elision &v, mx::xml::Node parent, const char *tag);
 
-void serializeElisionContent(const Elision &v, mxpugi::xml_node el);
+void serializeElisionContent(const Elision &v, mx::xml::Node el);
 
 } // namespace mx::core

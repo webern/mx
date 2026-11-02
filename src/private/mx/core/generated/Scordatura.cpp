@@ -36,10 +36,10 @@ void Scordatura::setAccord(OneOrMore<Accord> value)
     m_accord = std::move(value);
 }
 
-Scordatura parseScordatura(mxpugi::xml_node el, const ParseContext &context)
+Scordatura parseScordatura(mx::xml::Node el, const ParseContext &context)
 {
     Scordatura out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -59,9 +59,9 @@ Scordatura parseScordatura(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseScordaturaContent(Scordatura &out, mxpugi::xml_node el, const ParseContext &context)
+void parseScordaturaContent(Scordatura &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (!cursorIs(cursor, "accord"))
     {
         throwMissingOrMisplaced(el, cursor, "accord");
@@ -83,9 +83,9 @@ void parseScordaturaContent(Scordatura &out, mxpugi::xml_node el, const ParseCon
     }
 }
 
-void serializeScordatura(const Scordatura &v, mxpugi::xml_node parent, const char *tag)
+void serializeScordatura(const Scordatura &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.id())
     {
         setAttribute(el, "id", v.id()->toString());
@@ -93,7 +93,7 @@ void serializeScordatura(const Scordatura &v, mxpugi::xml_node parent, const cha
     serializeScordaturaContent(v, el);
 }
 
-void serializeScordaturaContent(const Scordatura &v, mxpugi::xml_node el)
+void serializeScordaturaContent(const Scordatura &v, mx::xml::Node el)
 {
     for (const auto &item : v.accord())
     {

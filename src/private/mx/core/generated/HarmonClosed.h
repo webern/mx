@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -35,12 +35,12 @@ class HarmonClosed final
     HarmonClosedValue m_value{};
 };
 
-HarmonClosed parseHarmonClosed(mxpugi::xml_node el, const ParseContext &context);
+HarmonClosed parseHarmonClosed(mx::xml::Node el, const ParseContext &context);
 
-void parseHarmonClosedContent(HarmonClosed &out, mxpugi::xml_node el, const ParseContext &context);
+void parseHarmonClosedContent(HarmonClosed &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeHarmonClosed(const HarmonClosed &v, mxpugi::xml_node parent, const char *tag);
+void serializeHarmonClosed(const HarmonClosed &v, mx::xml::Node parent, const char *tag);
 
-void serializeHarmonClosedContent(const HarmonClosed &v, mxpugi::xml_node el);
+void serializeHarmonClosedContent(const HarmonClosed &v, mx::xml::Node el);
 
 } // namespace mx::core

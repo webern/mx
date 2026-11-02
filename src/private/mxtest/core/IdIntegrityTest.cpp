@@ -10,7 +10,7 @@
 
 #include "mx/core/IdIntegrity.h"
 
-#include "mxpugi/mxpugi.hpp"
+#include "mx/xml/Xml.h"
 
 #include <sstream>
 #include <string>
@@ -36,8 +36,8 @@ inline std::string idIntegrityInstrumentPart(const std::string &partId, const st
 
 inline std::vector<Diagnostic> idIntegrityCheck(const std::string &xml)
 {
-    mxpugi::xml_document doc;
-    CHECK(doc.load_string(xml.c_str()));
+    mx::xml::Document doc;
+    CHECK(doc.loadString(xml.c_str()));
     std::vector<Diagnostic> out;
     checkIds(doc, [&out](const Diagnostic &diagnostic) { out.push_back(diagnostic); });
     return out;
@@ -51,12 +51,12 @@ struct IdIntegrityRepaired
 
 inline IdIntegrityRepaired idIntegrityRepair(const std::string &xml)
 {
-    mxpugi::xml_document doc;
-    CHECK(doc.load_string(xml.c_str()));
+    mx::xml::Document doc;
+    CHECK(doc.loadString(xml.c_str()));
     IdIntegrityRepaired out;
     repairIds(doc, [&out](const Diagnostic &diagnostic) { out.diagnostics.push_back(diagnostic); });
     std::ostringstream stream;
-    doc.save(stream, "", mxpugi::format_raw);
+    doc.save(stream, "", mx::xml::SaveFlags::raw);
     out.xml = stream.str();
     return out;
 }
@@ -143,12 +143,12 @@ TEST(ReadingChangesNothing, IdIntegrity)
     // duplicate survives the read.
     const std::string xml = idIntegrityScore(idIntegrityScorePart("P1") + idIntegrityScorePart("P1"),
                                              "<part id=\"P1\"><measure number=\"1\"/></part>");
-    mxpugi::xml_document doc;
-    CHECK(doc.load_string(xml.c_str()));
+    mx::xml::Document doc;
+    CHECK(doc.loadString(xml.c_str()));
     checkIds(doc, [](const Diagnostic &) {});
-    const mxpugi::xml_node first = doc.document_element().child("part-list").child("score-part");
+    const mx::xml::Node first = doc.documentElement().child("part-list").child("score-part");
     CHECK_EQUAL(std::string{"P1"}, std::string{first.attribute("id").value()});
-    CHECK_EQUAL(std::string{"P1"}, std::string{first.next_sibling("score-part").attribute("id").value()});
+    CHECK_EQUAL(std::string{"P1"}, std::string{first.nextSibling().attribute("id").value()});
 }
 
 TEST(WriteRenamesDuplicate, IdIntegrity)
@@ -189,10 +189,9 @@ TEST(WriteRenamesWithoutAHandler, IdIntegrity)
     // anybody is listening.
     const std::string xml = idIntegrityScore(idIntegrityScorePart("P1") + idIntegrityScorePart("P1"),
                                              "<part id=\"P1\"><measure number=\"1\"/></part>");
-    mxpugi::xml_document doc;
-    CHECK(doc.load_string(xml.c_str()));
+    mx::xml::Document doc;
+    CHECK(doc.loadString(xml.c_str()));
     repairIds(doc, DiagnosticHandler{});
-    const mxpugi::xml_node second =
-        doc.document_element().child("part-list").child("score-part").next_sibling("score-part");
+    const mx::xml::Node second = doc.documentElement().child("part-list").child("score-part").nextSibling();
     CHECK_EQUAL(std::string{"P1-2"}, std::string{second.attribute("id").value()});
 }

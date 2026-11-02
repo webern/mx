@@ -47,6 +47,43 @@ void stripWhitespaceRecursive(mxpugi::xml_node el)
     }
 }
 
+void normalizeLineEndsRecursive(mxpugi::xml_node el)
+{
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    {
+        if (c.type() == mxpugi::node_element)
+        {
+            normalizeLineEndsRecursive(c);
+            continue;
+        }
+        if (c.type() != mxpugi::node_pcdata && c.type() != mxpugi::node_cdata)
+        {
+            continue;
+        }
+        const std::string_view text{c.value()};
+        if (text.find('\r') == std::string_view::npos)
+        {
+            continue;
+        }
+        std::string folded;
+        folded.reserve(text.size());
+        for (std::size_t i = 0; i < text.size(); ++i)
+        {
+            if (text[i] == '\r')
+            {
+                folded.push_back('\n');
+                if (i + 1 < text.size() && text[i + 1] == '\n')
+                {
+                    ++i;
+                }
+                continue;
+            }
+            folded.push_back(text[i]);
+        }
+        c.set_value(folded.c_str());
+    }
+}
+
 void stripZerosRecursive(mxpugi::xml_node el)
 {
     bool hasElementChildren = false;
@@ -193,6 +230,14 @@ void stripInterElementWhitespace(mxpugi::xml_document &doc)
     if (doc.document_element())
     {
         stripWhitespaceRecursive(doc.document_element());
+    }
+}
+
+void normalizeLineEnds(mxpugi::xml_document &doc)
+{
+    if (doc.document_element())
+    {
+        normalizeLineEndsRecursive(doc.document_element());
     }
 }
 

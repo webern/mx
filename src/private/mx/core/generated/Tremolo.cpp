@@ -141,10 +141,10 @@ void Tremolo::setValue(TremoloMarks value)
     m_value = std::move(value);
 }
 
-Tremolo parseTremolo(mxpugi::xml_node el, const ParseContext &context)
+Tremolo parseTremolo(mx::xml::Node el, const ParseContext &context)
 {
     Tremolo out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -208,7 +208,7 @@ Tremolo parseTremolo(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTremoloContent(Tremolo &out, mxpugi::xml_node el, const ParseContext &context)
+void parseTremoloContent(Tremolo &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<TremoloMarks>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -217,9 +217,9 @@ void parseTremoloContent(Tremolo &out, mxpugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeTremolo(const Tremolo &v, mxpugi::xml_node parent, const char *tag)
+void serializeTremolo(const Tremolo &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.type())
     {
         setAttribute(el, "type", v.type()->toString());
@@ -271,7 +271,7 @@ void serializeTremolo(const Tremolo &v, mxpugi::xml_node parent, const char *tag
     serializeTremoloContent(v, el);
 }
 
-void serializeTremoloContent(const Tremolo &v, mxpugi::xml_node el)
+void serializeTremoloContent(const Tremolo &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

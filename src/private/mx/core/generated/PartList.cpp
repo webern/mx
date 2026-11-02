@@ -51,10 +51,10 @@ void PartList::setChoice(std::vector<PartListChoice> value)
     m_choice = std::move(value);
 }
 
-PartList parsePartList(mxpugi::xml_node el, const ParseContext &context)
+PartList parsePartList(mx::xml::Node el, const ParseContext &context)
 {
     PartList out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -67,9 +67,9 @@ PartList parsePartList(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePartListContent(PartList &out, mxpugi::xml_node el, const ParseContext &context)
+void parsePartListContent(PartList &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     while (cursorIs(cursor, "part-group"))
     {
         out.addPartGroup(parsePartGroup(cursor, context));
@@ -98,13 +98,13 @@ void parsePartListContent(PartList &out, mxpugi::xml_node el, const ParseContext
     }
 }
 
-void serializePartList(const PartList &v, mxpugi::xml_node parent, const char *tag)
+void serializePartList(const PartList &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializePartListContent(v, el);
 }
 
-void serializePartListContent(const PartList &v, mxpugi::xml_node el)
+void serializePartListContent(const PartList &v, mx::xml::Node el)
 {
     for (const auto &item : v.partGroup())
     {

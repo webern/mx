@@ -16,9 +16,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -77,12 +77,12 @@ class Hole final
     std::optional<std::string> m_holeShape;
 };
 
-Hole parseHole(mxpugi::xml_node el, const ParseContext &context);
+Hole parseHole(mx::xml::Node el, const ParseContext &context);
 
-void parseHoleContent(Hole &out, mxpugi::xml_node el, const ParseContext &context);
+void parseHoleContent(Hole &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeHole(const Hole &v, mxpugi::xml_node parent, const char *tag);
+void serializeHole(const Hole &v, mx::xml::Node parent, const char *tag);
 
-void serializeHoleContent(const Hole &v, mxpugi::xml_node el);
+void serializeHoleContent(const Hole &v, mx::xml::Node el);
 
 } // namespace mx::core

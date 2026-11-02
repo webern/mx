@@ -10,9 +10,9 @@
 #include <string>
 #include <string_view>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_document;
+class Document;
 }
 
 namespace mx::core
@@ -34,6 +34,6 @@ std::string mxSoftwareAttribution();
 /// <identification>/<encoding> when absent, replacing any prior mx stamp). The
 /// product/api write path goes through here; the generated serialize() stays
 /// pure so the roundtrip fidelity tests are unaffected.
-void serializeWithAttribution(const Document &d, mxpugi::xml_document &out);
+void serializeWithAttribution(const Document &d, xml::Document &out);
 
 } // namespace mx::core

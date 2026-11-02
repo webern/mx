@@ -26,7 +26,7 @@ GraceNoteChoice GraceNoteChoice::graceCueNoteGroup(GraceCueNoteGroup value)
     return GraceNoteChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-GraceNoteChoice parseGraceNoteChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+GraceNoteChoice parseGraceNoteChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
                    cursorIs(cursor, "rest")))
@@ -44,7 +44,7 @@ GraceNoteChoice parseGraceNoteChoice(mxpugi::xml_node el, mxpugi::xml_node &curs
     throwMissingElement(el, "chord");
 }
 
-void serializeGraceNoteChoice(const GraceNoteChoice &v, mxpugi::xml_node el)
+void serializeGraceNoteChoice(const GraceNoteChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

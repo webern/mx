@@ -10,9 +10,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -82,9 +82,9 @@ class CreditChoiceGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-CreditChoiceGroupChoice parseCreditChoiceGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+CreditChoiceGroupChoice parseCreditChoiceGroupChoice(mx::xml::Node el, mx::xml::Node &cursor,
                                                      const ParseContext &context);
 
-void serializeCreditChoiceGroupChoice(const CreditChoiceGroupChoice &v, mxpugi::xml_node el);
+void serializeCreditChoiceGroupChoice(const CreditChoiceGroupChoice &v, mx::xml::Node el);
 
 } // namespace mx::core

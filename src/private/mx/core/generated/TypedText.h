@@ -5,9 +5,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -30,12 +30,12 @@ class TypedText final
     std::string m_value{};
 };
 
-TypedText parseTypedText(mxpugi::xml_node el, const ParseContext &context);
+TypedText parseTypedText(mx::xml::Node el, const ParseContext &context);
 
-void parseTypedTextContent(TypedText &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTypedTextContent(TypedText &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTypedText(const TypedText &v, mxpugi::xml_node parent, const char *tag);
+void serializeTypedText(const TypedText &v, mx::xml::Node parent, const char *tag);
 
-void serializeTypedTextContent(const TypedText &v, mxpugi::xml_node el);
+void serializeTypedTextContent(const TypedText &v, mx::xml::Node el);
 
 } // namespace mx::core

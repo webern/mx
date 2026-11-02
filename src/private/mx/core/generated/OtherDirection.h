@@ -18,9 +18,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -86,12 +86,12 @@ class OtherDirection final
     std::string m_value{};
 };
 
-OtherDirection parseOtherDirection(mxpugi::xml_node el, const ParseContext &context);
+OtherDirection parseOtherDirection(mx::xml::Node el, const ParseContext &context);
 
-void parseOtherDirectionContent(OtherDirection &out, mxpugi::xml_node el, const ParseContext &context);
+void parseOtherDirectionContent(OtherDirection &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeOtherDirection(const OtherDirection &v, mxpugi::xml_node parent, const char *tag);
+void serializeOtherDirection(const OtherDirection &v, mx::xml::Node parent, const char *tag);
 
-void serializeOtherDirectionContent(const OtherDirection &v, mxpugi::xml_node el);
+void serializeOtherDirectionContent(const OtherDirection &v, mx::xml::Node el);
 
 } // namespace mx::core

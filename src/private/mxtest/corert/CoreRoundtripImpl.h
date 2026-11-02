@@ -35,10 +35,12 @@ std::vector<std::string> discoverInputFiles();
 // as the test case name (e.g. `lysuite/ly01a_Pitches_Pitches.xml`).
 std::string toTestName(const std::string &absolutePath);
 
-// Run the per-file core roundtrip flow: load via pugixml; pin the root
-// version attribute to the harness baseline; mx::core::parse; serialize
-// back; normalize both the actual and a fresh-loaded expected; apply
-// fixups to the expected; depth-first compare. Does not throw.
+// Run the per-file core roundtrip flow: load via mxpugi; pin the root
+// version attribute to the harness baseline; hand the text to an
+// mx::xml::Document and mx::core::parse it; serialize back into an
+// mx::xml::Document and reload its text in mxpugi; normalize both the
+// actual and a fresh-loaded expected; apply fixups to the expected;
+// depth-first compare. Does not throw.
 CoreRoundtripResult runCoreRoundtrip(const std::string &absoluteInputPath);
 
 // Write a pair of `.expected.xml` / `.actual.xml` debug files to

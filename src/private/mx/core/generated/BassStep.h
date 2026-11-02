@@ -13,9 +13,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -67,12 +67,12 @@ class BassStep final
     Step m_value{};
 };
 
-BassStep parseBassStep(mxpugi::xml_node el, const ParseContext &context);
+BassStep parseBassStep(mx::xml::Node el, const ParseContext &context);
 
-void parseBassStepContent(BassStep &out, mxpugi::xml_node el, const ParseContext &context);
+void parseBassStepContent(BassStep &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeBassStep(const BassStep &v, mxpugi::xml_node parent, const char *tag);
+void serializeBassStep(const BassStep &v, mx::xml::Node parent, const char *tag);
 
-void serializeBassStepContent(const BassStep &v, mxpugi::xml_node el);
+void serializeBassStepContent(const BassStep &v, mx::xml::Node el);
 
 } // namespace mx::core

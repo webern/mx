@@ -318,1852 +318,1852 @@ namespace mx::core
 void roundTripDefaults()
 {
     {
-        mxpugi::xml_document doc;
-        serializeAccidental(Accidental{}, doc, "probe");
-        parseAccidental(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeAccidental(Accidental{}, doc.root(), "probe");
+        parseAccidental(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeAccidentalMark(AccidentalMark{}, doc, "probe");
-        parseAccidentalMark(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeAccidentalMark(AccidentalMark{}, doc.root(), "probe");
+        parseAccidentalMark(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeAccidentalText(AccidentalText{}, doc, "probe");
-        parseAccidentalText(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeAccidentalText(AccidentalText{}, doc.root(), "probe");
+        parseAccidentalText(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeAccord(Accord{}, doc, "probe");
-        parseAccord(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeAccord(Accord{}, doc.root(), "probe");
+        parseAccord(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEmpty(Empty{}, doc, "probe");
-        parseEmpty(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEmpty(Empty{}, doc.root(), "probe");
+        parseEmpty(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeAccordionRegistration(AccordionRegistration{}, doc, "probe");
-        parseAccordionRegistration(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeAccordionRegistration(AccordionRegistration{}, doc.root(), "probe");
+        parseAccordionRegistration(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDistance(Distance{}, doc, "probe");
-        parseDistance(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDistance(Distance{}, doc.root(), "probe");
+        parseDistance(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeGlyph(Glyph{}, doc, "probe");
-        parseGlyph(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeGlyph(Glyph{}, doc.root(), "probe");
+        parseGlyph(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeLineWidth(LineWidth{}, doc, "probe");
-        parseLineWidth(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeLineWidth(LineWidth{}, doc.root(), "probe");
+        parseLineWidth(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNoteSize(NoteSize{}, doc, "probe");
-        parseNoteSize(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNoteSize(NoteSize{}, doc.root(), "probe");
+        parseNoteSize(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOtherAppearance(OtherAppearance{}, doc, "probe");
-        parseOtherAppearance(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOtherAppearance(OtherAppearance{}, doc.root(), "probe");
+        parseOtherAppearance(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeAppearance(Appearance{}, doc, "probe");
-        parseAppearance(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeAppearance(Appearance{}, doc.root(), "probe");
+        parseAppearance(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeArpeggiate(Arpeggiate{}, doc, "probe");
-        parseArpeggiate(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeArpeggiate(Arpeggiate{}, doc.root(), "probe");
+        parseArpeggiate(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeArrow(Arrow{}, doc, "probe");
-        parseArrow(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeArrow(Arrow{}, doc.root(), "probe");
+        parseArrow(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBreathMark(BreathMark{}, doc, "probe");
-        parseBreathMark(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBreathMark(BreathMark{}, doc.root(), "probe");
+        parseBreathMark(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeCaesura(Caesura{}, doc, "probe");
-        parseCaesura(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeCaesura(Caesura{}, doc.root(), "probe");
+        parseCaesura(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEmptyLine(EmptyLine{}, doc, "probe");
-        parseEmptyLine(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEmptyLine(EmptyLine{}, doc.root(), "probe");
+        parseEmptyLine(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEmptyPlacement(EmptyPlacement{}, doc, "probe");
-        parseEmptyPlacement(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEmptyPlacement(EmptyPlacement{}, doc.root(), "probe");
+        parseEmptyPlacement(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOtherPlacementText(OtherPlacementText{}, doc, "probe");
-        parseOtherPlacementText(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOtherPlacementText(OtherPlacementText{}, doc.root(), "probe");
+        parseOtherPlacementText(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStrongAccent(StrongAccent{}, doc, "probe");
-        parseStrongAccent(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStrongAccent(StrongAccent{}, doc.root(), "probe");
+        parseStrongAccent(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeArticulations(Articulations{}, doc, "probe");
-        parseArticulations(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeArticulations(Articulations{}, doc.root(), "probe");
+        parseArticulations(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeAssess(Assess{}, doc, "probe");
-        parseAssess(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeAssess(Assess{}, doc.root(), "probe");
+        parseAssess(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeClef(Clef{}, doc, "probe");
-        parseClef(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeClef(Clef{}, doc.root(), "probe");
+        parseClef(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDirective(Directive{}, doc, "probe");
-        parseDirective(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDirective(Directive{}, doc.root(), "probe");
+        parseDirective(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePartClef(PartClef{}, doc, "probe");
-        parsePartClef(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePartClef(PartClef{}, doc.root(), "probe");
+        parsePartClef(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDouble(Double{}, doc, "probe");
-        parseDouble(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDouble(Double{}, doc.root(), "probe");
+        parseDouble(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePartTranspose(PartTranspose{}, doc, "probe");
-        parsePartTranspose(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePartTranspose(PartTranspose{}, doc.root(), "probe");
+        parsePartTranspose(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeForPart(ForPart{}, doc, "probe");
-        parseForPart(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeForPart(ForPart{}, doc.root(), "probe");
+        parseForPart(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFormattedText(FormattedText{}, doc, "probe");
-        parseFormattedText(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFormattedText(FormattedText{}, doc.root(), "probe");
+        parseFormattedText(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeCancel(Cancel{}, doc, "probe");
-        parseCancel(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeCancel(Cancel{}, doc.root(), "probe");
+        parseCancel(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeKeyAccidental(KeyAccidental{}, doc, "probe");
-        parseKeyAccidental(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeKeyAccidental(KeyAccidental{}, doc.root(), "probe");
+        parseKeyAccidental(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeKeyOctave(KeyOctave{}, doc, "probe");
-        parseKeyOctave(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeKeyOctave(KeyOctave{}, doc.root(), "probe");
+        parseKeyOctave(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeKey(Key{}, doc, "probe");
-        parseKey(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeKey(Key{}, doc.root(), "probe");
+        parseKey(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeLevel(Level{}, doc, "probe");
-        parseLevel(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeLevel(Level{}, doc.root(), "probe");
+        parseLevel(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBeatRepeat(BeatRepeat{}, doc, "probe");
-        parseBeatRepeat(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBeatRepeat(BeatRepeat{}, doc.root(), "probe");
+        parseBeatRepeat(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMeasureRepeat(MeasureRepeat{}, doc, "probe");
-        parseMeasureRepeat(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMeasureRepeat(MeasureRepeat{}, doc.root(), "probe");
+        parseMeasureRepeat(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMultipleRest(MultipleRest{}, doc, "probe");
-        parseMultipleRest(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMultipleRest(MultipleRest{}, doc.root(), "probe");
+        parseMultipleRest(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSlash(Slash{}, doc, "probe");
-        parseSlash(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSlash(Slash{}, doc.root(), "probe");
+        parseSlash(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMeasureStyle(MeasureStyle{}, doc, "probe");
-        parseMeasureStyle(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMeasureStyle(MeasureStyle{}, doc.root(), "probe");
+        parseMeasureStyle(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePartSymbol(PartSymbol{}, doc, "probe");
-        parsePartSymbol(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePartSymbol(PartSymbol{}, doc.root(), "probe");
+        parsePartSymbol(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeLineDetail(LineDetail{}, doc, "probe");
-        parseLineDetail(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeLineDetail(LineDetail{}, doc.root(), "probe");
+        parseLineDetail(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStaffSize(StaffSize{}, doc, "probe");
-        parseStaffSize(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStaffSize(StaffSize{}, doc.root(), "probe");
+        parseStaffSize(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStaffTuning(StaffTuning{}, doc, "probe");
-        parseStaffTuning(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStaffTuning(StaffTuning{}, doc.root(), "probe");
+        parseStaffTuning(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStaffDetails(StaffDetails{}, doc, "probe");
-        parseStaffDetails(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStaffDetails(StaffDetails{}, doc.root(), "probe");
+        parseStaffDetails(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeInterchangeable(Interchangeable{}, doc, "probe");
-        parseInterchangeable(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeInterchangeable(Interchangeable{}, doc.root(), "probe");
+        parseInterchangeable(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTime(Time{}, doc, "probe");
-        parseTime(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTime(Time{}, doc.root(), "probe");
+        parseTime(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTranspose(Transpose{}, doc, "probe");
-        parseTranspose(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTranspose(Transpose{}, doc.root(), "probe");
+        parseTranspose(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeAttributes(Attributes{}, doc, "probe");
-        parseAttributes(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeAttributes(Attributes{}, doc.root(), "probe");
+        parseAttributes(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBackup(Backup{}, doc, "probe");
-        parseBackup(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBackup(Backup{}, doc.root(), "probe");
+        parseBackup(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBarStyleColor(BarStyleColor{}, doc, "probe");
-        parseBarStyleColor(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBarStyleColor(BarStyleColor{}, doc.root(), "probe");
+        parseBarStyleColor(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeCoda(Coda{}, doc, "probe");
-        parseCoda(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeCoda(Coda{}, doc.root(), "probe");
+        parseCoda(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEnding(Ending{}, doc, "probe");
-        parseEnding(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEnding(Ending{}, doc.root(), "probe");
+        parseEnding(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFermata(Fermata{}, doc, "probe");
-        parseFermata(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFermata(Fermata{}, doc.root(), "probe");
+        parseFermata(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeRepeat(Repeat{}, doc, "probe");
-        parseRepeat(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeRepeat(Repeat{}, doc.root(), "probe");
+        parseRepeat(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSegno(Segno{}, doc, "probe");
-        parseSegno(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSegno(Segno{}, doc.root(), "probe");
+        parseSegno(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeWavyLine(WavyLine{}, doc, "probe");
-        parseWavyLine(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeWavyLine(WavyLine{}, doc.root(), "probe");
+        parseWavyLine(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBarline(Barline{}, doc, "probe");
-        parseBarline(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBarline(Barline{}, doc.root(), "probe");
+        parseBarline(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBarre(Barre{}, doc, "probe");
-        parseBarre(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBarre(Barre{}, doc.root(), "probe");
+        parseBarre(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBassStep(BassStep{}, doc, "probe");
-        parseBassStep(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBassStep(BassStep{}, doc.root(), "probe");
+        parseBassStep(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHarmonyAlter(HarmonyAlter{}, doc, "probe");
-        parseHarmonyAlter(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHarmonyAlter(HarmonyAlter{}, doc.root(), "probe");
+        parseHarmonyAlter(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStyleText(StyleText{}, doc, "probe");
-        parseStyleText(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStyleText(StyleText{}, doc.root(), "probe");
+        parseStyleText(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBass(Bass{}, doc, "probe");
-        parseBass(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBass(Bass{}, doc.root(), "probe");
+        parseBass(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBeam(Beam{}, doc, "probe");
-        parseBeam(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBeam(Beam{}, doc.root(), "probe");
+        parseBeam(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBeatUnitTied(BeatUnitTied{}, doc, "probe");
-        parseBeatUnitTied(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBeatUnitTied(BeatUnitTied{}, doc.root(), "probe");
+        parseBeatUnitTied(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBeater(Beater{}, doc, "probe");
-        parseBeater(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBeater(Beater{}, doc.root(), "probe");
+        parseBeater(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePlacementText(PlacementText{}, doc, "probe");
-        parsePlacementText(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePlacementText(PlacementText{}, doc.root(), "probe");
+        parsePlacementText(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeRelease(Release{}, doc, "probe");
-        parseRelease(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeRelease(Release{}, doc.root(), "probe");
+        parseRelease(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBend(Bend{}, doc, "probe");
-        parseBend(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBend(Bend{}, doc.root(), "probe");
+        parseBend(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBookmark(Bookmark{}, doc, "probe");
-        parseBookmark(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBookmark(Bookmark{}, doc.root(), "probe");
+        parseBookmark(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeBracket(Bracket{}, doc, "probe");
-        parseBracket(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeBracket(Bracket{}, doc.root(), "probe");
+        parseBracket(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFormattedSymbolID(FormattedSymbolID{}, doc, "probe");
-        parseFormattedSymbolID(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFormattedSymbolID(FormattedSymbolID{}, doc.root(), "probe");
+        parseFormattedSymbolID(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFormattedTextID(FormattedTextID{}, doc, "probe");
-        parseFormattedTextID(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFormattedTextID(FormattedTextID{}, doc.root(), "probe");
+        parseFormattedTextID(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeImage(Image{}, doc, "probe");
-        parseImage(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeImage(Image{}, doc.root(), "probe");
+        parseImage(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeLink(Link{}, doc, "probe");
-        parseLink(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeLink(Link{}, doc.root(), "probe");
+        parseLink(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeCredit(Credit{}, doc, "probe");
-        parseCredit(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeCredit(Credit{}, doc.root(), "probe");
+        parseCredit(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDashes(Dashes{}, doc, "probe");
-        parseDashes(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDashes(Dashes{}, doc.root(), "probe");
+        parseDashes(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEmptyFont(EmptyFont{}, doc, "probe");
-        parseEmptyFont(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEmptyFont(EmptyFont{}, doc.root(), "probe");
+        parseEmptyFont(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeLyricFont(LyricFont{}, doc, "probe");
-        parseLyricFont(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeLyricFont(LyricFont{}, doc.root(), "probe");
+        parseLyricFont(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeLyricLanguage(LyricLanguage{}, doc, "probe");
-        parseLyricLanguage(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeLyricLanguage(LyricLanguage{}, doc.root(), "probe");
+        parseLyricLanguage(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePageMargins(PageMargins{}, doc, "probe");
-        parsePageMargins(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePageMargins(PageMargins{}, doc.root(), "probe");
+        parsePageMargins(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePageLayout(PageLayout{}, doc, "probe");
-        parsePageLayout(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePageLayout(PageLayout{}, doc.root(), "probe");
+        parsePageLayout(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeScaling(Scaling{}, doc, "probe");
-        parseScaling(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeScaling(Scaling{}, doc.root(), "probe");
+        parseScaling(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStaffLayout(StaffLayout{}, doc, "probe");
-        parseStaffLayout(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStaffLayout(StaffLayout{}, doc.root(), "probe");
+        parseStaffLayout(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEmptyPrintObjectStyleAlign(EmptyPrintObjectStyleAlign{}, doc, "probe");
-        parseEmptyPrintObjectStyleAlign(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEmptyPrintObjectStyleAlign(EmptyPrintObjectStyleAlign{}, doc.root(), "probe");
+        parseEmptyPrintObjectStyleAlign(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSystemDividers(SystemDividers{}, doc, "probe");
-        parseSystemDividers(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSystemDividers(SystemDividers{}, doc.root(), "probe");
+        parseSystemDividers(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSystemMargins(SystemMargins{}, doc, "probe");
-        parseSystemMargins(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSystemMargins(SystemMargins{}, doc.root(), "probe");
+        parseSystemMargins(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSystemLayout(SystemLayout{}, doc, "probe");
-        parseSystemLayout(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSystemLayout(SystemLayout{}, doc.root(), "probe");
+        parseSystemLayout(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDefaults(Defaults{}, doc, "probe");
-        parseDefaults(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDefaults(Defaults{}, doc.root(), "probe");
+        parseDefaults(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDegreeAlter(DegreeAlter{}, doc, "probe");
-        parseDegreeAlter(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDegreeAlter(DegreeAlter{}, doc.root(), "probe");
+        parseDegreeAlter(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDegreeType(DegreeType{}, doc, "probe");
-        parseDegreeType(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDegreeType(DegreeType{}, doc.root(), "probe");
+        parseDegreeType(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDegreeValue(DegreeValue{}, doc, "probe");
-        parseDegreeValue(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDegreeValue(DegreeValue{}, doc.root(), "probe");
+        parseDegreeValue(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDegree(Degree{}, doc, "probe");
-        parseDegree(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDegree(Degree{}, doc.root(), "probe");
+        parseDegree(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOtherText(OtherText{}, doc, "probe");
-        parseOtherText(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOtherText(OtherText{}, doc.root(), "probe");
+        parseOtherText(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDynamics(Dynamics{}, doc, "probe");
-        parseDynamics(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDynamics(Dynamics{}, doc.root(), "probe");
+        parseDynamics(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEmptyPrintStyleAlignID(EmptyPrintStyleAlignID{}, doc, "probe");
-        parseEmptyPrintStyleAlignID(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEmptyPrintStyleAlignID(EmptyPrintStyleAlignID{}, doc.root(), "probe");
+        parseEmptyPrintStyleAlignID(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePedalTuning(PedalTuning{}, doc, "probe");
-        parsePedalTuning(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePedalTuning(PedalTuning{}, doc.root(), "probe");
+        parsePedalTuning(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHarpPedals(HarpPedals{}, doc, "probe");
-        parseHarpPedals(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHarpPedals(HarpPedals{}, doc.root(), "probe");
+        parseHarpPedals(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMetronomeBeam(MetronomeBeam{}, doc, "probe");
-        parseMetronomeBeam(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMetronomeBeam(MetronomeBeam{}, doc.root(), "probe");
+        parseMetronomeBeam(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMetronomeTied(MetronomeTied{}, doc, "probe");
-        parseMetronomeTied(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMetronomeTied(MetronomeTied{}, doc.root(), "probe");
+        parseMetronomeTied(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTimeModification(TimeModification{}, doc, "probe");
-        parseTimeModification(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTimeModification(TimeModification{}, doc.root(), "probe");
+        parseTimeModification(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMetronomeTuplet(MetronomeTuplet{}, doc, "probe");
-        parseMetronomeTuplet(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMetronomeTuplet(MetronomeTuplet{}, doc.root(), "probe");
+        parseMetronomeTuplet(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMetronomeNote(MetronomeNote{}, doc, "probe");
-        parseMetronomeNote(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMetronomeNote(MetronomeNote{}, doc.root(), "probe");
+        parseMetronomeNote(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePerMinute(PerMinute{}, doc, "probe");
-        parsePerMinute(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePerMinute(PerMinute{}, doc.root(), "probe");
+        parsePerMinute(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMetronome(Metronome{}, doc, "probe");
-        parseMetronome(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMetronome(Metronome{}, doc.root(), "probe");
+        parseMetronome(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOctaveShift(OctaveShift{}, doc, "probe");
-        parseOctaveShift(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOctaveShift(OctaveShift{}, doc.root(), "probe");
+        parseOctaveShift(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOtherDirection(OtherDirection{}, doc, "probe");
-        parseOtherDirection(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOtherDirection(OtherDirection{}, doc.root(), "probe");
+        parseOtherDirection(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePedal(Pedal{}, doc, "probe");
-        parsePedal(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePedal(Pedal{}, doc.root(), "probe");
+        parsePedal(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEffect(Effect{}, doc, "probe");
-        parseEffect(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEffect(Effect{}, doc.root(), "probe");
+        parseEffect(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeGlass(Glass{}, doc, "probe");
-        parseGlass(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeGlass(Glass{}, doc.root(), "probe");
+        parseGlass(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMembrane(Membrane{}, doc, "probe");
-        parseMembrane(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMembrane(Membrane{}, doc.root(), "probe");
+        parseMembrane(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMetal(Metal{}, doc, "probe");
-        parseMetal(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMetal(Metal{}, doc.root(), "probe");
+        parseMetal(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePitched(Pitched{}, doc, "probe");
-        parsePitched(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePitched(Pitched{}, doc.root(), "probe");
+        parsePitched(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStick(Stick{}, doc, "probe");
-        parseStick(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStick(Stick{}, doc.root(), "probe");
+        parseStick(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTimpani(Timpani{}, doc, "probe");
-        parseTimpani(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTimpani(Timpani{}, doc.root(), "probe");
+        parseTimpani(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeWood(Wood{}, doc, "probe");
-        parseWood(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeWood(Wood{}, doc.root(), "probe");
+        parseWood(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePercussion(Percussion{}, doc, "probe");
-        parsePercussion(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePercussion(Percussion{}, doc.root(), "probe");
+        parsePercussion(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePrincipalVoice(PrincipalVoice{}, doc, "probe");
-        parsePrincipalVoice(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePrincipalVoice(PrincipalVoice{}, doc.root(), "probe");
+        parsePrincipalVoice(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeScordatura(Scordatura{}, doc, "probe");
-        parseScordatura(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeScordatura(Scordatura{}, doc.root(), "probe");
+        parseScordatura(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStaffDivide(StaffDivide{}, doc, "probe");
-        parseStaffDivide(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStaffDivide(StaffDivide{}, doc.root(), "probe");
+        parseStaffDivide(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStringMute(StringMute{}, doc, "probe");
-        parseStringMute(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStringMute(StringMute{}, doc.root(), "probe");
+        parseStringMute(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeWedge(Wedge{}, doc, "probe");
-        parseWedge(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeWedge(Wedge{}, doc.root(), "probe");
+        parseWedge(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDirectionType(DirectionType{}, doc, "probe");
-        parseDirectionType(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDirectionType(DirectionType{}, doc.root(), "probe");
+        parseDirectionType(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOffset(Offset{}, doc, "probe");
-        parseOffset(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOffset(Offset{}, doc.root(), "probe");
+        parseOffset(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOtherListening(OtherListening{}, doc, "probe");
-        parseOtherListening(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOtherListening(OtherListening{}, doc.root(), "probe");
+        parseOtherListening(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSync(Sync{}, doc, "probe");
-        parseSync(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSync(Sync{}, doc.root(), "probe");
+        parseSync(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeListening(Listening{}, doc, "probe");
-        parseListening(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeListening(Listening{}, doc.root(), "probe");
+        parseListening(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeVirtualInstrument(VirtualInstrument{}, doc, "probe");
-        parseVirtualInstrument(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeVirtualInstrument(VirtualInstrument{}, doc.root(), "probe");
+        parseVirtualInstrument(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeInstrumentChange(InstrumentChange{}, doc, "probe");
-        parseInstrumentChange(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeInstrumentChange(InstrumentChange{}, doc.root(), "probe");
+        parseInstrumentChange(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMIDIDevice(MIDIDevice{}, doc, "probe");
-        parseMIDIDevice(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMIDIDevice(MIDIDevice{}, doc.root(), "probe");
+        parseMIDIDevice(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMIDIInstrument(MIDIInstrument{}, doc, "probe");
-        parseMIDIInstrument(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMIDIInstrument(MIDIInstrument{}, doc.root(), "probe");
+        parseMIDIInstrument(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOtherPlay(OtherPlay{}, doc, "probe");
-        parseOtherPlay(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOtherPlay(OtherPlay{}, doc.root(), "probe");
+        parseOtherPlay(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePlay(Play{}, doc, "probe");
-        parsePlay(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePlay(Play{}, doc.root(), "probe");
+        parsePlay(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSwing(Swing{}, doc, "probe");
-        parseSwing(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSwing(Swing{}, doc.root(), "probe");
+        parseSwing(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSound(Sound{}, doc, "probe");
-        parseSound(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSound(Sound{}, doc.root(), "probe");
+        parseSound(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeDirection(Direction{}, doc, "probe");
-        parseDirection(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeDirection(Direction{}, doc.root(), "probe");
+        parseDirection(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeElision(Elision{}, doc, "probe");
-        parseElision(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeElision(Elision{}, doc.root(), "probe");
+        parseElision(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEmptyPlacementSmufl(EmptyPlacementSmufl{}, doc, "probe");
-        parseEmptyPlacementSmufl(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEmptyPlacementSmufl(EmptyPlacementSmufl{}, doc.root(), "probe");
+        parseEmptyPlacementSmufl(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEmptyTrillSound(EmptyTrillSound{}, doc, "probe");
-        parseEmptyTrillSound(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEmptyTrillSound(EmptyTrillSound{}, doc.root(), "probe");
+        parseEmptyTrillSound(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSupports(Supports{}, doc, "probe");
-        parseSupports(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSupports(Supports{}, doc.root(), "probe");
+        parseSupports(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTypedText(TypedText{}, doc, "probe");
-        parseTypedText(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTypedText(TypedText{}, doc.root(), "probe");
+        parseTypedText(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeEncoding(Encoding{}, doc, "probe");
-        parseEncoding(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeEncoding(Encoding{}, doc.root(), "probe");
+        parseEncoding(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeExtend(Extend{}, doc, "probe");
-        parseExtend(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeExtend(Extend{}, doc.root(), "probe");
+        parseExtend(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFeature(Feature{}, doc, "probe");
-        parseFeature(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFeature(Feature{}, doc.root(), "probe");
+        parseFeature(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFigure(Figure{}, doc, "probe");
-        parseFigure(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFigure(Figure{}, doc.root(), "probe");
+        parseFigure(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFiguredBass(FiguredBass{}, doc, "probe");
-        parseFiguredBass(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFiguredBass(FiguredBass{}, doc.root(), "probe");
+        parseFiguredBass(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFingering(Fingering{}, doc, "probe");
-        parseFingering(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFingering(Fingering{}, doc.root(), "probe");
+        parseFingering(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFirstFret(FirstFret{}, doc, "probe");
-        parseFirstFret(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFirstFret(FirstFret{}, doc.root(), "probe");
+        parseFirstFret(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeForward(Forward{}, doc, "probe");
-        parseForward(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeForward(Forward{}, doc.root(), "probe");
+        parseForward(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFret(Fret{}, doc, "probe");
-        parseFret(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFret(Fret{}, doc.root(), "probe");
+        parseFret(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeString(String{}, doc, "probe");
-        parseString(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeString(String{}, doc.root(), "probe");
+        parseString(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFrameNote(FrameNote{}, doc, "probe");
-        parseFrameNote(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFrameNote(FrameNote{}, doc.root(), "probe");
+        parseFrameNote(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeFrame(Frame{}, doc, "probe");
-        parseFrame(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeFrame(Frame{}, doc.root(), "probe");
+        parseFrame(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeGlissando(Glissando{}, doc, "probe");
-        parseGlissando(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeGlissando(Glissando{}, doc.root(), "probe");
+        parseGlissando(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeGrace(Grace{}, doc, "probe");
-        parseGrace(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeGrace(Grace{}, doc.root(), "probe");
+        parseGrace(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeGroupBarline(GroupBarline{}, doc, "probe");
-        parseGroupBarline(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeGroupBarline(GroupBarline{}, doc.root(), "probe");
+        parseGroupBarline(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeGroupName(GroupName{}, doc, "probe");
-        parseGroupName(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeGroupName(GroupName{}, doc.root(), "probe");
+        parseGroupName(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeGroupSymbol(GroupSymbol{}, doc, "probe");
-        parseGroupSymbol(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeGroupSymbol(GroupSymbol{}, doc.root(), "probe");
+        parseGroupSymbol(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeGrouping(Grouping{}, doc, "probe");
-        parseGrouping(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeGrouping(Grouping{}, doc.root(), "probe");
+        parseGrouping(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHammerOnPullOff(HammerOnPullOff{}, doc, "probe");
-        parseHammerOnPullOff(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHammerOnPullOff(HammerOnPullOff{}, doc.root(), "probe");
+        parseHammerOnPullOff(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHandbell(Handbell{}, doc, "probe");
-        parseHandbell(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHandbell(Handbell{}, doc.root(), "probe");
+        parseHandbell(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHarmonClosed(HarmonClosed{}, doc, "probe");
-        parseHarmonClosed(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHarmonClosed(HarmonClosed{}, doc.root(), "probe");
+        parseHarmonClosed(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHarmonMute(HarmonMute{}, doc, "probe");
-        parseHarmonMute(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHarmonMute(HarmonMute{}, doc.root(), "probe");
+        parseHarmonMute(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHarmonic(Harmonic{}, doc, "probe");
-        parseHarmonic(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHarmonic(Harmonic{}, doc.root(), "probe");
+        parseHarmonic(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeInversion(Inversion{}, doc, "probe");
-        parseInversion(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeInversion(Inversion{}, doc.root(), "probe");
+        parseInversion(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeKind(Kind{}, doc, "probe");
-        parseKind(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeKind(Kind{}, doc.root(), "probe");
+        parseKind(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNumeralKey(NumeralKey{}, doc, "probe");
-        parseNumeralKey(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNumeralKey(NumeralKey{}, doc.root(), "probe");
+        parseNumeralKey(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNumeralRoot(NumeralRoot{}, doc, "probe");
-        parseNumeralRoot(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNumeralRoot(NumeralRoot{}, doc.root(), "probe");
+        parseNumeralRoot(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNumeral(Numeral{}, doc, "probe");
-        parseNumeral(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNumeral(Numeral{}, doc.root(), "probe");
+        parseNumeral(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeRootStep(RootStep{}, doc, "probe");
-        parseRootStep(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeRootStep(RootStep{}, doc.root(), "probe");
+        parseRootStep(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeRoot(Root{}, doc, "probe");
-        parseRoot(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeRoot(Root{}, doc.root(), "probe");
+        parseRoot(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHarmony(Harmony{}, doc, "probe");
-        parseHarmony(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHarmony(Harmony{}, doc.root(), "probe");
+        parseHarmony(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHeelToe(HeelToe{}, doc, "probe");
-        parseHeelToe(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHeelToe(HeelToe{}, doc.root(), "probe");
+        parseHeelToe(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHoleClosed(HoleClosed{}, doc, "probe");
-        parseHoleClosed(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHoleClosed(HoleClosed{}, doc.root(), "probe");
+        parseHoleClosed(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHole(Hole{}, doc, "probe");
-        parseHole(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHole(Hole{}, doc.root(), "probe");
+        parseHole(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeHorizontalTurn(HorizontalTurn{}, doc, "probe");
-        parseHorizontalTurn(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeHorizontalTurn(HorizontalTurn{}, doc.root(), "probe");
+        parseHorizontalTurn(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMiscellaneousField(MiscellaneousField{}, doc, "probe");
-        parseMiscellaneousField(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMiscellaneousField(MiscellaneousField{}, doc.root(), "probe");
+        parseMiscellaneousField(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMiscellaneous(Miscellaneous{}, doc, "probe");
-        parseMiscellaneous(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMiscellaneous(Miscellaneous{}, doc.root(), "probe");
+        parseMiscellaneous(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeIdentification(Identification{}, doc, "probe");
-        parseIdentification(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeIdentification(Identification{}, doc.root(), "probe");
+        parseIdentification(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeInstrument(Instrument{}, doc, "probe");
-        parseInstrument(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeInstrument(Instrument{}, doc.root(), "probe");
+        parseInstrument(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeInstrumentLink(InstrumentLink{}, doc, "probe");
-        parseInstrumentLink(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeInstrumentLink(InstrumentLink{}, doc.root(), "probe");
+        parseInstrumentLink(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeWait(Wait{}, doc, "probe");
-        parseWait(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeWait(Wait{}, doc.root(), "probe");
+        parseWait(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeListen(Listen{}, doc, "probe");
-        parseListen(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeListen(Listen{}, doc.root(), "probe");
+        parseListen(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTextElementData(TextElementData{}, doc, "probe");
-        parseTextElementData(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTextElementData(TextElementData{}, doc.root(), "probe");
+        parseTextElementData(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeLyric(Lyric{}, doc, "probe");
-        parseLyric(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeLyric(Lyric{}, doc.root(), "probe");
+        parseLyric(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMeasureLayout(MeasureLayout{}, doc, "probe");
-        parseMeasureLayout(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMeasureLayout(MeasureLayout{}, doc.root(), "probe");
+        parseMeasureLayout(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMeasureNumbering(MeasureNumbering{}, doc, "probe");
-        parseMeasureNumbering(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMeasureNumbering(MeasureNumbering{}, doc.root(), "probe");
+        parseMeasureNumbering(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeMordent(Mordent{}, doc, "probe");
-        parseMordent(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeMordent(Mordent{}, doc.root(), "probe");
+        parseMordent(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNameDisplay(NameDisplay{}, doc, "probe");
-        parseNameDisplay(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNameDisplay(NameDisplay{}, doc.root(), "probe");
+        parseNameDisplay(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNonArpeggiate(NonArpeggiate{}, doc, "probe");
-        parseNonArpeggiate(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNonArpeggiate(NonArpeggiate{}, doc.root(), "probe");
+        parseNonArpeggiate(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTremolo(Tremolo{}, doc, "probe");
-        parseTremolo(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTremolo(Tremolo{}, doc.root(), "probe");
+        parseTremolo(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOrnaments(Ornaments{}, doc, "probe");
-        parseOrnaments(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOrnaments(Ornaments{}, doc.root(), "probe");
+        parseOrnaments(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOtherNotation(OtherNotation{}, doc, "probe");
-        parseOtherNotation(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOtherNotation(OtherNotation{}, doc.root(), "probe");
+        parseOtherNotation(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSlide(Slide{}, doc, "probe");
-        parseSlide(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSlide(Slide{}, doc.root(), "probe");
+        parseSlide(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeSlur(Slur{}, doc, "probe");
-        parseSlur(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeSlur(Slur{}, doc.root(), "probe");
+        parseSlur(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTap(Tap{}, doc, "probe");
-        parseTap(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTap(Tap{}, doc.root(), "probe");
+        parseTap(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTechnical(Technical{}, doc, "probe");
-        parseTechnical(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTechnical(Technical{}, doc.root(), "probe");
+        parseTechnical(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTied(Tied{}, doc, "probe");
-        parseTied(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTied(Tied{}, doc.root(), "probe");
+        parseTied(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTupletDot(TupletDot{}, doc, "probe");
-        parseTupletDot(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTupletDot(TupletDot{}, doc.root(), "probe");
+        parseTupletDot(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTupletNumber(TupletNumber{}, doc, "probe");
-        parseTupletNumber(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTupletNumber(TupletNumber{}, doc.root(), "probe");
+        parseTupletNumber(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTupletType(TupletType{}, doc, "probe");
-        parseTupletType(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTupletType(TupletType{}, doc.root(), "probe");
+        parseTupletType(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTupletPortion(TupletPortion{}, doc, "probe");
-        parseTupletPortion(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTupletPortion(TupletPortion{}, doc.root(), "probe");
+        parseTupletPortion(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTuplet(Tuplet{}, doc, "probe");
-        parseTuplet(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTuplet(Tuplet{}, doc.root(), "probe");
+        parseTuplet(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNotations(Notations{}, doc, "probe");
-        parseNotations(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNotations(Notations{}, doc.root(), "probe");
+        parseNotations(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNoteType(NoteType{}, doc, "probe");
-        parseNoteType(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNoteType(NoteType{}, doc.root(), "probe");
+        parseNoteType(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNotehead(Notehead{}, doc, "probe");
-        parseNotehead(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNotehead(Notehead{}, doc.root(), "probe");
+        parseNotehead(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNoteheadText(NoteheadText{}, doc, "probe");
-        parseNoteheadText(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNoteheadText(NoteheadText{}, doc.root(), "probe");
+        parseNoteheadText(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePitch(Pitch{}, doc, "probe");
-        parsePitch(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePitch(Pitch{}, doc.root(), "probe");
+        parsePitch(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeRest(Rest{}, doc, "probe");
-        parseRest(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeRest(Rest{}, doc.root(), "probe");
+        parseRest(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeStem(Stem{}, doc, "probe");
-        parseStem(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeStem(Stem{}, doc.root(), "probe");
+        parseStem(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTie(Tie{}, doc, "probe");
-        parseTie(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTie(Tie{}, doc.root(), "probe");
+        parseTie(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeUnpitched(Unpitched{}, doc, "probe");
-        parseUnpitched(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeUnpitched(Unpitched{}, doc.root(), "probe");
+        parseUnpitched(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeNote(Note{}, doc, "probe");
-        parseNote(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeNote(Note{}, doc.root(), "probe");
+        parseNote(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeOpus(Opus{}, doc, "probe");
-        parseOpus(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeOpus(Opus{}, doc.root(), "probe");
+        parseOpus(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePartGroup(PartGroup{}, doc, "probe");
-        parsePartGroup(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePartGroup(PartGroup{}, doc.root(), "probe");
+        parsePartGroup(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePartLink(PartLink{}, doc, "probe");
-        parsePartLink(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePartLink(PartLink{}, doc.root(), "probe");
+        parsePartLink(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePartName(PartName{}, doc, "probe");
-        parsePartName(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePartName(PartName{}, doc.root(), "probe");
+        parsePartName(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePlayer(Player{}, doc, "probe");
-        parsePlayer(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePlayer(Player{}, doc.root(), "probe");
+        parsePlayer(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeScoreInstrument(ScoreInstrument{}, doc, "probe");
-        parseScoreInstrument(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeScoreInstrument(ScoreInstrument{}, doc.root(), "probe");
+        parseScoreInstrument(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeScorePart(ScorePart{}, doc, "probe");
-        parseScorePart(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeScorePart(ScorePart{}, doc.root(), "probe");
+        parseScorePart(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePartList(PartList{}, doc, "probe");
-        parsePartList(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePartList(PartList{}, doc.root(), "probe");
+        parsePartList(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePrint(Print{}, doc, "probe");
-        parsePrint(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePrint(Print{}, doc.root(), "probe");
+        parsePrint(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePartwiseMeasure(PartwiseMeasure{}, doc, "probe");
-        parsePartwiseMeasure(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePartwiseMeasure(PartwiseMeasure{}, doc.root(), "probe");
+        parsePartwiseMeasure(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializePartwisePart(PartwisePart{}, doc, "probe");
-        parsePartwisePart(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializePartwisePart(PartwisePart{}, doc.root(), "probe");
+        parsePartwisePart(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeWork(Work{}, doc, "probe");
-        parseWork(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeWork(Work{}, doc.root(), "probe");
+        parseWork(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeScorePartwise(ScorePartwise{}, doc, "probe");
-        parseScorePartwise(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeScorePartwise(ScorePartwise{}, doc.root(), "probe");
+        parseScorePartwise(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTimewisePart(TimewisePart{}, doc, "probe");
-        parseTimewisePart(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTimewisePart(TimewisePart{}, doc.root(), "probe");
+        parseTimewisePart(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeTimewiseMeasure(TimewiseMeasure{}, doc, "probe");
-        parseTimewiseMeasure(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeTimewiseMeasure(TimewiseMeasure{}, doc.root(), "probe");
+        parseTimewiseMeasure(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        serializeScoreTimewise(ScoreTimewise{}, doc, "probe");
-        parseScoreTimewise(doc.document_element(), ParseContext{});
+        mx::xml::Document doc;
+        serializeScoreTimewise(ScoreTimewise{}, doc.root(), "probe");
+        parseScoreTimewise(doc.documentElement(), ParseContext{});
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeTuningGroup(TuningGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseTuningGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeClefGroup(ClefGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseClefGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeTransposeGroup(TransposeGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseTransposeGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeTraditionalKeyGroup(TraditionalKeyGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseTraditionalKeyGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeNonTraditionalKeyGroup(NonTraditionalKeyGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseNonTraditionalKeyGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeSlashGroup(SlashGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseSlashGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeTimeSignatureGroup(TimeSignatureGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseTimeSignatureGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeEditorialGroup(EditorialGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseEditorialGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeBeatUnitGroup(BeatUnitGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseBeatUnitGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeAllMarginsGroup(AllMarginsGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseAllMarginsGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeLeftRightMarginsGroup(LeftRightMarginsGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseLeftRightMarginsGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeLayoutGroup(LayoutGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseLayoutGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeVirtualInstrumentDataGroup(VirtualInstrumentDataGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseVirtualInstrumentDataGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeEditorialVoiceDirectionGroup(EditorialVoiceDirectionGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseEditorialVoiceDirectionGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeEditorialVoiceGroup(EditorialVoiceGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseEditorialVoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeHarmonyChordGroup(HarmonyChordGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseHarmonyChordGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeDisplayStepOctaveGroup(DisplayStepOctaveGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseDisplayStepOctaveGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeFullNoteGroup(FullNoteGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseFullNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeMusicDataChoice(MusicDataChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseMusicDataChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeScoreHeaderGroup(ScoreHeaderGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseScoreHeaderGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeArrowChoice(ArrowChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseArrowChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeArrowChoiceGroup(ArrowChoiceGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseArrowChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeArticulationsChoice(ArticulationsChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseArticulationsChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeKeyChoice(KeyChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseKeyChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeSlashGroupGroup(SlashGroupGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseSlashGroupGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeMeasureStyleChoice(MeasureStyleChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseMeasureStyleChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeStaffDetailsGroup(StaffDetailsGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseStaffDetailsGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeTimeChoice(TimeChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseTimeChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeTimeChoiceGroup(TimeChoiceGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseTimeChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeAttributesChoice(AttributesChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseAttributesChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeBendChoice(BendChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseBendChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeCreditChoice(CreditChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseCreditChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeCreditChoiceGroup(CreditChoiceGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseCreditChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeCreditChoiceGroupChoice(CreditChoiceGroupChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseCreditChoiceGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeCreditChoiceGroupGroup(CreditChoiceGroupGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseCreditChoiceGroupGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeCreditChoiceGroupGroupChoice(CreditChoiceGroupGroupChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseCreditChoiceGroupGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializePageLayoutGroup(PageLayoutGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parsePageLayoutGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeDynamicsChoice(DynamicsChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseDynamicsChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeTimeModificationGroup(TimeModificationGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseTimeModificationGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeMetronomeChoice(MetronomeChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseMetronomeChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeMetronomeChoiceGroup(MetronomeChoiceGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseMetronomeChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeMetronomeChoiceGroupChoice(MetronomeChoiceGroupChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseMetronomeChoiceGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeMetronomeChoiceGroupChoiceGroup(MetronomeChoiceGroupChoiceGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseMetronomeChoiceGroupChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeMetronomeChoiceGroup2(MetronomeChoiceGroup2{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseMetronomeChoiceGroup2(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeMetronomeChoiceGroup2Group(MetronomeChoiceGroup2Group{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseMetronomeChoiceGroup2Group(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializePercussionChoice(PercussionChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parsePercussionChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeDirectionTypeChoice(DirectionTypeChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseDirectionTypeChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeDirectionTypeChoiceChoice(DirectionTypeChoiceChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseDirectionTypeChoiceChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeListeningChoice(ListeningChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseListeningChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeVirtualInstrumentDataGroupChoice(VirtualInstrumentDataGroupChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseVirtualInstrumentDataGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializePlayChoice(PlayChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parsePlayChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeSwingChoice(SwingChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseSwingChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeSwingChoiceGroup(SwingChoiceGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseSwingChoiceGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeSoundGroup(SoundGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseSoundGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeEncodingChoice(EncodingChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseEncodingChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeHarmonicChoice(HarmonicChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseHarmonicChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeHarmonicChoice2(HarmonicChoice2{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseHarmonicChoice2(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeHarmonyChordGroupChoice(HarmonyChordGroupChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseHarmonyChordGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeListenChoice(ListenChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseListenChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeLyricChoice(LyricChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseLyricChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeLyricTextGroup(LyricTextGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseLyricTextGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeLyricSyllableGroup(LyricSyllableGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseLyricSyllableGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeElisionSyllabicGroup(ElisionSyllabicGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseElisionSyllabicGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeNameDisplayChoice(NameDisplayChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseNameDisplayChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeOrnamentsGroup(OrnamentsGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseOrnamentsGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeOrnamentsGroupChoice(OrnamentsGroupChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseOrnamentsGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeTechnicalChoice(TechnicalChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseTechnicalChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeNotationsChoice(NotationsChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseNotationsChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeNoteheadTextChoice(NoteheadTextChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseNoteheadTextChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeNoteChoice(NoteChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseNoteChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeGraceNoteGroup(GraceNoteGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseGraceNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeGraceNoteChoice(GraceNoteChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseGraceNoteChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeGraceNormalNoteGroup(GraceNormalNoteGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseGraceNormalNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeFullNoteGroupChoice(FullNoteGroupChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseFullNoteGroupChoice(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeGraceCueNoteGroup(GraceCueNoteGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseGraceCueNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeCueNoteGroup(CueNoteGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseCueNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeNormalNoteGroup(NormalNoteGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseNormalNoteGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializeScorePartMIDIGroup(ScorePartMIDIGroup{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parseScorePartMIDIGroup(el, cursor, ParseContext{});
         }
     }
     {
-        mxpugi::xml_document doc;
-        mxpugi::xml_node el = doc.append_child("probe");
+        mx::xml::Document doc;
+        mx::xml::Node el = doc.root().appendChild("probe");
         serializePartListChoice(PartListChoice{}, el);
-        if (mxpugi::xml_node cursor = firstElement(el))
+        if (mx::xml::Node cursor = firstElement(el))
         {
             parsePartListChoice(el, cursor, ParseContext{});
         }

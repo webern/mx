@@ -31,7 +31,7 @@ void EditorialGroup::setLevel(std::optional<Level> value)
     m_level = std::move(value);
 }
 
-EditorialGroup parseEditorialGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+EditorialGroup parseEditorialGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     EditorialGroup out;
     if (cursorIs(cursor, "footnote"))
@@ -47,7 +47,7 @@ EditorialGroup parseEditorialGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor
     return out;
 }
 
-void serializeEditorialGroup(const EditorialGroup &v, mxpugi::xml_node el)
+void serializeEditorialGroup(const EditorialGroup &v, mx::xml::Node el)
 {
     if (v.footnote())
     {

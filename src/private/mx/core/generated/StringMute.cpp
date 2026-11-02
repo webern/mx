@@ -141,11 +141,11 @@ void StringMute::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-StringMute parseStringMute(mxpugi::xml_node el, const ParseContext &context)
+StringMute parseStringMute(mx::xml::Node el, const ParseContext &context)
 {
     StringMute out;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -218,7 +218,7 @@ StringMute parseStringMute(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseStringMuteContent(StringMute &out, mxpugi::xml_node el, const ParseContext &context)
+void parseStringMuteContent(StringMute &out, mx::xml::Node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -228,9 +228,9 @@ void parseStringMuteContent(StringMute &out, mxpugi::xml_node el, const ParseCon
     }
 }
 
-void serializeStringMute(const StringMute &v, mxpugi::xml_node parent, const char *tag)
+void serializeStringMute(const StringMute &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.defaultX())
     {
@@ -283,7 +283,7 @@ void serializeStringMute(const StringMute &v, mxpugi::xml_node parent, const cha
     serializeStringMuteContent(v, el);
 }
 
-void serializeStringMuteContent(const StringMute &v, mxpugi::xml_node el)
+void serializeStringMuteContent(const StringMute &v, mx::xml::Node el)
 {
     (void)v;
     (void)el;

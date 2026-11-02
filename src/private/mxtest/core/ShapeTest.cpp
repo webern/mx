@@ -26,8 +26,9 @@
 #include "mx/core/generated/Pitch.h"
 #include "mx/core/generated/Step.h"
 
-#include "mxpugi/mxpugi.hpp"
+#include "mx/xml/Xml.h"
 
+#include <sstream>
 #include <string>
 
 using namespace mx::core;
@@ -38,30 +39,20 @@ namespace
 // Serialize through a scratch document and return the XML text, compact.
 std::string toXml(const Pitch &p)
 {
-    mxpugi::xml_document doc;
-    serializePitch(p, doc, "pitch");
-
-    struct Writer : mxpugi::xml_writer
-    {
-        std::string out;
-
-        void write(const void *data, size_t size) override
-        {
-            out.append(static_cast<const char *>(data), size);
-        }
-    } w;
-
-    doc.save(w, "", mxpugi::format_raw | mxpugi::format_no_declaration);
-    return w.out;
+    mx::xml::Document doc;
+    serializePitch(p, doc.root(), "pitch");
+    std::ostringstream out;
+    doc.save(out, "", mx::xml::SaveFlags::raw | mx::xml::SaveFlags::noDeclaration);
+    return out.str();
 }
 
 ErrorCode parsePitchExpectingError(const char *xml)
 {
-    mxpugi::xml_document doc;
-    CHECK(doc.load_string(xml));
+    mx::xml::Document doc;
+    CHECK(doc.loadString(xml));
     try
     {
-        parsePitch(doc.first_child(), ParseContext{});
+        parsePitch(doc.documentElement(), ParseContext{});
     }
     catch (const ParseError &e)
     {
@@ -192,9 +183,9 @@ TEST(StrictStructureParse, Shapes)
     CHECK(parsePitchExpectingError("<pitch><step>C</step><step>D</step><octave>4</octave></pitch>") ==
           ErrorCode::wrongElementOrder);
     // A round trip of valid input parses cleanly (values lenient).
-    mxpugi::xml_document doc;
-    CHECK(doc.load_string("<pitch><step>G</step><alter>-1</alter><octave>11</octave></pitch>"));
-    const Pitch p = parsePitch(doc.first_child(), ParseContext{});
+    mx::xml::Document doc;
+    CHECK(doc.loadString("<pitch><step>G</step><alter>-1</alter><octave>11</octave></pitch>"));
+    const Pitch p = parsePitch(doc.documentElement(), ParseContext{});
     CHECK(p.step() == Step::g());
     CHECK_EQUAL(9, p.octave().value()); // out-of-range value clamps
 }

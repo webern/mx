@@ -26,7 +26,7 @@ MetronomeChoice MetronomeChoice::group2(MetronomeChoiceGroup2 value)
     return MetronomeChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-MetronomeChoice parseMetronomeChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+MetronomeChoice parseMetronomeChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "beat-unit")))
     {
@@ -43,7 +43,7 @@ MetronomeChoice parseMetronomeChoice(mxpugi::xml_node el, mxpugi::xml_node &curs
     throwMissingElement(el, "beat-unit");
 }
 
-void serializeMetronomeChoice(const MetronomeChoice &v, mxpugi::xml_node el)
+void serializeMetronomeChoice(const MetronomeChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

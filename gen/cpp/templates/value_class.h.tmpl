@@ -19,9 +19,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace {{vars.namespace}}
@@ -49,12 +49,12 @@ private:
 {{/value}}
 };
 
-{{ident}} parse{{ident}}(mxpugi::xml_node el, const ParseContext &context);
+{{ident}} parse{{ident}}(mx::xml::Node el, const ParseContext &context);
 
-void parse{{ident}}Content({{ident}} &out, mxpugi::xml_node el, const ParseContext &context);
+void parse{{ident}}Content({{ident}} &out, mx::xml::Node el, const ParseContext &context);
 
-void serialize{{ident}}(const {{ident}} &v, mxpugi::xml_node parent, const char *tag);
+void serialize{{ident}}(const {{ident}} &v, mx::xml::Node parent, const char *tag);
 
-void serialize{{ident}}Content(const {{ident}} &v, mxpugi::xml_node el);
+void serialize{{ident}}Content(const {{ident}} &v, mx::xml::Node el);
 
 } // namespace {{vars.namespace}}

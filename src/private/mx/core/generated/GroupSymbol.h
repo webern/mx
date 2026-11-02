@@ -9,9 +9,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -47,12 +47,12 @@ class GroupSymbol final
     GroupSymbolValue m_value{};
 };
 
-GroupSymbol parseGroupSymbol(mxpugi::xml_node el, const ParseContext &context);
+GroupSymbol parseGroupSymbol(mx::xml::Node el, const ParseContext &context);
 
-void parseGroupSymbolContent(GroupSymbol &out, mxpugi::xml_node el, const ParseContext &context);
+void parseGroupSymbolContent(GroupSymbol &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeGroupSymbol(const GroupSymbol &v, mxpugi::xml_node parent, const char *tag);
+void serializeGroupSymbol(const GroupSymbol &v, mx::xml::Node parent, const char *tag);
 
-void serializeGroupSymbolContent(const GroupSymbol &v, mxpugi::xml_node el);
+void serializeGroupSymbolContent(const GroupSymbol &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -41,10 +41,10 @@ void Forward::setStaff(std::optional<int> value)
     m_staff = std::move(value);
 }
 
-Forward parseForward(mxpugi::xml_node el, const ParseContext &context)
+Forward parseForward(mx::xml::Node el, const ParseContext &context)
 {
     Forward out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -57,9 +57,9 @@ Forward parseForward(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseForwardContent(Forward &out, mxpugi::xml_node el, const ParseContext &context)
+void parseForwardContent(Forward &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "duration"))
     {
         out.setDuration(parseValue<PositiveDivisions>(childText(cursor), context, cursor, nullptr));
@@ -89,13 +89,13 @@ void parseForwardContent(Forward &out, mxpugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeForward(const Forward &v, mxpugi::xml_node parent, const char *tag)
+void serializeForward(const Forward &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeForwardContent(v, el);
 }
 
-void serializeForwardContent(const Forward &v, mxpugi::xml_node el)
+void serializeForwardContent(const Forward &v, mx::xml::Node el)
 {
     writeTextElement(el, "duration", v.duration().toString());
     serializeEditorialVoiceGroup(v.editorialVoice(), el);

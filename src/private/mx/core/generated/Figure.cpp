@@ -61,10 +61,10 @@ void Figure::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-Figure parseFigure(mxpugi::xml_node el, const ParseContext &context)
+Figure parseFigure(mx::xml::Node el, const ParseContext &context)
 {
     Figure out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -77,9 +77,9 @@ Figure parseFigure(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFigureContent(Figure &out, mxpugi::xml_node el, const ParseContext &context)
+void parseFigureContent(Figure &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "prefix"))
     {
         out.setPrefix(parseStyleText(cursor, context));
@@ -115,13 +115,13 @@ void parseFigureContent(Figure &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeFigure(const Figure &v, mxpugi::xml_node parent, const char *tag)
+void serializeFigure(const Figure &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     serializeFigureContent(v, el);
 }
 
-void serializeFigureContent(const Figure &v, mxpugi::xml_node el)
+void serializeFigureContent(const Figure &v, mx::xml::Node el)
 {
     if (v.prefix())
     {

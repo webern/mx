@@ -26,7 +26,7 @@ BendChoice BendChoice::release(Release value)
     return BendChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-BendChoice parseBendChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+BendChoice parseBendChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "pre-bend")))
     {
@@ -47,7 +47,7 @@ BendChoice parseBendChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const 
     throwMissingElement(el, "pre-bend");
 }
 
-void serializeBendChoice(const BendChoice &v, mxpugi::xml_node el)
+void serializeBendChoice(const BendChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

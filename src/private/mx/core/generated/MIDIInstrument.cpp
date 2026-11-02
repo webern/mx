@@ -101,11 +101,11 @@ void MIDIInstrument::setElevation(std::optional<RotationDegrees> value)
     m_elevation = std::move(value);
 }
 
-MIDIInstrument parseMIDIInstrument(mxpugi::xml_node el, const ParseContext &context)
+MIDIInstrument parseMIDIInstrument(mx::xml::Node el, const ParseContext &context)
 {
     MIDIInstrument out;
     bool seen_id = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -130,9 +130,9 @@ MIDIInstrument parseMIDIInstrument(mxpugi::xml_node el, const ParseContext &cont
     return out;
 }
 
-void parseMIDIInstrumentContent(MIDIInstrument &out, mxpugi::xml_node el, const ParseContext &context)
+void parseMIDIInstrumentContent(MIDIInstrument &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "midi-channel"))
     {
         out.setMIDIChannel(parseValue<MIDI16>(childText(cursor), context, cursor, nullptr));
@@ -185,14 +185,14 @@ void parseMIDIInstrumentContent(MIDIInstrument &out, mxpugi::xml_node el, const 
     }
 }
 
-void serializeMIDIInstrument(const MIDIInstrument &v, mxpugi::xml_node parent, const char *tag)
+void serializeMIDIInstrument(const MIDIInstrument &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "id", v.id().toString());
     serializeMIDIInstrumentContent(v, el);
 }
 
-void serializeMIDIInstrumentContent(const MIDIInstrument &v, mxpugi::xml_node el)
+void serializeMIDIInstrumentContent(const MIDIInstrument &v, mx::xml::Node el)
 {
     if (v.midiChannel())
     {

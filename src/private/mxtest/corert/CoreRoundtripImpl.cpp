@@ -8,6 +8,7 @@
 #include "mx/core/ParseContext.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/Version.h"
+#include "mx/xml/Xml.h"
 #include "mxtest/corert/Compare.h"
 #include "mxtest/corert/Fixer.h"
 #include "mxtest/file/PathRoot.h"
@@ -101,6 +102,27 @@ std::string saveToString(const mxpugi::xml_document &doc)
     return ss.str();
 }
 
+// The harness does its own DOM work with mxpugi and hands mx::core an
+// mx::xml::Document, and it crosses between the two as XML text, never by
+// casting one tree into the other. That is what a consumer who builds mx
+// against a different XML library would do, so the test stays honest about
+// the seam. The crossing is written raw (no indentation) so that it does not
+// add whitespace-only text to the tree.
+
+bool crossToCore(const mxpugi::xml_document &from, mx::xml::Document &to)
+{
+    std::ostringstream ss;
+    from.save(ss, "", mxpugi::format_raw);
+    return static_cast<bool>(to.loadString(ss.str()));
+}
+
+bool crossFromCore(const mx::xml::Document &from, mxpugi::xml_document &to)
+{
+    std::ostringstream ss;
+    from.save(ss, "", mx::xml::SaveFlags::raw);
+    return static_cast<bool>(to.load_string(ss.str().c_str(), mxpugi::parse_default | mxpugi::parse_doctype));
+}
+
 bool declaredVersionExceeds(const mxpugi::xml_document &doc)
 {
     mxpugi::xml_node root = doc.document_element();
@@ -187,18 +209,32 @@ CoreRoundtripResult runCoreRoundtrip(const std::string &absoluteInputPath)
             return r;
         }
 
-        // 3. Pin the root version to the harness baseline, then parse.
+        // 3. Pin the root version to the harness baseline, cross to the
+        //    core's side of the XML seam as text, then parse.
         setRootMusicXmlVersion(inputDoc, kMusicXmlVersionBaseline);
-        auto parsed = mx::core::parse(inputDoc, mx::core::ParseContext{});
+        mx::xml::Document coreInput;
+        if (!crossToCore(inputDoc, coreInput))
+        {
+            r.message = "failed to reload the input on the core side of the XML seam";
+            return r;
+        }
+        auto parsed = mx::core::parse(coreInput, mx::core::ParseContext{});
         if (!parsed)
         {
             r.message = "parse failed [" + parsed.error().path + "] " + parsed.error().message;
             return r;
         }
 
-        // 4. Serialize back out and normalize the actual document.
+        // 4. Serialize back out, cross back to the harness side as text,
+        //    and normalize the actual document.
+        mx::xml::Document coreOutput;
+        mx::core::serialize(parsed.value(), coreOutput);
         mxpugi::xml_document actualDoc;
-        mx::core::serialize(parsed.value(), actualDoc);
+        if (!crossFromCore(coreOutput, actualDoc))
+        {
+            r.message = "failed to reload the serialized output on the harness side of the XML seam";
+            return r;
+        }
         normalizeForComparison(actualDoc);
 
         // 5. Load a fresh expected from disk, normalize identically, then

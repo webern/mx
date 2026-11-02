@@ -121,10 +121,10 @@ void Handbell::setValue(HandbellValue value)
     m_value = std::move(value);
 }
 
-Handbell parseHandbell(mxpugi::xml_node el, const ParseContext &context)
+Handbell parseHandbell(mx::xml::Node el, const ParseContext &context)
 {
     Handbell out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ Handbell parseHandbell(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseHandbellContent(Handbell &out, mxpugi::xml_node el, const ParseContext &context)
+void parseHandbellContent(Handbell &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<HandbellValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseHandbellContent(Handbell &out, mxpugi::xml_node el, const ParseContext
     }
 }
 
-void serializeHandbell(const Handbell &v, mxpugi::xml_node parent, const char *tag)
+void serializeHandbell(const Handbell &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -235,7 +235,7 @@ void serializeHandbell(const Handbell &v, mxpugi::xml_node parent, const char *t
     serializeHandbellContent(v, el);
 }
 
-void serializeHandbellContent(const Handbell &v, mxpugi::xml_node el)
+void serializeHandbellContent(const Handbell &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

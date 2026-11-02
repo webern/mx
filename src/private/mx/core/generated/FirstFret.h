@@ -7,9 +7,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -38,12 +38,12 @@ class FirstFret final
     int m_value{};
 };
 
-FirstFret parseFirstFret(mxpugi::xml_node el, const ParseContext &context);
+FirstFret parseFirstFret(mx::xml::Node el, const ParseContext &context);
 
-void parseFirstFretContent(FirstFret &out, mxpugi::xml_node el, const ParseContext &context);
+void parseFirstFretContent(FirstFret &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeFirstFret(const FirstFret &v, mxpugi::xml_node parent, const char *tag);
+void serializeFirstFret(const FirstFret &v, mx::xml::Node parent, const char *tag);
 
-void serializeFirstFretContent(const FirstFret &v, mxpugi::xml_node el);
+void serializeFirstFretContent(const FirstFret &v, mx::xml::Node el);
 
 } // namespace mx::core

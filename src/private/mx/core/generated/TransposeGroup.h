@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -46,8 +46,8 @@ class TransposeGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TransposeGroup parseTransposeGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
+TransposeGroup parseTransposeGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeTransposeGroup(const TransposeGroup &v, mxpugi::xml_node el);
+void serializeTransposeGroup(const TransposeGroup &v, mx::xml::Node el);
 
 } // namespace mx::core

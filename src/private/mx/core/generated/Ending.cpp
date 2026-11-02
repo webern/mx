@@ -181,12 +181,12 @@ void Ending::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Ending parseEnding(mxpugi::xml_node el, const ParseContext &context)
+Ending parseEnding(mx::xml::Node el, const ParseContext &context)
 {
     Ending out;
     bool seen_number = false;
     bool seen_type = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -276,7 +276,7 @@ Ending parseEnding(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseEndingContent(Ending &out, mxpugi::xml_node el, const ParseContext &context)
+void parseEndingContent(Ending &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -285,9 +285,9 @@ void parseEndingContent(Ending &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeEnding(const Ending &v, mxpugi::xml_node parent, const char *tag)
+void serializeEnding(const Ending &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "number", v.number().toString());
     setAttribute(el, "type", v.type().toString());
     if (v.endLength())
@@ -349,7 +349,7 @@ void serializeEnding(const Ending &v, mxpugi::xml_node parent, const char *tag)
     serializeEndingContent(v, el);
 }
 
-void serializeEndingContent(const Ending &v, mxpugi::xml_node el)
+void serializeEndingContent(const Ending &v, mx::xml::Node el)
 {
     setText(el, v.value());
 }

@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -48,12 +48,12 @@ class PartList final
     std::vector<PartListChoice> m_choice;
 };
 
-PartList parsePartList(mxpugi::xml_node el, const ParseContext &context);
+PartList parsePartList(mx::xml::Node el, const ParseContext &context);
 
-void parsePartListContent(PartList &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePartListContent(PartList &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePartList(const PartList &v, mxpugi::xml_node parent, const char *tag);
+void serializePartList(const PartList &v, mx::xml::Node parent, const char *tag);
 
-void serializePartListContent(const PartList &v, mxpugi::xml_node el);
+void serializePartListContent(const PartList &v, mx::xml::Node el);
 
 } // namespace mx::core

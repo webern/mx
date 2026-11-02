@@ -31,10 +31,10 @@ void DirectionType::setChoice(DirectionTypeChoice value)
     m_choice = std::move(value);
 }
 
-DirectionType parseDirectionType(mxpugi::xml_node el, const ParseContext &context)
+DirectionType parseDirectionType(mx::xml::Node el, const ParseContext &context)
 {
     DirectionType out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,9 +54,9 @@ DirectionType parseDirectionType(mxpugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseDirectionTypeContent(DirectionType &out, mxpugi::xml_node el, const ParseContext &context)
+void parseDirectionTypeContent(DirectionType &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "rehearsal") || cursorIs(cursor, "segno") || cursorIs(cursor, "coda") ||
                    cursorIs(cursor, "words") || cursorIs(cursor, "symbol") || cursorIs(cursor, "wedge") ||
                    cursorIs(cursor, "dynamics") || cursorIs(cursor, "dashes") || cursorIs(cursor, "bracket") ||
@@ -91,9 +91,9 @@ void parseDirectionTypeContent(DirectionType &out, mxpugi::xml_node el, const Pa
     }
 }
 
-void serializeDirectionType(const DirectionType &v, mxpugi::xml_node parent, const char *tag)
+void serializeDirectionType(const DirectionType &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.id())
     {
         setAttribute(el, "id", v.id()->toString());
@@ -101,7 +101,7 @@ void serializeDirectionType(const DirectionType &v, mxpugi::xml_node parent, con
     serializeDirectionTypeContent(v, el);
 }
 
-void serializeDirectionTypeContent(const DirectionType &v, mxpugi::xml_node el)
+void serializeDirectionTypeContent(const DirectionType &v, mx::xml::Node el)
 {
     serializeDirectionTypeChoice(v.choice(), el);
 }

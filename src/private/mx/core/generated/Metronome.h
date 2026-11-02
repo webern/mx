@@ -20,9 +20,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -97,12 +97,12 @@ class Metronome final
     MetronomeChoice m_choice{};
 };
 
-Metronome parseMetronome(mxpugi::xml_node el, const ParseContext &context);
+Metronome parseMetronome(mx::xml::Node el, const ParseContext &context);
 
-void parseMetronomeContent(Metronome &out, mxpugi::xml_node el, const ParseContext &context);
+void parseMetronomeContent(Metronome &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeMetronome(const Metronome &v, mxpugi::xml_node parent, const char *tag);
+void serializeMetronome(const Metronome &v, mx::xml::Node parent, const char *tag);
 
-void serializeMetronomeContent(const Metronome &v, mxpugi::xml_node el);
+void serializeMetronomeContent(const Metronome &v, mx::xml::Node el);
 
 } // namespace mx::core

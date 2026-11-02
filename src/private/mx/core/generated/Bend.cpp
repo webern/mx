@@ -181,10 +181,10 @@ void Bend::setWithBar(std::optional<PlacementText> value)
     m_withBar = std::move(value);
 }
 
-Bend parseBend(mxpugi::xml_node el, const ParseContext &context)
+Bend parseBend(mx::xml::Node el, const ParseContext &context)
 {
     Bend out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -256,9 +256,9 @@ Bend parseBend(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBendContent(Bend &out, mxpugi::xml_node el, const ParseContext &context)
+void parseBendContent(Bend &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "bend-alter"))
     {
         out.setBendAlter(parseValue<Semitones>(childText(cursor), context, cursor, nullptr));
@@ -288,9 +288,9 @@ void parseBendContent(Bend &out, mxpugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeBend(const Bend &v, mxpugi::xml_node parent, const char *tag)
+void serializeBend(const Bend &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.shape())
     {
         setAttribute(el, "shape", v.shape()->toString());
@@ -350,7 +350,7 @@ void serializeBend(const Bend &v, mxpugi::xml_node parent, const char *tag)
     serializeBendContent(v, el);
 }
 
-void serializeBendContent(const Bend &v, mxpugi::xml_node el)
+void serializeBendContent(const Bend &v, mx::xml::Node el)
 {
     writeTextElement(el, "bend-alter", v.bendAlter().toString());
     if (v.choice())

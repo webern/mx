@@ -18,9 +18,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -97,12 +97,12 @@ class MeasureNumbering final
     MeasureNumberingValue m_value{};
 };
 
-MeasureNumbering parseMeasureNumbering(mxpugi::xml_node el, const ParseContext &context);
+MeasureNumbering parseMeasureNumbering(mx::xml::Node el, const ParseContext &context);
 
-void parseMeasureNumberingContent(MeasureNumbering &out, mxpugi::xml_node el, const ParseContext &context);
+void parseMeasureNumberingContent(MeasureNumbering &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeMeasureNumbering(const MeasureNumbering &v, mxpugi::xml_node parent, const char *tag);
+void serializeMeasureNumbering(const MeasureNumbering &v, mx::xml::Node parent, const char *tag);
 
-void serializeMeasureNumberingContent(const MeasureNumbering &v, mxpugi::xml_node el);
+void serializeMeasureNumberingContent(const MeasureNumbering &v, mx::xml::Node el);
 
 } // namespace mx::core

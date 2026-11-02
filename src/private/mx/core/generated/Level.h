@@ -9,9 +9,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -53,12 +53,12 @@ class Level final
     std::string m_value{};
 };
 
-Level parseLevel(mxpugi::xml_node el, const ParseContext &context);
+Level parseLevel(mx::xml::Node el, const ParseContext &context);
 
-void parseLevelContent(Level &out, mxpugi::xml_node el, const ParseContext &context);
+void parseLevelContent(Level &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeLevel(const Level &v, mxpugi::xml_node parent, const char *tag);
+void serializeLevel(const Level &v, mx::xml::Node parent, const char *tag);
 
-void serializeLevelContent(const Level &v, mxpugi::xml_node el);
+void serializeLevelContent(const Level &v, mx::xml::Node el);
 
 } // namespace mx::core

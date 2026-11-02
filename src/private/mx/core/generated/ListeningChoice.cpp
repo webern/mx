@@ -26,7 +26,7 @@ ListeningChoice ListeningChoice::otherListening(OtherListening value)
     return ListeningChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-ListeningChoice parseListeningChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+ListeningChoice parseListeningChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "sync")))
     {
@@ -47,7 +47,7 @@ ListeningChoice parseListeningChoice(mxpugi::xml_node el, mxpugi::xml_node &curs
     throwMissingElement(el, "sync");
 }
 
-void serializeListeningChoice(const ListeningChoice &v, mxpugi::xml_node el)
+void serializeListeningChoice(const ListeningChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

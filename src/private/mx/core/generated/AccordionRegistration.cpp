@@ -161,10 +161,10 @@ void AccordionRegistration::setAccordionLow(bool value) noexcept
     m_accordionLow = value;
 }
 
-AccordionRegistration parseAccordionRegistration(mxpugi::xml_node el, const ParseContext &context)
+AccordionRegistration parseAccordionRegistration(mx::xml::Node el, const ParseContext &context)
 {
     AccordionRegistration out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -228,9 +228,9 @@ AccordionRegistration parseAccordionRegistration(mxpugi::xml_node el, const Pars
     return out;
 }
 
-void parseAccordionRegistrationContent(AccordionRegistration &out, mxpugi::xml_node el, const ParseContext &context)
+void parseAccordionRegistrationContent(AccordionRegistration &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "accordion-high"))
     {
         parseEmpty(cursor, context);
@@ -259,9 +259,9 @@ void parseAccordionRegistrationContent(AccordionRegistration &out, mxpugi::xml_n
     }
 }
 
-void serializeAccordionRegistration(const AccordionRegistration &v, mxpugi::xml_node parent, const char *tag)
+void serializeAccordionRegistration(const AccordionRegistration &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -313,11 +313,11 @@ void serializeAccordionRegistration(const AccordionRegistration &v, mxpugi::xml_
     serializeAccordionRegistrationContent(v, el);
 }
 
-void serializeAccordionRegistrationContent(const AccordionRegistration &v, mxpugi::xml_node el)
+void serializeAccordionRegistrationContent(const AccordionRegistration &v, mx::xml::Node el)
 {
     if (v.accordionHigh())
     {
-        el.append_child("accordion-high");
+        el.appendChild("accordion-high");
     }
     if (v.accordionMiddle())
     {
@@ -325,7 +325,7 @@ void serializeAccordionRegistrationContent(const AccordionRegistration &v, mxpug
     }
     if (v.accordionLow())
     {
-        el.append_child("accordion-low");
+        el.appendChild("accordion-low");
     }
 }
 

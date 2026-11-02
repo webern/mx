@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -41,12 +41,12 @@ class InstrumentChange final
     VirtualInstrumentDataGroup m_virtualInstrumentData{};
 };
 
-InstrumentChange parseInstrumentChange(mxpugi::xml_node el, const ParseContext &context);
+InstrumentChange parseInstrumentChange(mx::xml::Node el, const ParseContext &context);
 
-void parseInstrumentChangeContent(InstrumentChange &out, mxpugi::xml_node el, const ParseContext &context);
+void parseInstrumentChangeContent(InstrumentChange &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeInstrumentChange(const InstrumentChange &v, mxpugi::xml_node parent, const char *tag);
+void serializeInstrumentChange(const InstrumentChange &v, mx::xml::Node parent, const char *tag);
 
-void serializeInstrumentChangeContent(const InstrumentChange &v, mxpugi::xml_node el);
+void serializeInstrumentChangeContent(const InstrumentChange &v, mx::xml::Node el);
 
 } // namespace mx::core

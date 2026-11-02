@@ -31,10 +31,10 @@ void Effect::setValue(EffectValue value)
     m_value = std::move(value);
 }
 
-Effect parseEffect(mxpugi::xml_node el, const ParseContext &context)
+Effect parseEffect(mx::xml::Node el, const ParseContext &context)
 {
     Effect out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ Effect parseEffect(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseEffectContent(Effect &out, mxpugi::xml_node el, const ParseContext &context)
+void parseEffectContent(Effect &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<EffectValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseEffectContent(Effect &out, mxpugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeEffect(const Effect &v, mxpugi::xml_node parent, const char *tag)
+void serializeEffect(const Effect &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -73,7 +73,7 @@ void serializeEffect(const Effect &v, mxpugi::xml_node parent, const char *tag)
     serializeEffectContent(v, el);
 }
 
-void serializeEffectContent(const Effect &v, mxpugi::xml_node el)
+void serializeEffectContent(const Effect &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

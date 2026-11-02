@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -34,12 +34,12 @@ class Metal final
     MetalValue m_value{};
 };
 
-Metal parseMetal(mxpugi::xml_node el, const ParseContext &context);
+Metal parseMetal(mx::xml::Node el, const ParseContext &context);
 
-void parseMetalContent(Metal &out, mxpugi::xml_node el, const ParseContext &context);
+void parseMetalContent(Metal &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeMetal(const Metal &v, mxpugi::xml_node parent, const char *tag);
+void serializeMetal(const Metal &v, mx::xml::Node parent, const char *tag);
 
-void serializeMetalContent(const Metal &v, mxpugi::xml_node el);
+void serializeMetalContent(const Metal &v, mx::xml::Node el);
 
 } // namespace mx::core

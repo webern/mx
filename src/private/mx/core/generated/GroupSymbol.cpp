@@ -71,10 +71,10 @@ void GroupSymbol::setValue(GroupSymbolValue value)
     m_value = std::move(value);
 }
 
-GroupSymbol parseGroupSymbol(mxpugi::xml_node el, const ParseContext &context)
+GroupSymbol parseGroupSymbol(mx::xml::Node el, const ParseContext &context)
 {
     GroupSymbol out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -110,7 +110,7 @@ GroupSymbol parseGroupSymbol(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseGroupSymbolContent(GroupSymbol &out, mxpugi::xml_node el, const ParseContext &context)
+void parseGroupSymbolContent(GroupSymbol &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<GroupSymbolValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -119,9 +119,9 @@ void parseGroupSymbolContent(GroupSymbol &out, mxpugi::xml_node el, const ParseC
     }
 }
 
-void serializeGroupSymbol(const GroupSymbol &v, mxpugi::xml_node parent, const char *tag)
+void serializeGroupSymbol(const GroupSymbol &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -145,7 +145,7 @@ void serializeGroupSymbol(const GroupSymbol &v, mxpugi::xml_node parent, const c
     serializeGroupSymbolContent(v, el);
 }
 
-void serializeGroupSymbolContent(const GroupSymbol &v, mxpugi::xml_node el)
+void serializeGroupSymbolContent(const GroupSymbol &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

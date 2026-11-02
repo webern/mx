@@ -12,9 +12,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -66,12 +66,12 @@ class Inversion final
     int m_value{};
 };
 
-Inversion parseInversion(mxpugi::xml_node el, const ParseContext &context);
+Inversion parseInversion(mx::xml::Node el, const ParseContext &context);
 
-void parseInversionContent(Inversion &out, mxpugi::xml_node el, const ParseContext &context);
+void parseInversionContent(Inversion &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeInversion(const Inversion &v, mxpugi::xml_node parent, const char *tag);
+void serializeInversion(const Inversion &v, mx::xml::Node parent, const char *tag);
 
-void serializeInversionContent(const Inversion &v, mxpugi::xml_node el);
+void serializeInversionContent(const Inversion &v, mx::xml::Node el);
 
 } // namespace mx::core

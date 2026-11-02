@@ -14,9 +14,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -70,12 +70,12 @@ class Arpeggiate final
     std::optional<Token> m_id;
 };
 
-Arpeggiate parseArpeggiate(mxpugi::xml_node el, const ParseContext &context);
+Arpeggiate parseArpeggiate(mx::xml::Node el, const ParseContext &context);
 
-void parseArpeggiateContent(Arpeggiate &out, mxpugi::xml_node el, const ParseContext &context);
+void parseArpeggiateContent(Arpeggiate &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeArpeggiate(const Arpeggiate &v, mxpugi::xml_node parent, const char *tag);
+void serializeArpeggiate(const Arpeggiate &v, mx::xml::Node parent, const char *tag);
 
-void serializeArpeggiateContent(const Arpeggiate &v, mxpugi::xml_node el);
+void serializeArpeggiateContent(const Arpeggiate &v, mx::xml::Node el);
 
 } // namespace mx::core

@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -41,12 +41,12 @@ class Ornaments final
     std::vector<OrnamentsGroup> m_group;
 };
 
-Ornaments parseOrnaments(mxpugi::xml_node el, const ParseContext &context);
+Ornaments parseOrnaments(mx::xml::Node el, const ParseContext &context);
 
-void parseOrnamentsContent(Ornaments &out, mxpugi::xml_node el, const ParseContext &context);
+void parseOrnamentsContent(Ornaments &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeOrnaments(const Ornaments &v, mxpugi::xml_node parent, const char *tag);
+void serializeOrnaments(const Ornaments &v, mx::xml::Node parent, const char *tag);
 
-void serializeOrnamentsContent(const Ornaments &v, mxpugi::xml_node el);
+void serializeOrnamentsContent(const Ornaments &v, mx::xml::Node el);
 
 } // namespace mx::core

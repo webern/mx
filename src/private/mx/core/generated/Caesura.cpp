@@ -121,10 +121,10 @@ void Caesura::setValue(CaesuraValue value)
     m_value = std::move(value);
 }
 
-Caesura parseCaesura(mxpugi::xml_node el, const ParseContext &context)
+Caesura parseCaesura(mx::xml::Node el, const ParseContext &context)
 {
     Caesura out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ Caesura parseCaesura(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseCaesuraContent(Caesura &out, mxpugi::xml_node el, const ParseContext &context)
+void parseCaesuraContent(Caesura &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<CaesuraValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseCaesuraContent(Caesura &out, mxpugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeCaesura(const Caesura &v, mxpugi::xml_node parent, const char *tag)
+void serializeCaesura(const Caesura &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -235,7 +235,7 @@ void serializeCaesura(const Caesura &v, mxpugi::xml_node parent, const char *tag
     serializeCaesuraContent(v, el);
 }
 
-void serializeCaesuraContent(const Caesura &v, mxpugi::xml_node el)
+void serializeCaesuraContent(const Caesura &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

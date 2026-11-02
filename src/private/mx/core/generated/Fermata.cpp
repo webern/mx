@@ -131,10 +131,10 @@ void Fermata::setValue(FermataShape value)
     m_value = std::move(value);
 }
 
-Fermata parseFermata(mxpugi::xml_node el, const ParseContext &context)
+Fermata parseFermata(mx::xml::Node el, const ParseContext &context)
 {
     Fermata out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -194,7 +194,7 @@ Fermata parseFermata(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFermataContent(Fermata &out, mxpugi::xml_node el, const ParseContext &context)
+void parseFermataContent(Fermata &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseValue<FermataShape>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -203,9 +203,9 @@ void parseFermataContent(Fermata &out, mxpugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeFermata(const Fermata &v, mxpugi::xml_node parent, const char *tag)
+void serializeFermata(const Fermata &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.type())
     {
         setAttribute(el, "type", v.type()->toString());
@@ -253,7 +253,7 @@ void serializeFermata(const Fermata &v, mxpugi::xml_node parent, const char *tag
     serializeFermataContent(v, el);
 }
 
-void serializeFermataContent(const Fermata &v, mxpugi::xml_node el)
+void serializeFermataContent(const Fermata &v, mx::xml::Node el)
 {
     setText(el, v.value().toString());
 }

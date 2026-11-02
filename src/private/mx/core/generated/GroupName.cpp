@@ -121,10 +121,10 @@ void GroupName::setValue(std::string value)
     m_value = std::move(value);
 }
 
-GroupName parseGroupName(mxpugi::xml_node el, const ParseContext &context)
+GroupName parseGroupName(mx::xml::Node el, const ParseContext &context)
 {
     GroupName out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ GroupName parseGroupName(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseGroupNameContent(GroupName &out, mxpugi::xml_node el, const ParseContext &context)
+void parseGroupNameContent(GroupName &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseGroupNameContent(GroupName &out, mxpugi::xml_node el, const ParseConte
     }
 }
 
-void serializeGroupName(const GroupName &v, mxpugi::xml_node parent, const char *tag)
+void serializeGroupName(const GroupName &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -235,7 +235,7 @@ void serializeGroupName(const GroupName &v, mxpugi::xml_node parent, const char 
     serializeGroupNameContent(v, el);
 }
 
-void serializeGroupNameContent(const GroupName &v, mxpugi::xml_node el)
+void serializeGroupNameContent(const GroupName &v, mx::xml::Node el)
 {
     setText(el, v.value());
 }

@@ -26,7 +26,7 @@ HarmonicChoice HarmonicChoice::artificial(Empty value)
     return HarmonicChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-HarmonicChoice parseHarmonicChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+HarmonicChoice parseHarmonicChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "natural")))
     {
@@ -47,7 +47,7 @@ HarmonicChoice parseHarmonicChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor
     throwMissingElement(el, "natural");
 }
 
-void serializeHarmonicChoice(const HarmonicChoice &v, mxpugi::xml_node el)
+void serializeHarmonicChoice(const HarmonicChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

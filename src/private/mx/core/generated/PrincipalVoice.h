@@ -18,9 +18,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -86,12 +86,12 @@ class PrincipalVoice final
     std::string m_value{};
 };
 
-PrincipalVoice parsePrincipalVoice(mxpugi::xml_node el, const ParseContext &context);
+PrincipalVoice parsePrincipalVoice(mx::xml::Node el, const ParseContext &context);
 
-void parsePrincipalVoiceContent(PrincipalVoice &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePrincipalVoiceContent(PrincipalVoice &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePrincipalVoice(const PrincipalVoice &v, mxpugi::xml_node parent, const char *tag);
+void serializePrincipalVoice(const PrincipalVoice &v, mx::xml::Node parent, const char *tag);
 
-void serializePrincipalVoiceContent(const PrincipalVoice &v, mxpugi::xml_node el);
+void serializePrincipalVoiceContent(const PrincipalVoice &v, mx::xml::Node el);
 
 } // namespace mx::core

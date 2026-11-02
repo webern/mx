@@ -15,9 +15,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -57,12 +57,12 @@ class TimewiseMeasure final
     OneOrMore<TimewisePart> m_part;
 };
 
-TimewiseMeasure parseTimewiseMeasure(mxpugi::xml_node el, const ParseContext &context);
+TimewiseMeasure parseTimewiseMeasure(mx::xml::Node el, const ParseContext &context);
 
-void parseTimewiseMeasureContent(TimewiseMeasure &out, mxpugi::xml_node el, const ParseContext &context);
+void parseTimewiseMeasureContent(TimewiseMeasure &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeTimewiseMeasure(const TimewiseMeasure &v, mxpugi::xml_node parent, const char *tag);
+void serializeTimewiseMeasure(const TimewiseMeasure &v, mx::xml::Node parent, const char *tag);
 
-void serializeTimewiseMeasureContent(const TimewiseMeasure &v, mxpugi::xml_node el);
+void serializeTimewiseMeasureContent(const TimewiseMeasure &v, mx::xml::Node el);
 
 } // namespace mx::core

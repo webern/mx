@@ -14,9 +14,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -56,12 +56,12 @@ class PartwiseMeasure final
     std::vector<MusicDataChoice> m_musicData;
 };
 
-PartwiseMeasure parsePartwiseMeasure(mxpugi::xml_node el, const ParseContext &context);
+PartwiseMeasure parsePartwiseMeasure(mx::xml::Node el, const ParseContext &context);
 
-void parsePartwiseMeasureContent(PartwiseMeasure &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePartwiseMeasureContent(PartwiseMeasure &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePartwiseMeasure(const PartwiseMeasure &v, mxpugi::xml_node parent, const char *tag);
+void serializePartwiseMeasure(const PartwiseMeasure &v, mx::xml::Node parent, const char *tag);
 
-void serializePartwiseMeasureContent(const PartwiseMeasure &v, mxpugi::xml_node el);
+void serializePartwiseMeasureContent(const PartwiseMeasure &v, mx::xml::Node el);
 
 } // namespace mx::core

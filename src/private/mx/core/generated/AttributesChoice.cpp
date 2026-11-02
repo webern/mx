@@ -26,7 +26,7 @@ AttributesChoice AttributesChoice::forPart(std::vector<ForPart> value)
     return AttributesChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-AttributesChoice parseAttributesChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+AttributesChoice parseAttributesChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "transpose")))
     {
@@ -55,7 +55,7 @@ AttributesChoice parseAttributesChoice(mxpugi::xml_node el, mxpugi::xml_node &cu
     throwMissingElement(el, "transpose");
 }
 
-void serializeAttributesChoice(const AttributesChoice &v, mxpugi::xml_node el)
+void serializeAttributesChoice(const AttributesChoice &v, mx::xml::Node el)
 {
     switch (v.kind())
     {

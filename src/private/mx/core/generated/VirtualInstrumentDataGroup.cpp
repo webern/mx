@@ -41,7 +41,7 @@ void VirtualInstrumentDataGroup::setVirtualInstrument(std::optional<VirtualInstr
     m_virtualInstrument = std::move(value);
 }
 
-VirtualInstrumentDataGroup parseVirtualInstrumentDataGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+VirtualInstrumentDataGroup parseVirtualInstrumentDataGroup(mx::xml::Node el, mx::xml::Node &cursor,
                                                            const ParseContext &context)
 {
     VirtualInstrumentDataGroup out;
@@ -62,7 +62,7 @@ VirtualInstrumentDataGroup parseVirtualInstrumentDataGroup(mxpugi::xml_node el, 
     return out;
 }
 
-void serializeVirtualInstrumentDataGroup(const VirtualInstrumentDataGroup &v, mxpugi::xml_node el)
+void serializeVirtualInstrumentDataGroup(const VirtualInstrumentDataGroup &v, mx::xml::Node el)
 {
     if (v.instrumentSound())
     {

@@ -101,11 +101,11 @@ void PartLink::setGroupLink(std::vector<std::string> value)
     m_groupLink = std::move(value);
 }
 
-PartLink parsePartLink(mxpugi::xml_node el, const ParseContext &context)
+PartLink parsePartLink(mx::xml::Node el, const ParseContext &context)
 {
     PartLink out;
     bool seen_xlinkHref = false;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -150,9 +150,9 @@ PartLink parsePartLink(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePartLinkContent(PartLink &out, mxpugi::xml_node el, const ParseContext &context)
+void parsePartLinkContent(PartLink &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     while (cursorIs(cursor, "instrument-link"))
     {
         out.addInstrumentLink(parseInstrumentLink(cursor, context));
@@ -173,9 +173,9 @@ void parsePartLinkContent(PartLink &out, mxpugi::xml_node el, const ParseContext
     }
 }
 
-void serializePartLink(const PartLink &v, mxpugi::xml_node parent, const char *tag)
+void serializePartLink(const PartLink &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     setAttribute(el, "xlink:href", v.xlinkHref());
     if (v.xlinkType())
     {
@@ -200,7 +200,7 @@ void serializePartLink(const PartLink &v, mxpugi::xml_node parent, const char *t
     serializePartLinkContent(v, el);
 }
 
-void serializePartLinkContent(const PartLink &v, mxpugi::xml_node el)
+void serializePartLinkContent(const PartLink &v, mx::xml::Node el)
 {
     for (const auto &item : v.instrumentLink())
     {

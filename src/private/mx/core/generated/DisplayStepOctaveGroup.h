@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -43,9 +43,9 @@ class DisplayStepOctaveGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-DisplayStepOctaveGroup parseDisplayStepOctaveGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+DisplayStepOctaveGroup parseDisplayStepOctaveGroup(mx::xml::Node el, mx::xml::Node &cursor,
                                                    const ParseContext &context);
 
-void serializeDisplayStepOctaveGroup(const DisplayStepOctaveGroup &v, mxpugi::xml_node el);
+void serializeDisplayStepOctaveGroup(const DisplayStepOctaveGroup &v, mx::xml::Node el);
 
 } // namespace mx::core

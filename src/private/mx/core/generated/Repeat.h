@@ -9,9 +9,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -44,12 +44,12 @@ class Repeat final
     std::optional<Winged> m_winged;
 };
 
-Repeat parseRepeat(mxpugi::xml_node el, const ParseContext &context);
+Repeat parseRepeat(mx::xml::Node el, const ParseContext &context);
 
-void parseRepeatContent(Repeat &out, mxpugi::xml_node el, const ParseContext &context);
+void parseRepeatContent(Repeat &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeRepeat(const Repeat &v, mxpugi::xml_node parent, const char *tag);
+void serializeRepeat(const Repeat &v, mx::xml::Node parent, const char *tag);
 
-void serializeRepeatContent(const Repeat &v, mxpugi::xml_node el);
+void serializeRepeatContent(const Repeat &v, mx::xml::Node el);
 
 } // namespace mx::core

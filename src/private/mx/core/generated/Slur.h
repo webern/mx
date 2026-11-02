@@ -16,9 +16,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -94,12 +94,12 @@ class Slur final
     std::optional<Token> m_id;
 };
 
-Slur parseSlur(mxpugi::xml_node el, const ParseContext &context);
+Slur parseSlur(mx::xml::Node el, const ParseContext &context);
 
-void parseSlurContent(Slur &out, mxpugi::xml_node el, const ParseContext &context);
+void parseSlurContent(Slur &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeSlur(const Slur &v, mxpugi::xml_node parent, const char *tag);
+void serializeSlur(const Slur &v, mx::xml::Node parent, const char *tag);
 
-void serializeSlurContent(const Slur &v, mxpugi::xml_node el);
+void serializeSlurContent(const Slur &v, mx::xml::Node el);
 
 } // namespace mx::core

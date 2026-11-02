@@ -20,9 +20,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -86,12 +86,12 @@ class Percussion final
     PercussionChoice m_choice{};
 };
 
-Percussion parsePercussion(mxpugi::xml_node el, const ParseContext &context);
+Percussion parsePercussion(mx::xml::Node el, const ParseContext &context);
 
-void parsePercussionContent(Percussion &out, mxpugi::xml_node el, const ParseContext &context);
+void parsePercussionContent(Percussion &out, mx::xml::Node el, const ParseContext &context);
 
-void serializePercussion(const Percussion &v, mxpugi::xml_node parent, const char *tag);
+void serializePercussion(const Percussion &v, mx::xml::Node parent, const char *tag);
 
-void serializePercussionContent(const Percussion &v, mxpugi::xml_node el);
+void serializePercussionContent(const Percussion &v, mx::xml::Node el);
 
 } // namespace mx::core

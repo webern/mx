@@ -31,10 +31,10 @@ void MultipleRest::setValue(int value)
     m_value = std::move(value);
 }
 
-MultipleRest parseMultipleRest(mxpugi::xml_node el, const ParseContext &context)
+MultipleRest parseMultipleRest(mx::xml::Node el, const ParseContext &context)
 {
     MultipleRest out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ MultipleRest parseMultipleRest(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseMultipleRestContent(MultipleRest &out, mxpugi::xml_node el, const ParseContext &context)
+void parseMultipleRestContent(MultipleRest &out, mx::xml::Node el, const ParseContext &context)
 {
     out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseMultipleRestContent(MultipleRest &out, mxpugi::xml_node el, const Pars
     }
 }
 
-void serializeMultipleRest(const MultipleRest &v, mxpugi::xml_node parent, const char *tag)
+void serializeMultipleRest(const MultipleRest &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.useSymbols())
     {
         setAttribute(el, "use-symbols", v.useSymbols()->toString());
@@ -73,7 +73,7 @@ void serializeMultipleRest(const MultipleRest &v, mxpugi::xml_node parent, const
     serializeMultipleRestContent(v, el);
 }
 
-void serializeMultipleRestContent(const MultipleRest &v, mxpugi::xml_node el)
+void serializeMultipleRestContent(const MultipleRest &v, mx::xml::Node el)
 {
     setText(el, formatInt(v.value()));
 }

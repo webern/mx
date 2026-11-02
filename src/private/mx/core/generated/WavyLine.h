@@ -18,9 +18,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -87,12 +87,12 @@ class WavyLine final
     std::optional<Percent> m_lastBeat;
 };
 
-WavyLine parseWavyLine(mxpugi::xml_node el, const ParseContext &context);
+WavyLine parseWavyLine(mx::xml::Node el, const ParseContext &context);
 
-void parseWavyLineContent(WavyLine &out, mxpugi::xml_node el, const ParseContext &context);
+void parseWavyLineContent(WavyLine &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeWavyLine(const WavyLine &v, mxpugi::xml_node parent, const char *tag);
+void serializeWavyLine(const WavyLine &v, mx::xml::Node parent, const char *tag);
 
-void serializeWavyLineContent(const WavyLine &v, mxpugi::xml_node el);
+void serializeWavyLineContent(const WavyLine &v, mx::xml::Node el);
 
 } // namespace mx::core

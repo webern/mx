@@ -91,10 +91,10 @@ void MeasureStyle::setChoice(MeasureStyleChoice value)
     m_choice = std::move(value);
 }
 
-MeasureStyle parseMeasureStyle(mxpugi::xml_node el, const ParseContext &context)
+MeasureStyle parseMeasureStyle(mx::xml::Node el, const ParseContext &context)
 {
     MeasureStyle out;
-    for (mxpugi::xml_attribute a : el.attributes())
+    for (mx::xml::Attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -138,9 +138,9 @@ MeasureStyle parseMeasureStyle(mxpugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseMeasureStyleContent(MeasureStyle &out, mxpugi::xml_node el, const ParseContext &context)
+void parseMeasureStyleContent(MeasureStyle &out, mx::xml::Node el, const ParseContext &context)
 {
-    mxpugi::xml_node cursor = firstElement(el);
+    mx::xml::Node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "multiple-rest") || cursorIs(cursor, "measure-repeat") ||
                    cursorIs(cursor, "beat-repeat") || cursorIs(cursor, "slash")))
     {
@@ -161,9 +161,9 @@ void parseMeasureStyleContent(MeasureStyle &out, mxpugi::xml_node el, const Pars
     }
 }
 
-void serializeMeasureStyle(const MeasureStyle &v, mxpugi::xml_node parent, const char *tag)
+void serializeMeasureStyle(const MeasureStyle &v, mx::xml::Node parent, const char *tag)
 {
-    mxpugi::xml_node el = parent.append_child(tag);
+    mx::xml::Node el = parent.appendChild(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -195,7 +195,7 @@ void serializeMeasureStyle(const MeasureStyle &v, mxpugi::xml_node parent, const
     serializeMeasureStyleContent(v, el);
 }
 
-void serializeMeasureStyleContent(const MeasureStyle &v, mxpugi::xml_node el)
+void serializeMeasureStyleContent(const MeasureStyle &v, mx::xml::Node el)
 {
     serializeMeasureStyleChoice(v.choice(), el);
 }

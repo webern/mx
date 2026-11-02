@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -35,12 +35,12 @@ class Barre final
     std::optional<Color> m_color;
 };
 
-Barre parseBarre(mxpugi::xml_node el, const ParseContext &context);
+Barre parseBarre(mx::xml::Node el, const ParseContext &context);
 
-void parseBarreContent(Barre &out, mxpugi::xml_node el, const ParseContext &context);
+void parseBarreContent(Barre &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeBarre(const Barre &v, mxpugi::xml_node parent, const char *tag);
+void serializeBarre(const Barre &v, mx::xml::Node parent, const char *tag);
 
-void serializeBarreContent(const Barre &v, mxpugi::xml_node el);
+void serializeBarreContent(const Barre &v, mx::xml::Node el);
 
 } // namespace mx::core

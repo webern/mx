@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -42,12 +42,12 @@ class Numeral final
     std::optional<NumeralKey> m_numeralKey;
 };
 
-Numeral parseNumeral(mxpugi::xml_node el, const ParseContext &context);
+Numeral parseNumeral(mx::xml::Node el, const ParseContext &context);
 
-void parseNumeralContent(Numeral &out, mxpugi::xml_node el, const ParseContext &context);
+void parseNumeralContent(Numeral &out, mx::xml::Node el, const ParseContext &context);
 
-void serializeNumeral(const Numeral &v, mxpugi::xml_node parent, const char *tag);
+void serializeNumeral(const Numeral &v, mx::xml::Node parent, const char *tag);
 
-void serializeNumeralContent(const Numeral &v, mxpugi::xml_node el);
+void serializeNumeralContent(const Numeral &v, mx::xml::Node el);
 
 } // namespace mx::core

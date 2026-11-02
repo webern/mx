@@ -36,7 +36,7 @@ void CreditChoiceGroup::setGroup(std::vector<CreditChoiceGroupGroup> value)
     m_group = std::move(value);
 }
 
-CreditChoiceGroup parseCreditChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
+CreditChoiceGroup parseCreditChoiceGroup(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context)
 {
     CreditChoiceGroup out;
     if (cursor && (cursorIs(cursor, "credit-words") || cursorIs(cursor, "credit-symbol")))
@@ -55,7 +55,7 @@ CreditChoiceGroup parseCreditChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &
     return out;
 }
 
-void serializeCreditChoiceGroup(const CreditChoiceGroup &v, mxpugi::xml_node el)
+void serializeCreditChoiceGroup(const CreditChoiceGroup &v, mx::xml::Node el)
 {
     serializeCreditChoiceGroupChoice(v.choice(), el);
     for (const auto &item : v.group())

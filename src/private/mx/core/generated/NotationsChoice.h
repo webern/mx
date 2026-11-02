@@ -22,9 +22,9 @@
 #include <variant>
 #include <vector>
 
-namespace mxpugi
+namespace mx::xml
 {
-class xml_node;
+class Node;
 }
 
 namespace mx::core
@@ -263,8 +263,8 @@ class NotationsChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-NotationsChoice parseNotationsChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
+NotationsChoice parseNotationsChoice(mx::xml::Node el, mx::xml::Node &cursor, const ParseContext &context);
 
-void serializeNotationsChoice(const NotationsChoice &v, mxpugi::xml_node el);
+void serializeNotationsChoice(const NotationsChoice &v, mx::xml::Node el);
 
 } // namespace mx::core
