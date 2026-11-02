@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -39,8 +39,8 @@ class GraceCueNoteGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+GraceCueNoteGroup parseGraceCueNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeGraceCueNoteGroup(const GraceCueNoteGroup &v, pugi::xml_node el);
+void serializeGraceCueNoteGroup(const GraceCueNoteGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -26,10 +26,10 @@ void Encoding::setChoice(std::vector<EncodingChoice> value)
     m_choice = std::move(value);
 }
 
-Encoding parseEncoding(pugi::xml_node el, const ParseContext &context)
+Encoding parseEncoding(mxpugi::xml_node el, const ParseContext &context)
 {
     Encoding out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -42,9 +42,9 @@ Encoding parseEncoding(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseEncodingContent(Encoding &out, pugi::xml_node el, const ParseContext &context)
+void parseEncodingContent(Encoding &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     while (cursor &&
            (cursorIs(cursor, "encoding-date") || cursorIs(cursor, "encoder") || cursorIs(cursor, "software") ||
             cursorIs(cursor, "encoding-description") || cursorIs(cursor, "supports")))
@@ -62,13 +62,13 @@ void parseEncodingContent(Encoding &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeEncoding(const Encoding &v, pugi::xml_node parent, const char *tag)
+void serializeEncoding(const Encoding &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeEncodingContent(v, el);
 }
 
-void serializeEncodingContent(const Encoding &v, pugi::xml_node el)
+void serializeEncodingContent(const Encoding &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.choice())
     {

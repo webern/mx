@@ -86,10 +86,10 @@ void Identification::setMiscellaneous(std::optional<Miscellaneous> value)
     m_miscellaneous = std::move(value);
 }
 
-Identification parseIdentification(pugi::xml_node el, const ParseContext &context)
+Identification parseIdentification(mxpugi::xml_node el, const ParseContext &context)
 {
     Identification out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -102,9 +102,9 @@ Identification parseIdentification(pugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseIdentificationContent(Identification &out, pugi::xml_node el, const ParseContext &context)
+void parseIdentificationContent(Identification &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     while (cursorIs(cursor, "creator"))
     {
         out.addCreator(parseTypedText(cursor, context));
@@ -146,13 +146,13 @@ void parseIdentificationContent(Identification &out, pugi::xml_node el, const Pa
     }
 }
 
-void serializeIdentification(const Identification &v, pugi::xml_node parent, const char *tag)
+void serializeIdentification(const Identification &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeIdentificationContent(v, el);
 }
 
-void serializeIdentificationContent(const Identification &v, pugi::xml_node el)
+void serializeIdentificationContent(const Identification &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.creator())
     {

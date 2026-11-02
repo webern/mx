@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -88,12 +88,12 @@ class Frame final
     OneOrMore<FrameNote> m_frameNote;
 };
 
-Frame parseFrame(pugi::xml_node el, const ParseContext &context);
+Frame parseFrame(mxpugi::xml_node el, const ParseContext &context);
 
-void parseFrameContent(Frame &out, pugi::xml_node el, const ParseContext &context);
+void parseFrameContent(Frame &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeFrame(const Frame &v, pugi::xml_node parent, const char *tag);
+void serializeFrame(const Frame &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeFrameContent(const Frame &v, pugi::xml_node el);
+void serializeFrameContent(const Frame &v, mxpugi::xml_node el);
 
 } // namespace mx::core

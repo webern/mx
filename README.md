@@ -496,15 +496,16 @@ constructors, clamp-on-construct number wrappers, composites with named fields i
 `std::variant`-based choice classes, `OneOrMore<T>` for required repeats, and `Result`-returning
 bounded appends (e.g. beam <= 8). Value semantics throughout -- no shared pointers. Errors exist
 in exactly two places:
-`mx::core::parse(const pugi::xml_document&, const ParseContext&) -> Result<Document>` (strict on
+`mx::core::parse(const mxpugi::xml_document&, const ParseContext&) -> Result<Document>` (strict on
 names and structure, lenient on values) and the bounded `add...` methods. Serialization is
-`mx::core::serialize(const Document&, pugi::xml_document&)`. The design and its rationale are
+`mx::core::serialize(const Document&, mxpugi::xml_document&)`. The design and its rationale are
 recorded in `docs/ai/design/mx-core-plan.md`.
 
-`mx::core` consumes the vendored [pugixml](http://pugixml.org/) (`src/private/pugixml/`) directly,
+`mx::core` consumes the vendored [pugixml](http://pugixml.org/) (`src/private/mxpugi/`) directly,
 in keeping with the build tenets [above](#build-tenets). The earlier `ezxml` abstraction layer is
-retired. A client project may provide a compatible version by creating the CMake `pugixml` target
-before adding `mx`.
+retired. mx compiles its own copy of pugixml under the private `mxpugi` namespace, so it does not
+define a `pugi::` symbol and can be linked alongside a consumer's own pugixml. A build option for
+using a different XML library is coming in 0.7.
 
 ##### `mx::impl`
 

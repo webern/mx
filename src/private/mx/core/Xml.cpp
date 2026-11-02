@@ -10,11 +10,11 @@
 namespace mx::core
 {
 
-pugi::xml_node firstElement(pugi::xml_node parent)
+mxpugi::xml_node firstElement(mxpugi::xml_node parent)
 {
-    for (pugi::xml_node n = parent.first_child(); n; n = n.next_sibling())
+    for (mxpugi::xml_node n = parent.first_child(); n; n = n.next_sibling())
     {
-        if (n.type() == pugi::node_element)
+        if (n.type() == mxpugi::node_element)
         {
             return n;
         }
@@ -22,11 +22,11 @@ pugi::xml_node firstElement(pugi::xml_node parent)
     return {};
 }
 
-pugi::xml_node nextElement(pugi::xml_node node)
+mxpugi::xml_node nextElement(mxpugi::xml_node node)
 {
-    for (pugi::xml_node n = node.next_sibling(); n; n = n.next_sibling())
+    for (mxpugi::xml_node n = node.next_sibling(); n; n = n.next_sibling())
     {
-        if (n.type() == pugi::node_element)
+        if (n.type() == mxpugi::node_element)
         {
             return n;
         }
@@ -34,12 +34,12 @@ pugi::xml_node nextElement(pugi::xml_node node)
     return {};
 }
 
-bool cursorIs(pugi::xml_node node, std::string_view name)
+bool cursorIs(mxpugi::xml_node node, std::string_view name)
 {
     return node && std::string_view{node.name()} == name;
 }
 
-const char *childText(pugi::xml_node el)
+const char *childText(mxpugi::xml_node el)
 {
     return el.text().get();
 }
@@ -96,7 +96,7 @@ std::string xmlSanitized(std::string_view text)
 
 } // namespace
 
-void setAttribute(pugi::xml_node el, const char *name, std::string_view value)
+void setAttribute(mxpugi::xml_node el, const char *name, std::string_view value)
 {
     if (needsXmlSanitize(value))
     {
@@ -107,12 +107,12 @@ void setAttribute(pugi::xml_node el, const char *name, std::string_view value)
     el.append_attribute(name).set_value(value.data(), value.size());
 }
 
-void writeTextElement(pugi::xml_node parent, const char *tag, std::string_view text)
+void writeTextElement(mxpugi::xml_node parent, const char *tag, std::string_view text)
 {
     setText(parent.append_child(tag), text);
 }
 
-void setText(pugi::xml_node el, std::string_view text)
+void setText(mxpugi::xml_node el, std::string_view text)
 {
     if (text.empty())
     {
@@ -121,22 +121,22 @@ void setText(pugi::xml_node el, std::string_view text)
     if (needsXmlSanitize(text))
     {
         const std::string clean = xmlSanitized(text);
-        el.append_child(pugi::node_pcdata).set_value(clean.data(), clean.size());
+        el.append_child(mxpugi::node_pcdata).set_value(clean.data(), clean.size());
         return;
     }
-    el.append_child(pugi::node_pcdata).set_value(text.data(), text.size());
+    el.append_child(mxpugi::node_pcdata).set_value(text.data(), text.size());
 }
 
-std::string nodePath(pugi::xml_node node)
+std::string nodePath(mxpugi::xml_node node)
 {
     std::string path;
-    for (pugi::xml_node n = node; n && n.type() == pugi::node_element; n = n.parent())
+    for (mxpugi::xml_node n = node; n && n.type() == mxpugi::node_element; n = n.parent())
     {
         int ordinal = 1;
         bool repeated = false;
-        for (pugi::xml_node s = n.previous_sibling(); s; s = s.previous_sibling())
+        for (mxpugi::xml_node s = n.previous_sibling(); s; s = s.previous_sibling())
         {
-            if (s.type() == pugi::node_element && std::string_view{s.name()} == n.name())
+            if (s.type() == mxpugi::node_element && std::string_view{s.name()} == n.name())
             {
                 ++ordinal;
                 repeated = true;
@@ -144,9 +144,9 @@ std::string nodePath(pugi::xml_node node)
         }
         if (!repeated)
         {
-            for (pugi::xml_node s = n.next_sibling(); s; s = s.next_sibling())
+            for (mxpugi::xml_node s = n.next_sibling(); s; s = s.next_sibling())
             {
-                if (s.type() == pugi::node_element && std::string_view{s.name()} == n.name())
+                if (s.type() == mxpugi::node_element && std::string_view{s.name()} == n.name())
                 {
                     repeated = true;
                     break;
@@ -166,35 +166,35 @@ std::string nodePath(pugi::xml_node node)
     return path.empty() ? "/" : path;
 }
 
-[[noreturn]] void throwUnknownElement(pugi::xml_node el)
+[[noreturn]] void throwUnknownElement(mxpugi::xml_node el)
 {
     throw ParseError{
         Error{ErrorCode::unknownElement, nodePath(el), std::string{"unknown element <"} + el.name() + ">"}};
 }
 
-[[noreturn]] void throwMisplacedElement(pugi::xml_node el)
+[[noreturn]] void throwMisplacedElement(mxpugi::xml_node el)
 {
     throw ParseError{
         Error{ErrorCode::wrongElementOrder, nodePath(el), std::string{"element <"} + el.name() + "> is out of order"}};
 }
 
-[[noreturn]] void throwUnknownAttribute(pugi::xml_node el, const char *attribute_name)
+[[noreturn]] void throwUnknownAttribute(mxpugi::xml_node el, const char *attribute_name)
 {
     throw ParseError{Error{ErrorCode::unknownAttribute, nodePath(el),
                            std::string{"unknown attribute \""} + attribute_name + "\" on <" + el.name() + ">"}};
 }
 
-[[noreturn]] void throwMissingElement(pugi::xml_node parent, const char *missing)
+[[noreturn]] void throwMissingElement(mxpugi::xml_node parent, const char *missing)
 {
     throw ParseError{Error{ErrorCode::missingRequiredElement, nodePath(parent),
                            std::string{"missing required element <"} + missing + "> in <" + parent.name() + ">"}};
 }
 
-[[noreturn]] void throwMissingOrMisplaced(pugi::xml_node parent, pugi::xml_node cursor, const char *missing)
+[[noreturn]] void throwMissingOrMisplaced(mxpugi::xml_node parent, mxpugi::xml_node cursor, const char *missing)
 {
-    for (pugi::xml_node n = cursor; n; n = n.next_sibling())
+    for (mxpugi::xml_node n = cursor; n; n = n.next_sibling())
     {
-        if (n.type() == pugi::node_element && std::string_view{n.name()} == missing)
+        if (n.type() == mxpugi::node_element && std::string_view{n.name()} == missing)
         {
             throwMisplacedElement(n);
         }
@@ -202,14 +202,14 @@ std::string nodePath(pugi::xml_node node)
     throwMissingElement(parent, missing);
 }
 
-[[noreturn]] void throwMissingAttribute(pugi::xml_node el, const char *attribute_name)
+[[noreturn]] void throwMissingAttribute(mxpugi::xml_node el, const char *attribute_name)
 {
     throw ParseError{
         Error{ErrorCode::missingRequiredAttribute, nodePath(el),
               std::string{"missing required attribute \""} + attribute_name + "\" on <" + el.name() + ">"}};
 }
 
-[[noreturn]] void throwTooManyElements(pugi::xml_node el)
+[[noreturn]] void throwTooManyElements(mxpugi::xml_node el)
 {
     throw ParseError{
         Error{ErrorCode::tooManyElements, nodePath(el), std::string{"too many <"} + el.name() + "> elements"}};

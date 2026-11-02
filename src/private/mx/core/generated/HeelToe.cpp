@@ -21,10 +21,10 @@ void HeelToe::setSubstitution(std::optional<YesNo> value)
     m_substitution = std::move(value);
 }
 
-HeelToe parseHeelToe(pugi::xml_node el, const ParseContext &context)
+HeelToe parseHeelToe(mxpugi::xml_node el, const ParseContext &context)
 {
     HeelToe out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -84,9 +84,9 @@ HeelToe parseHeelToe(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void serializeHeelToe(const HeelToe &v, pugi::xml_node parent, const char *tag)
+void serializeHeelToe(const HeelToe &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());

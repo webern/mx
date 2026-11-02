@@ -11,7 +11,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -111,8 +111,8 @@ class PlayChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-PlayChoice parsePlayChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+PlayChoice parsePlayChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializePlayChoice(const PlayChoice &v, pugi::xml_node el);
+void serializePlayChoice(const PlayChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

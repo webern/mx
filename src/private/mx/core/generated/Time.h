@@ -23,7 +23,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -102,12 +102,12 @@ class Time final
     TimeChoice m_choice{};
 };
 
-Time parseTime(pugi::xml_node el, const ParseContext &context);
+Time parseTime(mxpugi::xml_node el, const ParseContext &context);
 
-void parseTimeContent(Time &out, pugi::xml_node el, const ParseContext &context);
+void parseTimeContent(Time &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeTime(const Time &v, pugi::xml_node parent, const char *tag);
+void serializeTime(const Time &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeTimeContent(const Time &v, pugi::xml_node el);
+void serializeTimeContent(const Time &v, mxpugi::xml_node el);
 
 } // namespace mx::core

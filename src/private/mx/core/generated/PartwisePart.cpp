@@ -36,11 +36,11 @@ void PartwisePart::setMeasure(OneOrMore<PartwiseMeasure> value)
     m_measure = std::move(value);
 }
 
-PartwisePart parsePartwisePart(pugi::xml_node el, const ParseContext &context)
+PartwisePart parsePartwisePart(mxpugi::xml_node el, const ParseContext &context)
 {
     PartwisePart out;
     bool seen_id = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -65,9 +65,9 @@ PartwisePart parsePartwisePart(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el, const ParseContext &context)
+void parsePartwisePartContent(PartwisePart &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (!cursorIs(cursor, "measure"))
     {
         throwMissingOrMisplaced(el, cursor, "measure");
@@ -89,14 +89,14 @@ void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el, const ParseC
     }
 }
 
-void serializePartwisePart(const PartwisePart &v, pugi::xml_node parent, const char *tag)
+void serializePartwisePart(const PartwisePart &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "id", v.id().toString());
     serializePartwisePartContent(v, el);
 }
 
-void serializePartwisePartContent(const PartwisePart &v, pugi::xml_node el)
+void serializePartwisePartContent(const PartwisePart &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.measure())
     {

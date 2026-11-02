@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -39,12 +39,12 @@ class Rest final
     std::optional<DisplayStepOctaveGroup> m_displayStepOctave;
 };
 
-Rest parseRest(pugi::xml_node el, const ParseContext &context);
+Rest parseRest(mxpugi::xml_node el, const ParseContext &context);
 
-void parseRestContent(Rest &out, pugi::xml_node el, const ParseContext &context);
+void parseRestContent(Rest &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeRest(const Rest &v, pugi::xml_node parent, const char *tag);
+void serializeRest(const Rest &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeRestContent(const Rest &v, pugi::xml_node el);
+void serializeRestContent(const Rest &v, mxpugi::xml_node el);
 
 } // namespace mx::core

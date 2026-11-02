@@ -36,7 +36,7 @@ void TimeChoiceGroup::setInterchangeable(std::optional<Interchangeable> value)
     m_interchangeable = std::move(value);
 }
 
-TimeChoiceGroup parseTimeChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+TimeChoiceGroup parseTimeChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     TimeChoiceGroup out;
     if (!(cursor && (cursorIs(cursor, "beats"))))
@@ -56,7 +56,7 @@ TimeChoiceGroup parseTimeChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, 
     return out;
 }
 
-void serializeTimeChoiceGroup(const TimeChoiceGroup &v, pugi::xml_node el)
+void serializeTimeChoiceGroup(const TimeChoiceGroup &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.timeSignature())
     {

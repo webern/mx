@@ -51,10 +51,10 @@ void Bass::setBassAlter(std::optional<HarmonyAlter> value)
     m_bassAlter = std::move(value);
 }
 
-Bass parseBass(pugi::xml_node el, const ParseContext &context)
+Bass parseBass(mxpugi::xml_node el, const ParseContext &context)
 {
     Bass out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -74,9 +74,9 @@ Bass parseBass(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBassContent(Bass &out, pugi::xml_node el, const ParseContext &context)
+void parseBassContent(Bass &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "bass-separator"))
     {
         out.setBassSeparator(parseStyleText(cursor, context));
@@ -106,9 +106,9 @@ void parseBassContent(Bass &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeBass(const Bass &v, pugi::xml_node parent, const char *tag)
+void serializeBass(const Bass &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.arrangement())
     {
         setAttribute(el, "arrangement", v.arrangement()->toString());
@@ -116,7 +116,7 @@ void serializeBass(const Bass &v, pugi::xml_node parent, const char *tag)
     serializeBassContent(v, el);
 }
 
-void serializeBassContent(const Bass &v, pugi::xml_node el)
+void serializeBassContent(const Bass &v, mxpugi::xml_node el)
 {
     if (v.bassSeparator())
     {

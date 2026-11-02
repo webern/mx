@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -43,9 +43,9 @@ class DisplayStepOctaveGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor,
+DisplayStepOctaveGroup parseDisplayStepOctaveGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
                                                    const ParseContext &context);
 
-void serializeDisplayStepOctaveGroup(const DisplayStepOctaveGroup &v, pugi::xml_node el);
+void serializeDisplayStepOctaveGroup(const DisplayStepOctaveGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

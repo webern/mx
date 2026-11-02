@@ -15,7 +15,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -77,12 +77,12 @@ class HammerOnPullOff final
     std::string m_value{};
 };
 
-HammerOnPullOff parseHammerOnPullOff(pugi::xml_node el, const ParseContext &context);
+HammerOnPullOff parseHammerOnPullOff(mxpugi::xml_node el, const ParseContext &context);
 
-void parseHammerOnPullOffContent(HammerOnPullOff &out, pugi::xml_node el, const ParseContext &context);
+void parseHammerOnPullOffContent(HammerOnPullOff &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeHammerOnPullOff(const HammerOnPullOff &v, pugi::xml_node parent, const char *tag);
+void serializeHammerOnPullOff(const HammerOnPullOff &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeHammerOnPullOffContent(const HammerOnPullOff &v, pugi::xml_node el);
+void serializeHammerOnPullOffContent(const HammerOnPullOff &v, mxpugi::xml_node el);
 
 } // namespace mx::core

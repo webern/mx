@@ -31,10 +31,10 @@ void StaffLayout::setStaffDistance(std::optional<Tenths> value)
     m_staffDistance = std::move(value);
 }
 
-StaffLayout parseStaffLayout(pugi::xml_node el, const ParseContext &context)
+StaffLayout parseStaffLayout(mxpugi::xml_node el, const ParseContext &context)
 {
     StaffLayout out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,9 +54,9 @@ StaffLayout parseStaffLayout(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el, const ParseContext &context)
+void parseStaffLayoutContent(StaffLayout &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "staff-distance"))
     {
         out.setStaffDistance(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
@@ -72,9 +72,9 @@ void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el, const ParseCon
     }
 }
 
-void serializeStaffLayout(const StaffLayout &v, pugi::xml_node parent, const char *tag)
+void serializeStaffLayout(const StaffLayout &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -82,7 +82,7 @@ void serializeStaffLayout(const StaffLayout &v, pugi::xml_node parent, const cha
     serializeStaffLayoutContent(v, el);
 }
 
-void serializeStaffLayoutContent(const StaffLayout &v, pugi::xml_node el)
+void serializeStaffLayoutContent(const StaffLayout &v, mxpugi::xml_node el)
 {
     if (v.staffDistance())
     {

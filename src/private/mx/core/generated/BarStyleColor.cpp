@@ -31,10 +31,10 @@ void BarStyleColor::setValue(BarStyle value)
     m_value = std::move(value);
 }
 
-BarStyleColor parseBarStyleColor(pugi::xml_node el, const ParseContext &context)
+BarStyleColor parseBarStyleColor(mxpugi::xml_node el, const ParseContext &context)
 {
     BarStyleColor out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ BarStyleColor parseBarStyleColor(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBarStyleColorContent(BarStyleColor &out, pugi::xml_node el, const ParseContext &context)
+void parseBarStyleColorContent(BarStyleColor &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<BarStyle>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseBarStyleColorContent(BarStyleColor &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeBarStyleColor(const BarStyleColor &v, pugi::xml_node parent, const char *tag)
+void serializeBarStyleColor(const BarStyleColor &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.color())
     {
         setAttribute(el, "color", v.color()->toString());
@@ -73,7 +73,7 @@ void serializeBarStyleColor(const BarStyleColor &v, pugi::xml_node parent, const
     serializeBarStyleColorContent(v, el);
 }
 
-void serializeBarStyleColorContent(const BarStyleColor &v, pugi::xml_node el)
+void serializeBarStyleColorContent(const BarStyleColor &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

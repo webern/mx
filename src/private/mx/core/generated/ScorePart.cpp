@@ -146,11 +146,11 @@ void ScorePart::setMIDIGroup(std::vector<ScorePartMIDIGroup> value)
     m_midiGroup = std::move(value);
 }
 
-ScorePart parseScorePart(pugi::xml_node el, const ParseContext &context)
+ScorePart parseScorePart(mxpugi::xml_node el, const ParseContext &context)
 {
     ScorePart out;
     bool seen_id = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -175,9 +175,9 @@ ScorePart parseScorePart(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseScorePartContent(ScorePart &out, pugi::xml_node el, const ParseContext &context)
+void parseScorePartContent(ScorePart &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "identification"))
     {
         out.setIdentification(parseIdentification(cursor, context));
@@ -245,14 +245,14 @@ void parseScorePartContent(ScorePart &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeScorePart(const ScorePart &v, pugi::xml_node parent, const char *tag)
+void serializeScorePart(const ScorePart &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "id", v.id().toString());
     serializeScorePartContent(v, el);
 }
 
-void serializeScorePartContent(const ScorePart &v, pugi::xml_node el)
+void serializeScorePartContent(const ScorePart &v, mxpugi::xml_node el)
 {
     if (v.identification())
     {

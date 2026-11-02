@@ -107,7 +107,7 @@ const IdAttribute kIdAttributes[] = {
     {"wait", "player", kIdRefers, "player"},
 };
 
-using IdDefinitions = std::map<std::string, pugi::xml_node>;
+using IdDefinitions = std::map<std::string, mxpugi::xml_node>;
 
 // An element name is enough to classify: no MusicXML element declares an
 // identity attribute one way in one place and the other way somewhere else.
@@ -135,17 +135,17 @@ std::string repairedIdValue(const char *text)
 }
 
 /// Visits every element carrying an identity attribute, in document order.
-template <typename Fn> void forEachIdAttribute(pugi::xml_node node, const Fn &fn)
+template <typename Fn> void forEachIdAttribute(mxpugi::xml_node node, const Fn &fn)
 {
-    for (pugi::xml_node child = node.first_child(); child; child = child.next_sibling())
+    for (mxpugi::xml_node child = node.first_child(); child; child = child.next_sibling())
     {
-        if (child.type() != pugi::node_element)
+        if (child.type() != mxpugi::node_element)
         {
             continue;
         }
         if (const IdAttribute *entry = classifyIdAttribute(child.name()))
         {
-            if (pugi::xml_attribute attribute = child.attribute(entry->attribute))
+            if (mxpugi::xml_attribute attribute = child.attribute(entry->attribute))
             {
                 fn(child, attribute, *entry);
             }
@@ -154,9 +154,10 @@ template <typename Fn> void forEachIdAttribute(pugi::xml_node node, const Fn &fn
     }
 }
 
-void reportDanglingIdReferences(pugi::xml_node root, const IdDefinitions &definitions, const DiagnosticHandler &handler)
+void reportDanglingIdReferences(mxpugi::xml_node root, const IdDefinitions &definitions,
+                                const DiagnosticHandler &handler)
 {
-    forEachIdAttribute(root, [&](pugi::xml_node el, pugi::xml_attribute attribute, const IdAttribute &entry) {
+    forEachIdAttribute(root, [&](mxpugi::xml_node el, mxpugi::xml_attribute attribute, const IdAttribute &entry) {
         if (entry.kind != IdAttributeKind::reference)
         {
             return;
@@ -205,7 +206,7 @@ std::span<const IdAttribute> idAttributes()
     return std::span<const IdAttribute>{kIdAttributes};
 }
 
-void checkIds(const pugi::xml_document &doc, const DiagnosticHandler &handler)
+void checkIds(const mxpugi::xml_document &doc, const DiagnosticHandler &handler)
 {
     if (!handler)
     {
@@ -215,7 +216,7 @@ void checkIds(const pugi::xml_document &doc, const DiagnosticHandler &handler)
     }
 
     IdDefinitions definitions;
-    forEachIdAttribute(doc, [&](pugi::xml_node el, pugi::xml_attribute attribute, const IdAttribute &entry) {
+    forEachIdAttribute(doc, [&](mxpugi::xml_node el, mxpugi::xml_attribute attribute, const IdAttribute &entry) {
         if (entry.kind != IdAttributeKind::definition)
         {
             return;
@@ -235,12 +236,12 @@ void checkIds(const pugi::xml_document &doc, const DiagnosticHandler &handler)
     reportDanglingIdReferences(doc, definitions, handler);
 }
 
-void repairIds(pugi::xml_document &doc, const DiagnosticHandler &handler)
+void repairIds(mxpugi::xml_document &doc, const DiagnosticHandler &handler)
 {
     // Collect every id first, so a rename cannot land on one that appears
     // further down the document.
     std::set<std::string> taken;
-    forEachIdAttribute(doc, [&](pugi::xml_node, pugi::xml_attribute attribute, const IdAttribute &entry) {
+    forEachIdAttribute(doc, [&](mxpugi::xml_node, mxpugi::xml_attribute attribute, const IdAttribute &entry) {
         if (entry.kind == IdAttributeKind::definition)
         {
             taken.insert(repairedIdValue(attribute.value()));
@@ -248,7 +249,7 @@ void repairIds(pugi::xml_document &doc, const DiagnosticHandler &handler)
     });
 
     IdDefinitions definitions;
-    forEachIdAttribute(doc, [&](pugi::xml_node el, pugi::xml_attribute attribute, const IdAttribute &entry) {
+    forEachIdAttribute(doc, [&](mxpugi::xml_node el, mxpugi::xml_attribute attribute, const IdAttribute &entry) {
         if (entry.kind != IdAttributeKind::definition)
         {
             return;

@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -40,9 +40,9 @@ class TimeModificationGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TimeModificationGroup parseTimeModificationGroup(pugi::xml_node el, pugi::xml_node &cursor,
+TimeModificationGroup parseTimeModificationGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
                                                  const ParseContext &context);
 
-void serializeTimeModificationGroup(const TimeModificationGroup &v, pugi::xml_node el);
+void serializeTimeModificationGroup(const TimeModificationGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -23,7 +23,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -114,12 +114,12 @@ class FormattedTextID final
     std::string m_value{};
 };
 
-FormattedTextID parseFormattedTextID(pugi::xml_node el, const ParseContext &context);
+FormattedTextID parseFormattedTextID(mxpugi::xml_node el, const ParseContext &context);
 
-void parseFormattedTextIDContent(FormattedTextID &out, pugi::xml_node el, const ParseContext &context);
+void parseFormattedTextIDContent(FormattedTextID &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeFormattedTextID(const FormattedTextID &v, pugi::xml_node parent, const char *tag);
+void serializeFormattedTextID(const FormattedTextID &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeFormattedTextIDContent(const FormattedTextID &v, pugi::xml_node el);
+void serializeFormattedTextIDContent(const FormattedTextID &v, mxpugi::xml_node el);
 
 } // namespace mx::core

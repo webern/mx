@@ -31,7 +31,7 @@ void DisplayStepOctaveGroup::setDisplayOctave(Octave value)
     m_displayOctave = std::move(value);
 }
 
-DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_node &cursor,
+DisplayStepOctaveGroup parseDisplayStepOctaveGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
                                                    const ParseContext &context)
 {
     DisplayStepOctaveGroup out;
@@ -56,7 +56,7 @@ DisplayStepOctaveGroup parseDisplayStepOctaveGroup(pugi::xml_node el, pugi::xml_
     return out;
 }
 
-void serializeDisplayStepOctaveGroup(const DisplayStepOctaveGroup &v, pugi::xml_node el)
+void serializeDisplayStepOctaveGroup(const DisplayStepOctaveGroup &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "display-step", v.displayStep().toString());
     writeTextElement(el, "display-octave", v.displayOctave().toString());

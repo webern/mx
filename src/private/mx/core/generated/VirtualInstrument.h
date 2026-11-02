@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -35,12 +35,12 @@ class VirtualInstrument final
     std::optional<std::string> m_virtualName;
 };
 
-VirtualInstrument parseVirtualInstrument(pugi::xml_node el, const ParseContext &context);
+VirtualInstrument parseVirtualInstrument(mxpugi::xml_node el, const ParseContext &context);
 
-void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el, const ParseContext &context);
+void parseVirtualInstrumentContent(VirtualInstrument &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeVirtualInstrument(const VirtualInstrument &v, pugi::xml_node parent, const char *tag);
+void serializeVirtualInstrument(const VirtualInstrument &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeVirtualInstrumentContent(const VirtualInstrument &v, pugi::xml_node el);
+void serializeVirtualInstrumentContent(const VirtualInstrument &v, mxpugi::xml_node el);
 
 } // namespace mx::core

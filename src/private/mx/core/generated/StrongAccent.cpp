@@ -21,10 +21,10 @@ void StrongAccent::setType(std::optional<UpDown> value)
     m_type = std::move(value);
 }
 
-StrongAccent parseStrongAccent(pugi::xml_node el, const ParseContext &context)
+StrongAccent parseStrongAccent(mxpugi::xml_node el, const ParseContext &context)
 {
     StrongAccent out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -84,9 +84,9 @@ StrongAccent parseStrongAccent(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void serializeStrongAccent(const StrongAccent &v, pugi::xml_node parent, const char *tag)
+void serializeStrongAccent(const StrongAccent &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());

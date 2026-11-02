@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -37,12 +37,12 @@ class Encoding final
     std::vector<EncodingChoice> m_choice;
 };
 
-Encoding parseEncoding(pugi::xml_node el, const ParseContext &context);
+Encoding parseEncoding(mxpugi::xml_node el, const ParseContext &context);
 
-void parseEncodingContent(Encoding &out, pugi::xml_node el, const ParseContext &context);
+void parseEncodingContent(Encoding &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeEncoding(const Encoding &v, pugi::xml_node parent, const char *tag);
+void serializeEncoding(const Encoding &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeEncodingContent(const Encoding &v, pugi::xml_node el);
+void serializeEncodingContent(const Encoding &v, mxpugi::xml_node el);
 
 } // namespace mx::core

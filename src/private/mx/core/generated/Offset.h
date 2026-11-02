@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -40,12 +40,12 @@ class Offset final
     Divisions m_value{};
 };
 
-Offset parseOffset(pugi::xml_node el, const ParseContext &context);
+Offset parseOffset(mxpugi::xml_node el, const ParseContext &context);
 
-void parseOffsetContent(Offset &out, pugi::xml_node el, const ParseContext &context);
+void parseOffsetContent(Offset &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeOffset(const Offset &v, pugi::xml_node parent, const char *tag);
+void serializeOffset(const Offset &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeOffsetContent(const Offset &v, pugi::xml_node el);
+void serializeOffsetContent(const Offset &v, mxpugi::xml_node el);
 
 } // namespace mx::core

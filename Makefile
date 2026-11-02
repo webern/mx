@@ -57,16 +57,17 @@ DOCKER_RUN := $(DOCKER) run --rm \
 	$(DOCKER_USER) \
 	$(DOCKER_IMAGE)
 
-# C++ to format. Skip vendored pugixml and the cpul/Catch test harness.
+# C++ to format. Skip the vendored pugixml (src/private/mxpugi, written by
+# scripts/vendor_pugixml.py) and the cpul/Catch test harness.
 FIND_CPP := find src \
 	-path 'src/private/cpul' -prune -o \
-	-name 'pugixml.cpp' -prune -o \
-	-name 'pugixml.hpp' -prune -o \
-	-name 'pugiconfig.hpp' -prune -o \
+	-name 'mxpugi.cpp' -prune -o \
+	-name 'mxpugi.hpp' -prune -o \
+	-name 'mxpugiconfig.hpp' -prune -o \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
 .DEFAULT_GOAL := help
-.PHONY: help sdk fmt fmt-check test-all \
+.PHONY: help sdk fmt fmt-check test-all symbol-check vendor-pugixml \
         core-build core-roundtrip-test core-unit core-coverage \
         api-lib api-build api-test api-examples api-roundtrip \
         api-roundtrip-discover api-roundtrip-dump api-roundtrip-classify api-coverage \
@@ -83,6 +84,7 @@ help:
 	@echo ''
 	@echo '  Everything C++ (the default deep gate, run in CI on Linux):'
 	@echo '  make test-all       core-roundtrip-test + core-unit + api-test + api-roundtrip.'
+	@echo '  make symbol-check   Fail if a built archive exports a global pugi:: symbol (CI gate).'
 	@echo ''
 	@echo '  Product surface (mx::api / mx::impl):'
 	@echo '  make api-lib             Build the mx static library (MX_API=ON).'
@@ -133,6 +135,7 @@ help:
 	@echo '  make fmt            Format C++ under src/ via mx-sdk.'
 	@echo '  make fmt-check      clang-format gate (checks formatting; builds nothing).'
 	@echo '  make sdk            Build the mx-sdk Docker toolchain image.'
+	@echo '  make vendor-pugixml VERSION=x.y  Refresh src/private/mxpugi from a pugixml release (runs on the host).'
 	@echo '  make clean          Remove the build/ tree and gen build artifacts.'
 	@echo '  make clean-docker   Remove the sdk image and build volume.'
 
@@ -142,6 +145,12 @@ clean:
 	rm -rf $(BUILD_ROOT)
 	rm -rf gen/test/c/build
 	rm -rf gen/test/go/build
+
+# Re-vendor pugixml under the mxpugi namespace. Runs natively: it only needs
+# python3 and network access, and it writes source files, not build output.
+vendor-pugixml:
+	@test -n "$(VERSION)" || { echo "usage: make vendor-pugixml VERSION=1.16"; exit 1; }
+	python3 -I scripts/vendor_pugixml.py --version $(VERSION) --out src/private/mxpugi
 
 clean-docker:
 	-rm -f $(DOCKER_STAMP)
@@ -164,6 +173,45 @@ ifdef MX_RUNNING_IN_DOCKER
 # surface (mxtest + examples + corpus round-trip). The deep gate; CI runs it
 # on Linux. gen/go/c and the audit tool are separate (see their targets).
 test-all: core-roundtrip-test core-unit api-test api-roundtrip
+
+# mx compiles pugixml under its own namespace (src/private/mxpugi) so that a
+# consumer who links a stock pugixml does not get duplicate symbols from mx.
+# This gate reads every archive the api and core-dev builds produced and
+# fails on any symbol in the stock `pugi::` namespace. The mxpugi:: count is
+# printed, and must be non-zero, so an empty or stale archive cannot pass.
+# `nm -g | c++filt` is the same on GNU and Apple toolchains.
+SYMBOL_CHECK_ARCHIVES := \
+	$(BUILD_ROOT)/api/libmx.a \
+	$(BUILD_ROOT)/api/libmx_core.a \
+	$(BUILD_ROOT)/api/libmxpugi.a \
+	$(BUILD_ROOT)/core-dev/libmx_core.a \
+	$(BUILD_ROOT)/core-dev/libmxpugi.a
+
+symbol-check:
+	@found=0; total=0; status=0; \
+	for archive in $(SYMBOL_CHECK_ARCHIVES); do \
+	  [ -f "$$archive" ] || continue; \
+	  found=$$((found + 1)); \
+	  symbols=$$(nm -g "$$archive" | c++filt); \
+	  ours=$$(printf '%s\n' "$$symbols" | grep -c 'mxpugi::' || true); \
+	  total=$$((total + ours)); \
+	  leaked=$$(printf '%s\n' "$$symbols" | grep -E '(^|[^A-Za-z0-9_])pugi::' || true); \
+	  if [ -n "$$leaked" ]; then \
+	    echo "symbol-check: $$archive exports symbols in the stock pugi:: namespace:"; \
+	    printf '%s\n' "$$leaked" | head -n 20; \
+	    status=1; \
+	  else \
+	    echo "symbol-check: $$archive: no pugi:: symbols, $$ours mxpugi:: symbols"; \
+	  fi; \
+	done; \
+	if [ "$$found" -eq 0 ]; then \
+	  echo "symbol-check: no archives found under $(BUILD_ROOT)/api or $(BUILD_ROOT)/core-dev; build first"; exit 1; \
+	fi; \
+	if [ "$$total" -eq 0 ]; then \
+	  echo "symbol-check: the check did not see an mxpugi:: symbol in $$found archives; it is not looking at real output"; exit 1; \
+	fi; \
+	[ "$$status" -eq 0 ] || exit 1; \
+	echo "symbol-check passed: $$found archives, $$total mxpugi:: symbols, 0 pugi:: symbols."
 
 api-lib:
 	$(CMAKE) -S . -B $(BUILD_ROOT)/api -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DMX_API=on
@@ -389,6 +437,9 @@ docker-volume: | check-docker
 
 test-all: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make test-all BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
+
+symbol-check: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make symbol-check BUILD_TYPE=$(BUILD_TYPE)
 
 api-lib: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make api-lib BUILD_TYPE=$(BUILD_TYPE)

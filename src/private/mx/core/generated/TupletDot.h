@@ -11,7 +11,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -45,12 +45,12 @@ class TupletDot final
     std::optional<Color> m_color;
 };
 
-TupletDot parseTupletDot(pugi::xml_node el, const ParseContext &context);
+TupletDot parseTupletDot(mxpugi::xml_node el, const ParseContext &context);
 
-void parseTupletDotContent(TupletDot &out, pugi::xml_node el, const ParseContext &context);
+void parseTupletDotContent(TupletDot &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeTupletDot(const TupletDot &v, pugi::xml_node parent, const char *tag);
+void serializeTupletDot(const TupletDot &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeTupletDotContent(const TupletDot &v, pugi::xml_node el);
+void serializeTupletDotContent(const TupletDot &v, mxpugi::xml_node el);
 
 } // namespace mx::core

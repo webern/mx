@@ -19,7 +19,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -218,8 +218,8 @@ class PercussionChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-PercussionChoice parsePercussionChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+PercussionChoice parsePercussionChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializePercussionChoice(const PercussionChoice &v, pugi::xml_node el);
+void serializePercussionChoice(const PercussionChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -50,12 +50,12 @@ class Stick final
     StickMaterial m_stickMaterial{};
 };
 
-Stick parseStick(pugi::xml_node el, const ParseContext &context);
+Stick parseStick(mxpugi::xml_node el, const ParseContext &context);
 
-void parseStickContent(Stick &out, pugi::xml_node el, const ParseContext &context);
+void parseStickContent(Stick &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeStick(const Stick &v, pugi::xml_node parent, const char *tag);
+void serializeStick(const Stick &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeStickContent(const Stick &v, pugi::xml_node el);
+void serializeStickContent(const Stick &v, mxpugi::xml_node el);
 
 } // namespace mx::core

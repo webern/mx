@@ -131,10 +131,10 @@ void Tap::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Tap parseTap(pugi::xml_node el, const ParseContext &context)
+Tap parseTap(mxpugi::xml_node el, const ParseContext &context)
 {
     Tap out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -194,7 +194,7 @@ Tap parseTap(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTapContent(Tap &out, pugi::xml_node el, const ParseContext &context)
+void parseTapContent(Tap &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -203,9 +203,9 @@ void parseTapContent(Tap &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeTap(const Tap &v, pugi::xml_node parent, const char *tag)
+void serializeTap(const Tap &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.hand())
     {
         setAttribute(el, "hand", v.hand()->toString());
@@ -253,7 +253,7 @@ void serializeTap(const Tap &v, pugi::xml_node parent, const char *tag)
     serializeTapContent(v, el);
 }
 
-void serializeTapContent(const Tap &v, pugi::xml_node el)
+void serializeTapContent(const Tap &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

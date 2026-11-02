@@ -17,7 +17,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -86,12 +86,12 @@ class Glissando final
     std::string m_value{};
 };
 
-Glissando parseGlissando(pugi::xml_node el, const ParseContext &context);
+Glissando parseGlissando(mxpugi::xml_node el, const ParseContext &context);
 
-void parseGlissandoContent(Glissando &out, pugi::xml_node el, const ParseContext &context);
+void parseGlissandoContent(Glissando &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeGlissando(const Glissando &v, pugi::xml_node parent, const char *tag);
+void serializeGlissando(const Glissando &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeGlissandoContent(const Glissando &v, pugi::xml_node el);
+void serializeGlissandoContent(const Glissando &v, mxpugi::xml_node el);
 
 } // namespace mx::core

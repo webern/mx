@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -35,12 +35,12 @@ class KeyAccidental final
     AccidentalValue m_value{};
 };
 
-KeyAccidental parseKeyAccidental(pugi::xml_node el, const ParseContext &context);
+KeyAccidental parseKeyAccidental(mxpugi::xml_node el, const ParseContext &context);
 
-void parseKeyAccidentalContent(KeyAccidental &out, pugi::xml_node el, const ParseContext &context);
+void parseKeyAccidentalContent(KeyAccidental &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeKeyAccidental(const KeyAccidental &v, pugi::xml_node parent, const char *tag);
+void serializeKeyAccidental(const KeyAccidental &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeKeyAccidentalContent(const KeyAccidental &v, pugi::xml_node el);
+void serializeKeyAccidentalContent(const KeyAccidental &v, mxpugi::xml_node el);
 
 } // namespace mx::core

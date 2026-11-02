@@ -7,7 +7,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -38,12 +38,12 @@ class FirstFret final
     int m_value{};
 };
 
-FirstFret parseFirstFret(pugi::xml_node el, const ParseContext &context);
+FirstFret parseFirstFret(mxpugi::xml_node el, const ParseContext &context);
 
-void parseFirstFretContent(FirstFret &out, pugi::xml_node el, const ParseContext &context);
+void parseFirstFretContent(FirstFret &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeFirstFret(const FirstFret &v, pugi::xml_node parent, const char *tag);
+void serializeFirstFret(const FirstFret &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeFirstFretContent(const FirstFret &v, pugi::xml_node el);
+void serializeFirstFretContent(const FirstFret &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -41,7 +41,7 @@ void ClefGroup::setClefOctaveChange(std::optional<int> value)
     m_clefOctaveChange = std::move(value);
 }
 
-ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+ClefGroup parseClefGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     ClefGroup out;
     if (cursorIs(cursor, "sign"))
@@ -66,7 +66,7 @@ ClefGroup parseClefGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseC
     return out;
 }
 
-void serializeClefGroup(const ClefGroup &v, pugi::xml_node el)
+void serializeClefGroup(const ClefGroup &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "sign", v.sign().toString());
     if (v.line())

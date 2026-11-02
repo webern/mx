@@ -31,10 +31,10 @@ void TypedText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-TypedText parseTypedText(pugi::xml_node el, const ParseContext &context)
+TypedText parseTypedText(mxpugi::xml_node el, const ParseContext &context)
 {
     TypedText out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ TypedText parseTypedText(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTypedTextContent(TypedText &out, pugi::xml_node el, const ParseContext &context)
+void parseTypedTextContent(TypedText &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseTypedTextContent(TypedText &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeTypedText(const TypedText &v, pugi::xml_node parent, const char *tag)
+void serializeTypedText(const TypedText &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.type())
     {
         setAttribute(el, "type", *v.type());
@@ -73,7 +73,7 @@ void serializeTypedText(const TypedText &v, pugi::xml_node parent, const char *t
     serializeTypedTextContent(v, el);
 }
 
-void serializeTypedTextContent(const TypedText &v, pugi::xml_node el)
+void serializeTypedTextContent(const TypedText &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

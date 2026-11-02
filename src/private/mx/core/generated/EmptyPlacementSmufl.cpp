@@ -121,10 +121,10 @@ void EmptyPlacementSmufl::setSmufl(std::optional<SmuflGlyphName> value)
     m_smufl = std::move(value);
 }
 
-EmptyPlacementSmufl parseEmptyPlacementSmufl(pugi::xml_node el, const ParseContext &context)
+EmptyPlacementSmufl parseEmptyPlacementSmufl(mxpugi::xml_node el, const ParseContext &context)
 {
     EmptyPlacementSmufl out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -184,7 +184,7 @@ EmptyPlacementSmufl parseEmptyPlacementSmufl(pugi::xml_node el, const ParseConte
     return out;
 }
 
-void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, pugi::xml_node el, const ParseContext &context)
+void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -194,9 +194,9 @@ void parseEmptyPlacementSmuflContent(EmptyPlacementSmufl &out, pugi::xml_node el
     }
 }
 
-void serializeEmptyPlacementSmufl(const EmptyPlacementSmufl &v, pugi::xml_node parent, const char *tag)
+void serializeEmptyPlacementSmufl(const EmptyPlacementSmufl &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -244,7 +244,7 @@ void serializeEmptyPlacementSmufl(const EmptyPlacementSmufl &v, pugi::xml_node p
     serializeEmptyPlacementSmuflContent(v, el);
 }
 
-void serializeEmptyPlacementSmuflContent(const EmptyPlacementSmufl &v, pugi::xml_node el)
+void serializeEmptyPlacementSmuflContent(const EmptyPlacementSmufl &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

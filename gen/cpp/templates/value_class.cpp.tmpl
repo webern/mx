@@ -24,7 +24,7 @@ void {{type.ident}}::set{{name.pascal}}({{type_ref.ident}} value)
 }
 
 {{/value}}
-{{ident}} parse{{ident}}(pugi::xml_node el, const ParseContext &context)
+{{ident}} parse{{ident}}(mxpugi::xml_node el, const ParseContext &context)
 {
     {{ident}} out;
 {{>attributes_parse}}
@@ -32,7 +32,7 @@ void {{type.ident}}::set{{name.pascal}}({{type_ref.ident}} value)
     return out;
 }
 
-void parse{{ident}}Content({{ident}} &out, pugi::xml_node el, const ParseContext &context)
+void parse{{ident}}Content({{ident}} &out, mxpugi::xml_node el, const ParseContext &context)
 {
 {{#value}}
     out.set{{name.pascal}}({{#type_ref.is_value}}parseValue<{{type_ref.ident}}>(childText(el), context, el, nullptr){{/type_ref.is_value}}{{#type_ref.is_primitive_string}}std::string{childText(el)}{{/type_ref.is_primitive_string}}{{#type_ref.is_primitive_integer}}parseIntegerValue(childText(el), context, el, nullptr){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_decimal}}parseDecimalValue(childText(el), context, el, nullptr){{/type_ref.is_primitive_decimal}});
@@ -43,14 +43,14 @@ void parse{{ident}}Content({{ident}} &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serialize{{ident}}(const {{ident}} &v, pugi::xml_node parent, const char *tag)
+void serialize{{ident}}(const {{ident}} &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
 {{>attributes_serialize}}
     serialize{{ident}}Content(v, el);
 }
 
-void serialize{{ident}}Content(const {{ident}} &v, pugi::xml_node el)
+void serialize{{ident}}Content(const {{ident}} &v, mxpugi::xml_node el)
 {
 {{#value}}
     setText(el, {{#type_ref.is_value}}v.{{ident}}().toString(){{/type_ref.is_value}}{{#type_ref.is_primitive_string}}v.{{ident}}(){{/type_ref.is_primitive_string}}{{#type_ref.is_primitive_integer}}formatInt(v.{{ident}}()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_decimal}}v.{{ident}}().toString(){{/type_ref.is_primitive_decimal}});

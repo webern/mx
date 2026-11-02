@@ -41,10 +41,10 @@ void Transpose::setTranspose(TransposeGroup value)
     m_transpose = std::move(value);
 }
 
-Transpose parseTranspose(pugi::xml_node el, const ParseContext &context)
+Transpose parseTranspose(mxpugi::xml_node el, const ParseContext &context)
 {
     Transpose out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -68,9 +68,9 @@ Transpose parseTranspose(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTransposeContent(Transpose &out, pugi::xml_node el, const ParseContext &context)
+void parseTransposeContent(Transpose &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "diatonic") || cursorIs(cursor, "chromatic")))
     {
         out.setTranspose(parseTransposeGroup(el, cursor, context));
@@ -90,9 +90,9 @@ void parseTransposeContent(Transpose &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeTranspose(const Transpose &v, pugi::xml_node parent, const char *tag)
+void serializeTranspose(const Transpose &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -104,7 +104,7 @@ void serializeTranspose(const Transpose &v, pugi::xml_node parent, const char *t
     serializeTransposeContent(v, el);
 }
 
-void serializeTransposeContent(const Transpose &v, pugi::xml_node el)
+void serializeTransposeContent(const Transpose &v, mxpugi::xml_node el)
 {
     serializeTransposeGroup(v.transpose(), el);
 }

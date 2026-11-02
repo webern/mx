@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -44,8 +44,9 @@ class MetronomeChoiceGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-MetronomeChoiceGroup parseMetronomeChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+MetronomeChoiceGroup parseMetronomeChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+                                               const ParseContext &context);
 
-void serializeMetronomeChoiceGroup(const MetronomeChoiceGroup &v, pugi::xml_node el);
+void serializeMetronomeChoiceGroup(const MetronomeChoiceGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

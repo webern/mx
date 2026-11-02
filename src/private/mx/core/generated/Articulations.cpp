@@ -36,10 +36,10 @@ void Articulations::setChoice(std::vector<ArticulationsChoice> value)
     m_choice = std::move(value);
 }
 
-Articulations parseArticulations(pugi::xml_node el, const ParseContext &context)
+Articulations parseArticulations(mxpugi::xml_node el, const ParseContext &context)
 {
     Articulations out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -59,9 +59,9 @@ Articulations parseArticulations(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseArticulationsContent(Articulations &out, pugi::xml_node el, const ParseContext &context)
+void parseArticulationsContent(Articulations &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     while (cursor &&
            (cursorIs(cursor, "accent") || cursorIs(cursor, "strong-accent") || cursorIs(cursor, "staccato") ||
             cursorIs(cursor, "tenuto") || cursorIs(cursor, "detached-legato") || cursorIs(cursor, "staccatissimo") ||
@@ -87,9 +87,9 @@ void parseArticulationsContent(Articulations &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeArticulations(const Articulations &v, pugi::xml_node parent, const char *tag)
+void serializeArticulations(const Articulations &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.id())
     {
         setAttribute(el, "id", v.id()->toString());
@@ -97,7 +97,7 @@ void serializeArticulations(const Articulations &v, pugi::xml_node parent, const
     serializeArticulationsContent(v, el);
 }
 
-void serializeArticulationsContent(const Articulations &v, pugi::xml_node el)
+void serializeArticulationsContent(const Articulations &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.choice())
     {

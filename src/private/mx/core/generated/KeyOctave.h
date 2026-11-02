@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -42,12 +42,12 @@ class KeyOctave final
     Octave m_value{};
 };
 
-KeyOctave parseKeyOctave(pugi::xml_node el, const ParseContext &context);
+KeyOctave parseKeyOctave(mxpugi::xml_node el, const ParseContext &context);
 
-void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el, const ParseContext &context);
+void parseKeyOctaveContent(KeyOctave &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeKeyOctave(const KeyOctave &v, pugi::xml_node parent, const char *tag);
+void serializeKeyOctave(const KeyOctave &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeKeyOctaveContent(const KeyOctave &v, pugi::xml_node el);
+void serializeKeyOctaveContent(const KeyOctave &v, mxpugi::xml_node el);
 
 } // namespace mx::core

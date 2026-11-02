@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -62,12 +62,12 @@ class PartLink final
     std::vector<std::string> m_groupLink;
 };
 
-PartLink parsePartLink(pugi::xml_node el, const ParseContext &context);
+PartLink parsePartLink(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePartLinkContent(PartLink &out, pugi::xml_node el, const ParseContext &context);
+void parsePartLinkContent(PartLink &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePartLink(const PartLink &v, pugi::xml_node parent, const char *tag);
+void serializePartLink(const PartLink &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePartLinkContent(const PartLink &v, pugi::xml_node el);
+void serializePartLinkContent(const PartLink &v, mxpugi::xml_node el);
 
 } // namespace mx::core

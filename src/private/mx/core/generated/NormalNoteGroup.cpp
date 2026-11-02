@@ -51,7 +51,7 @@ void NormalNoteGroup::clearTie() noexcept
     m_tie.clear();
 }
 
-NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+NormalNoteGroup parseNormalNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     NormalNoteGroup out;
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
@@ -83,7 +83,7 @@ NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, 
     return out;
 }
 
-void serializeNormalNoteGroup(const NormalNoteGroup &v, pugi::xml_node el)
+void serializeNormalNoteGroup(const NormalNoteGroup &v, mxpugi::xml_node el)
 {
     serializeFullNoteGroup(v.fullNote(), el);
     writeTextElement(el, "duration", v.duration().toString());

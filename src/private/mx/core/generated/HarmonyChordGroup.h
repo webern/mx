@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -59,8 +59,8 @@ class HarmonyChordGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+HarmonyChordGroup parseHarmonyChordGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeHarmonyChordGroup(const HarmonyChordGroup &v, pugi::xml_node el);
+void serializeHarmonyChordGroup(const HarmonyChordGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

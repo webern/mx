@@ -411,10 +411,10 @@ void Note::setListen(std::optional<Listen> value)
     m_listen = std::move(value);
 }
 
-Note parseNote(pugi::xml_node el, const ParseContext &context)
+Note parseNote(mxpugi::xml_node el, const ParseContext &context)
 {
     Note out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -514,9 +514,9 @@ Note parseNote(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseNoteContent(Note &out, pugi::xml_node el, const ParseContext &context)
+void parseNoteContent(Note &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "grace") || cursorIs(cursor, "cue") || cursorIs(cursor, "chord") ||
                    cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") || cursorIs(cursor, "rest")))
     {
@@ -621,9 +621,9 @@ void parseNoteContent(Note &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeNote(const Note &v, pugi::xml_node parent, const char *tag)
+void serializeNote(const Note &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.printLeger())
     {
         setAttribute(el, "print-leger", v.printLeger()->toString());
@@ -711,7 +711,7 @@ void serializeNote(const Note &v, pugi::xml_node parent, const char *tag)
     serializeNoteContent(v, el);
 }
 
-void serializeNoteContent(const Note &v, pugi::xml_node el)
+void serializeNoteContent(const Note &v, mxpugi::xml_node el)
 {
     serializeNoteChoice(v.choice(), el);
     for (const auto &item : v.instrument())

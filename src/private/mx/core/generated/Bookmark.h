@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -39,12 +39,12 @@ class Bookmark final
     std::optional<int> m_position;
 };
 
-Bookmark parseBookmark(pugi::xml_node el, const ParseContext &context);
+Bookmark parseBookmark(mxpugi::xml_node el, const ParseContext &context);
 
-void parseBookmarkContent(Bookmark &out, pugi::xml_node el, const ParseContext &context);
+void parseBookmarkContent(Bookmark &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeBookmark(const Bookmark &v, pugi::xml_node parent, const char *tag);
+void serializeBookmark(const Bookmark &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeBookmarkContent(const Bookmark &v, pugi::xml_node el);
+void serializeBookmarkContent(const Bookmark &v, mxpugi::xml_node el);
 
 } // namespace mx::core

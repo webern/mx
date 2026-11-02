@@ -10,7 +10,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -82,8 +82,8 @@ class SwingChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-SwingChoice parseSwingChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+SwingChoice parseSwingChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeSwingChoice(const SwingChoice &v, pugi::xml_node el);
+void serializeSwingChoice(const SwingChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -34,12 +34,12 @@ class PartClef final
     ClefGroup m_clef{};
 };
 
-PartClef parsePartClef(pugi::xml_node el, const ParseContext &context);
+PartClef parsePartClef(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePartClefContent(PartClef &out, pugi::xml_node el, const ParseContext &context);
+void parsePartClefContent(PartClef &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePartClef(const PartClef &v, pugi::xml_node parent, const char *tag);
+void serializePartClef(const PartClef &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePartClefContent(const PartClef &v, pugi::xml_node el);
+void serializePartClefContent(const PartClef &v, mxpugi::xml_node el);
 
 } // namespace mx::core

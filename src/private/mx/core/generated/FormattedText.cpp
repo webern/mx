@@ -241,10 +241,10 @@ void FormattedText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-FormattedText parseFormattedText(pugi::xml_node el, const ParseContext &context)
+FormattedText parseFormattedText(mxpugi::xml_node el, const ParseContext &context)
 {
     FormattedText out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -348,7 +348,7 @@ FormattedText parseFormattedText(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFormattedTextContent(FormattedText &out, pugi::xml_node el, const ParseContext &context)
+void parseFormattedTextContent(FormattedText &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -357,9 +357,9 @@ void parseFormattedTextContent(FormattedText &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeFormattedText(const FormattedText &v, pugi::xml_node parent, const char *tag)
+void serializeFormattedText(const FormattedText &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.xmlLang())
     {
         setAttribute(el, "xml:lang", v.xmlLang()->toString());
@@ -451,7 +451,7 @@ void serializeFormattedText(const FormattedText &v, pugi::xml_node parent, const
     serializeFormattedTextContent(v, el);
 }
 
-void serializeFormattedTextContent(const FormattedText &v, pugi::xml_node el)
+void serializeFormattedTextContent(const FormattedText &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

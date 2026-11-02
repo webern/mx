@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -60,12 +60,12 @@ class SystemLayout final
     std::optional<SystemDividers> m_systemDividers;
 };
 
-SystemLayout parseSystemLayout(pugi::xml_node el, const ParseContext &context);
+SystemLayout parseSystemLayout(mxpugi::xml_node el, const ParseContext &context);
 
-void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el, const ParseContext &context);
+void parseSystemLayoutContent(SystemLayout &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeSystemLayout(const SystemLayout &v, pugi::xml_node parent, const char *tag);
+void serializeSystemLayout(const SystemLayout &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeSystemLayoutContent(const SystemLayout &v, pugi::xml_node el);
+void serializeSystemLayoutContent(const SystemLayout &v, mxpugi::xml_node el);
 
 } // namespace mx::core

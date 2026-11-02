@@ -51,11 +51,11 @@ void Repeat::setWinged(std::optional<Winged> value)
     m_winged = std::move(value);
 }
 
-Repeat parseRepeat(pugi::xml_node el, const ParseContext &context)
+Repeat parseRepeat(mxpugi::xml_node el, const ParseContext &context)
 {
     Repeat out;
     bool seen_direction = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -92,7 +92,7 @@ Repeat parseRepeat(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseRepeatContent(Repeat &out, pugi::xml_node el, const ParseContext &context)
+void parseRepeatContent(Repeat &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -102,9 +102,9 @@ void parseRepeatContent(Repeat &out, pugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeRepeat(const Repeat &v, pugi::xml_node parent, const char *tag)
+void serializeRepeat(const Repeat &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "direction", v.direction().toString());
     if (v.times())
     {
@@ -121,7 +121,7 @@ void serializeRepeat(const Repeat &v, pugi::xml_node parent, const char *tag)
     serializeRepeatContent(v, el);
 }
 
-void serializeRepeatContent(const Repeat &v, pugi::xml_node el)
+void serializeRepeatContent(const Repeat &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

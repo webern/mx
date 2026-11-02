@@ -11,7 +11,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -49,12 +49,12 @@ class Fret final
     int m_value{};
 };
 
-Fret parseFret(pugi::xml_node el, const ParseContext &context);
+Fret parseFret(mxpugi::xml_node el, const ParseContext &context);
 
-void parseFretContent(Fret &out, pugi::xml_node el, const ParseContext &context);
+void parseFretContent(Fret &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeFret(const Fret &v, pugi::xml_node parent, const char *tag);
+void serializeFret(const Fret &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeFretContent(const Fret &v, pugi::xml_node el);
+void serializeFretContent(const Fret &v, mxpugi::xml_node el);
 
 } // namespace mx::core

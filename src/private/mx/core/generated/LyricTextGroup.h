@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -48,8 +48,8 @@ class LyricTextGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+LyricTextGroup parseLyricTextGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeLyricTextGroup(const LyricTextGroup &v, pugi::xml_node el);
+void serializeLyricTextGroup(const LyricTextGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

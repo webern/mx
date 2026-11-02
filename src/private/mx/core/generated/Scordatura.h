@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,12 +41,12 @@ class Scordatura final
     OneOrMore<Accord> m_accord;
 };
 
-Scordatura parseScordatura(pugi::xml_node el, const ParseContext &context);
+Scordatura parseScordatura(mxpugi::xml_node el, const ParseContext &context);
 
-void parseScordaturaContent(Scordatura &out, pugi::xml_node el, const ParseContext &context);
+void parseScordaturaContent(Scordatura &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeScordatura(const Scordatura &v, pugi::xml_node parent, const char *tag);
+void serializeScordatura(const Scordatura &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeScordaturaContent(const Scordatura &v, pugi::xml_node el);
+void serializeScordaturaContent(const Scordatura &v, mxpugi::xml_node el);
 
 } // namespace mx::core

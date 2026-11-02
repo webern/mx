@@ -10,7 +10,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -83,8 +83,8 @@ class KeyChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-KeyChoice parseKeyChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+KeyChoice parseKeyChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeKeyChoice(const KeyChoice &v, pugi::xml_node el);
+void serializeKeyChoice(const KeyChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

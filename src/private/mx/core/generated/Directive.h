@@ -13,7 +13,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -64,12 +64,12 @@ class Directive final
     std::string m_value{};
 };
 
-Directive parseDirective(pugi::xml_node el, const ParseContext &context);
+Directive parseDirective(mxpugi::xml_node el, const ParseContext &context);
 
-void parseDirectiveContent(Directive &out, pugi::xml_node el, const ParseContext &context);
+void parseDirectiveContent(Directive &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeDirective(const Directive &v, pugi::xml_node parent, const char *tag);
+void serializeDirective(const Directive &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeDirectiveContent(const Directive &v, pugi::xml_node el);
+void serializeDirectiveContent(const Directive &v, mxpugi::xml_node el);
 
 } // namespace mx::core

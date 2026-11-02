@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,12 +41,12 @@ class ScoreTimewise final
     OneOrMore<TimewiseMeasure> m_measure;
 };
 
-ScoreTimewise parseScoreTimewise(pugi::xml_node el, const ParseContext &context);
+ScoreTimewise parseScoreTimewise(mxpugi::xml_node el, const ParseContext &context);
 
-void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el, const ParseContext &context);
+void parseScoreTimewiseContent(ScoreTimewise &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeScoreTimewise(const ScoreTimewise &v, pugi::xml_node parent, const char *tag);
+void serializeScoreTimewise(const ScoreTimewise &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeScoreTimewiseContent(const ScoreTimewise &v, pugi::xml_node el);
+void serializeScoreTimewiseContent(const ScoreTimewise &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -47,12 +47,12 @@ class Opus final
     std::optional<ActuateType> m_xlinkActuate;
 };
 
-Opus parseOpus(pugi::xml_node el, const ParseContext &context);
+Opus parseOpus(mxpugi::xml_node el, const ParseContext &context);
 
-void parseOpusContent(Opus &out, pugi::xml_node el, const ParseContext &context);
+void parseOpusContent(Opus &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeOpus(const Opus &v, pugi::xml_node parent, const char *tag);
+void serializeOpus(const Opus &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeOpusContent(const Opus &v, pugi::xml_node el);
+void serializeOpusContent(const Opus &v, mxpugi::xml_node el);
 
 } // namespace mx::core

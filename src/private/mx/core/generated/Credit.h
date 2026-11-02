@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -69,12 +69,12 @@ class Credit final
     CreditChoice m_choice{};
 };
 
-Credit parseCredit(pugi::xml_node el, const ParseContext &context);
+Credit parseCredit(mxpugi::xml_node el, const ParseContext &context);
 
-void parseCreditContent(Credit &out, pugi::xml_node el, const ParseContext &context);
+void parseCreditContent(Credit &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeCredit(const Credit &v, pugi::xml_node parent, const char *tag);
+void serializeCredit(const Credit &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeCreditContent(const Credit &v, pugi::xml_node el);
+void serializeCreditContent(const Credit &v, mxpugi::xml_node el);
 
 } // namespace mx::core

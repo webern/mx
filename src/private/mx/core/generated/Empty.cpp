@@ -8,10 +8,10 @@
 namespace mx::core
 {
 
-Empty parseEmpty(pugi::xml_node el, const ParseContext &context)
+Empty parseEmpty(mxpugi::xml_node el, const ParseContext &context)
 {
     Empty out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -24,7 +24,7 @@ Empty parseEmpty(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseEmptyContent(Empty &out, pugi::xml_node el, const ParseContext &context)
+void parseEmptyContent(Empty &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -34,13 +34,13 @@ void parseEmptyContent(Empty &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeEmpty(const Empty &v, pugi::xml_node parent, const char *tag)
+void serializeEmpty(const Empty &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeEmptyContent(v, el);
 }
 
-void serializeEmptyContent(const Empty &v, pugi::xml_node el)
+void serializeEmptyContent(const Empty &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

@@ -13,7 +13,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -67,12 +67,12 @@ class GroupName final
     std::string m_value{};
 };
 
-GroupName parseGroupName(pugi::xml_node el, const ParseContext &context);
+GroupName parseGroupName(mxpugi::xml_node el, const ParseContext &context);
 
-void parseGroupNameContent(GroupName &out, pugi::xml_node el, const ParseContext &context);
+void parseGroupNameContent(GroupName &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeGroupName(const GroupName &v, pugi::xml_node parent, const char *tag);
+void serializeGroupName(const GroupName &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeGroupNameContent(const GroupName &v, pugi::xml_node el);
+void serializeGroupNameContent(const GroupName &v, mxpugi::xml_node el);
 
 } // namespace mx::core

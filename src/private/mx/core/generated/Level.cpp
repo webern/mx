@@ -71,10 +71,10 @@ void Level::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Level parseLevel(pugi::xml_node el, const ParseContext &context)
+Level parseLevel(mxpugi::xml_node el, const ParseContext &context)
 {
     Level out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -110,7 +110,7 @@ Level parseLevel(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseLevelContent(Level &out, pugi::xml_node el, const ParseContext &context)
+void parseLevelContent(Level &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -119,9 +119,9 @@ void parseLevelContent(Level &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeLevel(const Level &v, pugi::xml_node parent, const char *tag)
+void serializeLevel(const Level &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.reference())
     {
         setAttribute(el, "reference", v.reference()->toString());
@@ -145,7 +145,7 @@ void serializeLevel(const Level &v, pugi::xml_node parent, const char *tag)
     serializeLevelContent(v, el);
 }
 
-void serializeLevelContent(const Level &v, pugi::xml_node el)
+void serializeLevelContent(const Level &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

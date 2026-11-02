@@ -10,7 +10,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -83,8 +83,8 @@ class AttributesChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+AttributesChoice parseAttributesChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeAttributesChoice(const AttributesChoice &v, pugi::xml_node el);
+void serializeAttributesChoice(const AttributesChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

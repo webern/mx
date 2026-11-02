@@ -26,7 +26,7 @@ NoteheadTextChoice NoteheadTextChoice::accidentalText(AccidentalText value)
     return NoteheadTextChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-NoteheadTextChoice parseNoteheadTextChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+NoteheadTextChoice parseNoteheadTextChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "display-text")))
     {
@@ -47,7 +47,7 @@ NoteheadTextChoice parseNoteheadTextChoice(pugi::xml_node el, pugi::xml_node &cu
     throwMissingElement(el, "display-text");
 }
 
-void serializeNoteheadTextChoice(const NoteheadTextChoice &v, pugi::xml_node el)
+void serializeNoteheadTextChoice(const NoteheadTextChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

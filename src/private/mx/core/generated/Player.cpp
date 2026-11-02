@@ -31,11 +31,11 @@ void Player::setPlayerName(std::string value)
     m_playerName = std::move(value);
 }
 
-Player parsePlayer(pugi::xml_node el, const ParseContext &context)
+Player parsePlayer(mxpugi::xml_node el, const ParseContext &context)
 {
     Player out;
     bool seen_id = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,9 +60,9 @@ Player parsePlayer(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePlayerContent(Player &out, pugi::xml_node el, const ParseContext &context)
+void parsePlayerContent(Player &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "player-name"))
     {
         out.setPlayerName(std::string{childText(cursor)});
@@ -82,14 +82,14 @@ void parsePlayerContent(Player &out, pugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializePlayer(const Player &v, pugi::xml_node parent, const char *tag)
+void serializePlayer(const Player &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "id", v.id().toString());
     serializePlayerContent(v, el);
 }
 
-void serializePlayerContent(const Player &v, pugi::xml_node el)
+void serializePlayerContent(const Player &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "player-name", v.playerName());
 }

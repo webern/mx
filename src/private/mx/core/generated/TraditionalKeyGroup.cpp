@@ -41,7 +41,7 @@ void TraditionalKeyGroup::setMode(std::optional<Mode> value)
     m_mode = std::move(value);
 }
 
-TraditionalKeyGroup parseTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+TraditionalKeyGroup parseTraditionalKeyGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     TraditionalKeyGroup out;
     if (cursorIs(cursor, "cancel"))
@@ -66,7 +66,7 @@ TraditionalKeyGroup parseTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &
     return out;
 }
 
-void serializeTraditionalKeyGroup(const TraditionalKeyGroup &v, pugi::xml_node el)
+void serializeTraditionalKeyGroup(const TraditionalKeyGroup &v, mxpugi::xml_node el)
 {
     if (v.cancel())
     {

@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -42,8 +42,8 @@ class FullNoteGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-FullNoteGroup parseFullNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+FullNoteGroup parseFullNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeFullNoteGroup(const FullNoteGroup &v, pugi::xml_node el);
+void serializeFullNoteGroup(const FullNoteGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

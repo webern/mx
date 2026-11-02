@@ -41,11 +41,11 @@ void MeasureRepeat::setValue(PositiveIntegerOrEmpty value)
     m_value = std::move(value);
 }
 
-MeasureRepeat parseMeasureRepeat(pugi::xml_node el, const ParseContext &context)
+MeasureRepeat parseMeasureRepeat(mxpugi::xml_node el, const ParseContext &context)
 {
     MeasureRepeat out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -74,7 +74,7 @@ MeasureRepeat parseMeasureRepeat(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el, const ParseContext &context)
+void parseMeasureRepeatContent(MeasureRepeat &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<PositiveIntegerOrEmpty>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -83,9 +83,9 @@ void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeMeasureRepeat(const MeasureRepeat &v, pugi::xml_node parent, const char *tag)
+void serializeMeasureRepeat(const MeasureRepeat &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.slashes())
     {
@@ -94,7 +94,7 @@ void serializeMeasureRepeat(const MeasureRepeat &v, pugi::xml_node parent, const
     serializeMeasureRepeatContent(v, el);
 }
 
-void serializeMeasureRepeatContent(const MeasureRepeat &v, pugi::xml_node el)
+void serializeMeasureRepeatContent(const MeasureRepeat &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

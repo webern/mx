@@ -18,7 +18,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -93,12 +93,12 @@ class Tuplet final
     std::optional<TupletPortion> m_tupletNormal;
 };
 
-Tuplet parseTuplet(pugi::xml_node el, const ParseContext &context);
+Tuplet parseTuplet(mxpugi::xml_node el, const ParseContext &context);
 
-void parseTupletContent(Tuplet &out, pugi::xml_node el, const ParseContext &context);
+void parseTupletContent(Tuplet &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeTuplet(const Tuplet &v, pugi::xml_node parent, const char *tag);
+void serializeTuplet(const Tuplet &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeTupletContent(const Tuplet &v, pugi::xml_node el);
+void serializeTupletContent(const Tuplet &v, mxpugi::xml_node el);
 
 } // namespace mx::core

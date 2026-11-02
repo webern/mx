@@ -31,11 +31,11 @@ void OtherAppearance::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherAppearance parseOtherAppearance(pugi::xml_node el, const ParseContext &context)
+OtherAppearance parseOtherAppearance(mxpugi::xml_node el, const ParseContext &context)
 {
     OtherAppearance out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,7 +60,7 @@ OtherAppearance parseOtherAppearance(pugi::xml_node el, const ParseContext &cont
     return out;
 }
 
-void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el, const ParseContext &context)
+void parseOtherAppearanceContent(OtherAppearance &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -69,14 +69,14 @@ void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el, const 
     }
 }
 
-void serializeOtherAppearance(const OtherAppearance &v, pugi::xml_node parent, const char *tag)
+void serializeOtherAppearance(const OtherAppearance &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type());
     serializeOtherAppearanceContent(v, el);
 }
 
-void serializeOtherAppearanceContent(const OtherAppearance &v, pugi::xml_node el)
+void serializeOtherAppearanceContent(const OtherAppearance &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

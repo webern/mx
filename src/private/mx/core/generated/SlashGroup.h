@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -42,8 +42,8 @@ class SlashGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-SlashGroup parseSlashGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+SlashGroup parseSlashGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeSlashGroup(const SlashGroup &v, pugi::xml_node el);
+void serializeSlashGroup(const SlashGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

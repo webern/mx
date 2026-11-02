@@ -26,10 +26,10 @@ void NoteheadText::setChoice(OneOrMore<NoteheadTextChoice> value)
     m_choice = std::move(value);
 }
 
-NoteheadText parseNoteheadText(pugi::xml_node el, const ParseContext &context)
+NoteheadText parseNoteheadText(mxpugi::xml_node el, const ParseContext &context)
 {
     NoteheadText out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -42,9 +42,9 @@ NoteheadText parseNoteheadText(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el, const ParseContext &context)
+void parseNoteheadTextContent(NoteheadText &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (!(cursor && (cursorIs(cursor, "display-text") || cursorIs(cursor, "accidental-text"))))
     {
         throwMissingElement(el, "display-text");
@@ -64,13 +64,13 @@ void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el, const ParseC
     }
 }
 
-void serializeNoteheadText(const NoteheadText &v, pugi::xml_node parent, const char *tag)
+void serializeNoteheadText(const NoteheadText &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeNoteheadTextContent(v, el);
 }
 
-void serializeNoteheadTextContent(const NoteheadText &v, pugi::xml_node el)
+void serializeNoteheadTextContent(const NoteheadText &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.choice())
     {

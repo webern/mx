@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -42,8 +42,8 @@ class Mordent : public EmptyTrillSound
     std::optional<AboveBelow> m_departure;
 };
 
-Mordent parseMordent(pugi::xml_node el, const ParseContext &context);
+Mordent parseMordent(mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMordent(const Mordent &v, pugi::xml_node parent, const char *tag);
+void serializeMordent(const Mordent &v, mxpugi::xml_node parent, const char *tag);
 
 } // namespace mx::core

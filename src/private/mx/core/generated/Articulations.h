@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -39,12 +39,12 @@ class Articulations final
     std::vector<ArticulationsChoice> m_choice;
 };
 
-Articulations parseArticulations(pugi::xml_node el, const ParseContext &context);
+Articulations parseArticulations(mxpugi::xml_node el, const ParseContext &context);
 
-void parseArticulationsContent(Articulations &out, pugi::xml_node el, const ParseContext &context);
+void parseArticulationsContent(Articulations &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeArticulations(const Articulations &v, pugi::xml_node parent, const char *tag);
+void serializeArticulations(const Articulations &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeArticulationsContent(const Articulations &v, pugi::xml_node el);
+void serializeArticulationsContent(const Articulations &v, mxpugi::xml_node el);
 
 } // namespace mx::core

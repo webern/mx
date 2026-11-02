@@ -14,7 +14,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -75,12 +75,12 @@ class Bracket final
     std::optional<Token> m_id;
 };
 
-Bracket parseBracket(pugi::xml_node el, const ParseContext &context);
+Bracket parseBracket(mxpugi::xml_node el, const ParseContext &context);
 
-void parseBracketContent(Bracket &out, pugi::xml_node el, const ParseContext &context);
+void parseBracketContent(Bracket &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeBracket(const Bracket &v, pugi::xml_node parent, const char *tag);
+void serializeBracket(const Bracket &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeBracketContent(const Bracket &v, pugi::xml_node el);
+void serializeBracketContent(const Bracket &v, mxpugi::xml_node el);
 
 } // namespace mx::core

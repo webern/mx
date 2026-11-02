@@ -16,7 +16,7 @@
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/Version.h"
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -30,7 +30,7 @@ namespace
 
 Error parseExpectingError(const char *xml)
 {
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string(xml));
     auto result = parse(doc, ParseContext{});
     CHECK(!result.ok());
@@ -120,7 +120,7 @@ TEST(RepairsOutOfVocabularyXmlAndXlinkAttributes, Document)
     // reported, the same leniency every other value type applies -- a
     // document-level REFUSAL would turn a 3.x file into an unparseable one.
     std::vector<Diagnostic> diagnostics;
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string("<score-partwise version=\"4.0\">"
                           "<credit page=\"1\">"
                           "<link xlink:href=\"http://x\" xlink:type=\"bogus\" xlink:show=\"sometimes\"/>"
@@ -149,7 +149,7 @@ TEST(RepairsOutOfVocabularyXmlAndXlinkAttributes, Document)
 
 TEST(RejectsNewerVersion, Document)
 {
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string("<score-partwise version=\"5.0\"/>"));
     auto result = parse(doc, ParseContext{});
     CHECK(!result.ok());
@@ -173,12 +173,12 @@ TEST(VersionGateBoundary, Document)
 
 TEST(RoundTripMinimalScore, Document)
 {
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string(kMinimalScore));
     auto parsed = parse(doc, ParseContext{});
     CHECK(parsed.ok());
     CHECK(parsed.value().isScorePartwise());
-    pugi::xml_document out;
+    mxpugi::xml_document out;
     serialize(parsed.value(), out);
     auto reparsed = parse(out, ParseContext{});
     CHECK(reparsed.ok());
@@ -187,16 +187,16 @@ TEST(RoundTripMinimalScore, Document)
 
 TEST(RootNamespacePreserved, Document)
 {
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string("<score-partwise xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"3.0\">"
                           "<part-list><score-part id=\"P1\"><part-name>M</part-name></score-part></part-list>"
                           "<part id=\"P1\"><measure number=\"1\"/></part></score-partwise>"));
     auto parsed = parse(doc, ParseContext{});
     CHECK(parsed.ok());
     CHECK_EQUAL(std::size_t{1}, parsed.value().rootNamespaces().size());
-    pugi::xml_document out;
+    mxpugi::xml_document out;
     serialize(parsed.value(), out);
-    const pugi::xml_attribute ns = out.document_element().attribute("xmlns:xlink");
+    const mxpugi::xml_attribute ns = out.document_element().attribute("xmlns:xlink");
     CHECK_EQUAL(std::string{"http://www.w3.org/1999/xlink"}, std::string{ns.value()});
 }
 

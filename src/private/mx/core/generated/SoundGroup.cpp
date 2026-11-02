@@ -51,7 +51,7 @@ void SoundGroup::setPlay(std::optional<Play> value)
     m_play = std::move(value);
 }
 
-SoundGroup parseSoundGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+SoundGroup parseSoundGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     SoundGroup out;
     if (cursorIs(cursor, "instrument-change"))
@@ -77,7 +77,7 @@ SoundGroup parseSoundGroup(pugi::xml_node el, pugi::xml_node &cursor, const Pars
     return out;
 }
 
-void serializeSoundGroup(const SoundGroup &v, pugi::xml_node el)
+void serializeSoundGroup(const SoundGroup &v, mxpugi::xml_node el)
 {
     if (v.instrumentChange())
     {

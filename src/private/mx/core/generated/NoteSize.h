@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -38,12 +38,12 @@ class NoteSize final
     NonNegativeDecimal m_value{};
 };
 
-NoteSize parseNoteSize(pugi::xml_node el, const ParseContext &context);
+NoteSize parseNoteSize(mxpugi::xml_node el, const ParseContext &context);
 
-void parseNoteSizeContent(NoteSize &out, pugi::xml_node el, const ParseContext &context);
+void parseNoteSizeContent(NoteSize &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeNoteSize(const NoteSize &v, pugi::xml_node parent, const char *tag);
+void serializeNoteSize(const NoteSize &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeNoteSizeContent(const NoteSize &v, pugi::xml_node el);
+void serializeNoteSizeContent(const NoteSize &v, mxpugi::xml_node el);
 
 } // namespace mx::core

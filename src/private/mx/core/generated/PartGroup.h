@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -75,12 +75,12 @@ class PartGroup final
     EditorialGroup m_editorial{};
 };
 
-PartGroup parsePartGroup(pugi::xml_node el, const ParseContext &context);
+PartGroup parsePartGroup(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePartGroupContent(PartGroup &out, pugi::xml_node el, const ParseContext &context);
+void parsePartGroupContent(PartGroup &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePartGroup(const PartGroup &v, pugi::xml_node parent, const char *tag);
+void serializePartGroup(const PartGroup &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePartGroupContent(const PartGroup &v, pugi::xml_node el);
+void serializePartGroupContent(const PartGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

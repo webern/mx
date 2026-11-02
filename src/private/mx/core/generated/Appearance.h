@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -57,12 +57,12 @@ class Appearance final
     std::vector<OtherAppearance> m_otherAppearance;
 };
 
-Appearance parseAppearance(pugi::xml_node el, const ParseContext &context);
+Appearance parseAppearance(mxpugi::xml_node el, const ParseContext &context);
 
-void parseAppearanceContent(Appearance &out, pugi::xml_node el, const ParseContext &context);
+void parseAppearanceContent(Appearance &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeAppearance(const Appearance &v, pugi::xml_node parent, const char *tag);
+void serializeAppearance(const Appearance &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeAppearanceContent(const Appearance &v, pugi::xml_node el);
+void serializeAppearanceContent(const Appearance &v, mxpugi::xml_node el);
 
 } // namespace mx::core

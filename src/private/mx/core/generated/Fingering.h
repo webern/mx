@@ -14,7 +14,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -75,12 +75,12 @@ class Fingering final
     std::string m_value{};
 };
 
-Fingering parseFingering(pugi::xml_node el, const ParseContext &context);
+Fingering parseFingering(mxpugi::xml_node el, const ParseContext &context);
 
-void parseFingeringContent(Fingering &out, pugi::xml_node el, const ParseContext &context);
+void parseFingeringContent(Fingering &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeFingering(const Fingering &v, pugi::xml_node parent, const char *tag);
+void serializeFingering(const Fingering &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeFingeringContent(const Fingering &v, pugi::xml_node el);
+void serializeFingeringContent(const Fingering &v, mxpugi::xml_node el);
 
 } // namespace mx::core

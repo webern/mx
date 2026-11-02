@@ -26,7 +26,7 @@ CreditChoiceGroupChoice CreditChoiceGroupChoice::creditSymbol(FormattedSymbolID 
     return CreditChoiceGroupChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-CreditChoiceGroupChoice parseCreditChoiceGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
+CreditChoiceGroupChoice parseCreditChoiceGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
                                                      const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "credit-words")))
@@ -48,7 +48,7 @@ CreditChoiceGroupChoice parseCreditChoiceGroupChoice(pugi::xml_node el, pugi::xm
     throwMissingElement(el, "credit-words");
 }
 
-void serializeCreditChoiceGroupChoice(const CreditChoiceGroupChoice &v, pugi::xml_node el)
+void serializeCreditChoiceGroupChoice(const CreditChoiceGroupChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

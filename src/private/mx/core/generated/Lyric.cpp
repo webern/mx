@@ -171,10 +171,10 @@ void Lyric::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-Lyric parseLyric(pugi::xml_node el, const ParseContext &context)
+Lyric parseLyric(mxpugi::xml_node el, const ParseContext &context)
 {
     Lyric out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -238,9 +238,9 @@ Lyric parseLyric(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseLyricContent(Lyric &out, pugi::xml_node el, const ParseContext &context)
+void parseLyricContent(Lyric &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "syllabic") || cursorIs(cursor, "text") || cursorIs(cursor, "extend") ||
                    cursorIs(cursor, "laughing") || cursorIs(cursor, "humming")))
     {
@@ -279,9 +279,9 @@ void parseLyricContent(Lyric &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeLyric(const Lyric &v, pugi::xml_node parent, const char *tag)
+void serializeLyric(const Lyric &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -333,7 +333,7 @@ void serializeLyric(const Lyric &v, pugi::xml_node parent, const char *tag)
     serializeLyricContent(v, el);
 }
 
-void serializeLyricContent(const Lyric &v, pugi::xml_node el)
+void serializeLyricContent(const Lyric &v, mxpugi::xml_node el)
 {
     serializeLyricChoice(v.choice(), el);
     if (v.endLine())

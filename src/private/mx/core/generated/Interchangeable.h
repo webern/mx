@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -49,12 +49,12 @@ class Interchangeable final
     OneOrMore<TimeSignatureGroup> m_timeSignature;
 };
 
-Interchangeable parseInterchangeable(pugi::xml_node el, const ParseContext &context);
+Interchangeable parseInterchangeable(mxpugi::xml_node el, const ParseContext &context);
 
-void parseInterchangeableContent(Interchangeable &out, pugi::xml_node el, const ParseContext &context);
+void parseInterchangeableContent(Interchangeable &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeInterchangeable(const Interchangeable &v, pugi::xml_node parent, const char *tag);
+void serializeInterchangeable(const Interchangeable &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeInterchangeableContent(const Interchangeable &v, pugi::xml_node el);
+void serializeInterchangeableContent(const Interchangeable &v, mxpugi::xml_node el);
 
 } // namespace mx::core

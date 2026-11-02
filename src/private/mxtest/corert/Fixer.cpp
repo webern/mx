@@ -24,7 +24,7 @@ std::string sidecarPath(const std::string &inputPath)
     return inputPath.substr(0, dot) + ".fixup.xml";
 }
 
-void applyRecursive(const std::vector<Fixup> &fixups, pugi::xml_node el)
+void applyRecursive(const std::vector<Fixup> &fixups, mxpugi::xml_node el)
 {
     for (const Fixup &fx : fixups)
     {
@@ -43,7 +43,7 @@ void applyRecursive(const std::vector<Fixup> &fixups, pugi::xml_node el)
         }
         else
         {
-            for (pugi::xml_attribute a : el.attributes())
+            for (mxpugi::xml_attribute a : el.attributes())
             {
                 if (std::string_view{a.name()} == fx.name && std::string_view{a.value()} == fx.value)
                 {
@@ -52,9 +52,9 @@ void applyRecursive(const std::vector<Fixup> &fixups, pugi::xml_node el)
             }
         }
     }
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
     {
-        if (c.type() == pugi::node_element)
+        if (c.type() == mxpugi::node_element)
         {
             applyRecursive(fixups, c);
         }
@@ -70,17 +70,17 @@ Fixer::Fixer(const std::string &inputFilePath)
     {
         return;
     }
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     if (!doc.load_file(path.c_str()))
     {
         return;
     }
-    pugi::xml_node root = doc.document_element();
+    mxpugi::xml_node root = doc.document_element();
     if (!root || std::string_view{root.name()} != "fixups")
     {
         return;
     }
-    for (pugi::xml_node replace = root.child("replace"); replace; replace = replace.next_sibling("replace"))
+    for (mxpugi::xml_node replace = root.child("replace"); replace; replace = replace.next_sibling("replace"))
     {
         Fixup fx;
         const std::string_view type = replace.child("type").text().get();
@@ -98,7 +98,7 @@ Fixer::Fixer(const std::string &inputFilePath)
         }
         fx.name = replace.child("name").text().get();
         fx.value = replace.child("value").text().get();
-        pugi::xml_node replacement = replace.child("replacement-value");
+        mxpugi::xml_node replacement = replace.child("replacement-value");
         if (fx.name.empty() || !replacement)
         {
             continue;
@@ -108,7 +108,7 @@ Fixer::Fixer(const std::string &inputFilePath)
     }
 }
 
-void Fixer::applyToExpected(pugi::xml_document &expected) const
+void Fixer::applyToExpected(mxpugi::xml_document &expected) const
 {
     if (myFixups.empty() || !expected.document_element())
     {

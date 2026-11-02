@@ -36,7 +36,7 @@ LyricChoice LyricChoice::humming(Empty value)
     return LyricChoice{Storage{std::in_place_index<3>, std::move(value)}};
 }
 
-LyricChoice parseLyricChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+LyricChoice parseLyricChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "syllabic") || cursorIs(cursor, "text")))
     {
@@ -67,7 +67,7 @@ LyricChoice parseLyricChoice(pugi::xml_node el, pugi::xml_node &cursor, const Pa
     throwMissingElement(el, "syllabic");
 }
 
-void serializeLyricChoice(const LyricChoice &v, pugi::xml_node el)
+void serializeLyricChoice(const LyricChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

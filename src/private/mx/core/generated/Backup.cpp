@@ -31,10 +31,10 @@ void Backup::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-Backup parseBackup(pugi::xml_node el, const ParseContext &context)
+Backup parseBackup(mxpugi::xml_node el, const ParseContext &context)
 {
     Backup out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -47,9 +47,9 @@ Backup parseBackup(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBackupContent(Backup &out, pugi::xml_node el, const ParseContext &context)
+void parseBackupContent(Backup &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "duration"))
     {
         out.setDuration(parseValue<PositiveDivisions>(childText(cursor), context, cursor, nullptr));
@@ -73,13 +73,13 @@ void parseBackupContent(Backup &out, pugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeBackup(const Backup &v, pugi::xml_node parent, const char *tag)
+void serializeBackup(const Backup &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeBackupContent(v, el);
 }
 
-void serializeBackupContent(const Backup &v, pugi::xml_node el)
+void serializeBackupContent(const Backup &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "duration", v.duration().toString());
     serializeEditorialGroup(v.editorial(), el);

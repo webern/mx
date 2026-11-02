@@ -12,7 +12,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -61,12 +61,12 @@ class StyleText final
     std::string m_value{};
 };
 
-StyleText parseStyleText(pugi::xml_node el, const ParseContext &context);
+StyleText parseStyleText(mxpugi::xml_node el, const ParseContext &context);
 
-void parseStyleTextContent(StyleText &out, pugi::xml_node el, const ParseContext &context);
+void parseStyleTextContent(StyleText &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeStyleText(const StyleText &v, pugi::xml_node parent, const char *tag);
+void serializeStyleText(const StyleText &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeStyleTextContent(const StyleText &v, pugi::xml_node el);
+void serializeStyleTextContent(const StyleText &v, mxpugi::xml_node el);
 
 } // namespace mx::core

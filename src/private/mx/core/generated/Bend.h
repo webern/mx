@@ -21,7 +21,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -97,12 +97,12 @@ class Bend final
     std::optional<PlacementText> m_withBar;
 };
 
-Bend parseBend(pugi::xml_node el, const ParseContext &context);
+Bend parseBend(mxpugi::xml_node el, const ParseContext &context);
 
-void parseBendContent(Bend &out, pugi::xml_node el, const ParseContext &context);
+void parseBendContent(Bend &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeBend(const Bend &v, pugi::xml_node parent, const char *tag);
+void serializeBend(const Bend &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeBendContent(const Bend &v, pugi::xml_node el);
+void serializeBendContent(const Bend &v, mxpugi::xml_node el);
 
 } // namespace mx::core

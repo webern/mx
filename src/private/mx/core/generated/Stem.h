@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -50,12 +50,12 @@ class Stem final
     StemValue m_value{};
 };
 
-Stem parseStem(pugi::xml_node el, const ParseContext &context);
+Stem parseStem(mxpugi::xml_node el, const ParseContext &context);
 
-void parseStemContent(Stem &out, pugi::xml_node el, const ParseContext &context);
+void parseStemContent(Stem &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeStem(const Stem &v, pugi::xml_node parent, const char *tag);
+void serializeStem(const Stem &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeStemContent(const Stem &v, pugi::xml_node el);
+void serializeStemContent(const Stem &v, mxpugi::xml_node el);
 
 } // namespace mx::core

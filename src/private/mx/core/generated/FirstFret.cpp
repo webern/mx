@@ -41,10 +41,10 @@ void FirstFret::setValue(int value)
     m_value = std::move(value);
 }
 
-FirstFret parseFirstFret(pugi::xml_node el, const ParseContext &context)
+FirstFret parseFirstFret(mxpugi::xml_node el, const ParseContext &context)
 {
     FirstFret out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -68,7 +68,7 @@ FirstFret parseFirstFret(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFirstFretContent(FirstFret &out, pugi::xml_node el, const ParseContext &context)
+void parseFirstFretContent(FirstFret &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -77,9 +77,9 @@ void parseFirstFretContent(FirstFret &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeFirstFret(const FirstFret &v, pugi::xml_node parent, const char *tag)
+void serializeFirstFret(const FirstFret &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.text())
     {
         setAttribute(el, "text", *v.text());
@@ -91,7 +91,7 @@ void serializeFirstFret(const FirstFret &v, pugi::xml_node parent, const char *t
     serializeFirstFretContent(v, el);
 }
 
-void serializeFirstFretContent(const FirstFret &v, pugi::xml_node el)
+void serializeFirstFretContent(const FirstFret &v, mxpugi::xml_node el)
 {
     setText(el, formatInt(v.value()));
 }

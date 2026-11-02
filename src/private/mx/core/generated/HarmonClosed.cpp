@@ -31,10 +31,10 @@ void HarmonClosed::setValue(HarmonClosedValue value)
     m_value = std::move(value);
 }
 
-HarmonClosed parseHarmonClosed(pugi::xml_node el, const ParseContext &context)
+HarmonClosed parseHarmonClosed(mxpugi::xml_node el, const ParseContext &context)
 {
     HarmonClosed out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ HarmonClosed parseHarmonClosed(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el, const ParseContext &context)
+void parseHarmonClosedContent(HarmonClosed &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<HarmonClosedValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el, const ParseC
     }
 }
 
-void serializeHarmonClosed(const HarmonClosed &v, pugi::xml_node parent, const char *tag)
+void serializeHarmonClosed(const HarmonClosed &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.location())
     {
         setAttribute(el, "location", v.location()->toString());
@@ -73,7 +73,7 @@ void serializeHarmonClosed(const HarmonClosed &v, pugi::xml_node parent, const c
     serializeHarmonClosedContent(v, el);
 }
 
-void serializeHarmonClosedContent(const HarmonClosed &v, pugi::xml_node el)
+void serializeHarmonClosedContent(const HarmonClosed &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

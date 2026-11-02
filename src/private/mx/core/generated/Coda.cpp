@@ -141,10 +141,10 @@ void Coda::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Coda parseCoda(pugi::xml_node el, const ParseContext &context)
+Coda parseCoda(mxpugi::xml_node el, const ParseContext &context)
 {
     Coda out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -212,7 +212,7 @@ Coda parseCoda(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseCodaContent(Coda &out, pugi::xml_node el, const ParseContext &context)
+void parseCodaContent(Coda &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -222,9 +222,9 @@ void parseCodaContent(Coda &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeCoda(const Coda &v, pugi::xml_node parent, const char *tag)
+void serializeCoda(const Coda &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -280,7 +280,7 @@ void serializeCoda(const Coda &v, pugi::xml_node parent, const char *tag)
     serializeCodaContent(v, el);
 }
 
-void serializeCodaContent(const Coda &v, pugi::xml_node el)
+void serializeCodaContent(const Coda &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

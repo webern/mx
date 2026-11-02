@@ -121,10 +121,10 @@ void Print::setPartAbbreviationDisplay(std::optional<NameDisplay> value)
     m_partAbbreviationDisplay = std::move(value);
 }
 
-Print parsePrint(pugi::xml_node el, const ParseContext &context)
+Print parsePrint(mxpugi::xml_node el, const ParseContext &context)
 {
     Print out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -164,9 +164,9 @@ Print parsePrint(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePrintContent(Print &out, pugi::xml_node el, const ParseContext &context)
+void parsePrintContent(Print &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor &&
         (cursorIs(cursor, "page-layout") || cursorIs(cursor, "system-layout") || cursorIs(cursor, "staff-layout")))
     {
@@ -204,9 +204,9 @@ void parsePrintContent(Print &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializePrint(const Print &v, pugi::xml_node parent, const char *tag)
+void serializePrint(const Print &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.staffSpacing())
     {
         setAttribute(el, "staff-spacing", v.staffSpacing()->toString());
@@ -234,7 +234,7 @@ void serializePrint(const Print &v, pugi::xml_node parent, const char *tag)
     serializePrintContent(v, el);
 }
 
-void serializePrintContent(const Print &v, pugi::xml_node el)
+void serializePrintContent(const Print &v, mxpugi::xml_node el)
 {
     serializeLayoutGroup(v.layout(), el);
     if (v.measureLayout())

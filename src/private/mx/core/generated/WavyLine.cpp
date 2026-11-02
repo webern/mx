@@ -171,11 +171,11 @@ void WavyLine::setLastBeat(std::optional<Percent> value)
     m_lastBeat = std::move(value);
 }
 
-WavyLine parseWavyLine(pugi::xml_node el, const ParseContext &context)
+WavyLine parseWavyLine(mxpugi::xml_node el, const ParseContext &context)
 {
     WavyLine out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -260,7 +260,7 @@ WavyLine parseWavyLine(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseWavyLineContent(WavyLine &out, pugi::xml_node el, const ParseContext &context)
+void parseWavyLineContent(WavyLine &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -270,9 +270,9 @@ void parseWavyLineContent(WavyLine &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeWavyLine(const WavyLine &v, pugi::xml_node parent, const char *tag)
+void serializeWavyLine(const WavyLine &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -337,7 +337,7 @@ void serializeWavyLine(const WavyLine &v, pugi::xml_node parent, const char *tag
     serializeWavyLineContent(v, el);
 }
 
-void serializeWavyLineContent(const WavyLine &v, pugi::xml_node el)
+void serializeWavyLineContent(const WavyLine &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

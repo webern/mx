@@ -171,11 +171,11 @@ void OtherNotation::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherNotation parseOtherNotation(pugi::xml_node el, const ParseContext &context)
+OtherNotation parseOtherNotation(mxpugi::xml_node el, const ParseContext &context)
 {
     OtherNotation out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -256,7 +256,7 @@ OtherNotation parseOtherNotation(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseOtherNotationContent(OtherNotation &out, pugi::xml_node el, const ParseContext &context)
+void parseOtherNotationContent(OtherNotation &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -265,9 +265,9 @@ void parseOtherNotationContent(OtherNotation &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeOtherNotation(const OtherNotation &v, pugi::xml_node parent, const char *tag)
+void serializeOtherNotation(const OtherNotation &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -328,7 +328,7 @@ void serializeOtherNotation(const OtherNotation &v, pugi::xml_node parent, const
     serializeOtherNotationContent(v, el);
 }
 
-void serializeOtherNotationContent(const OtherNotation &v, pugi::xml_node el)
+void serializeOtherNotationContent(const OtherNotation &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

@@ -51,11 +51,11 @@ void Slash::setSlash(std::optional<SlashGroup> value)
     m_slash = std::move(value);
 }
 
-Slash parseSlash(pugi::xml_node el, const ParseContext &context)
+Slash parseSlash(mxpugi::xml_node el, const ParseContext &context)
 {
     Slash out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -88,9 +88,9 @@ Slash parseSlash(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseSlashContent(Slash &out, pugi::xml_node el, const ParseContext &context)
+void parseSlashContent(Slash &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "slash-type") || cursorIs(cursor, "except-voice")))
     {
         out.setSlash(parseSlashGroup(el, cursor, context));
@@ -105,9 +105,9 @@ void parseSlashContent(Slash &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeSlash(const Slash &v, pugi::xml_node parent, const char *tag)
+void serializeSlash(const Slash &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.useDots())
     {
@@ -120,7 +120,7 @@ void serializeSlash(const Slash &v, pugi::xml_node parent, const char *tag)
     serializeSlashContent(v, el);
 }
 
-void serializeSlashContent(const Slash &v, pugi::xml_node el)
+void serializeSlashContent(const Slash &v, mxpugi::xml_node el)
 {
     if (v.slash())
     {

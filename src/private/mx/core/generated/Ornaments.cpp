@@ -36,10 +36,10 @@ void Ornaments::setGroup(std::vector<OrnamentsGroup> value)
     m_group = std::move(value);
 }
 
-Ornaments parseOrnaments(pugi::xml_node el, const ParseContext &context)
+Ornaments parseOrnaments(mxpugi::xml_node el, const ParseContext &context)
 {
     Ornaments out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -59,9 +59,9 @@ Ornaments parseOrnaments(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseOrnamentsContent(Ornaments &out, pugi::xml_node el, const ParseContext &context)
+void parseOrnamentsContent(Ornaments &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "trill-mark") || cursorIs(cursor, "turn") || cursorIs(cursor, "delayed-turn") ||
                       cursorIs(cursor, "inverted-turn") || cursorIs(cursor, "delayed-inverted-turn") ||
                       cursorIs(cursor, "vertical-turn") || cursorIs(cursor, "inverted-vertical-turn") ||
@@ -86,9 +86,9 @@ void parseOrnamentsContent(Ornaments &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeOrnaments(const Ornaments &v, pugi::xml_node parent, const char *tag)
+void serializeOrnaments(const Ornaments &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.id())
     {
         setAttribute(el, "id", v.id()->toString());
@@ -96,7 +96,7 @@ void serializeOrnaments(const Ornaments &v, pugi::xml_node parent, const char *t
     serializeOrnamentsContent(v, el);
 }
 
-void serializeOrnamentsContent(const Ornaments &v, pugi::xml_node el)
+void serializeOrnamentsContent(const Ornaments &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.group())
     {

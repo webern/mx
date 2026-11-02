@@ -14,7 +14,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -69,12 +69,12 @@ class Notehead final
     NoteheadValue m_value{};
 };
 
-Notehead parseNotehead(pugi::xml_node el, const ParseContext &context);
+Notehead parseNotehead(mxpugi::xml_node el, const ParseContext &context);
 
-void parseNoteheadContent(Notehead &out, pugi::xml_node el, const ParseContext &context);
+void parseNoteheadContent(Notehead &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeNotehead(const Notehead &v, pugi::xml_node parent, const char *tag);
+void serializeNotehead(const Notehead &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeNoteheadContent(const Notehead &v, pugi::xml_node el);
+void serializeNoteheadContent(const Notehead &v, mxpugi::xml_node el);
 
 } // namespace mx::core

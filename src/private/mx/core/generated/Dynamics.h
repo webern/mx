@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -109,12 +109,12 @@ class Dynamics final
     std::vector<DynamicsChoice> m_choice;
 };
 
-Dynamics parseDynamics(pugi::xml_node el, const ParseContext &context);
+Dynamics parseDynamics(mxpugi::xml_node el, const ParseContext &context);
 
-void parseDynamicsContent(Dynamics &out, pugi::xml_node el, const ParseContext &context);
+void parseDynamicsContent(Dynamics &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeDynamics(const Dynamics &v, pugi::xml_node parent, const char *tag);
+void serializeDynamics(const Dynamics &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeDynamicsContent(const Dynamics &v, pugi::xml_node el);
+void serializeDynamicsContent(const Dynamics &v, mxpugi::xml_node el);
 
 } // namespace mx::core

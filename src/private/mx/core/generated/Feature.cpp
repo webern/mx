@@ -31,10 +31,10 @@ void Feature::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Feature parseFeature(pugi::xml_node el, const ParseContext &context)
+Feature parseFeature(mxpugi::xml_node el, const ParseContext &context)
 {
     Feature out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ Feature parseFeature(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFeatureContent(Feature &out, pugi::xml_node el, const ParseContext &context)
+void parseFeatureContent(Feature &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseFeatureContent(Feature &out, pugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeFeature(const Feature &v, pugi::xml_node parent, const char *tag)
+void serializeFeature(const Feature &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.type())
     {
         setAttribute(el, "type", *v.type());
@@ -73,7 +73,7 @@ void serializeFeature(const Feature &v, pugi::xml_node parent, const char *tag)
     serializeFeatureContent(v, el);
 }
 
-void serializeFeatureContent(const Feature &v, pugi::xml_node el)
+void serializeFeatureContent(const Feature &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

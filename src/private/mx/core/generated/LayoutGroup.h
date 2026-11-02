@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -45,8 +45,8 @@ class LayoutGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-LayoutGroup parseLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+LayoutGroup parseLayoutGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeLayoutGroup(const LayoutGroup &v, pugi::xml_node el);
+void serializeLayoutGroup(const LayoutGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

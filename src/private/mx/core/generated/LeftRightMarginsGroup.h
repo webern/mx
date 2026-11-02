@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -38,9 +38,9 @@ class LeftRightMarginsGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-LeftRightMarginsGroup parseLeftRightMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor,
+LeftRightMarginsGroup parseLeftRightMarginsGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
                                                  const ParseContext &context);
 
-void serializeLeftRightMarginsGroup(const LeftRightMarginsGroup &v, pugi::xml_node el);
+void serializeLeftRightMarginsGroup(const LeftRightMarginsGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

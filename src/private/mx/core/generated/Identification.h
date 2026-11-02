@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -55,12 +55,12 @@ class Identification final
     std::optional<Miscellaneous> m_miscellaneous;
 };
 
-Identification parseIdentification(pugi::xml_node el, const ParseContext &context);
+Identification parseIdentification(mxpugi::xml_node el, const ParseContext &context);
 
-void parseIdentificationContent(Identification &out, pugi::xml_node el, const ParseContext &context);
+void parseIdentificationContent(Identification &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeIdentification(const Identification &v, pugi::xml_node parent, const char *tag);
+void serializeIdentification(const Identification &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeIdentificationContent(const Identification &v, pugi::xml_node el);
+void serializeIdentificationContent(const Identification &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -16,7 +16,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -103,12 +103,12 @@ class Tied final
     std::optional<Token> m_id;
 };
 
-Tied parseTied(pugi::xml_node el, const ParseContext &context);
+Tied parseTied(mxpugi::xml_node el, const ParseContext &context);
 
-void parseTiedContent(Tied &out, pugi::xml_node el, const ParseContext &context);
+void parseTiedContent(Tied &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeTied(const Tied &v, pugi::xml_node parent, const char *tag);
+void serializeTied(const Tied &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeTiedContent(const Tied &v, pugi::xml_node el);
+void serializeTiedContent(const Tied &v, mxpugi::xml_node el);
 
 } // namespace mx::core

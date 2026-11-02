@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -42,12 +42,12 @@ class StaffLayout final
     std::optional<Tenths> m_staffDistance;
 };
 
-StaffLayout parseStaffLayout(pugi::xml_node el, const ParseContext &context);
+StaffLayout parseStaffLayout(mxpugi::xml_node el, const ParseContext &context);
 
-void parseStaffLayoutContent(StaffLayout &out, pugi::xml_node el, const ParseContext &context);
+void parseStaffLayoutContent(StaffLayout &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeStaffLayout(const StaffLayout &v, pugi::xml_node parent, const char *tag);
+void serializeStaffLayout(const StaffLayout &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeStaffLayoutContent(const StaffLayout &v, pugi::xml_node el);
+void serializeStaffLayoutContent(const StaffLayout &v, mxpugi::xml_node el);
 
 } // namespace mx::core

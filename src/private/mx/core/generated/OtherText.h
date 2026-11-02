@@ -7,7 +7,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -34,12 +34,12 @@ class OtherText final
     std::string m_value{};
 };
 
-OtherText parseOtherText(pugi::xml_node el, const ParseContext &context);
+OtherText parseOtherText(mxpugi::xml_node el, const ParseContext &context);
 
-void parseOtherTextContent(OtherText &out, pugi::xml_node el, const ParseContext &context);
+void parseOtherTextContent(OtherText &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeOtherText(const OtherText &v, pugi::xml_node parent, const char *tag);
+void serializeOtherText(const OtherText &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeOtherTextContent(const OtherText &v, pugi::xml_node el);
+void serializeOtherTextContent(const OtherText &v, mxpugi::xml_node el);
 
 } // namespace mx::core

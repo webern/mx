@@ -31,10 +31,10 @@ void Swing::setSwingStyle(std::optional<std::string> value)
     m_swingStyle = std::move(value);
 }
 
-Swing parseSwing(pugi::xml_node el, const ParseContext &context)
+Swing parseSwing(mxpugi::xml_node el, const ParseContext &context)
 {
     Swing out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -47,9 +47,9 @@ Swing parseSwing(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseSwingContent(Swing &out, pugi::xml_node el, const ParseContext &context)
+void parseSwingContent(Swing &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "straight") || cursorIs(cursor, "first")))
     {
         out.setChoice(parseSwingChoice(el, cursor, context));
@@ -74,13 +74,13 @@ void parseSwingContent(Swing &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeSwing(const Swing &v, pugi::xml_node parent, const char *tag)
+void serializeSwing(const Swing &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeSwingContent(v, el);
 }
 
-void serializeSwingContent(const Swing &v, pugi::xml_node el)
+void serializeSwingContent(const Swing &v, mxpugi::xml_node el)
 {
     serializeSwingChoice(v.choice(), el);
     if (v.swingStyle())

@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -38,12 +38,12 @@ class Wait final
     std::optional<TimeOnly> m_timeOnly;
 };
 
-Wait parseWait(pugi::xml_node el, const ParseContext &context);
+Wait parseWait(mxpugi::xml_node el, const ParseContext &context);
 
-void parseWaitContent(Wait &out, pugi::xml_node el, const ParseContext &context);
+void parseWaitContent(Wait &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeWait(const Wait &v, pugi::xml_node parent, const char *tag);
+void serializeWait(const Wait &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeWaitContent(const Wait &v, pugi::xml_node el);
+void serializeWaitContent(const Wait &v, mxpugi::xml_node el);
 
 } // namespace mx::core

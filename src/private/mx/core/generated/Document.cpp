@@ -14,11 +14,11 @@
 namespace mx::core
 {
 
-Result<Document> parse(const pugi::xml_document &doc, const ParseContext &context)
+Result<Document> parse(const mxpugi::xml_document &doc, const ParseContext &context)
 {
     try
     {
-        pugi::xml_node root = doc.document_element();
+        mxpugi::xml_node root = doc.document_element();
         if (!root)
         {
             return Error{ErrorCode::invalidDocument, "/", "document has no root element"};
@@ -31,7 +31,7 @@ Result<Document> parse(const pugi::xml_document &doc, const ParseContext &contex
                              std::string{SupportedMusicXMLVersion}};
         }
         std::vector<RootNamespace> namespaces;
-        for (pugi::xml_attribute a : root.attributes())
+        for (mxpugi::xml_attribute a : root.attributes())
         {
             if (isNamespaceDecl(a.name()))
             {
@@ -61,14 +61,14 @@ Result<Document> parse(const pugi::xml_document &doc, const ParseContext &contex
     }
 }
 
-void serialize(const Document &d, pugi::xml_document &out)
+void serialize(const Document &d, mxpugi::xml_document &out)
 {
     out.reset();
-    pugi::xml_node decl = out.append_child(pugi::node_declaration);
+    mxpugi::xml_node decl = out.append_child(mxpugi::node_declaration);
     decl.append_attribute("version").set_value("1.0");
     decl.append_attribute("encoding").set_value("UTF-8");
     decl.append_attribute("standalone").set_value("no");
-    pugi::xml_node doctype = out.append_child(pugi::node_doctype);
+    mxpugi::xml_node doctype = out.append_child(mxpugi::node_doctype);
     if (d.isScorePartwise())
     {
         doctype.set_value(std::string{DoctypeScorePartwise}.c_str());
@@ -79,7 +79,7 @@ void serialize(const Document &d, pugi::xml_document &out)
         doctype.set_value(std::string{DoctypeScoreTimewise}.c_str());
         serializeScoreTimewise(d.asScoreTimewise(), out, "score-timewise");
     }
-    pugi::xml_node root = out.document_element();
+    mxpugi::xml_node root = out.document_element();
     for (const auto &ns : d.rootNamespaces())
     {
         // Only actual namespace declarations are written back: anything

@@ -31,7 +31,7 @@ void LyricSyllableGroup::setText(TextElementData value)
     m_text = std::move(value);
 }
 
-LyricSyllableGroup parseLyricSyllableGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+LyricSyllableGroup parseLyricSyllableGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     LyricSyllableGroup out;
     if (cursor && (cursorIs(cursor, "elision")))
@@ -50,7 +50,7 @@ LyricSyllableGroup parseLyricSyllableGroup(pugi::xml_node el, pugi::xml_node &cu
     return out;
 }
 
-void serializeLyricSyllableGroup(const LyricSyllableGroup &v, pugi::xml_node el)
+void serializeLyricSyllableGroup(const LyricSyllableGroup &v, mxpugi::xml_node el)
 {
     if (v.elisionSyllabicGroup())
     {

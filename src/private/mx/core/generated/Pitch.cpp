@@ -41,10 +41,10 @@ void Pitch::setOctave(Octave value)
     m_octave = std::move(value);
 }
 
-Pitch parsePitch(pugi::xml_node el, const ParseContext &context)
+Pitch parsePitch(mxpugi::xml_node el, const ParseContext &context)
 {
     Pitch out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -57,9 +57,9 @@ Pitch parsePitch(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePitchContent(Pitch &out, pugi::xml_node el, const ParseContext &context)
+void parsePitchContent(Pitch &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "step"))
     {
         out.setStep(parseValue<Step>(childText(cursor), context, cursor, nullptr));
@@ -93,13 +93,13 @@ void parsePitchContent(Pitch &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializePitch(const Pitch &v, pugi::xml_node parent, const char *tag)
+void serializePitch(const Pitch &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializePitchContent(v, el);
 }
 
-void serializePitchContent(const Pitch &v, pugi::xml_node el)
+void serializePitchContent(const Pitch &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "step", v.step().toString());
     if (v.alter())

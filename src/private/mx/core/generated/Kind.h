@@ -16,7 +16,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -104,12 +104,12 @@ class Kind final
     KindValue m_value{};
 };
 
-Kind parseKind(pugi::xml_node el, const ParseContext &context);
+Kind parseKind(mxpugi::xml_node el, const ParseContext &context);
 
-void parseKindContent(Kind &out, pugi::xml_node el, const ParseContext &context);
+void parseKindContent(Kind &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeKind(const Kind &v, pugi::xml_node parent, const char *tag);
+void serializeKind(const Kind &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeKindContent(const Kind &v, pugi::xml_node el);
+void serializeKindContent(const Kind &v, mxpugi::xml_node el);
 
 } // namespace mx::core

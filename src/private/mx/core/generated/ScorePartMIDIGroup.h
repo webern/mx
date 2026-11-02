@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -39,8 +39,8 @@ class ScorePartMIDIGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-ScorePartMIDIGroup parseScorePartMIDIGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+ScorePartMIDIGroup parseScorePartMIDIGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeScorePartMIDIGroup(const ScorePartMIDIGroup &v, pugi::xml_node el);
+void serializeScorePartMIDIGroup(const ScorePartMIDIGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

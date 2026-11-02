@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,8 +41,8 @@ class TimeChoiceGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-TimeChoiceGroup parseTimeChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+TimeChoiceGroup parseTimeChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeTimeChoiceGroup(const TimeChoiceGroup &v, pugi::xml_node el);
+void serializeTimeChoiceGroup(const TimeChoiceGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

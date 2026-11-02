@@ -146,10 +146,10 @@ void HarpPedals::setPedalTuning(OneOrMore<PedalTuning> value)
     m_pedalTuning = std::move(value);
 }
 
-HarpPedals parseHarpPedals(pugi::xml_node el, const ParseContext &context)
+HarpPedals parseHarpPedals(mxpugi::xml_node el, const ParseContext &context)
 {
     HarpPedals out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -213,9 +213,9 @@ HarpPedals parseHarpPedals(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseHarpPedalsContent(HarpPedals &out, pugi::xml_node el, const ParseContext &context)
+void parseHarpPedalsContent(HarpPedals &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (!cursorIs(cursor, "pedal-tuning"))
     {
         throwMissingOrMisplaced(el, cursor, "pedal-tuning");
@@ -237,9 +237,9 @@ void parseHarpPedalsContent(HarpPedals &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializeHarpPedals(const HarpPedals &v, pugi::xml_node parent, const char *tag)
+void serializeHarpPedals(const HarpPedals &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -291,7 +291,7 @@ void serializeHarpPedals(const HarpPedals &v, pugi::xml_node parent, const char 
     serializeHarpPedalsContent(v, el);
 }
 
-void serializeHarpPedalsContent(const HarpPedals &v, pugi::xml_node el)
+void serializeHarpPedalsContent(const HarpPedals &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.pedalTuning())
     {

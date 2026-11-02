@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -34,12 +34,12 @@ class MetronomeBeam final
     BeamValue m_value{};
 };
 
-MetronomeBeam parseMetronomeBeam(pugi::xml_node el, const ParseContext &context);
+MetronomeBeam parseMetronomeBeam(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el, const ParseContext &context);
+void parseMetronomeBeamContent(MetronomeBeam &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMetronomeBeam(const MetronomeBeam &v, pugi::xml_node parent, const char *tag);
+void serializeMetronomeBeam(const MetronomeBeam &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMetronomeBeamContent(const MetronomeBeam &v, pugi::xml_node el);
+void serializeMetronomeBeamContent(const MetronomeBeam &v, mxpugi::xml_node el);
 
 } // namespace mx::core

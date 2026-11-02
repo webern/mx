@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -37,12 +37,12 @@ class PedalTuning final
     Semitones m_pedalAlter{};
 };
 
-PedalTuning parsePedalTuning(pugi::xml_node el, const ParseContext &context);
+PedalTuning parsePedalTuning(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el, const ParseContext &context);
+void parsePedalTuningContent(PedalTuning &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePedalTuning(const PedalTuning &v, pugi::xml_node parent, const char *tag);
+void serializePedalTuning(const PedalTuning &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePedalTuningContent(const PedalTuning &v, pugi::xml_node el);
+void serializePedalTuningContent(const PedalTuning &v, mxpugi::xml_node el);
 
 } // namespace mx::core

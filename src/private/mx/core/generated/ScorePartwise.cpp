@@ -46,10 +46,10 @@ void ScorePartwise::setPart(OneOrMore<PartwisePart> value)
     m_part = std::move(value);
 }
 
-ScorePartwise parseScorePartwise(pugi::xml_node el, const ParseContext &context)
+ScorePartwise parseScorePartwise(mxpugi::xml_node el, const ParseContext &context)
 {
     ScorePartwise out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -69,9 +69,9 @@ ScorePartwise parseScorePartwise(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el, const ParseContext &context)
+void parseScorePartwiseContent(ScorePartwise &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "work") || cursorIs(cursor, "movement-number") ||
                    cursorIs(cursor, "movement-title") || cursorIs(cursor, "identification") ||
                    cursorIs(cursor, "defaults") || cursorIs(cursor, "credit") || cursorIs(cursor, "part-list")))
@@ -105,9 +105,9 @@ void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeScorePartwise(const ScorePartwise &v, pugi::xml_node parent, const char *tag)
+void serializeScorePartwise(const ScorePartwise &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.version())
     {
         setAttribute(el, "version", *v.version());
@@ -115,7 +115,7 @@ void serializeScorePartwise(const ScorePartwise &v, pugi::xml_node parent, const
     serializeScorePartwiseContent(v, el);
 }
 
-void serializeScorePartwiseContent(const ScorePartwise &v, pugi::xml_node el)
+void serializeScorePartwiseContent(const ScorePartwise &v, mxpugi::xml_node el)
 {
     serializeScoreHeaderGroup(v.scoreHeader(), el);
     for (const auto &item : v.part())

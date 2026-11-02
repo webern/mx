@@ -111,11 +111,11 @@ void PartGroup::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-PartGroup parsePartGroup(pugi::xml_node el, const ParseContext &context)
+PartGroup parsePartGroup(mxpugi::xml_node el, const ParseContext &context)
 {
     PartGroup out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -144,9 +144,9 @@ PartGroup parsePartGroup(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePartGroupContent(PartGroup &out, pugi::xml_node el, const ParseContext &context)
+void parsePartGroupContent(PartGroup &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "group-name"))
     {
         out.setGroupName(parseGroupName(cursor, context));
@@ -200,9 +200,9 @@ void parsePartGroupContent(PartGroup &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializePartGroup(const PartGroup &v, pugi::xml_node parent, const char *tag)
+void serializePartGroup(const PartGroup &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -211,7 +211,7 @@ void serializePartGroup(const PartGroup &v, pugi::xml_node parent, const char *t
     serializePartGroupContent(v, el);
 }
 
-void serializePartGroupContent(const PartGroup &v, pugi::xml_node el)
+void serializePartGroupContent(const PartGroup &v, mxpugi::xml_node el)
 {
     if (v.groupName())
     {

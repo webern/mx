@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,8 +41,8 @@ class SwingChoiceGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+SwingChoiceGroup parseSwingChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeSwingChoiceGroup(const SwingChoiceGroup &v, pugi::xml_node el);
+void serializeSwingChoiceGroup(const SwingChoiceGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

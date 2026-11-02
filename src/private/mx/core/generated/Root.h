@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -40,12 +40,12 @@ class Root final
     std::optional<HarmonyAlter> m_rootAlter;
 };
 
-Root parseRoot(pugi::xml_node el, const ParseContext &context);
+Root parseRoot(mxpugi::xml_node el, const ParseContext &context);
 
-void parseRootContent(Root &out, pugi::xml_node el, const ParseContext &context);
+void parseRootContent(Root &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeRoot(const Root &v, pugi::xml_node parent, const char *tag);
+void serializeRoot(const Root &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeRootContent(const Root &v, pugi::xml_node el);
+void serializeRootContent(const Root &v, mxpugi::xml_node el);
 
 } // namespace mx::core

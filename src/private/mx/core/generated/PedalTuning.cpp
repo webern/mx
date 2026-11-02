@@ -31,10 +31,10 @@ void PedalTuning::setPedalAlter(Semitones value)
     m_pedalAlter = std::move(value);
 }
 
-PedalTuning parsePedalTuning(pugi::xml_node el, const ParseContext &context)
+PedalTuning parsePedalTuning(mxpugi::xml_node el, const ParseContext &context)
 {
     PedalTuning out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -47,9 +47,9 @@ PedalTuning parsePedalTuning(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el, const ParseContext &context)
+void parsePedalTuningContent(PedalTuning &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "pedal-step"))
     {
         out.setPedalStep(parseValue<Step>(childText(cursor), context, cursor, nullptr));
@@ -78,13 +78,13 @@ void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el, const ParseCon
     }
 }
 
-void serializePedalTuning(const PedalTuning &v, pugi::xml_node parent, const char *tag)
+void serializePedalTuning(const PedalTuning &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializePedalTuningContent(v, el);
 }
 
-void serializePedalTuningContent(const PedalTuning &v, pugi::xml_node el)
+void serializePedalTuningContent(const PedalTuning &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "pedal-step", v.pedalStep().toString());
     writeTextElement(el, "pedal-alter", v.pedalAlter().toString());

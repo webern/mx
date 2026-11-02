@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,12 +41,12 @@ class Backup final
     EditorialGroup m_editorial{};
 };
 
-Backup parseBackup(pugi::xml_node el, const ParseContext &context);
+Backup parseBackup(mxpugi::xml_node el, const ParseContext &context);
 
-void parseBackupContent(Backup &out, pugi::xml_node el, const ParseContext &context);
+void parseBackupContent(Backup &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeBackup(const Backup &v, pugi::xml_node parent, const char *tag);
+void serializeBackup(const Backup &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeBackupContent(const Backup &v, pugi::xml_node el);
+void serializeBackupContent(const Backup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -51,12 +51,12 @@ void Supports::setValue(std::optional<std::string> value)
     m_value = std::move(value);
 }
 
-Supports parseSupports(pugi::xml_node el, const ParseContext &context)
+Supports parseSupports(mxpugi::xml_node el, const ParseContext &context)
 {
     Supports out;
     bool seen_type = false;
     bool seen_element = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -98,7 +98,7 @@ Supports parseSupports(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseSupportsContent(Supports &out, pugi::xml_node el, const ParseContext &context)
+void parseSupportsContent(Supports &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -108,9 +108,9 @@ void parseSupportsContent(Supports &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeSupports(const Supports &v, pugi::xml_node parent, const char *tag)
+void serializeSupports(const Supports &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     setAttribute(el, "element", v.element().toString());
     if (v.attribute())
@@ -124,7 +124,7 @@ void serializeSupports(const Supports &v, pugi::xml_node parent, const char *tag
     serializeSupportsContent(v, el);
 }
 
-void serializeSupportsContent(const Supports &v, pugi::xml_node el)
+void serializeSupportsContent(const Supports &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

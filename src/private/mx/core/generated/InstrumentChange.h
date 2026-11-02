@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,12 +41,12 @@ class InstrumentChange final
     VirtualInstrumentDataGroup m_virtualInstrumentData{};
 };
 
-InstrumentChange parseInstrumentChange(pugi::xml_node el, const ParseContext &context);
+InstrumentChange parseInstrumentChange(mxpugi::xml_node el, const ParseContext &context);
 
-void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el, const ParseContext &context);
+void parseInstrumentChangeContent(InstrumentChange &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeInstrumentChange(const InstrumentChange &v, pugi::xml_node parent, const char *tag);
+void serializeInstrumentChange(const InstrumentChange &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeInstrumentChangeContent(const InstrumentChange &v, pugi::xml_node el);
+void serializeInstrumentChangeContent(const InstrumentChange &v, mxpugi::xml_node el);
 
 } // namespace mx::core

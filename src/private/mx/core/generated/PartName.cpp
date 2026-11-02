@@ -131,10 +131,10 @@ void PartName::setValue(std::string value)
     m_value = std::move(value);
 }
 
-PartName parsePartName(pugi::xml_node el, const ParseContext &context)
+PartName parsePartName(mxpugi::xml_node el, const ParseContext &context)
 {
     PartName out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -194,7 +194,7 @@ PartName parsePartName(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePartNameContent(PartName &out, pugi::xml_node el, const ParseContext &context)
+void parsePartNameContent(PartName &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -203,9 +203,9 @@ void parsePartNameContent(PartName &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializePartName(const PartName &v, pugi::xml_node parent, const char *tag)
+void serializePartName(const PartName &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -253,7 +253,7 @@ void serializePartName(const PartName &v, pugi::xml_node parent, const char *tag
     serializePartNameContent(v, el);
 }
 
-void serializePartNameContent(const PartName &v, pugi::xml_node el)
+void serializePartNameContent(const PartName &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

@@ -61,10 +61,10 @@ void Stick::setStickMaterial(StickMaterial value)
     m_stickMaterial = std::move(value);
 }
 
-Stick parseStick(pugi::xml_node el, const ParseContext &context)
+Stick parseStick(mxpugi::xml_node el, const ParseContext &context)
 {
     Stick out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -92,9 +92,9 @@ Stick parseStick(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseStickContent(Stick &out, pugi::xml_node el, const ParseContext &context)
+void parseStickContent(Stick &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "stick-type"))
     {
         out.setStickType(parseValue<StickType>(childText(cursor), context, cursor, nullptr));
@@ -123,9 +123,9 @@ void parseStickContent(Stick &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeStick(const Stick &v, pugi::xml_node parent, const char *tag)
+void serializeStick(const Stick &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.tip())
     {
         setAttribute(el, "tip", v.tip()->toString());
@@ -141,7 +141,7 @@ void serializeStick(const Stick &v, pugi::xml_node parent, const char *tag)
     serializeStickContent(v, el);
 }
 
-void serializeStickContent(const Stick &v, pugi::xml_node el)
+void serializeStickContent(const Stick &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "stick-type", v.stickType().toString());
     writeTextElement(el, "stick-material", v.stickMaterial().toString());

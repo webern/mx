@@ -31,11 +31,11 @@ void Distance::setValue(Tenths value)
     m_value = std::move(value);
 }
 
-Distance parseDistance(pugi::xml_node el, const ParseContext &context)
+Distance parseDistance(mxpugi::xml_node el, const ParseContext &context)
 {
     Distance out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,7 +60,7 @@ Distance parseDistance(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseDistanceContent(Distance &out, pugi::xml_node el, const ParseContext &context)
+void parseDistanceContent(Distance &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<Tenths>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -69,14 +69,14 @@ void parseDistanceContent(Distance &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeDistance(const Distance &v, pugi::xml_node parent, const char *tag)
+void serializeDistance(const Distance &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     serializeDistanceContent(v, el);
 }
 
-void serializeDistanceContent(const Distance &v, pugi::xml_node el)
+void serializeDistanceContent(const Distance &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

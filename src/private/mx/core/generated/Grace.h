@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -45,12 +45,12 @@ class Grace final
     std::optional<YesNo> m_slash;
 };
 
-Grace parseGrace(pugi::xml_node el, const ParseContext &context);
+Grace parseGrace(mxpugi::xml_node el, const ParseContext &context);
 
-void parseGraceContent(Grace &out, pugi::xml_node el, const ParseContext &context);
+void parseGraceContent(Grace &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeGrace(const Grace &v, pugi::xml_node parent, const char *tag);
+void serializeGrace(const Grace &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeGraceContent(const Grace &v, pugi::xml_node el);
+void serializeGraceContent(const Grace &v, mxpugi::xml_node el);
 
 } // namespace mx::core

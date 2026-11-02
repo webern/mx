@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -50,12 +50,12 @@ class ForPart final
     PartTranspose m_partTranspose{};
 };
 
-ForPart parseForPart(pugi::xml_node el, const ParseContext &context);
+ForPart parseForPart(mxpugi::xml_node el, const ParseContext &context);
 
-void parseForPartContent(ForPart &out, pugi::xml_node el, const ParseContext &context);
+void parseForPartContent(ForPart &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeForPart(const ForPart &v, pugi::xml_node parent, const char *tag);
+void serializeForPart(const ForPart &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeForPartContent(const ForPart &v, pugi::xml_node el);
+void serializeForPartContent(const ForPart &v, mxpugi::xml_node el);
 
 } // namespace mx::core

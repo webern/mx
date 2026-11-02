@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -47,12 +47,12 @@ class Figure final
     EditorialGroup m_editorial{};
 };
 
-Figure parseFigure(pugi::xml_node el, const ParseContext &context);
+Figure parseFigure(mxpugi::xml_node el, const ParseContext &context);
 
-void parseFigureContent(Figure &out, pugi::xml_node el, const ParseContext &context);
+void parseFigureContent(Figure &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeFigure(const Figure &v, pugi::xml_node parent, const char *tag);
+void serializeFigure(const Figure &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeFigureContent(const Figure &v, pugi::xml_node el);
+void serializeFigureContent(const Figure &v, mxpugi::xml_node el);
 
 } // namespace mx::core

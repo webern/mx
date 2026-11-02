@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -35,12 +35,12 @@ class Tie final
     std::optional<TimeOnly> m_timeOnly;
 };
 
-Tie parseTie(pugi::xml_node el, const ParseContext &context);
+Tie parseTie(mxpugi::xml_node el, const ParseContext &context);
 
-void parseTieContent(Tie &out, pugi::xml_node el, const ParseContext &context);
+void parseTieContent(Tie &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeTie(const Tie &v, pugi::xml_node parent, const char *tag);
+void serializeTie(const Tie &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeTieContent(const Tie &v, pugi::xml_node el);
+void serializeTieContent(const Tie &v, mxpugi::xml_node el);
 
 } // namespace mx::core

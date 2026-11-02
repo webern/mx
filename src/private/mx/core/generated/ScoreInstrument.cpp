@@ -51,11 +51,11 @@ void ScoreInstrument::setVirtualInstrumentData(VirtualInstrumentDataGroup value)
     m_virtualInstrumentData = std::move(value);
 }
 
-ScoreInstrument parseScoreInstrument(pugi::xml_node el, const ParseContext &context)
+ScoreInstrument parseScoreInstrument(mxpugi::xml_node el, const ParseContext &context)
 {
     ScoreInstrument out;
     bool seen_id = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -80,9 +80,9 @@ ScoreInstrument parseScoreInstrument(pugi::xml_node el, const ParseContext &cont
     return out;
 }
 
-void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el, const ParseContext &context)
+void parseScoreInstrumentContent(ScoreInstrument &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "instrument-name"))
     {
         out.setInstrumentName(std::string{childText(cursor)});
@@ -114,14 +114,14 @@ void parseScoreInstrumentContent(ScoreInstrument &out, pugi::xml_node el, const 
     }
 }
 
-void serializeScoreInstrument(const ScoreInstrument &v, pugi::xml_node parent, const char *tag)
+void serializeScoreInstrument(const ScoreInstrument &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "id", v.id().toString());
     serializeScoreInstrumentContent(v, el);
 }
 
-void serializeScoreInstrumentContent(const ScoreInstrument &v, pugi::xml_node el)
+void serializeScoreInstrumentContent(const ScoreInstrument &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "instrument-name", v.instrumentName());
     if (v.instrumentAbbreviation())

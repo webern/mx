@@ -10,7 +10,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -82,8 +82,8 @@ class BendChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-BendChoice parseBendChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+BendChoice parseBendChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeBendChoice(const BendChoice &v, pugi::xml_node el);
+void serializeBendChoice(const BendChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

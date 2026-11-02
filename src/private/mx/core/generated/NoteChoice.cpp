@@ -31,7 +31,7 @@ NoteChoice NoteChoice::normalNoteGroup(NormalNoteGroup value)
     return NoteChoice{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-NoteChoice parseNoteChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+NoteChoice parseNoteChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "grace")))
     {
@@ -53,7 +53,7 @@ NoteChoice parseNoteChoice(pugi::xml_node el, pugi::xml_node &cursor, const Pars
     throwMissingElement(el, "grace");
 }
 
-void serializeNoteChoice(const NoteChoice &v, pugi::xml_node el)
+void serializeNoteChoice(const NoteChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

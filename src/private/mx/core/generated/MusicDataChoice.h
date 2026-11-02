@@ -21,7 +21,7 @@
 #include <memory>
 #include <variant>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -277,8 +277,8 @@ class MusicDataChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-MusicDataChoice parseMusicDataChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+MusicDataChoice parseMusicDataChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeMusicDataChoice(const MusicDataChoice &v, pugi::xml_node el);
+void serializeMusicDataChoice(const MusicDataChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

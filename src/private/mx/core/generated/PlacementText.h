@@ -13,7 +13,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -66,12 +66,12 @@ class PlacementText final
     std::string m_value{};
 };
 
-PlacementText parsePlacementText(pugi::xml_node el, const ParseContext &context);
+PlacementText parsePlacementText(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePlacementTextContent(PlacementText &out, pugi::xml_node el, const ParseContext &context);
+void parsePlacementTextContent(PlacementText &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePlacementText(const PlacementText &v, pugi::xml_node parent, const char *tag);
+void serializePlacementText(const PlacementText &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePlacementTextContent(const PlacementText &v, pugi::xml_node el);
+void serializePlacementTextContent(const PlacementText &v, mxpugi::xml_node el);
 
 } // namespace mx::core

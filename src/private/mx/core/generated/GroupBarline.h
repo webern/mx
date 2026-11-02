@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -33,12 +33,12 @@ class GroupBarline final
     GroupBarlineValue m_value{};
 };
 
-GroupBarline parseGroupBarline(pugi::xml_node el, const ParseContext &context);
+GroupBarline parseGroupBarline(mxpugi::xml_node el, const ParseContext &context);
 
-void parseGroupBarlineContent(GroupBarline &out, pugi::xml_node el, const ParseContext &context);
+void parseGroupBarlineContent(GroupBarline &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeGroupBarline(const GroupBarline &v, pugi::xml_node parent, const char *tag);
+void serializeGroupBarline(const GroupBarline &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeGroupBarlineContent(const GroupBarline &v, pugi::xml_node el);
+void serializeGroupBarlineContent(const GroupBarline &v, mxpugi::xml_node el);
 
 } // namespace mx::core

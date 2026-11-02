@@ -36,11 +36,11 @@ void TimewisePart::setMusicData(std::vector<MusicDataChoice> value)
     m_musicData = std::move(value);
 }
 
-TimewisePart parseTimewisePart(pugi::xml_node el, const ParseContext &context)
+TimewisePart parseTimewisePart(mxpugi::xml_node el, const ParseContext &context)
 {
     TimewisePart out;
     bool seen_id = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -65,9 +65,9 @@ TimewisePart parseTimewisePart(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTimewisePartContent(TimewisePart &out, pugi::xml_node el, const ParseContext &context)
+void parseTimewisePartContent(TimewisePart &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "note") || cursorIs(cursor, "backup") || cursorIs(cursor, "forward") ||
                       cursorIs(cursor, "direction") || cursorIs(cursor, "attributes") || cursorIs(cursor, "harmony") ||
                       cursorIs(cursor, "figured-bass") || cursorIs(cursor, "print") || cursorIs(cursor, "sound") ||
@@ -90,14 +90,14 @@ void parseTimewisePartContent(TimewisePart &out, pugi::xml_node el, const ParseC
     }
 }
 
-void serializeTimewisePart(const TimewisePart &v, pugi::xml_node parent, const char *tag)
+void serializeTimewisePart(const TimewisePart &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "id", v.id().toString());
     serializeTimewisePartContent(v, el);
 }
 
-void serializeTimewisePartContent(const TimewisePart &v, pugi::xml_node el)
+void serializeTimewisePartContent(const TimewisePart &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.musicData())
     {

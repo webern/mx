@@ -41,7 +41,7 @@ void SwingChoiceGroup::setSwingType(std::optional<SwingTypeValue> value)
     m_swingType = std::move(value);
 }
 
-SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+SwingChoiceGroup parseSwingChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     SwingChoiceGroup out;
     if (cursorIs(cursor, "first"))
@@ -70,7 +70,7 @@ SwingChoiceGroup parseSwingChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor
     return out;
 }
 
-void serializeSwingChoiceGroup(const SwingChoiceGroup &v, pugi::xml_node el)
+void serializeSwingChoiceGroup(const SwingChoiceGroup &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "first", formatInt(v.first()));
     writeTextElement(el, "second", formatInt(v.second()));

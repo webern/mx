@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,12 +41,12 @@ class ScorePartwise final
     OneOrMore<PartwisePart> m_part;
 };
 
-ScorePartwise parseScorePartwise(pugi::xml_node el, const ParseContext &context);
+ScorePartwise parseScorePartwise(mxpugi::xml_node el, const ParseContext &context);
 
-void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el, const ParseContext &context);
+void parseScorePartwiseContent(ScorePartwise &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeScorePartwise(const ScorePartwise &v, pugi::xml_node parent, const char *tag);
+void serializeScorePartwise(const ScorePartwise &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeScorePartwiseContent(const ScorePartwise &v, pugi::xml_node el);
+void serializeScorePartwiseContent(const ScorePartwise &v, mxpugi::xml_node el);
 
 } // namespace mx::core

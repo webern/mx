@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -36,12 +36,12 @@ class LineWidth final
     Tenths m_value{};
 };
 
-LineWidth parseLineWidth(pugi::xml_node el, const ParseContext &context);
+LineWidth parseLineWidth(mxpugi::xml_node el, const ParseContext &context);
 
-void parseLineWidthContent(LineWidth &out, pugi::xml_node el, const ParseContext &context);
+void parseLineWidthContent(LineWidth &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeLineWidth(const LineWidth &v, pugi::xml_node parent, const char *tag);
+void serializeLineWidth(const LineWidth &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeLineWidthContent(const LineWidth &v, pugi::xml_node el);
+void serializeLineWidthContent(const LineWidth &v, mxpugi::xml_node el);
 
 } // namespace mx::core

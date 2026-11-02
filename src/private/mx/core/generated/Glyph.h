@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -39,12 +39,12 @@ class Glyph final
     SmuflGlyphName m_value{};
 };
 
-Glyph parseGlyph(pugi::xml_node el, const ParseContext &context);
+Glyph parseGlyph(mxpugi::xml_node el, const ParseContext &context);
 
-void parseGlyphContent(Glyph &out, pugi::xml_node el, const ParseContext &context);
+void parseGlyphContent(Glyph &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeGlyph(const Glyph &v, pugi::xml_node parent, const char *tag);
+void serializeGlyph(const Glyph &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeGlyphContent(const Glyph &v, pugi::xml_node el);
+void serializeGlyphContent(const Glyph &v, mxpugi::xml_node el);
 
 } // namespace mx::core

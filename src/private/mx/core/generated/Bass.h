@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -48,12 +48,12 @@ class Bass final
     std::optional<HarmonyAlter> m_bassAlter;
 };
 
-Bass parseBass(pugi::xml_node el, const ParseContext &context);
+Bass parseBass(mxpugi::xml_node el, const ParseContext &context);
 
-void parseBassContent(Bass &out, pugi::xml_node el, const ParseContext &context);
+void parseBassContent(Bass &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeBass(const Bass &v, pugi::xml_node parent, const char *tag);
+void serializeBass(const Bass &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeBassContent(const Bass &v, pugi::xml_node el);
+void serializeBassContent(const Bass &v, mxpugi::xml_node el);
 
 } // namespace mx::core
