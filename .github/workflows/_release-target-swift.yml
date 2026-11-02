@@ -74,7 +74,7 @@ jobs:
       # links a stock pugixml does not get duplicate symbols. Every merged slice must
       # therefore be free of global pugi:: symbols; the mxpugi:: count is shown
       # so an empty archive cannot pass. Same check as `make symbol-check`.
-      - name: Check slices for global pugi:: symbols
+      - name: "Check slices for global pugi:: symbols"
         run: |
           set -euo pipefail
           status=0

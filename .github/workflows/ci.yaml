@@ -98,7 +98,7 @@ jobs:
 
       # mx compiles pugixml under its private mxpugi namespace; no built
       # archive may export a global pugi:: symbol (issue #478).
-      - name: Symbol check (no global pugi:: symbols)
+      - name: "Symbol check (no global pugi:: symbols)"
         run: make symbol-check
 
   # mx::api cross-compiled to WebAssembly via the pinned mx-sdk emsdk install
@@ -172,7 +172,7 @@ jobs:
       - name: api suite (mxtest + examples)
         run: make api-test
 
-      - name: Symbol check (no global pugi:: symbols)
+      - name: "Symbol check (no global pugi:: symbols)"
         run: make symbol-check
 
       - name: api corpus round-trip (regression mode)
