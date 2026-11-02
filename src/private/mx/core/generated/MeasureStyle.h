@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -68,12 +68,12 @@ class MeasureStyle final
     MeasureStyleChoice m_choice{};
 };
 
-MeasureStyle parseMeasureStyle(pugi::xml_node el, const ParseContext &context);
+MeasureStyle parseMeasureStyle(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMeasureStyleContent(MeasureStyle &out, pugi::xml_node el, const ParseContext &context);
+void parseMeasureStyleContent(MeasureStyle &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMeasureStyle(const MeasureStyle &v, pugi::xml_node parent, const char *tag);
+void serializeMeasureStyle(const MeasureStyle &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMeasureStyleContent(const MeasureStyle &v, pugi::xml_node el);
+void serializeMeasureStyleContent(const MeasureStyle &v, mxpugi::xml_node el);
 
 } // namespace mx::core

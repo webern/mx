@@ -141,12 +141,12 @@ void Bracket::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Bracket parseBracket(pugi::xml_node el, const ParseContext &context)
+Bracket parseBracket(mxpugi::xml_node el, const ParseContext &context)
 {
     Bracket out;
     bool seen_type = false;
     bool seen_lineEnd = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -224,7 +224,7 @@ Bracket parseBracket(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBracketContent(Bracket &out, pugi::xml_node el, const ParseContext &context)
+void parseBracketContent(Bracket &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -234,9 +234,9 @@ void parseBracketContent(Bracket &out, pugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeBracket(const Bracket &v, pugi::xml_node parent, const char *tag)
+void serializeBracket(const Bracket &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -286,7 +286,7 @@ void serializeBracket(const Bracket &v, pugi::xml_node parent, const char *tag)
     serializeBracketContent(v, el);
 }
 
-void serializeBracketContent(const Bracket &v, pugi::xml_node el)
+void serializeBracketContent(const Bracket &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

@@ -121,10 +121,10 @@ void NumeralRoot::setValue(NumeralValue value)
     m_value = std::move(value);
 }
 
-NumeralRoot parseNumeralRoot(pugi::xml_node el, const ParseContext &context)
+NumeralRoot parseNumeralRoot(mxpugi::xml_node el, const ParseContext &context)
 {
     NumeralRoot out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ NumeralRoot parseNumeralRoot(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseNumeralRootContent(NumeralRoot &out, pugi::xml_node el, const ParseContext &context)
+void parseNumeralRootContent(NumeralRoot &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<NumeralValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseNumeralRootContent(NumeralRoot &out, pugi::xml_node el, const ParseCon
     }
 }
 
-void serializeNumeralRoot(const NumeralRoot &v, pugi::xml_node parent, const char *tag)
+void serializeNumeralRoot(const NumeralRoot &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.text())
     {
         setAttribute(el, "text", *v.text());
@@ -235,7 +235,7 @@ void serializeNumeralRoot(const NumeralRoot &v, pugi::xml_node parent, const cha
     serializeNumeralRootContent(v, el);
 }
 
-void serializeNumeralRootContent(const NumeralRoot &v, pugi::xml_node el)
+void serializeNumeralRootContent(const NumeralRoot &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

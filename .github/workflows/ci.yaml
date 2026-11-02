@@ -96,6 +96,11 @@ jobs:
       - name: All C++ suites (core roundtrip + unit, api mxtest + examples + roundtrip)
         run: make test-all
 
+      # mx compiles pugixml under its private mxpugi namespace; no built
+      # archive may export a global pugi:: symbol (issue #478).
+      - name: "Symbol check (no global pugi:: symbols)"
+        run: make symbol-check
+
   # mx::api cross-compiled to WebAssembly via the pinned mx-sdk emsdk install
   # (#386) -- denigma (rpatters1/denigma) depends on this path staying green.
   emscripten:
@@ -166,6 +171,9 @@ jobs:
 
       - name: api suite (mxtest + examples)
         run: make api-test
+
+      - name: "Symbol check (no global pugi:: symbols)"
+        run: make symbol-check
 
       - name: api corpus round-trip (regression mode)
         run: make api-roundtrip

@@ -21,7 +21,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -98,12 +98,12 @@ class Barline final
     std::optional<Repeat> m_repeat;
 };
 
-Barline parseBarline(pugi::xml_node el, const ParseContext &context);
+Barline parseBarline(mxpugi::xml_node el, const ParseContext &context);
 
-void parseBarlineContent(Barline &out, pugi::xml_node el, const ParseContext &context);
+void parseBarlineContent(Barline &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeBarline(const Barline &v, pugi::xml_node parent, const char *tag);
+void serializeBarline(const Barline &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeBarlineContent(const Barline &v, pugi::xml_node el);
+void serializeBarlineContent(const Barline &v, mxpugi::xml_node el);
 
 } // namespace mx::core

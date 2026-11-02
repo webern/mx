@@ -226,10 +226,10 @@ void FiguredBass::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-FiguredBass parseFiguredBass(pugi::xml_node el, const ParseContext &context)
+FiguredBass parseFiguredBass(mxpugi::xml_node el, const ParseContext &context)
 {
     FiguredBass out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -317,9 +317,9 @@ FiguredBass parseFiguredBass(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el, const ParseContext &context)
+void parseFiguredBassContent(FiguredBass &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (!cursorIs(cursor, "figure"))
     {
         throwMissingOrMisplaced(el, cursor, "figure");
@@ -351,9 +351,9 @@ void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el, const ParseCon
     }
 }
 
-void serializeFiguredBass(const FiguredBass &v, pugi::xml_node parent, const char *tag)
+void serializeFiguredBass(const FiguredBass &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.parentheses())
     {
         setAttribute(el, "parentheses", v.parentheses()->toString());
@@ -429,7 +429,7 @@ void serializeFiguredBass(const FiguredBass &v, pugi::xml_node parent, const cha
     serializeFiguredBassContent(v, el);
 }
 
-void serializeFiguredBassContent(const FiguredBass &v, pugi::xml_node el)
+void serializeFiguredBassContent(const FiguredBass &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.figure())
     {

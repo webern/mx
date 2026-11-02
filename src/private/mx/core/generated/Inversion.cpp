@@ -121,10 +121,10 @@ void Inversion::setValue(int value)
     m_value = std::move(value);
 }
 
-Inversion parseInversion(pugi::xml_node el, const ParseContext &context)
+Inversion parseInversion(mxpugi::xml_node el, const ParseContext &context)
 {
     Inversion out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ Inversion parseInversion(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseInversionContent(Inversion &out, pugi::xml_node el, const ParseContext &context)
+void parseInversionContent(Inversion &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseInversionContent(Inversion &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeInversion(const Inversion &v, pugi::xml_node parent, const char *tag)
+void serializeInversion(const Inversion &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.text())
     {
         setAttribute(el, "text", *v.text());
@@ -235,7 +235,7 @@ void serializeInversion(const Inversion &v, pugi::xml_node parent, const char *t
     serializeInversionContent(v, el);
 }
 
-void serializeInversionContent(const Inversion &v, pugi::xml_node el)
+void serializeInversionContent(const Inversion &v, mxpugi::xml_node el)
 {
     setText(el, formatInt(v.value()));
 }

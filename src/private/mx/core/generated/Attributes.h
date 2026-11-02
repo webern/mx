@@ -18,7 +18,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -83,12 +83,12 @@ class Attributes final
     std::vector<MeasureStyle> m_measureStyle;
 };
 
-Attributes parseAttributes(pugi::xml_node el, const ParseContext &context);
+Attributes parseAttributes(mxpugi::xml_node el, const ParseContext &context);
 
-void parseAttributesContent(Attributes &out, pugi::xml_node el, const ParseContext &context);
+void parseAttributesContent(Attributes &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeAttributes(const Attributes &v, pugi::xml_node parent, const char *tag);
+void serializeAttributes(const Attributes &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeAttributesContent(const Attributes &v, pugi::xml_node el);
+void serializeAttributesContent(const Attributes &v, mxpugi::xml_node el);
 
 } // namespace mx::core

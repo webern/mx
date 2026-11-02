@@ -14,8 +14,8 @@
 #include "mx/api/Diagnostics.h"
 #include "mx/api/MusicXml.h"
 #include "mx/api/ScoreData.h"
+#include "mxpugi/mxpugi.hpp"
 #include "mxtest/api/TestHelpers.h"
-#include "pugixml.hpp"
 
 #include <string>
 #include <utility>
@@ -69,7 +69,7 @@ inline void addStop(NoteData &ioNote, SpannerNumber inNumber)
 inline std::vector<std::pair<std::string, std::string>> tupletSequence(const std::string &inXml)
 {
     std::vector<std::pair<std::string, std::string>> result;
-    pugi::xml_document xdoc;
+    mxpugi::xml_document xdoc;
     if (!xdoc.load_string(inXml.c_str()))
     {
         return result;

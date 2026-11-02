@@ -31,10 +31,10 @@ void NoteType::setValue(NoteTypeValue value)
     m_value = std::move(value);
 }
 
-NoteType parseNoteType(pugi::xml_node el, const ParseContext &context)
+NoteType parseNoteType(mxpugi::xml_node el, const ParseContext &context)
 {
     NoteType out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ NoteType parseNoteType(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseNoteTypeContent(NoteType &out, pugi::xml_node el, const ParseContext &context)
+void parseNoteTypeContent(NoteType &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<NoteTypeValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseNoteTypeContent(NoteType &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeNoteType(const NoteType &v, pugi::xml_node parent, const char *tag)
+void serializeNoteType(const NoteType &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.size())
     {
         setAttribute(el, "size", v.size()->toString());
@@ -73,7 +73,7 @@ void serializeNoteType(const NoteType &v, pugi::xml_node parent, const char *tag
     serializeNoteTypeContent(v, el);
 }
 
-void serializeNoteTypeContent(const NoteType &v, pugi::xml_node el)
+void serializeNoteTypeContent(const NoteType &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

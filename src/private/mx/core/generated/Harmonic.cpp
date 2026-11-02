@@ -141,10 +141,10 @@ void Harmonic::setChoice2(std::optional<HarmonicChoice2> value)
     m_choice2 = std::move(value);
 }
 
-Harmonic parseHarmonic(pugi::xml_node el, const ParseContext &context)
+Harmonic parseHarmonic(mxpugi::xml_node el, const ParseContext &context)
 {
     Harmonic out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -204,9 +204,9 @@ Harmonic parseHarmonic(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseHarmonicContent(Harmonic &out, pugi::xml_node el, const ParseContext &context)
+void parseHarmonicContent(Harmonic &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "natural") || cursorIs(cursor, "artificial")))
     {
         out.setChoice(parseHarmonicChoice(el, cursor, context));
@@ -227,9 +227,9 @@ void parseHarmonicContent(Harmonic &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeHarmonic(const Harmonic &v, pugi::xml_node parent, const char *tag)
+void serializeHarmonic(const Harmonic &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.printObject())
     {
         setAttribute(el, "print-object", v.printObject()->toString());
@@ -277,7 +277,7 @@ void serializeHarmonic(const Harmonic &v, pugi::xml_node parent, const char *tag
     serializeHarmonicContent(v, el);
 }
 
-void serializeHarmonicContent(const Harmonic &v, pugi::xml_node el)
+void serializeHarmonicContent(const Harmonic &v, mxpugi::xml_node el)
 {
     if (v.choice())
     {

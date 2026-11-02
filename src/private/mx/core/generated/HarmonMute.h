@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -70,12 +70,12 @@ class HarmonMute final
     HarmonClosed m_harmonClosed{};
 };
 
-HarmonMute parseHarmonMute(pugi::xml_node el, const ParseContext &context);
+HarmonMute parseHarmonMute(mxpugi::xml_node el, const ParseContext &context);
 
-void parseHarmonMuteContent(HarmonMute &out, pugi::xml_node el, const ParseContext &context);
+void parseHarmonMuteContent(HarmonMute &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeHarmonMute(const HarmonMute &v, pugi::xml_node parent, const char *tag);
+void serializeHarmonMute(const HarmonMute &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeHarmonMuteContent(const HarmonMute &v, pugi::xml_node el);
+void serializeHarmonMuteContent(const HarmonMute &v, mxpugi::xml_node el);
 
 } // namespace mx::core

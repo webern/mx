@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -36,12 +36,12 @@ class BeatUnitTied final
     BeatUnitGroup m_beatUnit{};
 };
 
-BeatUnitTied parseBeatUnitTied(pugi::xml_node el, const ParseContext &context);
+BeatUnitTied parseBeatUnitTied(mxpugi::xml_node el, const ParseContext &context);
 
-void parseBeatUnitTiedContent(BeatUnitTied &out, pugi::xml_node el, const ParseContext &context);
+void parseBeatUnitTiedContent(BeatUnitTied &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeBeatUnitTied(const BeatUnitTied &v, pugi::xml_node parent, const char *tag);
+void serializeBeatUnitTied(const BeatUnitTied &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeBeatUnitTiedContent(const BeatUnitTied &v, pugi::xml_node el);
+void serializeBeatUnitTiedContent(const BeatUnitTied &v, mxpugi::xml_node el);
 
 } // namespace mx::core

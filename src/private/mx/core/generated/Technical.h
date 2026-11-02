@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -39,12 +39,12 @@ class Technical final
     std::vector<TechnicalChoice> m_choice;
 };
 
-Technical parseTechnical(pugi::xml_node el, const ParseContext &context);
+Technical parseTechnical(mxpugi::xml_node el, const ParseContext &context);
 
-void parseTechnicalContent(Technical &out, pugi::xml_node el, const ParseContext &context);
+void parseTechnicalContent(Technical &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeTechnical(const Technical &v, pugi::xml_node parent, const char *tag);
+void serializeTechnical(const Technical &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeTechnicalContent(const Technical &v, pugi::xml_node el);
+void serializeTechnicalContent(const Technical &v, mxpugi::xml_node el);
 
 } // namespace mx::core

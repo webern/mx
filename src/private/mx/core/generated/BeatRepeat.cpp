@@ -51,11 +51,11 @@ void BeatRepeat::setSlash(std::optional<SlashGroup> value)
     m_slash = std::move(value);
 }
 
-BeatRepeat parseBeatRepeat(pugi::xml_node el, const ParseContext &context)
+BeatRepeat parseBeatRepeat(mxpugi::xml_node el, const ParseContext &context)
 {
     BeatRepeat out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -88,9 +88,9 @@ BeatRepeat parseBeatRepeat(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el, const ParseContext &context)
+void parseBeatRepeatContent(BeatRepeat &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "slash-type") || cursorIs(cursor, "except-voice")))
     {
         out.setSlash(parseSlashGroup(el, cursor, context));
@@ -105,9 +105,9 @@ void parseBeatRepeatContent(BeatRepeat &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializeBeatRepeat(const BeatRepeat &v, pugi::xml_node parent, const char *tag)
+void serializeBeatRepeat(const BeatRepeat &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.slashes())
     {
@@ -120,7 +120,7 @@ void serializeBeatRepeat(const BeatRepeat &v, pugi::xml_node parent, const char 
     serializeBeatRepeatContent(v, el);
 }
 
-void serializeBeatRepeatContent(const BeatRepeat &v, pugi::xml_node el)
+void serializeBeatRepeatContent(const BeatRepeat &v, mxpugi::xml_node el)
 {
     if (v.slash())
     {

@@ -141,11 +141,11 @@ void Wedge::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Wedge parseWedge(pugi::xml_node el, const ParseContext &context)
+Wedge parseWedge(mxpugi::xml_node el, const ParseContext &context)
 {
     Wedge out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -218,7 +218,7 @@ Wedge parseWedge(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseWedgeContent(Wedge &out, pugi::xml_node el, const ParseContext &context)
+void parseWedgeContent(Wedge &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -228,9 +228,9 @@ void parseWedgeContent(Wedge &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeWedge(const Wedge &v, pugi::xml_node parent, const char *tag)
+void serializeWedge(const Wedge &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -283,7 +283,7 @@ void serializeWedge(const Wedge &v, pugi::xml_node parent, const char *tag)
     serializeWedgeContent(v, el);
 }
 
-void serializeWedgeContent(const Wedge &v, pugi::xml_node el)
+void serializeWedgeContent(const Wedge &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

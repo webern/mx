@@ -196,10 +196,10 @@ void Dynamics::setChoice(std::vector<DynamicsChoice> value)
     m_choice = std::move(value);
 }
 
-Dynamics parseDynamics(pugi::xml_node el, const ParseContext &context)
+Dynamics parseDynamics(mxpugi::xml_node el, const ParseContext &context)
 {
     Dynamics out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -283,9 +283,9 @@ Dynamics parseDynamics(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseDynamicsContent(Dynamics &out, pugi::xml_node el, const ParseContext &context)
+void parseDynamicsContent(Dynamics &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     while (cursor &&
            (cursorIs(cursor, "p") || cursorIs(cursor, "pp") || cursorIs(cursor, "ppp") || cursorIs(cursor, "pppp") ||
             cursorIs(cursor, "ppppp") || cursorIs(cursor, "pppppp") || cursorIs(cursor, "f") ||
@@ -315,9 +315,9 @@ void parseDynamicsContent(Dynamics &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeDynamics(const Dynamics &v, pugi::xml_node parent, const char *tag)
+void serializeDynamics(const Dynamics &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -389,7 +389,7 @@ void serializeDynamics(const Dynamics &v, pugi::xml_node parent, const char *tag
     serializeDynamicsContent(v, el);
 }
 
-void serializeDynamicsContent(const Dynamics &v, pugi::xml_node el)
+void serializeDynamicsContent(const Dynamics &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.choice())
     {

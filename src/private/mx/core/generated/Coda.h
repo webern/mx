@@ -17,7 +17,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -76,12 +76,12 @@ class Coda final
     std::optional<Token> m_id;
 };
 
-Coda parseCoda(pugi::xml_node el, const ParseContext &context);
+Coda parseCoda(mxpugi::xml_node el, const ParseContext &context);
 
-void parseCodaContent(Coda &out, pugi::xml_node el, const ParseContext &context);
+void parseCodaContent(Coda &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeCoda(const Coda &v, pugi::xml_node parent, const char *tag);
+void serializeCoda(const Coda &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeCodaContent(const Coda &v, pugi::xml_node el);
+void serializeCodaContent(const Coda &v, mxpugi::xml_node el);
 
 } // namespace mx::core

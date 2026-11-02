@@ -31,10 +31,10 @@ void PageMargins::setAllMargins(AllMarginsGroup value)
     m_allMargins = std::move(value);
 }
 
-PageMargins parsePageMargins(pugi::xml_node el, const ParseContext &context)
+PageMargins parsePageMargins(mxpugi::xml_node el, const ParseContext &context)
 {
     PageMargins out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,9 +54,9 @@ PageMargins parsePageMargins(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePageMarginsContent(PageMargins &out, pugi::xml_node el, const ParseContext &context)
+void parsePageMarginsContent(PageMargins &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "left-margin")))
     {
         out.setAllMargins(parseAllMarginsGroup(el, cursor, context));
@@ -76,9 +76,9 @@ void parsePageMarginsContent(PageMargins &out, pugi::xml_node el, const ParseCon
     }
 }
 
-void serializePageMargins(const PageMargins &v, pugi::xml_node parent, const char *tag)
+void serializePageMargins(const PageMargins &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.type())
     {
         setAttribute(el, "type", v.type()->toString());
@@ -86,7 +86,7 @@ void serializePageMargins(const PageMargins &v, pugi::xml_node parent, const cha
     serializePageMarginsContent(v, el);
 }
 
-void serializePageMarginsContent(const PageMargins &v, pugi::xml_node el)
+void serializePageMarginsContent(const PageMargins &v, mxpugi::xml_node el)
 {
     serializeAllMarginsGroup(v.allMargins(), el);
 }

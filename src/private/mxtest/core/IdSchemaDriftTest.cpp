@@ -14,7 +14,7 @@
 
 #include "mxtest/file/PathRoot.h"
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <map>
 #include <set>
@@ -30,8 +30,8 @@ using IdSchemaByElement = std::map<std::string, IdSchemaAttributes>;
 
 struct IdSchema
 {
-    std::map<std::string_view, pugi::xml_node> attributeGroups;
-    std::map<std::string_view, pugi::xml_node> complexTypes;
+    std::map<std::string_view, mxpugi::xml_node> attributeGroups;
+    std::map<std::string_view, mxpugi::xml_node> complexTypes;
 };
 
 inline std::string_view idSchemaLocalName(const char *qualified)
@@ -44,10 +44,10 @@ inline std::string_view idSchemaLocalName(const char *qualified)
 /// The identity attributes a complexType or attributeGroup owns, following
 /// attributeGroup references and extension bases. A child element
 /// declaration owns whatever it declares, so the walk stops there.
-inline void idSchemaCollectAttributes(const IdSchema &schema, pugi::xml_node node, std::set<pugi::xml_node> &visited,
-                                      IdSchemaAttributes &out)
+inline void idSchemaCollectAttributes(const IdSchema &schema, mxpugi::xml_node node,
+                                      std::set<mxpugi::xml_node> &visited, IdSchemaAttributes &out)
 {
-    for (pugi::xml_node child = node.first_child(); child; child = child.next_sibling())
+    for (mxpugi::xml_node child = node.first_child(); child; child = child.next_sibling())
     {
         const std::string_view tag = idSchemaLocalName(child.name());
         if (tag == "element" || tag == "annotation")
@@ -85,33 +85,33 @@ inline void idSchemaCollectAttributes(const IdSchema &schema, pugi::xml_node nod
 }
 
 /// The complexType an element declaration uses, named or inline.
-inline pugi::xml_node idSchemaTypeOf(const IdSchema &schema, pugi::xml_node element)
+inline mxpugi::xml_node idSchemaTypeOf(const IdSchema &schema, mxpugi::xml_node element)
 {
     const auto named = schema.complexTypes.find(idSchemaLocalName(element.attribute("type").value()));
     if (named != schema.complexTypes.end())
     {
         return named->second;
     }
-    for (pugi::xml_node child = element.first_child(); child; child = child.next_sibling())
+    for (mxpugi::xml_node child = element.first_child(); child; child = child.next_sibling())
     {
         if (idSchemaLocalName(child.name()) == "complexType")
         {
             return child;
         }
     }
-    return pugi::xml_node{};
+    return mxpugi::xml_node{};
 }
 
-inline void idSchemaCollectElements(const IdSchema &schema, pugi::xml_node node, IdSchemaByElement &out)
+inline void idSchemaCollectElements(const IdSchema &schema, mxpugi::xml_node node, IdSchemaByElement &out)
 {
-    for (pugi::xml_node child = node.first_child(); child; child = child.next_sibling())
+    for (mxpugi::xml_node child = node.first_child(); child; child = child.next_sibling())
     {
         if (idSchemaLocalName(child.name()) == "element" && child.attribute("name"))
         {
-            if (const pugi::xml_node type = idSchemaTypeOf(schema, child))
+            if (const mxpugi::xml_node type = idSchemaTypeOf(schema, child))
             {
                 IdSchemaAttributes attributes;
-                std::set<pugi::xml_node> visited;
+                std::set<mxpugi::xml_node> visited;
                 idSchemaCollectAttributes(schema, type, visited, attributes);
                 if (!attributes.empty())
                 {
@@ -127,11 +127,11 @@ inline void idSchemaCollectElements(const IdSchema &schema, pugi::xml_node node,
 TEST(TableMatchesSchema, IdSchemaDrift)
 {
     const std::string schemaPath = std::string{MX_REPO_ROOT_PATH} + "/docs/musicxml-4.0-ed15c23.xsd";
-    pugi::xml_document schemaDoc;
+    mxpugi::xml_document schemaDoc;
     CHECK(schemaDoc.load_file(schemaPath.c_str()));
 
     IdSchema schema;
-    for (pugi::xml_node child = schemaDoc.document_element().first_child(); child; child = child.next_sibling())
+    for (mxpugi::xml_node child = schemaDoc.document_element().first_child(); child; child = child.next_sibling())
     {
         const std::string_view tag = idSchemaLocalName(child.name());
         if (!child.attribute("name"))

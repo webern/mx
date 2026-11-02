@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -60,8 +60,8 @@ class ScoreHeaderGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+ScoreHeaderGroup parseScoreHeaderGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeScoreHeaderGroup(const ScoreHeaderGroup &v, pugi::xml_node el);
+void serializeScoreHeaderGroup(const ScoreHeaderGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -12,7 +12,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -112,8 +112,8 @@ class MeasureStyleChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-MeasureStyleChoice parseMeasureStyleChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+MeasureStyleChoice parseMeasureStyleChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeMeasureStyleChoice(const MeasureStyleChoice &v, pugi::xml_node el);
+void serializeMeasureStyleChoice(const MeasureStyleChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

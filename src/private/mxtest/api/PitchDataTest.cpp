@@ -7,7 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <sstream>
 #include <string>
@@ -20,7 +20,7 @@ namespace
 {
 
 /// Walk the pugixml tree depth-first to find the first element with the given name.
-pugi::xml_node bruteForceFindFirstElement(pugi::xml_node root, const std::string &inElementName)
+mxpugi::xml_node bruteForceFindFirstElement(mxpugi::xml_node root, const std::string &inElementName)
 {
     if (std::string{root.name()} == inElementName)
     {
@@ -36,7 +36,7 @@ pugi::xml_node bruteForceFindFirstElement(pugi::xml_node root, const std::string
         }
     }
 
-    return pugi::xml_node{};
+    return mxpugi::xml_node{};
 }
 
 struct Input
@@ -82,7 +82,7 @@ Output pitchDataTest(const Input &input)
     std::move(docIdResult).value().writeToStream(ss);
 
     // check the alter value that was written to xml
-    pugi::xml_document xdoc;
+    mxpugi::xml_document xdoc;
     const std::string xml = ss.str();
     xdoc.load_string(xml.c_str());
     auto elem = bruteForceFindFirstElement(xdoc.document_element(), "alter");
@@ -117,7 +117,7 @@ Output pitchDataTest(const Input &input)
     std::move(docId3Result).value().writeToStream(ss2);
 
     // check the alter value that was written to xml
-    pugi::xml_document xdoc2;
+    mxpugi::xml_document xdoc2;
     const std::string xml2 = ss2.str();
     xdoc2.load_string(xml2.c_str());
     auto elem2 = bruteForceFindFirstElement(xdoc2.document_element(), "alter");

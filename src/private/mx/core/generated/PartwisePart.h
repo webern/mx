@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -39,12 +39,12 @@ class PartwisePart final
     OneOrMore<PartwiseMeasure> m_measure;
 };
 
-PartwisePart parsePartwisePart(pugi::xml_node el, const ParseContext &context);
+PartwisePart parsePartwisePart(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el, const ParseContext &context);
+void parsePartwisePartContent(PartwisePart &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePartwisePart(const PartwisePart &v, pugi::xml_node parent, const char *tag);
+void serializePartwisePart(const PartwisePart &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePartwisePartContent(const PartwisePart &v, pugi::xml_node el);
+void serializePartwisePartContent(const PartwisePart &v, mxpugi::xml_node el);
 
 } // namespace mx::core

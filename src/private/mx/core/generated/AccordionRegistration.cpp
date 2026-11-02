@@ -161,10 +161,10 @@ void AccordionRegistration::setAccordionLow(bool value) noexcept
     m_accordionLow = value;
 }
 
-AccordionRegistration parseAccordionRegistration(pugi::xml_node el, const ParseContext &context)
+AccordionRegistration parseAccordionRegistration(mxpugi::xml_node el, const ParseContext &context)
 {
     AccordionRegistration out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -228,9 +228,9 @@ AccordionRegistration parseAccordionRegistration(pugi::xml_node el, const ParseC
     return out;
 }
 
-void parseAccordionRegistrationContent(AccordionRegistration &out, pugi::xml_node el, const ParseContext &context)
+void parseAccordionRegistrationContent(AccordionRegistration &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "accordion-high"))
     {
         parseEmpty(cursor, context);
@@ -259,9 +259,9 @@ void parseAccordionRegistrationContent(AccordionRegistration &out, pugi::xml_nod
     }
 }
 
-void serializeAccordionRegistration(const AccordionRegistration &v, pugi::xml_node parent, const char *tag)
+void serializeAccordionRegistration(const AccordionRegistration &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -313,7 +313,7 @@ void serializeAccordionRegistration(const AccordionRegistration &v, pugi::xml_no
     serializeAccordionRegistrationContent(v, el);
 }
 
-void serializeAccordionRegistrationContent(const AccordionRegistration &v, pugi::xml_node el)
+void serializeAccordionRegistrationContent(const AccordionRegistration &v, mxpugi::xml_node el)
 {
     if (v.accordionHigh())
     {

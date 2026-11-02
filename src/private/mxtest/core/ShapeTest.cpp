@@ -26,7 +26,7 @@
 #include "mx/core/generated/Pitch.h"
 #include "mx/core/generated/Step.h"
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <string>
 
@@ -38,10 +38,10 @@ namespace
 // Serialize through a scratch document and return the XML text, compact.
 std::string toXml(const Pitch &p)
 {
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     serializePitch(p, doc, "pitch");
 
-    struct Writer : pugi::xml_writer
+    struct Writer : mxpugi::xml_writer
     {
         std::string out;
 
@@ -51,13 +51,13 @@ std::string toXml(const Pitch &p)
         }
     } w;
 
-    doc.save(w, "", pugi::format_raw | pugi::format_no_declaration);
+    doc.save(w, "", mxpugi::format_raw | mxpugi::format_no_declaration);
     return w.out;
 }
 
 ErrorCode parsePitchExpectingError(const char *xml)
 {
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string(xml));
     try
     {
@@ -192,7 +192,7 @@ TEST(StrictStructureParse, Shapes)
     CHECK(parsePitchExpectingError("<pitch><step>C</step><step>D</step><octave>4</octave></pitch>") ==
           ErrorCode::wrongElementOrder);
     // A round trip of valid input parses cleanly (values lenient).
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string("<pitch><step>G</step><alter>-1</alter><octave>11</octave></pitch>"));
     const Pitch p = parsePitch(doc.first_child(), ParseContext{});
     CHECK(p.step() == Step::g());

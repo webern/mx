@@ -31,7 +31,7 @@ void TimeSignatureGroup::setBeatType(std::string value)
     m_beatType = std::move(value);
 }
 
-TimeSignatureGroup parseTimeSignatureGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+TimeSignatureGroup parseTimeSignatureGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     TimeSignatureGroup out;
     if (cursorIs(cursor, "beats"))
@@ -55,7 +55,7 @@ TimeSignatureGroup parseTimeSignatureGroup(pugi::xml_node el, pugi::xml_node &cu
     return out;
 }
 
-void serializeTimeSignatureGroup(const TimeSignatureGroup &v, pugi::xml_node el)
+void serializeTimeSignatureGroup(const TimeSignatureGroup &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "beats", v.beats());
     writeTextElement(el, "beat-type", v.beatType());

@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
 project(mx CXX)
 
-# The mx::core C++ typed model: pugixml + the generated src/private/mx/core
-# (emitted by `python3 -m gen gen/cpp/config.toml`, committed) + its
-# hand-written runtime, plus the corert/unit test binaries.
+# The mx::core C++ typed model: mx's private copy of pugixml (mxpugi) + the
+# generated src/private/mx/core (emitted by `python3 -m gen gen/cpp/config.toml`,
+# committed) + its hand-written runtime, plus the corert/unit test binaries.
 # See AGENTS.md and docs/ai/design/mx-core-plan.md.
 
 set(CMAKE_CXX_STANDARD 20)
@@ -49,13 +49,14 @@ endif()
 set(PRIVATE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/private")
 set(PUBLIC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/include")
 
-# pugixml: the XML layer the generated mx::core consumes directly (plan §2.1).
-# Vendored at src/private/pugixml (upstream 1.15, stock pugiconfig).
-# Client projects may provide a compatible pugixml target before adding mx.
-if(NOT TARGET pugixml)
-    add_library(pugixml STATIC ${PRIVATE_DIR}/pugixml/pugixml.cpp)
-    target_include_directories(pugixml PUBLIC ${PRIVATE_DIR}/pugixml)
-endif()
+# mxpugi: the XML layer the generated mx::core consumes directly (plan §2.1).
+# It is pugixml, vendored at src/private/mxpugi by scripts/vendor_pugixml.py
+# with its namespace renamed from `pugi` to `mxpugi` (stock pugiconfig). The
+# private copy exists so that mx does not define any `pugi::` symbol: a
+# consumer that links its own pugixml does not get duplicates from mx. An
+# option to build mx against a different XML library is coming in 0.7.
+add_library(mxpugi STATIC ${PRIVATE_DIR}/mxpugi/mxpugi.cpp)
+target_include_directories(mxpugi PUBLIC ${PRIVATE_DIR})
 
 # mx_core: the generated C++ typed model plus its hand-written runtime
 # (Decimal, Result, Error, Lexical, ParseContext, Token, NameToken, Language,
@@ -113,7 +114,7 @@ add_library(mx_core STATIC
     ${MX_CORE_RUNTIME_SOURCES} ${MX_CORE_GENERATED_SOURCES} ${MX_GIT_SHA_CPP})
 add_dependencies(mx_core mx_git_sha)
 target_include_directories(mx_core PUBLIC ${PRIVATE_DIR})
-target_link_libraries(mx_core PUBLIC pugixml)
+target_link_libraries(mx_core PUBLIC mxpugi)
 target_compile_features(mx_core PUBLIC cxx_std_20)
 
 # mx_core unit tests (clamping, factories, structural value shapes,
@@ -129,7 +130,7 @@ endif()
 
 if(MX_CORE_DEV)
 
-    # corert: round-trips each data/ file through mx::core (pugixml-backed)
+    # corert: round-trips each data/ file through mx::core (mxpugi-backed)
     # and compares against a normalized, fixup-adjusted form of the input.
     # Fixer applies .fixup.xml sidecars; cpul is the Catch test runner
     # (main); the import/ helpers normalize whitespace, decimals,

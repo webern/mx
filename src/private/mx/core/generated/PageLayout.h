@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -49,12 +49,12 @@ class PageLayout final
     std::vector<PageMargins> m_pageMargins;
 };
 
-PageLayout parsePageLayout(pugi::xml_node el, const ParseContext &context);
+PageLayout parsePageLayout(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePageLayoutContent(PageLayout &out, pugi::xml_node el, const ParseContext &context);
+void parsePageLayoutContent(PageLayout &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePageLayout(const PageLayout &v, pugi::xml_node parent, const char *tag);
+void serializePageLayout(const PageLayout &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePageLayoutContent(const PageLayout &v, pugi::xml_node el);
+void serializePageLayoutContent(const PageLayout &v, mxpugi::xml_node el);
 
 } // namespace mx::core

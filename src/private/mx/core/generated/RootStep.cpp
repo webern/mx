@@ -121,10 +121,10 @@ void RootStep::setValue(Step value)
     m_value = std::move(value);
 }
 
-RootStep parseRootStep(pugi::xml_node el, const ParseContext &context)
+RootStep parseRootStep(mxpugi::xml_node el, const ParseContext &context)
 {
     RootStep out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ RootStep parseRootStep(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseRootStepContent(RootStep &out, pugi::xml_node el, const ParseContext &context)
+void parseRootStepContent(RootStep &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<Step>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseRootStepContent(RootStep &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeRootStep(const RootStep &v, pugi::xml_node parent, const char *tag)
+void serializeRootStep(const RootStep &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.text())
     {
         setAttribute(el, "text", *v.text());
@@ -235,7 +235,7 @@ void serializeRootStep(const RootStep &v, pugi::xml_node parent, const char *tag
     serializeRootStepContent(v, el);
 }
 
-void serializeRootStepContent(const RootStep &v, pugi::xml_node el)
+void serializeRootStepContent(const RootStep &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

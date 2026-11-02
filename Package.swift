@@ -20,9 +20,9 @@ import PackageDescription
 // `src/private`), minus the Catch2 runner, the test suites, and the example
 // programs -- the only files carrying their own main(). The public surface
 // is the mx::api headers under `src/include`; `src/private` is added to the
-// internal header search path so the model can include `mx/core/...`; and
-// `src/private/pugixml` is added so sources can use the canonical
-// `#include "pugixml.hpp"` form that the CMake build also exposes.
+// internal header search path so the model can include `mx/core/...` and
+// `mxpugi/mxpugi.hpp` (mx's private copy of pugixml), the same include root
+// the CMake build exposes.
 let mxTarget: Target = .target(
     name: "Mx",
     path: "src",
@@ -34,7 +34,6 @@ let mxTarget: Target = .target(
     publicHeadersPath: "include",
     cxxSettings: [
         .headerSearchPath("private"),
-        .headerSearchPath("private/pugixml"),
     ]
 )
 

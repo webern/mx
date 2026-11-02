@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -35,12 +35,12 @@ class HoleClosed final
     HoleClosedValue m_value{};
 };
 
-HoleClosed parseHoleClosed(pugi::xml_node el, const ParseContext &context);
+HoleClosed parseHoleClosed(mxpugi::xml_node el, const ParseContext &context);
 
-void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el, const ParseContext &context);
+void parseHoleClosedContent(HoleClosed &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeHoleClosed(const HoleClosed &v, pugi::xml_node parent, const char *tag);
+void serializeHoleClosed(const HoleClosed &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeHoleClosedContent(const HoleClosed &v, pugi::xml_node el);
+void serializeHoleClosedContent(const HoleClosed &v, mxpugi::xml_node el);
 
 } // namespace mx::core

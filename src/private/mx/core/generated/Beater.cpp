@@ -31,10 +31,10 @@ void Beater::setValue(BeaterValue value)
     m_value = std::move(value);
 }
 
-Beater parseBeater(pugi::xml_node el, const ParseContext &context)
+Beater parseBeater(mxpugi::xml_node el, const ParseContext &context)
 {
     Beater out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ Beater parseBeater(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBeaterContent(Beater &out, pugi::xml_node el, const ParseContext &context)
+void parseBeaterContent(Beater &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<BeaterValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseBeaterContent(Beater &out, pugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeBeater(const Beater &v, pugi::xml_node parent, const char *tag)
+void serializeBeater(const Beater &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.tip())
     {
         setAttribute(el, "tip", v.tip()->toString());
@@ -73,7 +73,7 @@ void serializeBeater(const Beater &v, pugi::xml_node parent, const char *tag)
     serializeBeaterContent(v, el);
 }
 
-void serializeBeaterContent(const Beater &v, pugi::xml_node el)
+void serializeBeaterContent(const Beater &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

@@ -26,7 +26,7 @@ VirtualInstrumentDataGroupChoice VirtualInstrumentDataGroupChoice::ensemble(Posi
     return VirtualInstrumentDataGroupChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-VirtualInstrumentDataGroupChoice parseVirtualInstrumentDataGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
+VirtualInstrumentDataGroupChoice parseVirtualInstrumentDataGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
                                                                        const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "solo")))
@@ -48,7 +48,7 @@ VirtualInstrumentDataGroupChoice parseVirtualInstrumentDataGroupChoice(pugi::xml
     throwMissingElement(el, "solo");
 }
 
-void serializeVirtualInstrumentDataGroupChoice(const VirtualInstrumentDataGroupChoice &v, pugi::xml_node el)
+void serializeVirtualInstrumentDataGroupChoice(const VirtualInstrumentDataGroupChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

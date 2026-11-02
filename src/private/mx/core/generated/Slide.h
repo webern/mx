@@ -20,7 +20,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -101,12 +101,12 @@ class Slide final
     std::string m_value{};
 };
 
-Slide parseSlide(pugi::xml_node el, const ParseContext &context);
+Slide parseSlide(mxpugi::xml_node el, const ParseContext &context);
 
-void parseSlideContent(Slide &out, pugi::xml_node el, const ParseContext &context);
+void parseSlideContent(Slide &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeSlide(const Slide &v, pugi::xml_node parent, const char *tag);
+void serializeSlide(const Slide &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeSlideContent(const Slide &v, pugi::xml_node el);
+void serializeSlideContent(const Slide &v, mxpugi::xml_node el);
 
 } // namespace mx::core

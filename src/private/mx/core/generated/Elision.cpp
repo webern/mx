@@ -81,10 +81,10 @@ void Elision::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Elision parseElision(pugi::xml_node el, const ParseContext &context)
+Elision parseElision(mxpugi::xml_node el, const ParseContext &context)
 {
     Elision out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -124,7 +124,7 @@ Elision parseElision(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseElisionContent(Elision &out, pugi::xml_node el, const ParseContext &context)
+void parseElisionContent(Elision &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -133,9 +133,9 @@ void parseElisionContent(Elision &out, pugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeElision(const Elision &v, pugi::xml_node parent, const char *tag)
+void serializeElision(const Elision &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -163,7 +163,7 @@ void serializeElision(const Elision &v, pugi::xml_node parent, const char *tag)
     serializeElisionContent(v, el);
 }
 
-void serializeElisionContent(const Elision &v, pugi::xml_node el)
+void serializeElisionContent(const Elision &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

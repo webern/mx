@@ -121,10 +121,10 @@ void BassStep::setValue(Step value)
     m_value = std::move(value);
 }
 
-BassStep parseBassStep(pugi::xml_node el, const ParseContext &context)
+BassStep parseBassStep(mxpugi::xml_node el, const ParseContext &context)
 {
     BassStep out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ BassStep parseBassStep(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBassStepContent(BassStep &out, pugi::xml_node el, const ParseContext &context)
+void parseBassStepContent(BassStep &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<Step>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parseBassStepContent(BassStep &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeBassStep(const BassStep &v, pugi::xml_node parent, const char *tag)
+void serializeBassStep(const BassStep &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.text())
     {
         setAttribute(el, "text", *v.text());
@@ -235,7 +235,7 @@ void serializeBassStep(const BassStep &v, pugi::xml_node parent, const char *tag
     serializeBassStepContent(v, el);
 }
 
-void serializeBassStepContent(const BassStep &v, pugi::xml_node el)
+void serializeBassStepContent(const BassStep &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

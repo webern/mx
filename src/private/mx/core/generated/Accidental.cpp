@@ -171,10 +171,10 @@ void Accidental::setValue(AccidentalValue value)
     m_value = std::move(value);
 }
 
-Accidental parseAccidental(pugi::xml_node el, const ParseContext &context)
+Accidental parseAccidental(mxpugi::xml_node el, const ParseContext &context)
 {
     Accidental out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -250,7 +250,7 @@ Accidental parseAccidental(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseAccidentalContent(Accidental &out, pugi::xml_node el, const ParseContext &context)
+void parseAccidentalContent(Accidental &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<AccidentalValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -259,9 +259,9 @@ void parseAccidentalContent(Accidental &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializeAccidental(const Accidental &v, pugi::xml_node parent, const char *tag)
+void serializeAccidental(const Accidental &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.cautionary())
     {
         setAttribute(el, "cautionary", v.cautionary()->toString());
@@ -325,7 +325,7 @@ void serializeAccidental(const Accidental &v, pugi::xml_node parent, const char 
     serializeAccidentalContent(v, el);
 }
 
-void serializeAccidentalContent(const Accidental &v, pugi::xml_node el)
+void serializeAccidentalContent(const Accidental &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

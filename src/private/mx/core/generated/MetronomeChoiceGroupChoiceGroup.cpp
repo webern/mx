@@ -36,7 +36,7 @@ void MetronomeChoiceGroupChoiceGroup::setBeatUnitTied(std::vector<BeatUnitTied> 
     m_beatUnitTied = std::move(value);
 }
 
-MetronomeChoiceGroupChoiceGroup parseMetronomeChoiceGroupChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor,
+MetronomeChoiceGroupChoiceGroup parseMetronomeChoiceGroupChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
                                                                      const ParseContext &context)
 {
     MetronomeChoiceGroupChoiceGroup out;
@@ -56,7 +56,7 @@ MetronomeChoiceGroupChoiceGroup parseMetronomeChoiceGroupChoiceGroup(pugi::xml_n
     return out;
 }
 
-void serializeMetronomeChoiceGroupChoiceGroup(const MetronomeChoiceGroupChoiceGroup &v, pugi::xml_node el)
+void serializeMetronomeChoiceGroupChoiceGroup(const MetronomeChoiceGroupChoiceGroup &v, mxpugi::xml_node el)
 {
     serializeBeatUnitGroup(v.beatUnit(), el);
     for (const auto &item : v.beatUnitTied())

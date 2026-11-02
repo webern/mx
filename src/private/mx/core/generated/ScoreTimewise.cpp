@@ -46,10 +46,10 @@ void ScoreTimewise::setMeasure(OneOrMore<TimewiseMeasure> value)
     m_measure = std::move(value);
 }
 
-ScoreTimewise parseScoreTimewise(pugi::xml_node el, const ParseContext &context)
+ScoreTimewise parseScoreTimewise(mxpugi::xml_node el, const ParseContext &context)
 {
     ScoreTimewise out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -69,9 +69,9 @@ ScoreTimewise parseScoreTimewise(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el, const ParseContext &context)
+void parseScoreTimewiseContent(ScoreTimewise &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "work") || cursorIs(cursor, "movement-number") ||
                    cursorIs(cursor, "movement-title") || cursorIs(cursor, "identification") ||
                    cursorIs(cursor, "defaults") || cursorIs(cursor, "credit") || cursorIs(cursor, "part-list")))
@@ -105,9 +105,9 @@ void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeScoreTimewise(const ScoreTimewise &v, pugi::xml_node parent, const char *tag)
+void serializeScoreTimewise(const ScoreTimewise &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.version())
     {
         setAttribute(el, "version", *v.version());
@@ -115,7 +115,7 @@ void serializeScoreTimewise(const ScoreTimewise &v, pugi::xml_node parent, const
     serializeScoreTimewiseContent(v, el);
 }
 
-void serializeScoreTimewiseContent(const ScoreTimewise &v, pugi::xml_node el)
+void serializeScoreTimewiseContent(const ScoreTimewise &v, mxpugi::xml_node el)
 {
     serializeScoreHeaderGroup(v.scoreHeader(), el);
     for (const auto &item : v.measure())

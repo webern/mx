@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -39,12 +39,12 @@ class PageMargins final
     AllMarginsGroup m_allMargins{};
 };
 
-PageMargins parsePageMargins(pugi::xml_node el, const ParseContext &context);
+PageMargins parsePageMargins(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePageMarginsContent(PageMargins &out, pugi::xml_node el, const ParseContext &context);
+void parsePageMarginsContent(PageMargins &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePageMargins(const PageMargins &v, pugi::xml_node parent, const char *tag);
+void serializePageMargins(const PageMargins &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePageMarginsContent(const PageMargins &v, pugi::xml_node el);
+void serializePageMarginsContent(const PageMargins &v, mxpugi::xml_node el);
 
 } // namespace mx::core

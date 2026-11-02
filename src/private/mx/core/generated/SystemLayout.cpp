@@ -51,10 +51,10 @@ void SystemLayout::setSystemDividers(std::optional<SystemDividers> value)
     m_systemDividers = std::move(value);
 }
 
-SystemLayout parseSystemLayout(pugi::xml_node el, const ParseContext &context)
+SystemLayout parseSystemLayout(mxpugi::xml_node el, const ParseContext &context)
 {
     SystemLayout out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -67,9 +67,9 @@ SystemLayout parseSystemLayout(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el, const ParseContext &context)
+void parseSystemLayoutContent(SystemLayout &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "system-margins"))
     {
         out.setSystemMargins(parseSystemMargins(cursor, context));
@@ -101,13 +101,13 @@ void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el, const ParseC
     }
 }
 
-void serializeSystemLayout(const SystemLayout &v, pugi::xml_node parent, const char *tag)
+void serializeSystemLayout(const SystemLayout &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeSystemLayoutContent(v, el);
 }
 
-void serializeSystemLayoutContent(const SystemLayout &v, pugi::xml_node el)
+void serializeSystemLayoutContent(const SystemLayout &v, mxpugi::xml_node el)
 {
     if (v.systemMargins())
     {

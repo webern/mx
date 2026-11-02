@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -48,12 +48,12 @@ class Extend final
     std::optional<Color> m_color;
 };
 
-Extend parseExtend(pugi::xml_node el, const ParseContext &context);
+Extend parseExtend(mxpugi::xml_node el, const ParseContext &context);
 
-void parseExtendContent(Extend &out, pugi::xml_node el, const ParseContext &context);
+void parseExtendContent(Extend &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeExtend(const Extend &v, pugi::xml_node parent, const char *tag);
+void serializeExtend(const Extend &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeExtendContent(const Extend &v, pugi::xml_node el);
+void serializeExtendContent(const Extend &v, mxpugi::xml_node el);
 
 } // namespace mx::core

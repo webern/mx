@@ -35,7 +35,6 @@ let mxSourceTarget: Target = .target(
     publicHeadersPath: "include",
     cxxSettings: [
         .headerSearchPath("private"),
-        .headerSearchPath("private/pugixml"),
     ]
 )
 

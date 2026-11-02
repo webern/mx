@@ -151,10 +151,10 @@ void Percussion::setChoice(PercussionChoice value)
     m_choice = std::move(value);
 }
 
-Percussion parsePercussion(pugi::xml_node el, const ParseContext &context)
+Percussion parsePercussion(mxpugi::xml_node el, const ParseContext &context)
 {
     Percussion out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -222,9 +222,9 @@ Percussion parsePercussion(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePercussionContent(Percussion &out, pugi::xml_node el, const ParseContext &context)
+void parsePercussionContent(Percussion &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "glass") || cursorIs(cursor, "metal") || cursorIs(cursor, "wood") ||
                    cursorIs(cursor, "pitched") || cursorIs(cursor, "membrane") || cursorIs(cursor, "effect") ||
                    cursorIs(cursor, "timpani") || cursorIs(cursor, "beater") || cursorIs(cursor, "stick") ||
@@ -249,9 +249,9 @@ void parsePercussionContent(Percussion &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializePercussion(const Percussion &v, pugi::xml_node parent, const char *tag)
+void serializePercussion(const Percussion &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -307,7 +307,7 @@ void serializePercussion(const Percussion &v, pugi::xml_node parent, const char 
     serializePercussionContent(v, el);
 }
 
-void serializePercussionContent(const Percussion &v, pugi::xml_node el)
+void serializePercussionContent(const Percussion &v, mxpugi::xml_node el)
 {
     serializePercussionChoice(v.choice(), el);
 }

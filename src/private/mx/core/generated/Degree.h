@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -50,12 +50,12 @@ class Degree final
     DegreeType m_degreeType{};
 };
 
-Degree parseDegree(pugi::xml_node el, const ParseContext &context);
+Degree parseDegree(mxpugi::xml_node el, const ParseContext &context);
 
-void parseDegreeContent(Degree &out, pugi::xml_node el, const ParseContext &context);
+void parseDegreeContent(Degree &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeDegree(const Degree &v, pugi::xml_node parent, const char *tag);
+void serializeDegree(const Degree &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeDegreeContent(const Degree &v, pugi::xml_node el);
+void serializeDegreeContent(const Degree &v, mxpugi::xml_node el);
 
 } // namespace mx::core

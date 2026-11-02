@@ -171,11 +171,11 @@ void Glissando::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Glissando parseGlissando(pugi::xml_node el, const ParseContext &context)
+Glissando parseGlissando(mxpugi::xml_node el, const ParseContext &context)
 {
     Glissando out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -256,7 +256,7 @@ Glissando parseGlissando(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseGlissandoContent(Glissando &out, pugi::xml_node el, const ParseContext &context)
+void parseGlissandoContent(Glissando &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -265,9 +265,9 @@ void parseGlissandoContent(Glissando &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeGlissando(const Glissando &v, pugi::xml_node parent, const char *tag)
+void serializeGlissando(const Glissando &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -328,7 +328,7 @@ void serializeGlissando(const Glissando &v, pugi::xml_node parent, const char *t
     serializeGlissandoContent(v, el);
 }
 
-void serializeGlissandoContent(const Glissando &v, pugi::xml_node el)
+void serializeGlissandoContent(const Glissando &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

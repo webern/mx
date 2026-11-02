@@ -31,7 +31,7 @@ HarmonicChoice2 HarmonicChoice2::soundingPitch(Empty value)
     return HarmonicChoice2{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-HarmonicChoice2 parseHarmonicChoice2(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+HarmonicChoice2 parseHarmonicChoice2(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "base-pitch")))
     {
@@ -58,7 +58,7 @@ HarmonicChoice2 parseHarmonicChoice2(pugi::xml_node el, pugi::xml_node &cursor, 
     throwMissingElement(el, "base-pitch");
 }
 
-void serializeHarmonicChoice2(const HarmonicChoice2 &v, pugi::xml_node el)
+void serializeHarmonicChoice2(const HarmonicChoice2 &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

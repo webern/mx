@@ -56,10 +56,10 @@ void Notations::setChoice(std::vector<NotationsChoice> value)
     m_choice = std::move(value);
 }
 
-Notations parseNotations(pugi::xml_node el, const ParseContext &context)
+Notations parseNotations(mxpugi::xml_node el, const ParseContext &context)
 {
     Notations out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -83,9 +83,9 @@ Notations parseNotations(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseNotationsContent(Notations &out, pugi::xml_node el, const ParseContext &context)
+void parseNotationsContent(Notations &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
         out.setEditorial(parseEditorialGroup(el, cursor, context));
@@ -114,9 +114,9 @@ void parseNotationsContent(Notations &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeNotations(const Notations &v, pugi::xml_node parent, const char *tag)
+void serializeNotations(const Notations &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.printObject())
     {
         setAttribute(el, "print-object", v.printObject()->toString());
@@ -128,7 +128,7 @@ void serializeNotations(const Notations &v, pugi::xml_node parent, const char *t
     serializeNotationsContent(v, el);
 }
 
-void serializeNotationsContent(const Notations &v, pugi::xml_node el)
+void serializeNotationsContent(const Notations &v, mxpugi::xml_node el)
 {
     serializeEditorialGroup(v.editorial(), el);
     for (const auto &item : v.choice())

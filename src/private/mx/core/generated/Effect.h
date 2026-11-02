@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -34,12 +34,12 @@ class Effect final
     EffectValue m_value{};
 };
 
-Effect parseEffect(pugi::xml_node el, const ParseContext &context);
+Effect parseEffect(mxpugi::xml_node el, const ParseContext &context);
 
-void parseEffectContent(Effect &out, pugi::xml_node el, const ParseContext &context);
+void parseEffectContent(Effect &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeEffect(const Effect &v, pugi::xml_node parent, const char *tag);
+void serializeEffect(const Effect &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeEffectContent(const Effect &v, pugi::xml_node el);
+void serializeEffectContent(const Effect &v, mxpugi::xml_node el);
 
 } // namespace mx::core

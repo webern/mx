@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -40,9 +40,9 @@ class MetronomeChoiceGroup2Group final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-MetronomeChoiceGroup2Group parseMetronomeChoiceGroup2Group(pugi::xml_node el, pugi::xml_node &cursor,
+MetronomeChoiceGroup2Group parseMetronomeChoiceGroup2Group(mxpugi::xml_node el, mxpugi::xml_node &cursor,
                                                            const ParseContext &context);
 
-void serializeMetronomeChoiceGroup2Group(const MetronomeChoiceGroup2Group &v, pugi::xml_node el);
+void serializeMetronomeChoiceGroup2Group(const MetronomeChoiceGroup2Group &v, mxpugi::xml_node el);
 
 } // namespace mx::core

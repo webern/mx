@@ -31,7 +31,7 @@ FullNoteGroupChoice FullNoteGroupChoice::rest(Rest value)
     return FullNoteGroupChoice{Storage{std::in_place_index<2>, std::move(value)}};
 }
 
-FullNoteGroupChoice parseFullNoteGroupChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+FullNoteGroupChoice parseFullNoteGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "pitch")))
     {
@@ -58,7 +58,7 @@ FullNoteGroupChoice parseFullNoteGroupChoice(pugi::xml_node el, pugi::xml_node &
     throwMissingElement(el, "pitch");
 }
 
-void serializeFullNoteGroupChoice(const FullNoteGroupChoice &v, pugi::xml_node el)
+void serializeFullNoteGroupChoice(const FullNoteGroupChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

@@ -10,7 +10,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -82,8 +82,8 @@ class MetronomeChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-MetronomeChoice parseMetronomeChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+MetronomeChoice parseMetronomeChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeMetronomeChoice(const MetronomeChoice &v, pugi::xml_node el);
+void serializeMetronomeChoice(const MetronomeChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

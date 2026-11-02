@@ -141,10 +141,10 @@ void Hole::setHoleShape(std::optional<std::string> value)
     m_holeShape = std::move(value);
 }
 
-Hole parseHole(pugi::xml_node el, const ParseContext &context)
+Hole parseHole(mxpugi::xml_node el, const ParseContext &context)
 {
     Hole out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -200,9 +200,9 @@ Hole parseHole(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseHoleContent(Hole &out, pugi::xml_node el, const ParseContext &context)
+void parseHoleContent(Hole &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "hole-type"))
     {
         out.setHoleType(std::string{childText(cursor)});
@@ -232,9 +232,9 @@ void parseHoleContent(Hole &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeHole(const Hole &v, pugi::xml_node parent, const char *tag)
+void serializeHole(const Hole &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -278,7 +278,7 @@ void serializeHole(const Hole &v, pugi::xml_node parent, const char *tag)
     serializeHoleContent(v, el);
 }
 
-void serializeHoleContent(const Hole &v, pugi::xml_node el)
+void serializeHoleContent(const Hole &v, mxpugi::xml_node el)
 {
     if (v.holeType())
     {

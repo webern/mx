@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -42,12 +42,12 @@ class Pitch final
     Octave m_octave{};
 };
 
-Pitch parsePitch(pugi::xml_node el, const ParseContext &context);
+Pitch parsePitch(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePitchContent(Pitch &out, pugi::xml_node el, const ParseContext &context);
+void parsePitchContent(Pitch &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePitch(const Pitch &v, pugi::xml_node parent, const char *tag);
+void serializePitch(const Pitch &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePitchContent(const Pitch &v, pugi::xml_node el);
+void serializePitchContent(const Pitch &v, mxpugi::xml_node el);
 
 } // namespace mx::core

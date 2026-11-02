@@ -36,7 +36,7 @@ void StaffDetailsGroup::setLineDetail(std::vector<LineDetail> value)
     m_lineDetail = std::move(value);
 }
 
-StaffDetailsGroup parseStaffDetailsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+StaffDetailsGroup parseStaffDetailsGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     StaffDetailsGroup out;
     if (cursorIs(cursor, "staff-lines"))
@@ -56,7 +56,7 @@ StaffDetailsGroup parseStaffDetailsGroup(pugi::xml_node el, pugi::xml_node &curs
     return out;
 }
 
-void serializeStaffDetailsGroup(const StaffDetailsGroup &v, pugi::xml_node el)
+void serializeStaffDetailsGroup(const StaffDetailsGroup &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "staff-lines", formatInt(v.staffLines()));
     for (const auto &item : v.lineDetail())

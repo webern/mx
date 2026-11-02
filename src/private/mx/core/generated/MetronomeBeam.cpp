@@ -31,10 +31,10 @@ void MetronomeBeam::setValue(BeamValue value)
     m_value = std::move(value);
 }
 
-MetronomeBeam parseMetronomeBeam(pugi::xml_node el, const ParseContext &context)
+MetronomeBeam parseMetronomeBeam(mxpugi::xml_node el, const ParseContext &context)
 {
     MetronomeBeam out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ MetronomeBeam parseMetronomeBeam(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el, const ParseContext &context)
+void parseMetronomeBeamContent(MetronomeBeam &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<BeamValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeMetronomeBeam(const MetronomeBeam &v, pugi::xml_node parent, const char *tag)
+void serializeMetronomeBeam(const MetronomeBeam &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -73,7 +73,7 @@ void serializeMetronomeBeam(const MetronomeBeam &v, pugi::xml_node parent, const
     serializeMetronomeBeamContent(v, el);
 }
 
-void serializeMetronomeBeamContent(const MetronomeBeam &v, pugi::xml_node el)
+void serializeMetronomeBeamContent(const MetronomeBeam &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

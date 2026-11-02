@@ -16,7 +16,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -86,12 +86,12 @@ class Accidental final
     AccidentalValue m_value{};
 };
 
-Accidental parseAccidental(pugi::xml_node el, const ParseContext &context);
+Accidental parseAccidental(mxpugi::xml_node el, const ParseContext &context);
 
-void parseAccidentalContent(Accidental &out, pugi::xml_node el, const ParseContext &context);
+void parseAccidentalContent(Accidental &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeAccidental(const Accidental &v, pugi::xml_node parent, const char *tag);
+void serializeAccidental(const Accidental &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeAccidentalContent(const Accidental &v, pugi::xml_node el);
+void serializeAccidentalContent(const Accidental &v, mxpugi::xml_node el);
 
 } // namespace mx::core

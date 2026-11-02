@@ -131,7 +131,7 @@ DirectionTypeChoice DirectionTypeChoice::otherDirection(OtherDirection value)
     return DirectionTypeChoice{Storage{std::in_place_index<22>, std::move(value)}};
 }
 
-DirectionTypeChoice parseDirectionTypeChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+DirectionTypeChoice parseDirectionTypeChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "rehearsal")))
     {
@@ -306,7 +306,7 @@ DirectionTypeChoice parseDirectionTypeChoice(pugi::xml_node el, pugi::xml_node &
     throwMissingElement(el, "rehearsal");
 }
 
-void serializeDirectionTypeChoice(const DirectionTypeChoice &v, pugi::xml_node el)
+void serializeDirectionTypeChoice(const DirectionTypeChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

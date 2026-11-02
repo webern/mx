@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -48,12 +48,12 @@ class Listening final
     std::optional<Offset> m_offset;
 };
 
-Listening parseListening(pugi::xml_node el, const ParseContext &context);
+Listening parseListening(mxpugi::xml_node el, const ParseContext &context);
 
-void parseListeningContent(Listening &out, pugi::xml_node el, const ParseContext &context);
+void parseListeningContent(Listening &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeListening(const Listening &v, pugi::xml_node parent, const char *tag);
+void serializeListening(const Listening &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeListeningContent(const Listening &v, pugi::xml_node el);
+void serializeListeningContent(const Listening &v, mxpugi::xml_node el);
 
 } // namespace mx::core

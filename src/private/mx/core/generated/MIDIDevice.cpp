@@ -41,10 +41,10 @@ void MIDIDevice::setValue(std::string value)
     m_value = std::move(value);
 }
 
-MIDIDevice parseMIDIDevice(pugi::xml_node el, const ParseContext &context)
+MIDIDevice parseMIDIDevice(mxpugi::xml_node el, const ParseContext &context)
 {
     MIDIDevice out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -68,7 +68,7 @@ MIDIDevice parseMIDIDevice(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el, const ParseContext &context)
+void parseMIDIDeviceContent(MIDIDevice &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -77,9 +77,9 @@ void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializeMIDIDevice(const MIDIDevice &v, pugi::xml_node parent, const char *tag)
+void serializeMIDIDevice(const MIDIDevice &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.port())
     {
         setAttribute(el, "port", v.port()->toString());
@@ -91,7 +91,7 @@ void serializeMIDIDevice(const MIDIDevice &v, pugi::xml_node parent, const char 
     serializeMIDIDeviceContent(v, el);
 }
 
-void serializeMIDIDeviceContent(const MIDIDevice &v, pugi::xml_node el)
+void serializeMIDIDeviceContent(const MIDIDevice &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

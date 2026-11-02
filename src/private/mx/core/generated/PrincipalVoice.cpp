@@ -161,12 +161,12 @@ void PrincipalVoice::setValue(std::string value)
     m_value = std::move(value);
 }
 
-PrincipalVoice parsePrincipalVoice(pugi::xml_node el, const ParseContext &context)
+PrincipalVoice parsePrincipalVoice(mxpugi::xml_node el, const ParseContext &context)
 {
     PrincipalVoice out;
     bool seen_type = false;
     bool seen_symbol = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -248,7 +248,7 @@ PrincipalVoice parsePrincipalVoice(pugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el, const ParseContext &context)
+void parsePrincipalVoiceContent(PrincipalVoice &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -257,9 +257,9 @@ void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el, const Pa
     }
 }
 
-void serializePrincipalVoice(const PrincipalVoice &v, pugi::xml_node parent, const char *tag)
+void serializePrincipalVoice(const PrincipalVoice &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     setAttribute(el, "symbol", v.symbol().toString());
     if (v.defaultX())
@@ -313,7 +313,7 @@ void serializePrincipalVoice(const PrincipalVoice &v, pugi::xml_node parent, con
     serializePrincipalVoiceContent(v, el);
 }
 
-void serializePrincipalVoiceContent(const PrincipalVoice &v, pugi::xml_node el)
+void serializePrincipalVoiceContent(const PrincipalVoice &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

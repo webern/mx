@@ -71,10 +71,10 @@ void TupletNumber::setValue(int value)
     m_value = std::move(value);
 }
 
-TupletNumber parseTupletNumber(pugi::xml_node el, const ParseContext &context)
+TupletNumber parseTupletNumber(mxpugi::xml_node el, const ParseContext &context)
 {
     TupletNumber out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -110,7 +110,7 @@ TupletNumber parseTupletNumber(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTupletNumberContent(TupletNumber &out, pugi::xml_node el, const ParseContext &context)
+void parseTupletNumberContent(TupletNumber &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -119,9 +119,9 @@ void parseTupletNumberContent(TupletNumber &out, pugi::xml_node el, const ParseC
     }
 }
 
-void serializeTupletNumber(const TupletNumber &v, pugi::xml_node parent, const char *tag)
+void serializeTupletNumber(const TupletNumber &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.fontFamily())
     {
         setAttribute(el, "font-family", v.fontFamily()->toString());
@@ -145,7 +145,7 @@ void serializeTupletNumber(const TupletNumber &v, pugi::xml_node parent, const c
     serializeTupletNumberContent(v, el);
 }
 
-void serializeTupletNumberContent(const TupletNumber &v, pugi::xml_node el)
+void serializeTupletNumberContent(const TupletNumber &v, mxpugi::xml_node el)
 {
     setText(el, formatInt(v.value()));
 }

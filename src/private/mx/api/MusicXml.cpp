@@ -13,7 +13,7 @@
 #include "mx/impl/ScoreWriter.h"
 #include "mx/impl/WriteRefusal.h"
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <sstream>
 
@@ -190,13 +190,13 @@ Result<MusicXml> MusicXml::fromFile(const std::string &filePath, Diagnostics &di
 {
     try
     {
-        pugi::xml_document xdoc;
-        const pugi::xml_parse_result loaded =
-            xdoc.load_file(filePath.c_str(), pugi::parse_default | pugi::parse_doctype);
+        mxpugi::xml_document xdoc;
+        const mxpugi::xml_parse_result loaded =
+            xdoc.load_file(filePath.c_str(), mxpugi::parse_default | mxpugi::parse_doctype);
         if (!loaded)
         {
-            if (loaded.status == pugi::status_file_not_found || loaded.status == pugi::status_io_error ||
-                loaded.status == pugi::status_out_of_memory)
+            if (loaded.status == mxpugi::status_file_not_found || loaded.status == mxpugi::status_io_error ||
+                loaded.status == mxpugi::status_out_of_memory)
             {
                 return ApiError{ResultCode::ioError, Location{},
                                 "could not read '" + filePath + "' (" + loaded.description() + ")"};
@@ -249,8 +249,8 @@ Result<MusicXml> MusicXml::fromStream(std::istream &stream, Diagnostics &diagnos
 {
     try
     {
-        pugi::xml_document xdoc;
-        const pugi::xml_parse_result loaded = xdoc.load(stream, pugi::parse_default | pugi::parse_doctype);
+        mxpugi::xml_document xdoc;
+        const mxpugi::xml_parse_result loaded = xdoc.load(stream, mxpugi::parse_default | mxpugi::parse_doctype);
         if (!loaded)
         {
             Location location;
@@ -294,7 +294,7 @@ Result<void> MusicXml::writeToFile(const std::string &filePath, Diagnostics &dia
 {
     try
     {
-        pugi::xml_document xdoc;
+        mxpugi::xml_document xdoc;
         const core::Document toWrite = withWriteVersion(myImpl->document);
         if (myImpl->writeMxVersion)
         {
@@ -335,7 +335,7 @@ Result<void> MusicXml::writeToStream(std::ostream &stream, Diagnostics &diagnost
 {
     try
     {
-        pugi::xml_document xdoc;
+        mxpugi::xml_document xdoc;
         const core::Document toWrite = withWriteVersion(myImpl->document);
         if (myImpl->writeMxVersion)
         {

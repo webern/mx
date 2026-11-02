@@ -38,10 +38,10 @@ jobs:
       # Three static-library slices via CMake's built-in Apple cross-compilation
       # support (CMAKE_SYSTEM_NAME=iOS plus per-slice sysroot/archs); CMake drives
       # clang directly -- no .xcodeproj, no third-party toolchain file. Each slice
-      # builds only the `mx` target and its dependencies (mx_core, pugixml), then
-      # libtool merges the three .a files so each XCFramework slice carries a
-      # single library. Deployment floors: macOS 11.0 (first arm64 macOS),
-      # iOS 13.0 -- raise deliberately, never by accident.
+      # builds only the `mx` target and its dependencies (mx_core, mxpugi -- mx's
+      # private copy of pugixml), then libtool merges the three .a files so each
+      # XCFramework slice carries a single library. Deployment floors: macOS 11.0
+      # (first arm64 macOS), iOS 13.0 -- raise deliberately, never by accident.
       - name: Build slices (macOS universal, iOS device, iOS simulator)
         run: |
           set -euxo pipefail
@@ -52,7 +52,7 @@ jobs:
             libtool -static -o "build/release-$slice/libMxAll.a" \
               "build/release-$slice/libmx.a" \
               "build/release-$slice/libmx_core.a" \
-              "build/release-$slice/libpugixml.a"
+              "build/release-$slice/libmxpugi.a"
           }
           build_slice macos \
             -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
@@ -69,6 +69,32 @@ jobs:
             -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 \
             -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
+
+      # mx ships pugixml under its private mxpugi namespace so a consumer who
+      # links a stock pugixml does not get duplicate symbols. Every merged slice must
+      # therefore be free of global pugi:: symbols; the mxpugi:: count is shown
+      # so an empty archive cannot pass. Same check as `make symbol-check`.
+      - name: "Check slices for global pugi:: symbols"
+        run: |
+          set -euo pipefail
+          status=0
+          for slice in macos ios iossim; do
+            archive="build/release-$slice/libMxAll.a"
+            symbols=$(nm -g "$archive" | c++filt)
+            ours=$(printf '%s\n' "$symbols" | grep -c 'mxpugi::' || true)
+            leaked=$(printf '%s\n' "$symbols" | grep -E '(^|[^A-Za-z0-9_])pugi::' || true)
+            if [ -n "$leaked" ]; then
+              echo "::error::$archive exports symbols in the stock pugi:: namespace"
+              printf '%s\n' "$leaked" | head -n 20
+              status=1
+            elif [ "$ours" -eq 0 ]; then
+              echo "::error::$archive does not export an mxpugi:: symbol; the check did not see real output"
+              status=1
+            else
+              echo "$archive: no pugi:: symbols, $ours mxpugi:: symbols"
+            fi
+          done
+          exit $status
 
       # xcodebuild -create-xcframework is the one Apple-tool call: nothing else
       # writes the bundle format correctly. Headers are the public mx::api

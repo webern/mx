@@ -9,7 +9,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -81,8 +81,8 @@ class TimeChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-TimeChoice parseTimeChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+TimeChoice parseTimeChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeTimeChoice(const TimeChoice &v, pugi::xml_node el);
+void serializeTimeChoice(const TimeChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

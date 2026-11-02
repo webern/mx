@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -36,12 +36,12 @@ class NoteType final
     NoteTypeValue m_value{};
 };
 
-NoteType parseNoteType(pugi::xml_node el, const ParseContext &context);
+NoteType parseNoteType(mxpugi::xml_node el, const ParseContext &context);
 
-void parseNoteTypeContent(NoteType &out, pugi::xml_node el, const ParseContext &context);
+void parseNoteTypeContent(NoteType &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeNoteType(const NoteType &v, pugi::xml_node parent, const char *tag);
+void serializeNoteType(const NoteType &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeNoteTypeContent(const NoteType &v, pugi::xml_node el);
+void serializeNoteTypeContent(const NoteType &v, mxpugi::xml_node el);
 
 } // namespace mx::core

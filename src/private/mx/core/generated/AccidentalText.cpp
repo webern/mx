@@ -251,10 +251,10 @@ void AccidentalText::setValue(AccidentalValue value)
     m_value = std::move(value);
 }
 
-AccidentalText parseAccidentalText(pugi::xml_node el, const ParseContext &context)
+AccidentalText parseAccidentalText(mxpugi::xml_node el, const ParseContext &context)
 {
     AccidentalText out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -362,7 +362,7 @@ AccidentalText parseAccidentalText(pugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseAccidentalTextContent(AccidentalText &out, pugi::xml_node el, const ParseContext &context)
+void parseAccidentalTextContent(AccidentalText &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<AccidentalValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -371,9 +371,9 @@ void parseAccidentalTextContent(AccidentalText &out, pugi::xml_node el, const Pa
     }
 }
 
-void serializeAccidentalText(const AccidentalText &v, pugi::xml_node parent, const char *tag)
+void serializeAccidentalText(const AccidentalText &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.smufl())
     {
         setAttribute(el, "smufl", v.smufl()->toString());
@@ -469,7 +469,7 @@ void serializeAccidentalText(const AccidentalText &v, pugi::xml_node parent, con
     serializeAccidentalTextContent(v, el);
 }
 
-void serializeAccidentalTextContent(const AccidentalText &v, pugi::xml_node el)
+void serializeAccidentalTextContent(const AccidentalText &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

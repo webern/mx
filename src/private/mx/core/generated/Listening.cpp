@@ -36,10 +36,10 @@ void Listening::setOffset(std::optional<Offset> value)
     m_offset = std::move(value);
 }
 
-Listening parseListening(pugi::xml_node el, const ParseContext &context)
+Listening parseListening(mxpugi::xml_node el, const ParseContext &context)
 {
     Listening out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -52,9 +52,9 @@ Listening parseListening(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseListeningContent(Listening &out, pugi::xml_node el, const ParseContext &context)
+void parseListeningContent(Listening &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (!(cursor && (cursorIs(cursor, "sync") || cursorIs(cursor, "other-listening"))))
     {
         throwMissingElement(el, "sync");
@@ -79,13 +79,13 @@ void parseListeningContent(Listening &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeListening(const Listening &v, pugi::xml_node parent, const char *tag)
+void serializeListening(const Listening &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeListeningContent(v, el);
 }
 
-void serializeListeningContent(const Listening &v, pugi::xml_node el)
+void serializeListeningContent(const Listening &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.choice())
     {

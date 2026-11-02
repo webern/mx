@@ -11,7 +11,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -63,12 +63,12 @@ class Image final
     std::optional<Token> m_id;
 };
 
-Image parseImage(pugi::xml_node el, const ParseContext &context);
+Image parseImage(mxpugi::xml_node el, const ParseContext &context);
 
-void parseImageContent(Image &out, pugi::xml_node el, const ParseContext &context);
+void parseImageContent(Image &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeImage(const Image &v, pugi::xml_node parent, const char *tag);
+void serializeImage(const Image &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeImageContent(const Image &v, pugi::xml_node el);
+void serializeImageContent(const Image &v, mxpugi::xml_node el);
 
 } // namespace mx::core

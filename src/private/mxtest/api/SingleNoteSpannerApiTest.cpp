@@ -14,9 +14,9 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mxpugi/mxpugi.hpp"
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/api/TestHelpers.h"
-#include "pugixml.hpp"
 
 #include <string>
 #include <utility>
@@ -63,7 +63,7 @@ inline VoiceData &getVoice(ScoreData &ioScore)
     return ioScore.parts.back().measures.back().staves.back().voices[0];
 }
 
-inline void collectSpanner(const pugi::xml_node &inNode, const std::string &inElementName,
+inline void collectSpanner(const mxpugi::xml_node &inNode, const std::string &inElementName,
                            std::vector<std::pair<std::string, std::string>> &ioResult)
 {
     if (std::string{inNode.name()} == inElementName)
@@ -82,7 +82,7 @@ inline void collectSpanner(const pugi::xml_node &inNode, const std::string &inEl
 inline std::vector<std::pair<std::string, std::string>> spannerSequence(const std::string &inXml, int inNoteIndex,
                                                                         const std::string &inElementName)
 {
-    pugi::xml_document xdoc;
+    mxpugi::xml_document xdoc;
     if (!xdoc.load_string(inXml.c_str()))
     {
         return {};

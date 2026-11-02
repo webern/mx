@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -40,12 +40,12 @@ class Work final
     std::optional<Opus> m_opus;
 };
 
-Work parseWork(pugi::xml_node el, const ParseContext &context);
+Work parseWork(mxpugi::xml_node el, const ParseContext &context);
 
-void parseWorkContent(Work &out, pugi::xml_node el, const ParseContext &context);
+void parseWorkContent(Work &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeWork(const Work &v, pugi::xml_node parent, const char *tag);
+void serializeWork(const Work &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeWorkContent(const Work &v, pugi::xml_node el);
+void serializeWorkContent(const Work &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -272,7 +272,7 @@ uses CMake's built-in Apple cross-compilation support, invoked once per slice â€
 design anticipated a third-party toolchain file, e.g. `leetal/ios-cmake`; none turned out to be
 needed). CMake drives `clang`/`clang++` **directly** (the same compiler the existing native
 `macos` CI job uses) â€” no `.xcodeproj` is generated and no `xcodebuild` runs for *compilation*.
-Each slice builds the `mx` CMake target and its dependencies (`mx_core`, `pugixml`) and merges
+Each slice builds the `mx` CMake target and its dependencies (`mx_core`, `mxpugi`) and merges
 the three static libraries into one with `libtool -static`, so each XCFramework slice carries a
 single library plus the public headers (`src/include`). No module map ships: the consumers are
 C++/ObjC++ and include `mx/api/...` via the header search path SwiftPM derives from the bundle;

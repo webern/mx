@@ -181,11 +181,11 @@ void Pedal::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Pedal parsePedal(pugi::xml_node el, const ParseContext &context)
+Pedal parsePedal(mxpugi::xml_node el, const ParseContext &context)
 {
     Pedal out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -274,7 +274,7 @@ Pedal parsePedal(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePedalContent(Pedal &out, pugi::xml_node el, const ParseContext &context)
+void parsePedalContent(Pedal &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -284,9 +284,9 @@ void parsePedalContent(Pedal &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializePedal(const Pedal &v, pugi::xml_node parent, const char *tag)
+void serializePedal(const Pedal &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -355,7 +355,7 @@ void serializePedal(const Pedal &v, pugi::xml_node parent, const char *tag)
     serializePedalContent(v, el);
 }
 
-void serializePedalContent(const Pedal &v, pugi::xml_node el)
+void serializePedalContent(const Pedal &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

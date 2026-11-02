@@ -10,7 +10,7 @@
 
 #include "mx/core/IdIntegrity.h"
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <sstream>
 #include <string>
@@ -36,7 +36,7 @@ inline std::string idIntegrityInstrumentPart(const std::string &partId, const st
 
 inline std::vector<Diagnostic> idIntegrityCheck(const std::string &xml)
 {
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string(xml.c_str()));
     std::vector<Diagnostic> out;
     checkIds(doc, [&out](const Diagnostic &diagnostic) { out.push_back(diagnostic); });
@@ -51,12 +51,12 @@ struct IdIntegrityRepaired
 
 inline IdIntegrityRepaired idIntegrityRepair(const std::string &xml)
 {
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string(xml.c_str()));
     IdIntegrityRepaired out;
     repairIds(doc, [&out](const Diagnostic &diagnostic) { out.diagnostics.push_back(diagnostic); });
     std::ostringstream stream;
-    doc.save(stream, "", pugi::format_raw);
+    doc.save(stream, "", mxpugi::format_raw);
     out.xml = stream.str();
     return out;
 }
@@ -143,10 +143,10 @@ TEST(ReadingChangesNothing, IdIntegrity)
     // duplicate survives the read.
     const std::string xml = idIntegrityScore(idIntegrityScorePart("P1") + idIntegrityScorePart("P1"),
                                              "<part id=\"P1\"><measure number=\"1\"/></part>");
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string(xml.c_str()));
     checkIds(doc, [](const Diagnostic &) {});
-    const pugi::xml_node first = doc.document_element().child("part-list").child("score-part");
+    const mxpugi::xml_node first = doc.document_element().child("part-list").child("score-part");
     CHECK_EQUAL(std::string{"P1"}, std::string{first.attribute("id").value()});
     CHECK_EQUAL(std::string{"P1"}, std::string{first.next_sibling("score-part").attribute("id").value()});
 }
@@ -189,10 +189,10 @@ TEST(WriteRenamesWithoutAHandler, IdIntegrity)
     // anybody is listening.
     const std::string xml = idIntegrityScore(idIntegrityScorePart("P1") + idIntegrityScorePart("P1"),
                                              "<part id=\"P1\"><measure number=\"1\"/></part>");
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     CHECK(doc.load_string(xml.c_str()));
     repairIds(doc, DiagnosticHandler{});
-    const pugi::xml_node second =
+    const mxpugi::xml_node second =
         doc.document_element().child("part-list").child("score-part").next_sibling("score-part");
     CHECK_EQUAL(std::string{"P1-2"}, std::string{second.attribute("id").value()});
 }

@@ -56,7 +56,7 @@ void LyricTextGroup::setExtend(std::optional<Extend> value)
     m_extend = std::move(value);
 }
 
-LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+LyricTextGroup parseLyricTextGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     LyricTextGroup out;
     if (cursorIs(cursor, "syllabic"))
@@ -85,7 +85,7 @@ LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor, co
     return out;
 }
 
-void serializeLyricTextGroup(const LyricTextGroup &v, pugi::xml_node el)
+void serializeLyricTextGroup(const LyricTextGroup &v, mxpugi::xml_node el)
 {
     if (v.syllabic())
     {

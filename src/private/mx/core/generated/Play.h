@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -42,12 +42,12 @@ class Play final
     std::vector<PlayChoice> m_choice;
 };
 
-Play parsePlay(pugi::xml_node el, const ParseContext &context);
+Play parsePlay(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePlayContent(Play &out, pugi::xml_node el, const ParseContext &context);
+void parsePlayContent(Play &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePlay(const Play &v, pugi::xml_node parent, const char *tag);
+void serializePlay(const Play &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePlayContent(const Play &v, pugi::xml_node el);
+void serializePlayContent(const Play &v, mxpugi::xml_node el);
 
 } // namespace mx::core

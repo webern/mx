@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -42,12 +42,12 @@ class MIDIDevice final
     std::string m_value{};
 };
 
-MIDIDevice parseMIDIDevice(pugi::xml_node el, const ParseContext &context);
+MIDIDevice parseMIDIDevice(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el, const ParseContext &context);
+void parseMIDIDeviceContent(MIDIDevice &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMIDIDevice(const MIDIDevice &v, pugi::xml_node parent, const char *tag);
+void serializeMIDIDevice(const MIDIDevice &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMIDIDeviceContent(const MIDIDevice &v, pugi::xml_node el);
+void serializeMIDIDeviceContent(const MIDIDevice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

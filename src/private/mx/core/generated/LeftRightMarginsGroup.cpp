@@ -31,7 +31,8 @@ void LeftRightMarginsGroup::setRightMargin(Tenths value)
     m_rightMargin = std::move(value);
 }
 
-LeftRightMarginsGroup parseLeftRightMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+LeftRightMarginsGroup parseLeftRightMarginsGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+                                                 const ParseContext &context)
 {
     LeftRightMarginsGroup out;
     if (cursorIs(cursor, "left-margin"))
@@ -55,7 +56,7 @@ LeftRightMarginsGroup parseLeftRightMarginsGroup(pugi::xml_node el, pugi::xml_no
     return out;
 }
 
-void serializeLeftRightMarginsGroup(const LeftRightMarginsGroup &v, pugi::xml_node el)
+void serializeLeftRightMarginsGroup(const LeftRightMarginsGroup &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "left-margin", v.leftMargin().toString());
     writeTextElement(el, "right-margin", v.rightMargin().toString());

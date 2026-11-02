@@ -19,9 +19,9 @@ namespace mxtest
 namespace
 {
 
-bool isBlankText(pugi::xml_node node)
+bool isBlankText(mxpugi::xml_node node)
 {
-    if (node.type() != pugi::node_pcdata && node.type() != pugi::node_cdata)
+    if (node.type() != mxpugi::node_pcdata && node.type() != mxpugi::node_cdata)
     {
         return false;
     }
@@ -29,17 +29,17 @@ bool isBlankText(pugi::xml_node node)
     return text.find_first_not_of(" \t\r\n") == std::string_view::npos;
 }
 
-void stripWhitespaceRecursive(pugi::xml_node el)
+void stripWhitespaceRecursive(mxpugi::xml_node el)
 {
-    pugi::xml_node child = el.first_child();
+    mxpugi::xml_node child = el.first_child();
     while (child)
     {
-        pugi::xml_node next = child.next_sibling();
+        mxpugi::xml_node next = child.next_sibling();
         if (isBlankText(child))
         {
             el.remove_child(child);
         }
-        else if (child.type() == pugi::node_element)
+        else if (child.type() == mxpugi::node_element)
         {
             stripWhitespaceRecursive(child);
         }
@@ -47,12 +47,12 @@ void stripWhitespaceRecursive(pugi::xml_node el)
     }
 }
 
-void stripZerosRecursive(pugi::xml_node el)
+void stripZerosRecursive(mxpugi::xml_node el)
 {
     bool hasElementChildren = false;
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
     {
-        if (c.type() == pugi::node_element)
+        if (c.type() == mxpugi::node_element)
         {
             hasElementChildren = true;
             break;
@@ -66,7 +66,7 @@ void stripZerosRecursive(pugi::xml_node el)
             el.text().set(stripZeros(text).c_str());
         }
     }
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         if (decimalFields.count(a.name()))
         {
@@ -77,9 +77,9 @@ void stripZerosRecursive(pugi::xml_node el)
             }
         }
     }
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
     {
-        if (c.type() == pugi::node_element)
+        if (c.type() == mxpugi::node_element)
         {
             stripZerosRecursive(c);
         }
@@ -121,9 +121,9 @@ std::string respaceCommaSeparatedList(const std::string &value)
     return out;
 }
 
-void normalizeCommaSeparatedFieldsRecursive(pugi::xml_node el)
+void normalizeCommaSeparatedFieldsRecursive(mxpugi::xml_node el)
 {
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         if (commaSeparatedFields.count(a.name()))
         {
@@ -134,19 +134,19 @@ void normalizeCommaSeparatedFieldsRecursive(pugi::xml_node el)
             }
         }
     }
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
     {
-        if (c.type() == pugi::node_element)
+        if (c.type() == mxpugi::node_element)
         {
             normalizeCommaSeparatedFieldsRecursive(c);
         }
     }
 }
 
-void sortAttributesRecursive(pugi::xml_node el)
+void sortAttributesRecursive(mxpugi::xml_node el)
 {
     std::vector<std::pair<std::string, std::string>> attrs;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         attrs.emplace_back(a.name(), a.value());
     }
@@ -162,9 +162,9 @@ void sortAttributesRecursive(pugi::xml_node el)
             el.append_attribute(name.c_str()).set_value(value.c_str());
         }
     }
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
     {
-        if (c.type() == pugi::node_element)
+        if (c.type() == mxpugi::node_element)
         {
             sortAttributesRecursive(c);
         }
@@ -173,14 +173,14 @@ void sortAttributesRecursive(pugi::xml_node el)
 
 } // namespace
 
-void setRootMusicXmlVersion(pugi::xml_document &doc, const char *version)
+void setRootMusicXmlVersion(mxpugi::xml_document &doc, const char *version)
 {
-    pugi::xml_node root = doc.document_element();
+    mxpugi::xml_node root = doc.document_element();
     if (!root)
     {
         return;
     }
-    pugi::xml_attribute attr = root.attribute("version");
+    mxpugi::xml_attribute attr = root.attribute("version");
     if (!attr)
     {
         attr = root.append_attribute("version");
@@ -188,7 +188,7 @@ void setRootMusicXmlVersion(pugi::xml_document &doc, const char *version)
     attr.set_value(version);
 }
 
-void stripInterElementWhitespace(pugi::xml_document &doc)
+void stripInterElementWhitespace(mxpugi::xml_document &doc)
 {
     if (doc.document_element())
     {
@@ -196,7 +196,7 @@ void stripInterElementWhitespace(pugi::xml_document &doc)
     }
 }
 
-void stripZerosFromDecimalFields(pugi::xml_document &doc)
+void stripZerosFromDecimalFields(mxpugi::xml_document &doc)
 {
     if (doc.document_element())
     {
@@ -204,7 +204,7 @@ void stripZerosFromDecimalFields(pugi::xml_document &doc)
     }
 }
 
-void normalizeCommaSeparatedFields(pugi::xml_document &doc)
+void normalizeCommaSeparatedFields(mxpugi::xml_document &doc)
 {
     if (doc.document_element())
     {
@@ -212,7 +212,7 @@ void normalizeCommaSeparatedFields(pugi::xml_document &doc)
     }
 }
 
-void sortAttributes(pugi::xml_document &doc)
+void sortAttributes(mxpugi::xml_document &doc)
 {
     if (doc.document_element())
     {

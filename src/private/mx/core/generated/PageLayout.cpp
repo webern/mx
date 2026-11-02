@@ -41,10 +41,10 @@ void PageLayout::clearPageMargins() noexcept
     m_pageMargins.clear();
 }
 
-PageLayout parsePageLayout(pugi::xml_node el, const ParseContext &context)
+PageLayout parsePageLayout(mxpugi::xml_node el, const ParseContext &context)
 {
     PageLayout out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -57,9 +57,9 @@ PageLayout parsePageLayout(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePageLayoutContent(PageLayout &out, pugi::xml_node el, const ParseContext &context)
+void parsePageLayoutContent(PageLayout &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "page-height")))
     {
         out.setGroup(parsePageLayoutGroup(el, cursor, context));
@@ -82,13 +82,13 @@ void parsePageLayoutContent(PageLayout &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializePageLayout(const PageLayout &v, pugi::xml_node parent, const char *tag)
+void serializePageLayout(const PageLayout &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializePageLayoutContent(v, el);
 }
 
-void serializePageLayoutContent(const PageLayout &v, pugi::xml_node el)
+void serializePageLayoutContent(const PageLayout &v, mxpugi::xml_node el)
 {
     if (v.group())
     {

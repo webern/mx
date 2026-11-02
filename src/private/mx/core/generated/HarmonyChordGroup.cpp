@@ -66,7 +66,7 @@ void HarmonyChordGroup::setDegree(std::vector<Degree> value)
     m_degree = std::move(value);
 }
 
-HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+HarmonyChordGroup parseHarmonyChordGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     HarmonyChordGroup out;
     if (cursor && (cursorIs(cursor, "root") || cursorIs(cursor, "numeral") || cursorIs(cursor, "function")))
@@ -104,7 +104,7 @@ HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &curs
     return out;
 }
 
-void serializeHarmonyChordGroup(const HarmonyChordGroup &v, pugi::xml_node el)
+void serializeHarmonyChordGroup(const HarmonyChordGroup &v, mxpugi::xml_node el)
 {
     serializeHarmonyChordGroupChoice(v.choice(), el);
     serializeKind(v.kind(), el, "kind");

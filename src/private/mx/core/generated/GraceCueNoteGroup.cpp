@@ -31,7 +31,7 @@ void GraceCueNoteGroup::setFullNote(FullNoteGroup value)
     m_fullNote = std::move(value);
 }
 
-GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+GraceCueNoteGroup parseGraceCueNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     GraceCueNoteGroup out;
     if (cursorIs(cursor, "cue"))
@@ -55,7 +55,7 @@ GraceCueNoteGroup parseGraceCueNoteGroup(pugi::xml_node el, pugi::xml_node &curs
     return out;
 }
 
-void serializeGraceCueNoteGroup(const GraceCueNoteGroup &v, pugi::xml_node el)
+void serializeGraceCueNoteGroup(const GraceCueNoteGroup &v, mxpugi::xml_node el)
 {
     serializeEmpty(v.cue(), el, "cue");
     serializeFullNoteGroup(v.fullNote(), el);

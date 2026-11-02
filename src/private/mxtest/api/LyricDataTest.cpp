@@ -7,8 +7,8 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/ScoreData.h"
+#include "mxpugi/mxpugi.hpp"
 #include "mxtest/api/TestHelpers.h"
-#include "pugixml.hpp"
 
 #include <string>
 
@@ -66,9 +66,9 @@ mx::api::ScoreData makeScoreWithLyrics()
     return score;
 }
 
-pugi::xml_node firstNote(const std::string &xml)
+mxpugi::xml_node firstNote(const std::string &xml)
 {
-    static pugi::xml_document doc;
+    static mxpugi::xml_document doc;
     doc.reset();
     doc.load_string(xml.c_str());
     return doc.child("score-partwise").child("part").child("measure").child("note");

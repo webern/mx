@@ -36,7 +36,7 @@ void OrnamentsGroup::setAccidentalMark(std::vector<AccidentalMark> value)
     m_accidentalMark = std::move(value);
 }
 
-OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+OrnamentsGroup parseOrnamentsGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     OrnamentsGroup out;
     if (cursor && (cursorIs(cursor, "trill-mark") || cursorIs(cursor, "turn") || cursorIs(cursor, "delayed-turn") ||
@@ -60,7 +60,7 @@ OrnamentsGroup parseOrnamentsGroup(pugi::xml_node el, pugi::xml_node &cursor, co
     return out;
 }
 
-void serializeOrnamentsGroup(const OrnamentsGroup &v, pugi::xml_node el)
+void serializeOrnamentsGroup(const OrnamentsGroup &v, mxpugi::xml_node el)
 {
     serializeOrnamentsGroupChoice(v.choice(), el);
     for (const auto &item : v.accidentalMark())

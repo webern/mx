@@ -31,10 +31,10 @@ void Root::setRootAlter(std::optional<HarmonyAlter> value)
     m_rootAlter = std::move(value);
 }
 
-Root parseRoot(pugi::xml_node el, const ParseContext &context)
+Root parseRoot(mxpugi::xml_node el, const ParseContext &context)
 {
     Root out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -47,9 +47,9 @@ Root parseRoot(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseRootContent(Root &out, pugi::xml_node el, const ParseContext &context)
+void parseRootContent(Root &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "root-step"))
     {
         out.setRootStep(parseRootStep(cursor, context));
@@ -74,13 +74,13 @@ void parseRootContent(Root &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeRoot(const Root &v, pugi::xml_node parent, const char *tag)
+void serializeRoot(const Root &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeRootContent(v, el);
 }
 
-void serializeRootContent(const Root &v, pugi::xml_node el)
+void serializeRootContent(const Root &v, mxpugi::xml_node el)
 {
     serializeRootStep(v.rootStep(), el, "root-step");
     if (v.rootAlter())

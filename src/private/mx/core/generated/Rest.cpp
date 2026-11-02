@@ -31,10 +31,10 @@ void Rest::setDisplayStepOctave(std::optional<DisplayStepOctaveGroup> value)
     m_displayStepOctave = std::move(value);
 }
 
-Rest parseRest(pugi::xml_node el, const ParseContext &context)
+Rest parseRest(mxpugi::xml_node el, const ParseContext &context)
 {
     Rest out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,9 +54,9 @@ Rest parseRest(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseRestContent(Rest &out, pugi::xml_node el, const ParseContext &context)
+void parseRestContent(Rest &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "display-step")))
     {
         out.setDisplayStepOctave(parseDisplayStepOctaveGroup(el, cursor, context));
@@ -71,9 +71,9 @@ void parseRestContent(Rest &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeRest(const Rest &v, pugi::xml_node parent, const char *tag)
+void serializeRest(const Rest &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.measure())
     {
         setAttribute(el, "measure", v.measure()->toString());
@@ -81,7 +81,7 @@ void serializeRest(const Rest &v, pugi::xml_node parent, const char *tag)
     serializeRestContent(v, el);
 }
 
-void serializeRestContent(const Rest &v, pugi::xml_node el)
+void serializeRestContent(const Rest &v, mxpugi::xml_node el)
 {
     if (v.displayStepOctave())
     {

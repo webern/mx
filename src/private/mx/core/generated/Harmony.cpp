@@ -226,10 +226,10 @@ void Harmony::setStaff(std::optional<int> value)
     m_staff = std::move(value);
 }
 
-Harmony parseHarmony(pugi::xml_node el, const ParseContext &context)
+Harmony parseHarmony(mxpugi::xml_node el, const ParseContext &context)
 {
     Harmony out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -309,9 +309,9 @@ Harmony parseHarmony(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseHarmonyContent(Harmony &out, pugi::xml_node el, const ParseContext &context)
+void parseHarmonyContent(Harmony &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (!(cursor && (cursorIs(cursor, "root") || cursorIs(cursor, "numeral") || cursorIs(cursor, "function"))))
     {
         throwMissingElement(el, "root");
@@ -353,9 +353,9 @@ void parseHarmonyContent(Harmony &out, pugi::xml_node el, const ParseContext &co
     }
 }
 
-void serializeHarmony(const Harmony &v, pugi::xml_node parent, const char *tag)
+void serializeHarmony(const Harmony &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.type())
     {
         setAttribute(el, "type", v.type()->toString());
@@ -423,7 +423,7 @@ void serializeHarmony(const Harmony &v, pugi::xml_node parent, const char *tag)
     serializeHarmonyContent(v, el);
 }
 
-void serializeHarmonyContent(const Harmony &v, pugi::xml_node el)
+void serializeHarmonyContent(const Harmony &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.harmonyChord())
     {

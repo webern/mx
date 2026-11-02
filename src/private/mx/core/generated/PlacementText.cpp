@@ -121,10 +121,10 @@ void PlacementText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-PlacementText parsePlacementText(pugi::xml_node el, const ParseContext &context)
+PlacementText parsePlacementText(mxpugi::xml_node el, const ParseContext &context)
 {
     PlacementText out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -180,7 +180,7 @@ PlacementText parsePlacementText(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePlacementTextContent(PlacementText &out, pugi::xml_node el, const ParseContext &context)
+void parsePlacementTextContent(PlacementText &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -189,9 +189,9 @@ void parsePlacementTextContent(PlacementText &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializePlacementText(const PlacementText &v, pugi::xml_node parent, const char *tag)
+void serializePlacementText(const PlacementText &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -235,7 +235,7 @@ void serializePlacementText(const PlacementText &v, pugi::xml_node parent, const
     serializePlacementTextContent(v, el);
 }
 
-void serializePlacementTextContent(const PlacementText &v, pugi::xml_node el)
+void serializePlacementTextContent(const PlacementText &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

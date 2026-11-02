@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -34,12 +34,12 @@ class MeasureLayout final
     std::optional<Tenths> m_measureDistance;
 };
 
-MeasureLayout parseMeasureLayout(pugi::xml_node el, const ParseContext &context);
+MeasureLayout parseMeasureLayout(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el, const ParseContext &context);
+void parseMeasureLayoutContent(MeasureLayout &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMeasureLayout(const MeasureLayout &v, pugi::xml_node parent, const char *tag);
+void serializeMeasureLayout(const MeasureLayout &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMeasureLayoutContent(const MeasureLayout &v, pugi::xml_node el);
+void serializeMeasureLayoutContent(const MeasureLayout &v, mxpugi::xml_node el);
 
 } // namespace mx::core

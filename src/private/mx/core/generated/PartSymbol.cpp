@@ -91,10 +91,10 @@ void PartSymbol::setValue(GroupSymbolValue value)
     m_value = std::move(value);
 }
 
-PartSymbol parsePartSymbol(pugi::xml_node el, const ParseContext &context)
+PartSymbol parsePartSymbol(mxpugi::xml_node el, const ParseContext &context)
 {
     PartSymbol out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -138,7 +138,7 @@ PartSymbol parsePartSymbol(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePartSymbolContent(PartSymbol &out, pugi::xml_node el, const ParseContext &context)
+void parsePartSymbolContent(PartSymbol &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<GroupSymbolValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -147,9 +147,9 @@ void parsePartSymbolContent(PartSymbol &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializePartSymbol(const PartSymbol &v, pugi::xml_node parent, const char *tag)
+void serializePartSymbol(const PartSymbol &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.topStaff())
     {
         setAttribute(el, "top-staff", v.topStaff()->toString());
@@ -181,7 +181,7 @@ void serializePartSymbol(const PartSymbol &v, pugi::xml_node parent, const char 
     serializePartSymbolContent(v, el);
 }
 
-void serializePartSymbolContent(const PartSymbol &v, pugi::xml_node el)
+void serializePartSymbolContent(const PartSymbol &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

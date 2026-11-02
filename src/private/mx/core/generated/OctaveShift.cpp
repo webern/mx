@@ -161,11 +161,11 @@ void OctaveShift::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-OctaveShift parseOctaveShift(pugi::xml_node el, const ParseContext &context)
+OctaveShift parseOctaveShift(mxpugi::xml_node el, const ParseContext &context)
 {
     OctaveShift out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -246,7 +246,7 @@ OctaveShift parseOctaveShift(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseOctaveShiftContent(OctaveShift &out, pugi::xml_node el, const ParseContext &context)
+void parseOctaveShiftContent(OctaveShift &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -256,9 +256,9 @@ void parseOctaveShiftContent(OctaveShift &out, pugi::xml_node el, const ParseCon
     }
 }
 
-void serializeOctaveShift(const OctaveShift &v, pugi::xml_node parent, const char *tag)
+void serializeOctaveShift(const OctaveShift &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -319,7 +319,7 @@ void serializeOctaveShift(const OctaveShift &v, pugi::xml_node parent, const cha
     serializeOctaveShiftContent(v, el);
 }
 
-void serializeOctaveShiftContent(const OctaveShift &v, pugi::xml_node el)
+void serializeOctaveShiftContent(const OctaveShift &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

@@ -121,12 +121,12 @@ void Image::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Image parseImage(pugi::xml_node el, const ParseContext &context)
+Image parseImage(mxpugi::xml_node el, const ParseContext &context)
 {
     Image out;
     bool seen_source = false;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -196,7 +196,7 @@ Image parseImage(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseImageContent(Image &out, pugi::xml_node el, const ParseContext &context)
+void parseImageContent(Image &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -206,9 +206,9 @@ void parseImageContent(Image &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeImage(const Image &v, pugi::xml_node parent, const char *tag)
+void serializeImage(const Image &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "source", v.source());
     setAttribute(el, "type", v.type());
     if (v.height())
@@ -250,7 +250,7 @@ void serializeImage(const Image &v, pugi::xml_node parent, const char *tag)
     serializeImageContent(v, el);
 }
 
-void serializeImageContent(const Image &v, pugi::xml_node el)
+void serializeImageContent(const Image &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

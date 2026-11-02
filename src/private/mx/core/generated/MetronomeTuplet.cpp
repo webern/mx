@@ -41,11 +41,11 @@ void MetronomeTuplet::setShowNumber(std::optional<ShowTuplet> value)
     m_showNumber = std::move(value);
 }
 
-MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el, const ParseContext &context)
+MetronomeTuplet parseMetronomeTuplet(mxpugi::xml_node el, const ParseContext &context)
 {
     MetronomeTuplet out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -78,9 +78,9 @@ MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el, const ParseContext &cont
     return out;
 }
 
-void serializeMetronomeTuplet(const MetronomeTuplet &v, pugi::xml_node parent, const char *tag)
+void serializeMetronomeTuplet(const MetronomeTuplet &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.bracket())
     {

@@ -101,10 +101,10 @@ void Defaults::setLyricLanguage(std::vector<LyricLanguage> value)
     m_lyricLanguage = std::move(value);
 }
 
-Defaults parseDefaults(pugi::xml_node el, const ParseContext &context)
+Defaults parseDefaults(mxpugi::xml_node el, const ParseContext &context)
 {
     Defaults out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -117,9 +117,9 @@ Defaults parseDefaults(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseDefaultsContent(Defaults &out, pugi::xml_node el, const ParseContext &context)
+void parseDefaultsContent(Defaults &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "scaling"))
     {
         out.setScaling(parseScaling(cursor, context));
@@ -174,13 +174,13 @@ void parseDefaultsContent(Defaults &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeDefaults(const Defaults &v, pugi::xml_node parent, const char *tag)
+void serializeDefaults(const Defaults &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeDefaultsContent(v, el);
 }
 
-void serializeDefaultsContent(const Defaults &v, pugi::xml_node el)
+void serializeDefaultsContent(const Defaults &v, mxpugi::xml_node el)
 {
     if (v.scaling())
     {

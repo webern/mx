@@ -71,10 +71,10 @@ void MetronomeNote::setMetronomeTuplet(std::optional<MetronomeTuplet> value)
     m_metronomeTuplet = std::move(value);
 }
 
-MetronomeNote parseMetronomeNote(pugi::xml_node el, const ParseContext &context)
+MetronomeNote parseMetronomeNote(mxpugi::xml_node el, const ParseContext &context)
 {
     MetronomeNote out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -87,9 +87,9 @@ MetronomeNote parseMetronomeNote(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el, const ParseContext &context)
+void parseMetronomeNoteContent(MetronomeNote &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "metronome-type"))
     {
         out.setMetronomeType(parseValue<NoteTypeValue>(childText(cursor), context, cursor, nullptr));
@@ -131,13 +131,13 @@ void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeMetronomeNote(const MetronomeNote &v, pugi::xml_node parent, const char *tag)
+void serializeMetronomeNote(const MetronomeNote &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeMetronomeNoteContent(v, el);
 }
 
-void serializeMetronomeNoteContent(const MetronomeNote &v, pugi::xml_node el)
+void serializeMetronomeNoteContent(const MetronomeNote &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "metronome-type", v.metronomeType().toString());
     for (const auto &item : v.metronomeDot())

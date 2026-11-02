@@ -21,11 +21,11 @@ void InstrumentLink::setID(Token value)
     m_id = std::move(value);
 }
 
-InstrumentLink parseInstrumentLink(pugi::xml_node el, const ParseContext &context)
+InstrumentLink parseInstrumentLink(mxpugi::xml_node el, const ParseContext &context)
 {
     InstrumentLink out;
     bool seen_id = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -50,7 +50,7 @@ InstrumentLink parseInstrumentLink(pugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el, const ParseContext &context)
+void parseInstrumentLinkContent(InstrumentLink &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -60,14 +60,14 @@ void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el, const Pa
     }
 }
 
-void serializeInstrumentLink(const InstrumentLink &v, pugi::xml_node parent, const char *tag)
+void serializeInstrumentLink(const InstrumentLink &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "id", v.id().toString());
     serializeInstrumentLinkContent(v, el);
 }
 
-void serializeInstrumentLinkContent(const InstrumentLink &v, pugi::xml_node el)
+void serializeInstrumentLinkContent(const InstrumentLink &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

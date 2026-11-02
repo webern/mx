@@ -10,7 +10,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,12 +41,12 @@ class EmptyFont final
     std::optional<FontWeight> m_fontWeight;
 };
 
-EmptyFont parseEmptyFont(pugi::xml_node el, const ParseContext &context);
+EmptyFont parseEmptyFont(mxpugi::xml_node el, const ParseContext &context);
 
-void parseEmptyFontContent(EmptyFont &out, pugi::xml_node el, const ParseContext &context);
+void parseEmptyFontContent(EmptyFont &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeEmptyFont(const EmptyFont &v, pugi::xml_node parent, const char *tag);
+void serializeEmptyFont(const EmptyFont &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeEmptyFontContent(const EmptyFont &v, pugi::xml_node el);
+void serializeEmptyFontContent(const EmptyFont &v, mxpugi::xml_node el);
 
 } // namespace mx::core

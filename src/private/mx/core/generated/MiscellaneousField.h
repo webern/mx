@@ -5,7 +5,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -32,12 +32,12 @@ class MiscellaneousField final
     std::string m_value{};
 };
 
-MiscellaneousField parseMiscellaneousField(pugi::xml_node el, const ParseContext &context);
+MiscellaneousField parseMiscellaneousField(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el, const ParseContext &context);
+void parseMiscellaneousFieldContent(MiscellaneousField &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMiscellaneousField(const MiscellaneousField &v, pugi::xml_node parent, const char *tag);
+void serializeMiscellaneousField(const MiscellaneousField &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMiscellaneousFieldContent(const MiscellaneousField &v, pugi::xml_node el);
+void serializeMiscellaneousFieldContent(const MiscellaneousField &v, mxpugi::xml_node el);
 
 } // namespace mx::core

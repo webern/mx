@@ -14,7 +14,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -67,12 +67,12 @@ class Handbell final
     HandbellValue m_value{};
 };
 
-Handbell parseHandbell(pugi::xml_node el, const ParseContext &context);
+Handbell parseHandbell(mxpugi::xml_node el, const ParseContext &context);
 
-void parseHandbellContent(Handbell &out, pugi::xml_node el, const ParseContext &context);
+void parseHandbellContent(Handbell &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeHandbell(const Handbell &v, pugi::xml_node parent, const char *tag);
+void serializeHandbell(const Handbell &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeHandbellContent(const Handbell &v, pugi::xml_node el);
+void serializeHandbellContent(const Handbell &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -9,7 +9,7 @@
 #include "mx/core/Decimal.h"
 #include "mx/core/Lexical.h"
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <functional>
 #include <string>
@@ -55,20 +55,20 @@ class ParseContext
 
 /// Reports that the text of `el`, or of its `attribute` when that is not
 /// null, was replaced by `replacement`.
-void reportValueRepair(const ParseContext &context, ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
-                       std::string_view text, std::string_view replacement);
+void reportValueRepair(const ParseContext &context, ValueParseOutcome outcome, mxpugi::xml_node el,
+                       const char *attribute, std::string_view text, std::string_view replacement);
 
 /// Reports a repaired xs:ID attribute, warning that the repair may have made
 /// it the same as another ID in the document.
-void reportIdRepair(const ParseContext &context, ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
+void reportIdRepair(const ParseContext &context, ValueParseOutcome outcome, mxpugi::xml_node el, const char *attribute,
                     std::string_view text, std::string_view replacement);
 
-void reportAttributeDefaulted(const ParseContext &context, pugi::xml_node el, const char *attribute,
+void reportAttributeDefaulted(const ParseContext &context, mxpugi::xml_node el, const char *attribute,
                               std::string_view value);
 
 /// The lenient parse of a value type, reporting any repair it made.
 template <typename T>
-T parseValue(std::string_view text, const ParseContext &context, pugi::xml_node el, const char *attribute)
+T parseValue(std::string_view text, const ParseContext &context, mxpugi::xml_node el, const char *attribute)
 {
     ValueParseOutcome outcome = ValueParseOutcome::valid;
     T value = T::parse(text, outcome);
@@ -81,7 +81,7 @@ T parseValue(std::string_view text, const ParseContext &context, pugi::xml_node 
 
 /// The lenient parse of an xs:ID attribute, reporting any repair it made.
 template <typename T>
-T parseIdValue(std::string_view text, const ParseContext &context, pugi::xml_node el, const char *attribute)
+T parseIdValue(std::string_view text, const ParseContext &context, mxpugi::xml_node el, const char *attribute)
 {
     ValueParseOutcome outcome = ValueParseOutcome::valid;
     T value = T::parse(text, outcome);
@@ -92,8 +92,9 @@ T parseIdValue(std::string_view text, const ParseContext &context, pugi::xml_nod
     return value;
 }
 
-int parseIntegerValue(std::string_view text, const ParseContext &context, pugi::xml_node el, const char *attribute);
+int parseIntegerValue(std::string_view text, const ParseContext &context, mxpugi::xml_node el, const char *attribute);
 
-Decimal parseDecimalValue(std::string_view text, const ParseContext &context, pugi::xml_node el, const char *attribute);
+Decimal parseDecimalValue(std::string_view text, const ParseContext &context, mxpugi::xml_node el,
+                          const char *attribute);
 
 } // namespace mx::core

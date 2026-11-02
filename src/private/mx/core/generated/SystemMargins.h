@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -34,12 +34,12 @@ class SystemMargins final
     LeftRightMarginsGroup m_leftRightMargins{};
 };
 
-SystemMargins parseSystemMargins(pugi::xml_node el, const ParseContext &context);
+SystemMargins parseSystemMargins(mxpugi::xml_node el, const ParseContext &context);
 
-void parseSystemMarginsContent(SystemMargins &out, pugi::xml_node el, const ParseContext &context);
+void parseSystemMarginsContent(SystemMargins &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeSystemMargins(const SystemMargins &v, pugi::xml_node parent, const char *tag);
+void serializeSystemMargins(const SystemMargins &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeSystemMarginsContent(const SystemMargins &v, pugi::xml_node el);
+void serializeSystemMarginsContent(const SystemMargins &v, mxpugi::xml_node el);
 
 } // namespace mx::core

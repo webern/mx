@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -42,8 +42,8 @@ class AllMarginsGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-AllMarginsGroup parseAllMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+AllMarginsGroup parseAllMarginsGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeAllMarginsGroup(const AllMarginsGroup &v, pugi::xml_node el);
+void serializeAllMarginsGroup(const AllMarginsGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

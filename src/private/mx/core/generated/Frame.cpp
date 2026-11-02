@@ -166,10 +166,10 @@ void Frame::setFrameNote(OneOrMore<FrameNote> value)
     m_frameNote = std::move(value);
 }
 
-Frame parseFrame(pugi::xml_node el, const ParseContext &context)
+Frame parseFrame(mxpugi::xml_node el, const ParseContext &context)
 {
     Frame out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -229,9 +229,9 @@ Frame parseFrame(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFrameContent(Frame &out, pugi::xml_node el, const ParseContext &context)
+void parseFrameContent(Frame &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "frame-strings"))
     {
         out.setFrameStrings(parseIntegerValue(childText(cursor), context, cursor, nullptr));
@@ -277,9 +277,9 @@ void parseFrameContent(Frame &out, pugi::xml_node el, const ParseContext &contex
     }
 }
 
-void serializeFrame(const Frame &v, pugi::xml_node parent, const char *tag)
+void serializeFrame(const Frame &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.height())
     {
         setAttribute(el, "height", v.height()->toString());
@@ -327,7 +327,7 @@ void serializeFrame(const Frame &v, pugi::xml_node parent, const char *tag)
     serializeFrameContent(v, el);
 }
 
-void serializeFrameContent(const Frame &v, pugi::xml_node el)
+void serializeFrameContent(const Frame &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "frame-strings", formatInt(v.frameStrings()));
     writeTextElement(el, "frame-frets", formatInt(v.frameFrets()));

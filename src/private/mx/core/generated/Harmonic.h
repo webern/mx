@@ -18,7 +18,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -83,12 +83,12 @@ class Harmonic final
     std::optional<HarmonicChoice2> m_choice2;
 };
 
-Harmonic parseHarmonic(pugi::xml_node el, const ParseContext &context);
+Harmonic parseHarmonic(mxpugi::xml_node el, const ParseContext &context);
 
-void parseHarmonicContent(Harmonic &out, pugi::xml_node el, const ParseContext &context);
+void parseHarmonicContent(Harmonic &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeHarmonic(const Harmonic &v, pugi::xml_node parent, const char *tag);
+void serializeHarmonic(const Harmonic &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeHarmonicContent(const Harmonic &v, pugi::xml_node el);
+void serializeHarmonicContent(const Harmonic &v, mxpugi::xml_node el);
 
 } // namespace mx::core

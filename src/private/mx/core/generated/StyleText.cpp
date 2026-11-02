@@ -111,10 +111,10 @@ void StyleText::setValue(std::string value)
     m_value = std::move(value);
 }
 
-StyleText parseStyleText(pugi::xml_node el, const ParseContext &context)
+StyleText parseStyleText(mxpugi::xml_node el, const ParseContext &context)
 {
     StyleText out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -166,7 +166,7 @@ StyleText parseStyleText(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseStyleTextContent(StyleText &out, pugi::xml_node el, const ParseContext &context)
+void parseStyleTextContent(StyleText &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -175,9 +175,9 @@ void parseStyleTextContent(StyleText &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeStyleText(const StyleText &v, pugi::xml_node parent, const char *tag)
+void serializeStyleText(const StyleText &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.defaultX())
     {
         setAttribute(el, "default-x", v.defaultX()->toString());
@@ -217,7 +217,7 @@ void serializeStyleText(const StyleText &v, pugi::xml_node parent, const char *t
     serializeStyleTextContent(v, el);
 }
 
-void serializeStyleTextContent(const StyleText &v, pugi::xml_node el)
+void serializeStyleTextContent(const StyleText &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

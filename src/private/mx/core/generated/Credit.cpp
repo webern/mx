@@ -86,10 +86,10 @@ void Credit::setChoice(CreditChoice value)
     m_choice = std::move(value);
 }
 
-Credit parseCredit(pugi::xml_node el, const ParseContext &context)
+Credit parseCredit(mxpugi::xml_node el, const ParseContext &context)
 {
     Credit out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -113,9 +113,9 @@ Credit parseCredit(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseCreditContent(Credit &out, pugi::xml_node el, const ParseContext &context)
+void parseCreditContent(Credit &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     while (cursorIs(cursor, "credit-type"))
     {
         out.addCreditType(std::string{childText(cursor)});
@@ -151,9 +151,9 @@ void parseCreditContent(Credit &out, pugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeCredit(const Credit &v, pugi::xml_node parent, const char *tag)
+void serializeCredit(const Credit &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.page())
     {
         setAttribute(el, "page", formatInt(*v.page()));
@@ -165,7 +165,7 @@ void serializeCredit(const Credit &v, pugi::xml_node parent, const char *tag)
     serializeCreditContent(v, el);
 }
 
-void serializeCreditContent(const Credit &v, pugi::xml_node el)
+void serializeCreditContent(const Credit &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.creditType())
     {

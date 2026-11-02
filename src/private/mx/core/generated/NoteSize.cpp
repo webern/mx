@@ -31,11 +31,11 @@ void NoteSize::setValue(NonNegativeDecimal value)
     m_value = std::move(value);
 }
 
-NoteSize parseNoteSize(pugi::xml_node el, const ParseContext &context)
+NoteSize parseNoteSize(mxpugi::xml_node el, const ParseContext &context)
 {
     NoteSize out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,7 +60,7 @@ NoteSize parseNoteSize(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseNoteSizeContent(NoteSize &out, pugi::xml_node el, const ParseContext &context)
+void parseNoteSizeContent(NoteSize &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<NonNegativeDecimal>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -69,14 +69,14 @@ void parseNoteSizeContent(NoteSize &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializeNoteSize(const NoteSize &v, pugi::xml_node parent, const char *tag)
+void serializeNoteSize(const NoteSize &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     serializeNoteSizeContent(v, el);
 }
 
-void serializeNoteSizeContent(const NoteSize &v, pugi::xml_node el)
+void serializeNoteSizeContent(const NoteSize &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

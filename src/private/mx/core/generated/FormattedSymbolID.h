@@ -22,7 +22,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -108,12 +108,12 @@ class FormattedSymbolID final
     SmuflGlyphName m_value{};
 };
 
-FormattedSymbolID parseFormattedSymbolID(pugi::xml_node el, const ParseContext &context);
+FormattedSymbolID parseFormattedSymbolID(mxpugi::xml_node el, const ParseContext &context);
 
-void parseFormattedSymbolIDContent(FormattedSymbolID &out, pugi::xml_node el, const ParseContext &context);
+void parseFormattedSymbolIDContent(FormattedSymbolID &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeFormattedSymbolID(const FormattedSymbolID &v, pugi::xml_node parent, const char *tag);
+void serializeFormattedSymbolID(const FormattedSymbolID &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeFormattedSymbolIDContent(const FormattedSymbolID &v, pugi::xml_node el);
+void serializeFormattedSymbolIDContent(const FormattedSymbolID &v, mxpugi::xml_node el);
 
 } // namespace mx::core

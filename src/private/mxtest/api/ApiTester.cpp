@@ -4,8 +4,8 @@
 
 #include "mxtest/api/ApiTester.h"
 #include "mx/api/MusicXml.h"
+#include "mxpugi/mxpugi.hpp"
 #include "mxtest/file/StupidFileFunctions.h"
-#include "pugixml.hpp"
 
 #include <sstream>
 
@@ -103,7 +103,7 @@ void ApiTester::runTestCode()
     setFailureMessage("after round-trips to disk the ScoreData objects were not equal");
 
     // save a "scrubbed" version of the input via pugixml round-trip
-    pugi::xml_document pDoc;
+    mxpugi::xml_document pDoc;
     if (pDoc.load_file(testFilePath().c_str()))
     {
         pDoc.save_file(myScrubbedFilePath.c_str());

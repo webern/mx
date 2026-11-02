@@ -161,10 +161,10 @@ void OtherDirection::setValue(std::string value)
     m_value = std::move(value);
 }
 
-OtherDirection parseOtherDirection(pugi::xml_node el, const ParseContext &context)
+OtherDirection parseOtherDirection(mxpugi::xml_node el, const ParseContext &context)
 {
     OtherDirection out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -236,7 +236,7 @@ OtherDirection parseOtherDirection(pugi::xml_node el, const ParseContext &contex
     return out;
 }
 
-void parseOtherDirectionContent(OtherDirection &out, pugi::xml_node el, const ParseContext &context)
+void parseOtherDirectionContent(OtherDirection &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -245,9 +245,9 @@ void parseOtherDirectionContent(OtherDirection &out, pugi::xml_node el, const Pa
     }
 }
 
-void serializeOtherDirection(const OtherDirection &v, pugi::xml_node parent, const char *tag)
+void serializeOtherDirection(const OtherDirection &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.printObject())
     {
         setAttribute(el, "print-object", v.printObject()->toString());
@@ -307,7 +307,7 @@ void serializeOtherDirection(const OtherDirection &v, pugi::xml_node parent, con
     serializeOtherDirectionContent(v, el);
 }
 
-void serializeOtherDirectionContent(const OtherDirection &v, pugi::xml_node el)
+void serializeOtherDirectionContent(const OtherDirection &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

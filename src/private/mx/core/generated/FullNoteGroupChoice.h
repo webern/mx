@@ -11,7 +11,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -97,8 +97,9 @@ class FullNoteGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-FullNoteGroupChoice parseFullNoteGroupChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+FullNoteGroupChoice parseFullNoteGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+                                             const ParseContext &context);
 
-void serializeFullNoteGroupChoice(const FullNoteGroupChoice &v, pugi::xml_node el);
+void serializeFullNoteGroupChoice(const FullNoteGroupChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

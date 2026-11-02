@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -34,12 +34,12 @@ class Beater final
     BeaterValue m_value{};
 };
 
-Beater parseBeater(pugi::xml_node el, const ParseContext &context);
+Beater parseBeater(mxpugi::xml_node el, const ParseContext &context);
 
-void parseBeaterContent(Beater &out, pugi::xml_node el, const ParseContext &context);
+void parseBeaterContent(Beater &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeBeater(const Beater &v, pugi::xml_node parent, const char *tag);
+void serializeBeater(const Beater &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeBeaterContent(const Beater &v, pugi::xml_node el);
+void serializeBeaterContent(const Beater &v, mxpugi::xml_node el);
 
 } // namespace mx::core

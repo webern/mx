@@ -161,10 +161,10 @@ void Attributes::setMeasureStyle(std::vector<MeasureStyle> value)
     m_measureStyle = std::move(value);
 }
 
-Attributes parseAttributes(pugi::xml_node el, const ParseContext &context)
+Attributes parseAttributes(mxpugi::xml_node el, const ParseContext &context)
 {
     Attributes out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -177,9 +177,9 @@ Attributes parseAttributes(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseAttributesContent(Attributes &out, pugi::xml_node el, const ParseContext &context)
+void parseAttributesContent(Attributes &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
         out.setEditorial(parseEditorialGroup(el, cursor, context));
@@ -252,13 +252,13 @@ void parseAttributesContent(Attributes &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializeAttributes(const Attributes &v, pugi::xml_node parent, const char *tag)
+void serializeAttributes(const Attributes &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeAttributesContent(v, el);
 }
 
-void serializeAttributesContent(const Attributes &v, pugi::xml_node el)
+void serializeAttributesContent(const Attributes &v, mxpugi::xml_node el)
 {
     serializeEditorialGroup(v.editorial(), el);
     if (v.divisions())

@@ -13,7 +13,7 @@
 #include "mxtest/file/PathRoot.h"
 #include "mxtest/import/Normalize.h"
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -94,16 +94,16 @@ bool hasInvalidMarker(const std::filesystem::path &p)
     return std::filesystem::exists(marker, ec);
 }
 
-std::string saveToString(const pugi::xml_document &doc)
+std::string saveToString(const mxpugi::xml_document &doc)
 {
     std::ostringstream ss;
     doc.save(ss, "  ");
     return ss.str();
 }
 
-bool declaredVersionExceeds(const pugi::xml_document &doc)
+bool declaredVersionExceeds(const mxpugi::xml_document &doc)
 {
-    pugi::xml_node root = doc.document_element();
+    mxpugi::xml_node root = doc.document_element();
     if (!root)
     {
         return false;
@@ -167,9 +167,9 @@ CoreRoundtripResult runCoreRoundtrip(const std::string &absoluteInputPath)
     try
     {
         // 1. Load the input (pugixml auto-detects UTF-16/Latin-1).
-        pugi::xml_document inputDoc;
-        const pugi::xml_parse_result loaded =
-            inputDoc.load_file(absoluteInputPath.c_str(), pugi::parse_default | pugi::parse_doctype);
+        mxpugi::xml_document inputDoc;
+        const mxpugi::xml_parse_result loaded =
+            inputDoc.load_file(absoluteInputPath.c_str(), mxpugi::parse_default | mxpugi::parse_doctype);
         if (!loaded)
         {
             r.message = std::string{"failed to load: "} + loaded.description();
@@ -197,15 +197,15 @@ CoreRoundtripResult runCoreRoundtrip(const std::string &absoluteInputPath)
         }
 
         // 4. Serialize back out and normalize the actual document.
-        pugi::xml_document actualDoc;
+        mxpugi::xml_document actualDoc;
         mx::core::serialize(parsed.value(), actualDoc);
         normalizeForComparison(actualDoc);
 
         // 5. Load a fresh expected from disk, normalize identically, then
         //    apply per-file fixups (mx clamps out-of-bounds values; the
         //    sidecar patches the expected to the clamped form).
-        pugi::xml_document expectedDoc;
-        if (!expectedDoc.load_file(absoluteInputPath.c_str(), pugi::parse_default | pugi::parse_doctype))
+        mxpugi::xml_document expectedDoc;
+        if (!expectedDoc.load_file(absoluteInputPath.c_str(), mxpugi::parse_default | mxpugi::parse_doctype))
         {
             r.message = "failed to reload expected";
             return r;

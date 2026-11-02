@@ -21,10 +21,10 @@ void PartClef::setClef(ClefGroup value)
     m_clef = std::move(value);
 }
 
-PartClef parsePartClef(pugi::xml_node el, const ParseContext &context)
+PartClef parsePartClef(mxpugi::xml_node el, const ParseContext &context)
 {
     PartClef out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -37,9 +37,9 @@ PartClef parsePartClef(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parsePartClefContent(PartClef &out, pugi::xml_node el, const ParseContext &context)
+void parsePartClefContent(PartClef &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "sign")))
     {
         out.setClef(parseClefGroup(el, cursor, context));
@@ -58,13 +58,13 @@ void parsePartClefContent(PartClef &out, pugi::xml_node el, const ParseContext &
     }
 }
 
-void serializePartClef(const PartClef &v, pugi::xml_node parent, const char *tag)
+void serializePartClef(const PartClef &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializePartClefContent(v, el);
 }
 
-void serializePartClefContent(const PartClef &v, pugi::xml_node el)
+void serializePartClefContent(const PartClef &v, mxpugi::xml_node el)
 {
     serializeClefGroup(v.clef(), el);
 }

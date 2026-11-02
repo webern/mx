@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -87,12 +87,12 @@ class Key final
     std::vector<KeyOctave> m_keyOctave;
 };
 
-Key parseKey(pugi::xml_node el, const ParseContext &context);
+Key parseKey(mxpugi::xml_node el, const ParseContext &context);
 
-void parseKeyContent(Key &out, pugi::xml_node el, const ParseContext &context);
+void parseKeyContent(Key &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeKey(const Key &v, pugi::xml_node parent, const char *tag);
+void serializeKey(const Key &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeKeyContent(const Key &v, pugi::xml_node el);
+void serializeKeyContent(const Key &v, mxpugi::xml_node el);
 
 } // namespace mx::core

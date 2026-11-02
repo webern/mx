@@ -13,7 +13,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -59,12 +59,12 @@ class Beam final
     BeamValue m_value{};
 };
 
-Beam parseBeam(pugi::xml_node el, const ParseContext &context);
+Beam parseBeam(mxpugi::xml_node el, const ParseContext &context);
 
-void parseBeamContent(Beam &out, pugi::xml_node el, const ParseContext &context);
+void parseBeamContent(Beam &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeBeam(const Beam &v, pugi::xml_node parent, const char *tag);
+void serializeBeam(const Beam &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeBeamContent(const Beam &v, pugi::xml_node el);
+void serializeBeamContent(const Beam &v, mxpugi::xml_node el);
 
 } // namespace mx::core

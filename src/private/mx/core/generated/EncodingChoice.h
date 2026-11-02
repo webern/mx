@@ -11,7 +11,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -125,8 +125,8 @@ class EncodingChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-EncodingChoice parseEncodingChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+EncodingChoice parseEncodingChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeEncodingChoice(const EncodingChoice &v, pugi::xml_node el);
+void serializeEncodingChoice(const EncodingChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

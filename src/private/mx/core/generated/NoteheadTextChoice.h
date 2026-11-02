@@ -10,7 +10,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -82,8 +82,8 @@ class NoteheadTextChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-NoteheadTextChoice parseNoteheadTextChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+NoteheadTextChoice parseNoteheadTextChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeNoteheadTextChoice(const NoteheadTextChoice &v, pugi::xml_node el);
+void serializeNoteheadTextChoice(const NoteheadTextChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

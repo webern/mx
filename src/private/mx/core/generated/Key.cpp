@@ -156,10 +156,10 @@ void Key::setKeyOctave(std::vector<KeyOctave> value)
     m_keyOctave = std::move(value);
 }
 
-Key parseKey(pugi::xml_node el, const ParseContext &context)
+Key parseKey(mxpugi::xml_node el, const ParseContext &context)
 {
     Key out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -223,9 +223,9 @@ Key parseKey(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseKeyContent(Key &out, pugi::xml_node el, const ParseContext &context)
+void parseKeyContent(Key &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "cancel") || cursorIs(cursor, "fifths") || cursorIs(cursor, "key-step")))
     {
         out.setChoice(parseKeyChoice(el, cursor, context));
@@ -247,9 +247,9 @@ void parseKeyContent(Key &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeKey(const Key &v, pugi::xml_node parent, const char *tag)
+void serializeKey(const Key &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -301,7 +301,7 @@ void serializeKey(const Key &v, pugi::xml_node parent, const char *tag)
     serializeKeyContent(v, el);
 }
 
-void serializeKeyContent(const Key &v, pugi::xml_node el)
+void serializeKeyContent(const Key &v, mxpugi::xml_node el)
 {
     serializeKeyChoice(v.choice(), el);
     for (const auto &item : v.keyOctave())

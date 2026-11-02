@@ -26,7 +26,7 @@ void ParseContext::report(Diagnostic diagnostic) const
 namespace
 {
 
-Diagnostic valueRepairDiagnostic(ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
+Diagnostic valueRepairDiagnostic(ValueParseOutcome outcome, mxpugi::xml_node el, const char *attribute,
                                  std::string_view text, std::string_view replacement)
 {
     const bool invalid = outcome == ValueParseOutcome::invalid;
@@ -48,13 +48,13 @@ Diagnostic valueRepairDiagnostic(ValueParseOutcome outcome, pugi::xml_node el, c
 
 } // namespace
 
-void reportValueRepair(const ParseContext &context, ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
-                       std::string_view text, std::string_view replacement)
+void reportValueRepair(const ParseContext &context, ValueParseOutcome outcome, mxpugi::xml_node el,
+                       const char *attribute, std::string_view text, std::string_view replacement)
 {
     context.report(valueRepairDiagnostic(outcome, el, attribute, text, replacement));
 }
 
-void reportIdRepair(const ParseContext &context, ValueParseOutcome outcome, pugi::xml_node el, const char *attribute,
+void reportIdRepair(const ParseContext &context, ValueParseOutcome outcome, mxpugi::xml_node el, const char *attribute,
                     std::string_view text, std::string_view replacement)
 {
     Diagnostic diagnostic = valueRepairDiagnostic(outcome, el, attribute, text, replacement);
@@ -62,7 +62,7 @@ void reportIdRepair(const ParseContext &context, ValueParseOutcome outcome, pugi
     context.report(std::move(diagnostic));
 }
 
-void reportAttributeDefaulted(const ParseContext &context, pugi::xml_node el, const char *attribute,
+void reportAttributeDefaulted(const ParseContext &context, mxpugi::xml_node el, const char *attribute,
                               std::string_view value)
 {
     std::string message = "missing attribute \"";
@@ -73,7 +73,7 @@ void reportAttributeDefaulted(const ParseContext &context, pugi::xml_node el, co
     context.report(Diagnostic{DiagnosticCode::missingValueDefaulted, nodePath(el), std::move(message)});
 }
 
-int parseIntegerValue(std::string_view text, const ParseContext &context, pugi::xml_node el, const char *attribute)
+int parseIntegerValue(std::string_view text, const ParseContext &context, mxpugi::xml_node el, const char *attribute)
 {
     int value = 0;
     if (!tryParseInt(text, value))
@@ -83,7 +83,8 @@ int parseIntegerValue(std::string_view text, const ParseContext &context, pugi::
     return value;
 }
 
-Decimal parseDecimalValue(std::string_view text, const ParseContext &context, pugi::xml_node el, const char *attribute)
+Decimal parseDecimalValue(std::string_view text, const ParseContext &context, mxpugi::xml_node el,
+                          const char *attribute)
 {
     Decimal value;
     if (!Decimal::tryParse(text, value))

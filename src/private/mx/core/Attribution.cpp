@@ -13,7 +13,7 @@
 #include "mx/core/generated/ScorePartwise.h"
 #include "mx/core/generated/ScoreTimewise.h"
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <utility>
 #include <vector>
@@ -60,7 +60,7 @@ std::string mxSoftwareAttribution()
     return std::string{kMxSoftwareMarker} + " version=" + gitSha;
 }
 
-void serializeWithAttribution(const Document &d, pugi::xml_document &out)
+void serializeWithAttribution(const Document &d, mxpugi::xml_document &out)
 {
     // Stamp the typed model and let the generated serializer place
     // <identification>/<encoding> in their schema-correct slots for free.

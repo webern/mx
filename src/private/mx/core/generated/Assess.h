@@ -10,7 +10,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -44,12 +44,12 @@ class Assess final
     std::optional<TimeOnly> m_timeOnly;
 };
 
-Assess parseAssess(pugi::xml_node el, const ParseContext &context);
+Assess parseAssess(mxpugi::xml_node el, const ParseContext &context);
 
-void parseAssessContent(Assess &out, pugi::xml_node el, const ParseContext &context);
+void parseAssessContent(Assess &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeAssess(const Assess &v, pugi::xml_node parent, const char *tag);
+void serializeAssess(const Assess &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeAssessContent(const Assess &v, pugi::xml_node el);
+void serializeAssessContent(const Assess &v, mxpugi::xml_node el);
 
 } // namespace mx::core

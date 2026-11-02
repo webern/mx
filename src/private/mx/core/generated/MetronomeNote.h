@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -51,12 +51,12 @@ class MetronomeNote final
     std::optional<MetronomeTuplet> m_metronomeTuplet;
 };
 
-MetronomeNote parseMetronomeNote(pugi::xml_node el, const ParseContext &context);
+MetronomeNote parseMetronomeNote(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMetronomeNoteContent(MetronomeNote &out, pugi::xml_node el, const ParseContext &context);
+void parseMetronomeNoteContent(MetronomeNote &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMetronomeNote(const MetronomeNote &v, pugi::xml_node parent, const char *tag);
+void serializeMetronomeNote(const MetronomeNote &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMetronomeNoteContent(const MetronomeNote &v, pugi::xml_node el);
+void serializeMetronomeNoteContent(const MetronomeNote &v, mxpugi::xml_node el);
 
 } // namespace mx::core

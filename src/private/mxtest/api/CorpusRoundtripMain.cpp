@@ -22,10 +22,10 @@
 
 #include "mx/api/MusicXml.h"
 #include "mx/core/Attribution.h"
+#include "mxpugi/mxpugi.hpp"
 #include "mxtest/corert/Compare.h"
 #include "mxtest/corert/Fixer.h"
 #include "mxtest/import/Normalize.h"
-#include "pugixml.hpp"
 
 #include <algorithm>
 #include <filesystem>
@@ -62,14 +62,14 @@ bool isExcludedPath(const std::filesystem::path &p)
 // it or misplaces it now fails. Mirrors withStamp: create <identification>/
 // <encoding> in schema position if absent, drop any prior mx stamp, then append the
 // current one as encoding's last child.
-void addMxAttribution(pugi::xml_node scoreRoot)
+void addMxAttribution(mxpugi::xml_node scoreRoot)
 {
-    pugi::xml_node identification = scoreRoot.child("identification");
+    mxpugi::xml_node identification = scoreRoot.child("identification");
     if (!identification)
     {
         // identification follows work/movement-*, precedes defaults/credit/part-list.
-        pugi::xml_node before;
-        for (pugi::xml_node c = scoreRoot.first_child(); c; c = c.next_sibling())
+        mxpugi::xml_node before;
+        for (mxpugi::xml_node c = scoreRoot.first_child(); c; c = c.next_sibling())
         {
             const std::string_view n{c.name()};
             if (n == "defaults" || n == "credit" || n == "part-list")
@@ -82,12 +82,12 @@ void addMxAttribution(pugi::xml_node scoreRoot)
             before ? scoreRoot.insert_child_before("identification", before) : scoreRoot.append_child("identification");
     }
 
-    pugi::xml_node encoding = identification.child("encoding");
+    mxpugi::xml_node encoding = identification.child("encoding");
     if (!encoding)
     {
         // encoding follows creator/rights, precedes source/relation/miscellaneous.
-        pugi::xml_node before;
-        for (pugi::xml_node c = identification.first_child(); c; c = c.next_sibling())
+        mxpugi::xml_node before;
+        for (mxpugi::xml_node c = identification.first_child(); c; c = c.next_sibling())
         {
             const std::string_view n{c.name()};
             if (n == "source" || n == "relation" || n == "miscellaneous")
@@ -100,9 +100,9 @@ void addMxAttribution(pugi::xml_node scoreRoot)
             before ? identification.insert_child_before("encoding", before) : identification.append_child("encoding");
     }
 
-    for (pugi::xml_node sw = encoding.child("software"); sw;)
+    for (mxpugi::xml_node sw = encoding.child("software"); sw;)
     {
-        const pugi::xml_node next = sw.next_sibling("software");
+        const mxpugi::xml_node next = sw.next_sibling("software");
         if (std::string_view{sw.text().get()}.starts_with(mx::core::kMxSoftwareMarker))
         {
             encoding.remove_child(sw);
@@ -110,7 +110,7 @@ void addMxAttribution(pugi::xml_node scoreRoot)
         sw = next;
     }
     encoding.append_child("software")
-        .append_child(pugi::node_pcdata)
+        .append_child(mxpugi::node_pcdata)
         .set_value(mx::core::mxSoftwareAttribution().c_str());
 }
 
@@ -131,9 +131,9 @@ void addMxAttribution(pugi::xml_node scoreRoot)
 //
 // Must run after normalizeForComparison(): that strips inter-element whitespace, so
 // <encoding>'s direct children are pure elements here.
-void canonicalizeEncodingChildOrder(pugi::xml_node scoreRoot)
+void canonicalizeEncodingChildOrder(mxpugi::xml_node scoreRoot)
 {
-    pugi::xml_node encoding = scoreRoot.child("identification").child("encoding");
+    mxpugi::xml_node encoding = scoreRoot.child("identification").child("encoding");
     if (!encoding)
         return;
 
@@ -151,12 +151,13 @@ void canonicalizeEncodingChildOrder(pugi::xml_node scoreRoot)
         return 5; // unknown children sort last, preserving their relative order
     };
 
-    std::vector<pugi::xml_node> children;
-    for (pugi::xml_node c = encoding.first_child(); c; c = c.next_sibling())
+    std::vector<mxpugi::xml_node> children;
+    for (mxpugi::xml_node c = encoding.first_child(); c; c = c.next_sibling())
         children.push_back(c);
 
-    std::stable_sort(children.begin(), children.end(),
-                     [&](const pugi::xml_node &a, const pugi::xml_node &b) { return rank(a.name()) < rank(b.name()); });
+    std::stable_sort(children.begin(), children.end(), [&](const mxpugi::xml_node &a, const mxpugi::xml_node &b) {
+        return rank(a.name()) < rank(b.name());
+    });
 
     // append_move pulls each node to the end; visiting the sorted vector in order
     // leaves encoding's children in exactly that order.
@@ -172,12 +173,12 @@ void canonicalizeEncodingChildOrder(pugi::xml_node scoreRoot)
 //
 // Must run after normalizeForComparison(): that strips inter-element whitespace and trailing
 // zeros, so the two elements' children compare as plain text.
-void collapseEqualPageMargins(pugi::xml_node el)
+void collapseEqualPageMargins(mxpugi::xml_node el)
 {
     if (std::string_view{el.name()} == "page-layout")
     {
-        std::vector<pugi::xml_node> margins;
-        for (pugi::xml_node c = el.child("page-margins"); c; c = c.next_sibling("page-margins"))
+        std::vector<mxpugi::xml_node> margins;
+        for (mxpugi::xml_node c = el.child("page-margins"); c; c = c.next_sibling("page-margins"))
             margins.push_back(c);
 
         if (margins.size() == 2)
@@ -186,7 +187,7 @@ void collapseEqualPageMargins(pugi::xml_node el)
             const std::string_view t1 = margins[1].attribute("type").value();
             const bool isOddEvenPair = (t0 == "odd" && t1 == "even") || (t0 == "even" && t1 == "odd");
 
-            const auto marginsEqual = [](pugi::xml_node a, pugi::xml_node b) {
+            const auto marginsEqual = [](mxpugi::xml_node a, mxpugi::xml_node b) {
                 static const char *const kFields[] = {"left-margin", "right-margin", "top-margin", "bottom-margin"};
                 for (const char *field : kFields)
                 {
@@ -204,9 +205,9 @@ void collapseEqualPageMargins(pugi::xml_node el)
         }
     }
 
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
     {
-        if (c.type() == pugi::node_element)
+        if (c.type() == mxpugi::node_element)
             collapseEqualPageMargins(c);
     }
 }
@@ -221,7 +222,7 @@ void collapseEqualPageMargins(pugi::xml_node el)
 //
 // Must run after normalizeForComparison(): that strips inter-element whitespace, so a measure's
 // direct children are pure elements here.
-void moveLeadingPrintFirst(pugi::xml_node el)
+void moveLeadingPrintFirst(mxpugi::xml_node el)
 {
     if (std::string_view{el.name()} == "measure")
     {
@@ -229,7 +230,7 @@ void moveLeadingPrintFirst(pugi::xml_node el)
             return name == "print" || name == "attributes" || name == "barline" || name == "bookmark" || name == "link";
         };
 
-        for (pugi::xml_node c = el.first_child(); c && isLeading(c.name()); c = c.next_sibling())
+        for (mxpugi::xml_node c = el.first_child(); c && isLeading(c.name()); c = c.next_sibling())
         {
             if (std::string_view{c.name()} == "print")
             {
@@ -241,9 +242,9 @@ void moveLeadingPrintFirst(pugi::xml_node el)
         return;
     }
 
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
     {
-        if (c.type() == pugi::node_element)
+        if (c.type() == mxpugi::node_element)
             moveLeadingPrintFirst(c);
     }
 }
@@ -255,7 +256,7 @@ void moveLeadingPrintFirst(pugi::xml_node el)
 // spec defaults. The bare-vs-explicit spelling is not notation-semantic, so rewrite each <pedal>
 // to mx's explicit form on both documents; a genuine line-vs-sign disagreement still fails,
 // because the target form is derived from each element's own type/line values, not forced flat.
-void canonicalizePedalDefaults(pugi::xml_node el)
+void canonicalizePedalDefaults(mxpugi::xml_node el)
 {
     if (std::string_view{el.name()} == "pedal")
     {
@@ -284,9 +285,9 @@ void canonicalizePedalDefaults(pugi::xml_node el)
         }
     }
 
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
     {
-        if (c.type() == pugi::node_element)
+        if (c.type() == mxpugi::node_element)
         {
             canonicalizePedalDefaults(c);
         }
@@ -297,7 +298,7 @@ void canonicalizePedalDefaults(pugi::xml_node el)
 // the actual document just before comparison (the corpus input files are never edited). Adding
 // pedal attributes can leave them out of order, so re-sort attributes afterward -- sortAttributes
 // must run last (see Normalize.h).
-void canonicalizeDirectionSpellings(pugi::xml_document &doc)
+void canonicalizeDirectionSpellings(mxpugi::xml_document &doc)
 {
     canonicalizePedalDefaults(doc.document_element());
     mxtest::sortAttributes(doc);
@@ -313,11 +314,11 @@ void canonicalizeDirectionSpellings(pugi::xml_document &doc)
 // Only the expected side is narrowed. mx writes 8, 15, or 22, so a write that produced some other
 // size still fails. The size of a stop is taken here from the stop's own attribute, while mx takes
 // it from the start the stop closes, so a source whose stop contradicts its start still fails too.
-void narrowOctaveShiftSizes(pugi::xml_node el)
+void narrowOctaveShiftSizes(mxpugi::xml_node el)
 {
     if (std::string_view{el.name()} == "octave-shift")
     {
-        pugi::xml_attribute size = el.attribute("size");
+        mxpugi::xml_attribute size = el.attribute("size");
         const int stated = size ? size.as_int(0) : 0;
         if (stated > 0)
         {
@@ -325,9 +326,9 @@ void narrowOctaveShiftSizes(pugi::xml_node el)
         }
     }
 
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    for (mxpugi::xml_node c = el.first_child(); c; c = c.next_sibling())
     {
-        if (c.type() == pugi::node_element)
+        if (c.type() == mxpugi::node_element)
         {
             narrowOctaveShiftSizes(c);
         }
@@ -462,8 +463,8 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
     const std::string actualXml = ss.str();
 
     // Load actual XML with pugixml
-    pugi::xml_document actualDoc;
-    if (!actualDoc.load_string(actualXml.c_str(), pugi::parse_default | pugi::parse_doctype))
+    mxpugi::xml_document actualDoc;
+    if (!actualDoc.load_string(actualXml.c_str(), mxpugi::parse_default | mxpugi::parse_doctype))
     {
         r.status = RoundtripResult::Status::fail;
         r.detail = "failed to parse written output as XML";
@@ -471,8 +472,8 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
     }
 
     // Load expected (original input) with pugixml
-    pugi::xml_document expectedDoc;
-    if (!expectedDoc.load_file(absolutePath.c_str(), pugi::parse_default | pugi::parse_doctype))
+    mxpugi::xml_document expectedDoc;
+    if (!expectedDoc.load_file(absolutePath.c_str(), mxpugi::parse_default | mxpugi::parse_doctype))
     {
         r.status = RoundtripResult::Status::fail;
         r.detail = "failed to reload expected input";
@@ -587,8 +588,8 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
     // Expected side: load the original input, add the mx stamp (every api write
     // emits it, so the comparison expects it), normalize, then apply fixups --
     // the same order runRoundtrip() uses for the expected document.
-    pugi::xml_document expectedDoc;
-    if (!expectedDoc.load_file(absolutePath.c_str(), pugi::parse_default | pugi::parse_doctype))
+    mxpugi::xml_document expectedDoc;
+    if (!expectedDoc.load_file(absolutePath.c_str(), mxpugi::parse_default | mxpugi::parse_doctype))
     {
         std::cerr << "dump: cannot load expected for " << relPath << "\n";
         return;
@@ -646,8 +647,8 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
         return;
     }
 
-    pugi::xml_document actualDoc;
-    if (!actualDoc.load_string(ss.str().c_str(), pugi::parse_default | pugi::parse_doctype))
+    mxpugi::xml_document actualDoc;
+    if (!actualDoc.load_string(ss.str().c_str(), mxpugi::parse_default | mxpugi::parse_doctype))
     {
         std::cerr << "dump: no actual for " << relPath << " (output did not parse)\n";
         return;

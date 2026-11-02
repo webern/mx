@@ -86,7 +86,7 @@ NotationsChoice NotationsChoice::otherNotation(OtherNotation value)
     return NotationsChoice{Storage{std::in_place_index<13>, std::move(value)}};
 }
 
-NotationsChoice parseNotationsChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+NotationsChoice parseNotationsChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "tied")))
     {
@@ -179,7 +179,7 @@ NotationsChoice parseNotationsChoice(pugi::xml_node el, pugi::xml_node &cursor, 
     throwMissingElement(el, "tied");
 }
 
-void serializeNotationsChoice(const NotationsChoice &v, pugi::xml_node el)
+void serializeNotationsChoice(const NotationsChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

@@ -13,7 +13,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -71,12 +71,12 @@ class DegreeValue final
     int m_value{};
 };
 
-DegreeValue parseDegreeValue(pugi::xml_node el, const ParseContext &context);
+DegreeValue parseDegreeValue(mxpugi::xml_node el, const ParseContext &context);
 
-void parseDegreeValueContent(DegreeValue &out, pugi::xml_node el, const ParseContext &context);
+void parseDegreeValueContent(DegreeValue &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeDegreeValue(const DegreeValue &v, pugi::xml_node parent, const char *tag);
+void serializeDegreeValue(const DegreeValue &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeDegreeValueContent(const DegreeValue &v, pugi::xml_node el);
+void serializeDegreeValueContent(const DegreeValue &v, mxpugi::xml_node el);
 
 } // namespace mx::core

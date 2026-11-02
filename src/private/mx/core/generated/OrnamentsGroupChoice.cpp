@@ -91,7 +91,8 @@ OrnamentsGroupChoice OrnamentsGroupChoice::otherOrnament(OtherPlacementText valu
     return OrnamentsGroupChoice{Storage{std::in_place_index<14>, std::move(value)}};
 }
 
-OrnamentsGroupChoice parseOrnamentsGroupChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+OrnamentsGroupChoice parseOrnamentsGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+                                               const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "trill-mark")))
     {
@@ -190,7 +191,7 @@ OrnamentsGroupChoice parseOrnamentsGroupChoice(pugi::xml_node el, pugi::xml_node
     throwMissingElement(el, "trill-mark");
 }
 
-void serializeOrnamentsGroupChoice(const OrnamentsGroupChoice &v, pugi::xml_node el)
+void serializeOrnamentsGroupChoice(const OrnamentsGroupChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

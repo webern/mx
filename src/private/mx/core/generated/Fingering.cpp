@@ -141,10 +141,10 @@ void Fingering::setValue(std::string value)
     m_value = std::move(value);
 }
 
-Fingering parseFingering(pugi::xml_node el, const ParseContext &context)
+Fingering parseFingering(mxpugi::xml_node el, const ParseContext &context)
 {
     Fingering out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -208,7 +208,7 @@ Fingering parseFingering(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseFingeringContent(Fingering &out, pugi::xml_node el, const ParseContext &context)
+void parseFingeringContent(Fingering &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -217,9 +217,9 @@ void parseFingeringContent(Fingering &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeFingering(const Fingering &v, pugi::xml_node parent, const char *tag)
+void serializeFingering(const Fingering &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.substitution())
     {
         setAttribute(el, "substitution", v.substitution()->toString());
@@ -271,7 +271,7 @@ void serializeFingering(const Fingering &v, pugi::xml_node parent, const char *t
     serializeFingeringContent(v, el);
 }
 
-void serializeFingeringContent(const Fingering &v, pugi::xml_node el)
+void serializeFingeringContent(const Fingering &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

@@ -41,11 +41,11 @@ void KeyOctave::setValue(Octave value)
     m_value = std::move(value);
 }
 
-KeyOctave parseKeyOctave(pugi::xml_node el, const ParseContext &context)
+KeyOctave parseKeyOctave(mxpugi::xml_node el, const ParseContext &context)
 {
     KeyOctave out;
     bool seen_number = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -74,7 +74,7 @@ KeyOctave parseKeyOctave(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el, const ParseContext &context)
+void parseKeyOctaveContent(KeyOctave &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<Octave>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -83,9 +83,9 @@ void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeKeyOctave(const KeyOctave &v, pugi::xml_node parent, const char *tag)
+void serializeKeyOctave(const KeyOctave &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "number", formatInt(v.number()));
     if (v.cancel())
     {
@@ -94,7 +94,7 @@ void serializeKeyOctave(const KeyOctave &v, pugi::xml_node parent, const char *t
     serializeKeyOctaveContent(v, el);
 }
 
-void serializeKeyOctaveContent(const KeyOctave &v, pugi::xml_node el)
+void serializeKeyOctaveContent(const KeyOctave &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

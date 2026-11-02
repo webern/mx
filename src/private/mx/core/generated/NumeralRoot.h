@@ -13,7 +13,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -69,12 +69,12 @@ class NumeralRoot final
     NumeralValue m_value{};
 };
 
-NumeralRoot parseNumeralRoot(pugi::xml_node el, const ParseContext &context);
+NumeralRoot parseNumeralRoot(mxpugi::xml_node el, const ParseContext &context);
 
-void parseNumeralRootContent(NumeralRoot &out, pugi::xml_node el, const ParseContext &context);
+void parseNumeralRootContent(NumeralRoot &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeNumeralRoot(const NumeralRoot &v, pugi::xml_node parent, const char *tag);
+void serializeNumeralRoot(const NumeralRoot &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeNumeralRootContent(const NumeralRoot &v, pugi::xml_node el);
+void serializeNumeralRootContent(const NumeralRoot &v, mxpugi::xml_node el);
 
 } // namespace mx::core

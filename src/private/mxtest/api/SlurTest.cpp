@@ -6,9 +6,9 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
+#include "mxpugi/mxpugi.hpp"
 #include "mxtest/api/TestHelpers.h"
 #include "mxtest/file/MxFileRepository.h"
-#include "pugixml.hpp"
 
 #include <sstream>
 
@@ -40,7 +40,7 @@ TEST(startStop, Slurs)
     // Write to XML and assert that stop happens before start
     const auto xml = toXml(scoreData);
 
-    pugi::xml_document xdoc;
+    mxpugi::xml_document xdoc;
     xdoc.load_string(xml.c_str());
     auto root = xdoc.document_element();
 

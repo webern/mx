@@ -26,7 +26,7 @@ CreditChoice CreditChoice::group(CreditChoiceGroup value)
     return CreditChoice{Storage{std::in_place_index<1>, std::move(value)}};
 }
 
-CreditChoice parseCreditChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+CreditChoice parseCreditChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "credit-image")))
     {
@@ -45,7 +45,7 @@ CreditChoice parseCreditChoice(pugi::xml_node el, pugi::xml_node &cursor, const 
     throwMissingElement(el, "credit-image");
 }
 
-void serializeCreditChoice(const CreditChoice &v, pugi::xml_node el)
+void serializeCreditChoice(const CreditChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

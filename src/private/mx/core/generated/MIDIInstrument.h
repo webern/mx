@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -65,12 +65,12 @@ class MIDIInstrument final
     std::optional<RotationDegrees> m_elevation;
 };
 
-MIDIInstrument parseMIDIInstrument(pugi::xml_node el, const ParseContext &context);
+MIDIInstrument parseMIDIInstrument(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el, const ParseContext &context);
+void parseMIDIInstrumentContent(MIDIInstrument &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMIDIInstrument(const MIDIInstrument &v, pugi::xml_node parent, const char *tag);
+void serializeMIDIInstrument(const MIDIInstrument &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMIDIInstrumentContent(const MIDIInstrument &v, pugi::xml_node el);
+void serializeMIDIInstrumentContent(const MIDIInstrument &v, mxpugi::xml_node el);
 
 } // namespace mx::core

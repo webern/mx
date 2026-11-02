@@ -86,11 +86,11 @@ void PartwiseMeasure::setMusicData(std::vector<MusicDataChoice> value)
     m_musicData = std::move(value);
 }
 
-PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el, const ParseContext &context)
+PartwiseMeasure parsePartwiseMeasure(mxpugi::xml_node el, const ParseContext &context)
 {
     PartwiseMeasure out;
     bool seen_number = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -135,9 +135,9 @@ PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el, const ParseContext &cont
     return out;
 }
 
-void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el, const ParseContext &context)
+void parsePartwiseMeasureContent(PartwiseMeasure &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "note") || cursorIs(cursor, "backup") || cursorIs(cursor, "forward") ||
                       cursorIs(cursor, "direction") || cursorIs(cursor, "attributes") || cursorIs(cursor, "harmony") ||
                       cursorIs(cursor, "figured-bass") || cursorIs(cursor, "print") || cursorIs(cursor, "sound") ||
@@ -160,9 +160,9 @@ void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el, const 
     }
 }
 
-void serializePartwiseMeasure(const PartwiseMeasure &v, pugi::xml_node parent, const char *tag)
+void serializePartwiseMeasure(const PartwiseMeasure &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "number", v.number());
     if (v.text())
     {
@@ -187,7 +187,7 @@ void serializePartwiseMeasure(const PartwiseMeasure &v, pugi::xml_node parent, c
     serializePartwiseMeasureContent(v, el);
 }
 
-void serializePartwiseMeasureContent(const PartwiseMeasure &v, pugi::xml_node el)
+void serializePartwiseMeasureContent(const PartwiseMeasure &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.musicData())
     {

@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -47,8 +47,8 @@ class NormalNoteGroup final
 
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
-NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+NormalNoteGroup parseNormalNoteGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeNormalNoteGroup(const NormalNoteGroup &v, pugi::xml_node el);
+void serializeNormalNoteGroup(const NormalNoteGroup &v, mxpugi::xml_node el);
 
 } // namespace mx::core

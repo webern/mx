@@ -23,7 +23,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -115,12 +115,12 @@ class AccidentalText final
     AccidentalValue m_value{};
 };
 
-AccidentalText parseAccidentalText(pugi::xml_node el, const ParseContext &context);
+AccidentalText parseAccidentalText(mxpugi::xml_node el, const ParseContext &context);
 
-void parseAccidentalTextContent(AccidentalText &out, pugi::xml_node el, const ParseContext &context);
+void parseAccidentalTextContent(AccidentalText &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeAccidentalText(const AccidentalText &v, pugi::xml_node parent, const char *tag);
+void serializeAccidentalText(const AccidentalText &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeAccidentalTextContent(const AccidentalText &v, pugi::xml_node el);
+void serializeAccidentalTextContent(const AccidentalText &v, mxpugi::xml_node el);
 
 } // namespace mx::core

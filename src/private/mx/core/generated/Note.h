@@ -36,7 +36,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -195,12 +195,12 @@ class Note final
     std::optional<Listen> m_listen;
 };
 
-Note parseNote(pugi::xml_node el, const ParseContext &context);
+Note parseNote(mxpugi::xml_node el, const ParseContext &context);
 
-void parseNoteContent(Note &out, pugi::xml_node el, const ParseContext &context);
+void parseNoteContent(Note &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeNote(const Note &v, pugi::xml_node parent, const char *tag);
+void serializeNote(const Note &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeNoteContent(const Note &v, pugi::xml_node el);
+void serializeNoteContent(const Note &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -116,10 +116,10 @@ void Direction::setListening(std::optional<Listening> value)
     m_listening = std::move(value);
 }
 
-Direction parseDirection(pugi::xml_node el, const ParseContext &context)
+Direction parseDirection(mxpugi::xml_node el, const ParseContext &context)
 {
     Direction out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -151,9 +151,9 @@ Direction parseDirection(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseDirectionContent(Direction &out, pugi::xml_node el, const ParseContext &context)
+void parseDirectionContent(Direction &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (!cursorIs(cursor, "direction-type"))
     {
         throwMissingOrMisplaced(el, cursor, "direction-type");
@@ -201,9 +201,9 @@ void parseDirectionContent(Direction &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeDirection(const Direction &v, pugi::xml_node parent, const char *tag)
+void serializeDirection(const Direction &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.placement())
     {
         setAttribute(el, "placement", v.placement()->toString());
@@ -223,7 +223,7 @@ void serializeDirection(const Direction &v, pugi::xml_node parent, const char *t
     serializeDirectionContent(v, el);
 }
 
-void serializeDirectionContent(const Direction &v, pugi::xml_node el)
+void serializeDirectionContent(const Direction &v, mxpugi::xml_node el)
 {
     for (const auto &item : v.directionType())
     {

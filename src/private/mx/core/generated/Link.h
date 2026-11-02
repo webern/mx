@@ -12,7 +12,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -72,12 +72,12 @@ class Link final
     std::optional<Tenths> m_relativeY;
 };
 
-Link parseLink(pugi::xml_node el, const ParseContext &context);
+Link parseLink(mxpugi::xml_node el, const ParseContext &context);
 
-void parseLinkContent(Link &out, pugi::xml_node el, const ParseContext &context);
+void parseLinkContent(Link &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeLink(const Link &v, pugi::xml_node parent, const char *tag);
+void serializeLink(const Link &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeLinkContent(const Link &v, pugi::xml_node el);
+void serializeLinkContent(const Link &v, mxpugi::xml_node el);
 
 } // namespace mx::core

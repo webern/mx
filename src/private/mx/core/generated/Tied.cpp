@@ -201,11 +201,11 @@ void Tied::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Tied parseTied(pugi::xml_node el, const ParseContext &context)
+Tied parseTied(mxpugi::xml_node el, const ParseContext &context)
 {
     Tied out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -302,7 +302,7 @@ Tied parseTied(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTiedContent(Tied &out, pugi::xml_node el, const ParseContext &context)
+void parseTiedContent(Tied &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -312,9 +312,9 @@ void parseTiedContent(Tied &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeTied(const Tied &v, pugi::xml_node parent, const char *tag)
+void serializeTied(const Tied &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -391,7 +391,7 @@ void serializeTied(const Tied &v, pugi::xml_node parent, const char *tag)
     serializeTiedContent(v, el);
 }
 
-void serializeTiedContent(const Tied &v, pugi::xml_node el)
+void serializeTiedContent(const Tied &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

@@ -31,10 +31,10 @@ void VirtualInstrument::setVirtualName(std::optional<std::string> value)
     m_virtualName = std::move(value);
 }
 
-VirtualInstrument parseVirtualInstrument(pugi::xml_node el, const ParseContext &context)
+VirtualInstrument parseVirtualInstrument(mxpugi::xml_node el, const ParseContext &context)
 {
     VirtualInstrument out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -47,9 +47,9 @@ VirtualInstrument parseVirtualInstrument(pugi::xml_node el, const ParseContext &
     return out;
 }
 
-void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el, const ParseContext &context)
+void parseVirtualInstrumentContent(VirtualInstrument &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "virtual-library"))
     {
         out.setVirtualLibrary(std::string{childText(cursor)});
@@ -70,13 +70,13 @@ void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el, co
     }
 }
 
-void serializeVirtualInstrument(const VirtualInstrument &v, pugi::xml_node parent, const char *tag)
+void serializeVirtualInstrument(const VirtualInstrument &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeVirtualInstrumentContent(v, el);
 }
 
-void serializeVirtualInstrumentContent(const VirtualInstrument &v, pugi::xml_node el)
+void serializeVirtualInstrumentContent(const VirtualInstrument &v, mxpugi::xml_node el)
 {
     if (v.virtualLibrary())
     {

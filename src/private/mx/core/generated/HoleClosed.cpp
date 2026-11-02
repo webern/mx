@@ -31,10 +31,10 @@ void HoleClosed::setValue(HoleClosedValue value)
     m_value = std::move(value);
 }
 
-HoleClosed parseHoleClosed(pugi::xml_node el, const ParseContext &context)
+HoleClosed parseHoleClosed(mxpugi::xml_node el, const ParseContext &context)
 {
     HoleClosed out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ HoleClosed parseHoleClosed(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el, const ParseContext &context)
+void parseHoleClosedContent(HoleClosed &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<HoleClosedValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializeHoleClosed(const HoleClosed &v, pugi::xml_node parent, const char *tag)
+void serializeHoleClosed(const HoleClosed &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.location())
     {
         setAttribute(el, "location", v.location()->toString());
@@ -73,7 +73,7 @@ void serializeHoleClosed(const HoleClosed &v, pugi::xml_node parent, const char 
     serializeHoleClosedContent(v, el);
 }
 
-void serializeHoleClosedContent(const HoleClosed &v, pugi::xml_node el)
+void serializeHoleClosedContent(const HoleClosed &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

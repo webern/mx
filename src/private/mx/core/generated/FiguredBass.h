@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -112,12 +112,12 @@ class FiguredBass final
     EditorialGroup m_editorial{};
 };
 
-FiguredBass parseFiguredBass(pugi::xml_node el, const ParseContext &context);
+FiguredBass parseFiguredBass(mxpugi::xml_node el, const ParseContext &context);
 
-void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el, const ParseContext &context);
+void parseFiguredBassContent(FiguredBass &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeFiguredBass(const FiguredBass &v, pugi::xml_node parent, const char *tag);
+void serializeFiguredBass(const FiguredBass &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeFiguredBassContent(const FiguredBass &v, pugi::xml_node el);
+void serializeFiguredBassContent(const FiguredBass &v, mxpugi::xml_node el);
 
 } // namespace mx::core

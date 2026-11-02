@@ -71,10 +71,10 @@ void Beam::setValue(BeamValue value)
     m_value = std::move(value);
 }
 
-Beam parseBeam(pugi::xml_node el, const ParseContext &context)
+Beam parseBeam(mxpugi::xml_node el, const ParseContext &context)
 {
     Beam out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -110,7 +110,7 @@ Beam parseBeam(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseBeamContent(Beam &out, pugi::xml_node el, const ParseContext &context)
+void parseBeamContent(Beam &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<BeamValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -119,9 +119,9 @@ void parseBeamContent(Beam &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeBeam(const Beam &v, pugi::xml_node parent, const char *tag)
+void serializeBeam(const Beam &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.number())
     {
         setAttribute(el, "number", v.number()->toString());
@@ -145,7 +145,7 @@ void serializeBeam(const Beam &v, pugi::xml_node parent, const char *tag)
     serializeBeamContent(v, el);
 }
 
-void serializeBeamContent(const Beam &v, pugi::xml_node el)
+void serializeBeamContent(const Beam &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

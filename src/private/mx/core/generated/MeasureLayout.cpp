@@ -21,10 +21,10 @@ void MeasureLayout::setMeasureDistance(std::optional<Tenths> value)
     m_measureDistance = std::move(value);
 }
 
-MeasureLayout parseMeasureLayout(pugi::xml_node el, const ParseContext &context)
+MeasureLayout parseMeasureLayout(mxpugi::xml_node el, const ParseContext &context)
 {
     MeasureLayout out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -37,9 +37,9 @@ MeasureLayout parseMeasureLayout(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el, const ParseContext &context)
+void parseMeasureLayoutContent(MeasureLayout &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "measure-distance"))
     {
         out.setMeasureDistance(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
@@ -55,13 +55,13 @@ void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeMeasureLayout(const MeasureLayout &v, pugi::xml_node parent, const char *tag)
+void serializeMeasureLayout(const MeasureLayout &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeMeasureLayoutContent(v, el);
 }
 
-void serializeMeasureLayoutContent(const MeasureLayout &v, pugi::xml_node el)
+void serializeMeasureLayoutContent(const MeasureLayout &v, mxpugi::xml_node el)
 {
     if (v.measureDistance())
     {

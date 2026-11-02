@@ -31,10 +31,10 @@ void StaffSize::setValue(NonNegativeDecimal value)
     m_value = std::move(value);
 }
 
-StaffSize parseStaffSize(pugi::xml_node el, const ParseContext &context)
+StaffSize parseStaffSize(mxpugi::xml_node el, const ParseContext &context)
 {
     StaffSize out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ StaffSize parseStaffSize(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseStaffSizeContent(StaffSize &out, pugi::xml_node el, const ParseContext &context)
+void parseStaffSizeContent(StaffSize &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<NonNegativeDecimal>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseStaffSizeContent(StaffSize &out, pugi::xml_node el, const ParseContext
     }
 }
 
-void serializeStaffSize(const StaffSize &v, pugi::xml_node parent, const char *tag)
+void serializeStaffSize(const StaffSize &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.scaling())
     {
         setAttribute(el, "scaling", v.scaling()->toString());
@@ -73,7 +73,7 @@ void serializeStaffSize(const StaffSize &v, pugi::xml_node parent, const char *t
     serializeStaffSizeContent(v, el);
 }
 
-void serializeStaffSizeContent(const StaffSize &v, pugi::xml_node el)
+void serializeStaffSizeContent(const StaffSize &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

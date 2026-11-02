@@ -7,9 +7,9 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/ScoreData.h"
+#include "mxpugi/mxpugi.hpp"
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/api/TestHelpers.h"
-#include "pugixml.hpp"
 
 #include <string>
 #include <vector>
@@ -232,12 +232,12 @@ TEST(figuredBassExtendWritesXml, FiguredBassApi)
 
     const auto xml = mxtest::toXml(makeScoreWithFiguredBass(fb));
 
-    pugi::xml_document doc;
+    mxpugi::xml_document doc;
     REQUIRE(doc.load_string(xml.c_str()));
     const auto figuredBass = doc.select_node("//figured-bass").node();
     REQUIRE(!figuredBass.empty());
 
-    std::vector<pugi::xml_node> figures;
+    std::vector<mxpugi::xml_node> figures;
     for (const auto figure : figuredBass.children("figure"))
     {
         figures.push_back(figure);

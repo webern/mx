@@ -46,10 +46,10 @@ void TupletPortion::setTupletDot(std::vector<TupletDot> value)
     m_tupletDot = std::move(value);
 }
 
-TupletPortion parseTupletPortion(pugi::xml_node el, const ParseContext &context)
+TupletPortion parseTupletPortion(mxpugi::xml_node el, const ParseContext &context)
 {
     TupletPortion out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -62,9 +62,9 @@ TupletPortion parseTupletPortion(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el, const ParseContext &context)
+void parseTupletPortionContent(TupletPortion &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "tuplet-number"))
     {
         out.setTupletNumber(parseTupletNumber(cursor, context));
@@ -90,13 +90,13 @@ void parseTupletPortionContent(TupletPortion &out, pugi::xml_node el, const Pars
     }
 }
 
-void serializeTupletPortion(const TupletPortion &v, pugi::xml_node parent, const char *tag)
+void serializeTupletPortion(const TupletPortion &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeTupletPortionContent(v, el);
 }
 
-void serializeTupletPortionContent(const TupletPortion &v, pugi::xml_node el)
+void serializeTupletPortionContent(const TupletPortion &v, mxpugi::xml_node el)
 {
     if (v.tupletNumber())
     {

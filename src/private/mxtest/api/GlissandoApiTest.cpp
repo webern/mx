@@ -11,10 +11,10 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mxpugi/mxpugi.hpp"
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/api/TestHelpers.h"
 #include "mxtest/file/MxFileRepository.h"
-#include "pugixml.hpp"
 
 using namespace mx::api;
 using namespace mxtest;
@@ -144,7 +144,7 @@ TEST(writesAsTopLevelNotationsChild, Glissando)
     voice.notes.back().noteAttachmentData.glissandoStarts.push_back(start);
 
     const auto xml = toXml(score);
-    pugi::xml_document xdoc;
+    mxpugi::xml_document xdoc;
     REQUIRE(xdoc.load_string(xml.c_str()));
 
     const auto notations = xdoc.document_element().child("part").child("measure").child("note").child("notations");
@@ -192,7 +192,7 @@ TEST(stopPrecedesStartOnAChainedNote, Glissando)
     voice.notes.at(2).noteAttachmentData.glissandoStops.push_back(secondStop);
 
     const auto xml = toXml(score);
-    pugi::xml_document xdoc;
+    mxpugi::xml_document xdoc;
     REQUIRE(xdoc.load_string(xml.c_str()));
 
     const auto notes = xdoc.document_element().child("part").child("measure");

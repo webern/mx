@@ -7,7 +7,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -34,12 +34,12 @@ class MultipleRest final
     int m_value{};
 };
 
-MultipleRest parseMultipleRest(pugi::xml_node el, const ParseContext &context);
+MultipleRest parseMultipleRest(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMultipleRestContent(MultipleRest &out, pugi::xml_node el, const ParseContext &context);
+void parseMultipleRestContent(MultipleRest &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMultipleRest(const MultipleRest &v, pugi::xml_node parent, const char *tag);
+void serializeMultipleRest(const MultipleRest &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMultipleRestContent(const MultipleRest &v, pugi::xml_node el);
+void serializeMultipleRestContent(const MultipleRest &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -18,7 +18,7 @@
 #include "mx/core/generated/ScoreHeaderGroup.h"
 #include "mx/core/generated/ScorePartwise.h"
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <string>
 #include <string_view>
@@ -29,10 +29,10 @@ namespace
 {
 
 // Count <software> descendants whose text equals the given value.
-int countSoftware(const pugi::xml_node &node, std::string_view text)
+int countSoftware(const mxpugi::xml_node &node, std::string_view text)
 {
     int count = 0;
-    for (pugi::xml_node child : node.children())
+    for (mxpugi::xml_node child : node.children())
     {
         if (std::string_view{child.name()} == "software" && std::string_view{child.text().get()} == text)
         {
@@ -44,10 +44,10 @@ int countSoftware(const pugi::xml_node &node, std::string_view text)
 }
 
 // Count mx stamps regardless of which version they carry (prefix match).
-int countMxStamps(const pugi::xml_node &node)
+int countMxStamps(const mxpugi::xml_node &node)
 {
     int count = 0;
-    for (pugi::xml_node child : node.children())
+    for (mxpugi::xml_node child : node.children())
     {
         if (std::string_view{child.name()} == "software" &&
             std::string_view{child.text().get()}.starts_with(kMxSoftwareMarker))
@@ -64,14 +64,14 @@ int countMxStamps(const pugi::xml_node &node)
 TEST(StampsIntoEmptyDocument, Attribution)
 {
     Document doc; // default ScorePartwise, no <identification>
-    pugi::xml_document out;
+    mxpugi::xml_document out;
     serializeWithAttribution(doc, out);
 
     const std::string expected = mxSoftwareAttribution();
     CHECK(expected == std::string{"https://github.com/webern/mx version="} + gitSha);
 
     // Stamped at the schema-correct path, exactly once.
-    const pugi::xml_node encoding = out.document_element().child("identification").child("encoding");
+    const mxpugi::xml_node encoding = out.document_element().child("identification").child("encoding");
     CHECK(std::string_view{encoding.child("software").text().get()} == expected);
     CHECK(countSoftware(out.document_element(), expected) == 1);
 }
@@ -89,7 +89,7 @@ TEST(PreservesUserSoftware, Attribution)
     score.setScoreHeader(header);
     doc.setRoot(Document::Root{score});
 
-    pugi::xml_document out;
+    mxpugi::xml_document out;
     serializeWithAttribution(doc, out);
 
     CHECK(countSoftware(out.document_element(), "Finale") == 1);
@@ -99,7 +99,7 @@ TEST(PreservesUserSoftware, Attribution)
 TEST(DoesNotAccumulateAcrossRoundTrips, Attribution)
 {
     Document doc;
-    pugi::xml_document first;
+    mxpugi::xml_document first;
     serializeWithAttribution(doc, first);
 
     // Parsing mx's own output, then re-writing, must still yield one stamp.
@@ -107,7 +107,7 @@ TEST(DoesNotAccumulateAcrossRoundTrips, Attribution)
     CHECK(reparsed.ok());
     if (reparsed.ok())
     {
-        pugi::xml_document second;
+        mxpugi::xml_document second;
         serializeWithAttribution(reparsed.value(), second);
         CHECK(countSoftware(second.document_element(), mxSoftwareAttribution()) == 1);
     }
@@ -128,7 +128,7 @@ TEST(ReplacesAStampFromADifferentVersion, Attribution)
     score.setScoreHeader(header);
     doc.setRoot(Document::Root{score});
 
-    pugi::xml_document out;
+    mxpugi::xml_document out;
     serializeWithAttribution(doc, out);
 
     // The stale stamp is gone, replaced by exactly one current-version stamp.

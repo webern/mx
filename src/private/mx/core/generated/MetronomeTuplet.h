@@ -10,7 +10,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,8 +41,8 @@ class MetronomeTuplet : public TimeModification
     std::optional<ShowTuplet> m_showNumber;
 };
 
-MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el, const ParseContext &context);
+MetronomeTuplet parseMetronomeTuplet(mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMetronomeTuplet(const MetronomeTuplet &v, pugi::xml_node parent, const char *tag);
+void serializeMetronomeTuplet(const MetronomeTuplet &v, mxpugi::xml_node parent, const char *tag);
 
 } // namespace mx::core

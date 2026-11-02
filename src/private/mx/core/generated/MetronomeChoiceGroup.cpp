@@ -46,7 +46,8 @@ void MetronomeChoiceGroup::setChoice(MetronomeChoiceGroupChoice value)
     m_choice = std::move(value);
 }
 
-MetronomeChoiceGroup parseMetronomeChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+MetronomeChoiceGroup parseMetronomeChoiceGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+                                               const ParseContext &context)
 {
     MetronomeChoiceGroup out;
     if (cursor && (cursorIs(cursor, "beat-unit")))
@@ -73,7 +74,7 @@ MetronomeChoiceGroup parseMetronomeChoiceGroup(pugi::xml_node el, pugi::xml_node
     return out;
 }
 
-void serializeMetronomeChoiceGroup(const MetronomeChoiceGroup &v, pugi::xml_node el)
+void serializeMetronomeChoiceGroup(const MetronomeChoiceGroup &v, mxpugi::xml_node el)
 {
     serializeBeatUnitGroup(v.beatUnit(), el);
     for (const auto &item : v.beatUnitTied())

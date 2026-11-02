@@ -5,7 +5,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -32,12 +32,12 @@ class Feature final
     std::string m_value{};
 };
 
-Feature parseFeature(pugi::xml_node el, const ParseContext &context);
+Feature parseFeature(mxpugi::xml_node el, const ParseContext &context);
 
-void parseFeatureContent(Feature &out, pugi::xml_node el, const ParseContext &context);
+void parseFeatureContent(Feature &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeFeature(const Feature &v, pugi::xml_node parent, const char *tag);
+void serializeFeature(const Feature &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeFeatureContent(const Feature &v, pugi::xml_node el);
+void serializeFeatureContent(const Feature &v, mxpugi::xml_node el);
 
 } // namespace mx::core

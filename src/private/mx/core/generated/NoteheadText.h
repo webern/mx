@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -38,12 +38,12 @@ class NoteheadText final
     OneOrMore<NoteheadTextChoice> m_choice;
 };
 
-NoteheadText parseNoteheadText(pugi::xml_node el, const ParseContext &context);
+NoteheadText parseNoteheadText(mxpugi::xml_node el, const ParseContext &context);
 
-void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el, const ParseContext &context);
+void parseNoteheadTextContent(NoteheadText &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeNoteheadText(const NoteheadText &v, pugi::xml_node parent, const char *tag);
+void serializeNoteheadText(const NoteheadText &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeNoteheadTextContent(const NoteheadText &v, pugi::xml_node el);
+void serializeNoteheadTextContent(const NoteheadText &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -111,11 +111,11 @@ void Dashes::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-Dashes parseDashes(pugi::xml_node el, const ParseContext &context)
+Dashes parseDashes(mxpugi::xml_node el, const ParseContext &context)
 {
     Dashes out;
     bool seen_type = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -176,7 +176,7 @@ Dashes parseDashes(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseDashesContent(Dashes &out, pugi::xml_node el, const ParseContext &context)
+void parseDashesContent(Dashes &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -186,9 +186,9 @@ void parseDashesContent(Dashes &out, pugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeDashes(const Dashes &v, pugi::xml_node parent, const char *tag)
+void serializeDashes(const Dashes &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "type", v.type().toString());
     if (v.number())
     {
@@ -229,7 +229,7 @@ void serializeDashes(const Dashes &v, pugi::xml_node parent, const char *tag)
     serializeDashesContent(v, el);
 }
 
-void serializeDashesContent(const Dashes &v, pugi::xml_node el)
+void serializeDashesContent(const Dashes &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

@@ -31,11 +31,11 @@ void MiscellaneousField::setValue(std::string value)
     m_value = std::move(value);
 }
 
-MiscellaneousField parseMiscellaneousField(pugi::xml_node el, const ParseContext &context)
+MiscellaneousField parseMiscellaneousField(mxpugi::xml_node el, const ParseContext &context)
 {
     MiscellaneousField out;
     bool seen_name = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -60,7 +60,7 @@ MiscellaneousField parseMiscellaneousField(pugi::xml_node el, const ParseContext
     return out;
 }
 
-void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el, const ParseContext &context)
+void parseMiscellaneousFieldContent(MiscellaneousField &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))
@@ -69,14 +69,14 @@ void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el, 
     }
 }
 
-void serializeMiscellaneousField(const MiscellaneousField &v, pugi::xml_node parent, const char *tag)
+void serializeMiscellaneousField(const MiscellaneousField &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "name", v.name());
     serializeMiscellaneousFieldContent(v, el);
 }
 
-void serializeMiscellaneousFieldContent(const MiscellaneousField &v, pugi::xml_node el)
+void serializeMiscellaneousFieldContent(const MiscellaneousField &v, mxpugi::xml_node el)
 {
     setText(el, v.value());
 }

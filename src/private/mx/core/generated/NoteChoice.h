@@ -11,7 +11,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -97,8 +97,8 @@ class NoteChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-NoteChoice parseNoteChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
+NoteChoice parseNoteChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context);
 
-void serializeNoteChoice(const NoteChoice &v, pugi::xml_node el);
+void serializeNoteChoice(const NoteChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

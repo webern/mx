@@ -10,7 +10,7 @@
 #include <variant>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -82,9 +82,9 @@ class VirtualInstrumentDataGroupChoice final
 
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
-VirtualInstrumentDataGroupChoice parseVirtualInstrumentDataGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
+VirtualInstrumentDataGroupChoice parseVirtualInstrumentDataGroupChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor,
                                                                        const ParseContext &context);
 
-void serializeVirtualInstrumentDataGroupChoice(const VirtualInstrumentDataGroupChoice &v, pugi::xml_node el);
+void serializeVirtualInstrumentDataGroupChoice(const VirtualInstrumentDataGroupChoice &v, mxpugi::xml_node el);
 
 } // namespace mx::core

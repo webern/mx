@@ -49,10 +49,10 @@ bool isEquivalent(const std::string &left, const std::string &right)
     return l && r && std::fabs(*l - *r) < 0.00000001L;
 }
 
-std::string nodePathString(pugi::xml_node node)
+std::string nodePathString(mxpugi::xml_node node)
 {
     std::string path;
-    for (pugi::xml_node n = node; n && n.type() == pugi::node_element; n = n.parent())
+    for (mxpugi::xml_node n = node; n && n.type() == mxpugi::node_element; n = n.parent())
     {
         path.insert(0, std::string{"/"} + n.name());
     }
@@ -61,7 +61,7 @@ std::string nodePathString(pugi::xml_node node)
 
 } // namespace
 
-void normalizeForComparison(pugi::xml_document &doc)
+void normalizeForComparison(mxpugi::xml_document &doc)
 {
     setRootMusicXmlVersion(doc, kMusicXmlVersionBaseline);
     stripInterElementWhitespace(doc);
@@ -70,7 +70,7 @@ void normalizeForComparison(pugi::xml_document &doc)
     sortAttributes(doc); // must be last
 }
 
-CompareFailure compareElements(pugi::xml_node expected, pugi::xml_node actual)
+CompareFailure compareElements(mxpugi::xml_node expected, mxpugi::xml_node actual)
 {
     CompareFailure fail;
 
@@ -92,8 +92,8 @@ CompareFailure compareElements(pugi::xml_node expected, pugi::xml_node actual)
         return fail;
     }
 
-    pugi::xml_attribute ea = expected.first_attribute();
-    pugi::xml_attribute aa = actual.first_attribute();
+    mxpugi::xml_attribute ea = expected.first_attribute();
+    mxpugi::xml_attribute aa = actual.first_attribute();
     while (ea && aa)
     {
         if (std::string_view{ea.name()} != aa.name() || !isEquivalent(ea.value(), aa.value()))
@@ -113,15 +113,15 @@ CompareFailure compareElements(pugi::xml_node expected, pugi::xml_node actual)
         return fail;
     }
 
-    pugi::xml_node ec = expected.first_child();
-    pugi::xml_node ac = actual.first_child();
+    mxpugi::xml_node ec = expected.first_child();
+    mxpugi::xml_node ac = actual.first_child();
     while (true)
     {
-        while (ec && ec.type() != pugi::node_element)
+        while (ec && ec.type() != mxpugi::node_element)
         {
             ec = ec.next_sibling();
         }
-        while (ac && ac.type() != pugi::node_element)
+        while (ac && ac.type() != mxpugi::node_element)
         {
             ac = ac.next_sibling();
         }

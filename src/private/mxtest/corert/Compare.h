@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <string>
 
@@ -28,13 +28,13 @@ struct CompareFailure
 // harness baseline, strip whitespace-only text nodes, strip trailing zeros
 // from decimal fields, re-space comma-separated-text fields, sort attributes
 // (must be last).
-void normalizeForComparison(pugi::xml_document &doc);
+void normalizeForComparison(mxpugi::xml_document &doc);
 
 // Depth-first compare: element names, DIRECT text content only (never the
 // subtree concatenation), attributes by qualified name with numeric
 // equivalence (epsilon < 0.00000001 for floats). Both sides must already be
 // normalized.
-CompareFailure compareElements(pugi::xml_node expected, pugi::xml_node actual);
+CompareFailure compareElements(mxpugi::xml_node expected, mxpugi::xml_node actual);
 
 } // namespace corert
 } // namespace mxtest

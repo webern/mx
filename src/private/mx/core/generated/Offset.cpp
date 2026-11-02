@@ -31,10 +31,10 @@ void Offset::setValue(Divisions value)
     m_value = std::move(value);
 }
 
-Offset parseOffset(pugi::xml_node el, const ParseContext &context)
+Offset parseOffset(mxpugi::xml_node el, const ParseContext &context)
 {
     Offset out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -54,7 +54,7 @@ Offset parseOffset(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseOffsetContent(Offset &out, pugi::xml_node el, const ParseContext &context)
+void parseOffsetContent(Offset &out, mxpugi::xml_node el, const ParseContext &context)
 {
     out.setValue(parseValue<Divisions>(childText(el), context, el, nullptr));
     if (firstElement(el))
@@ -63,9 +63,9 @@ void parseOffsetContent(Offset &out, pugi::xml_node el, const ParseContext &cont
     }
 }
 
-void serializeOffset(const Offset &v, pugi::xml_node parent, const char *tag)
+void serializeOffset(const Offset &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     if (v.sound())
     {
         setAttribute(el, "sound", v.sound()->toString());
@@ -73,7 +73,7 @@ void serializeOffset(const Offset &v, pugi::xml_node parent, const char *tag)
     serializeOffsetContent(v, el);
 }
 
-void serializeOffsetContent(const Offset &v, pugi::xml_node el)
+void serializeOffsetContent(const Offset &v, mxpugi::xml_node el)
 {
     setText(el, v.value().toString());
 }

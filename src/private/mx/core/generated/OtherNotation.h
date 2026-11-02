@@ -19,7 +19,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -91,12 +91,12 @@ class OtherNotation final
     std::string m_value{};
 };
 
-OtherNotation parseOtherNotation(pugi::xml_node el, const ParseContext &context);
+OtherNotation parseOtherNotation(mxpugi::xml_node el, const ParseContext &context);
 
-void parseOtherNotationContent(OtherNotation &out, pugi::xml_node el, const ParseContext &context);
+void parseOtherNotationContent(OtherNotation &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeOtherNotation(const OtherNotation &v, pugi::xml_node parent, const char *tag);
+void serializeOtherNotation(const OtherNotation &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeOtherNotationContent(const OtherNotation &v, pugi::xml_node el);
+void serializeOtherNotationContent(const OtherNotation &v, mxpugi::xml_node el);
 
 } // namespace mx::core

@@ -71,7 +71,7 @@ PercussionChoice PercussionChoice::otherPercussion(OtherText value)
     return PercussionChoice{Storage{std::in_place_index<10>, std::move(value)}};
 }
 
-PercussionChoice parsePercussionChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+PercussionChoice parsePercussionChoice(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     if (cursor && (cursorIs(cursor, "glass")))
     {
@@ -146,7 +146,7 @@ PercussionChoice parsePercussionChoice(pugi::xml_node el, pugi::xml_node &cursor
     throwMissingElement(el, "glass");
 }
 
-void serializePercussionChoice(const PercussionChoice &v, pugi::xml_node el)
+void serializePercussionChoice(const PercussionChoice &v, mxpugi::xml_node el)
 {
     switch (v.kind())
     {

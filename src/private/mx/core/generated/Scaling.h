@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -41,12 +41,12 @@ class Scaling final
     Tenths m_tenths{};
 };
 
-Scaling parseScaling(pugi::xml_node el, const ParseContext &context);
+Scaling parseScaling(mxpugi::xml_node el, const ParseContext &context);
 
-void parseScalingContent(Scaling &out, pugi::xml_node el, const ParseContext &context);
+void parseScalingContent(Scaling &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeScaling(const Scaling &v, pugi::xml_node parent, const char *tag);
+void serializeScaling(const Scaling &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeScalingContent(const Scaling &v, pugi::xml_node el);
+void serializeScalingContent(const Scaling &v, mxpugi::xml_node el);
 
 } // namespace mx::core

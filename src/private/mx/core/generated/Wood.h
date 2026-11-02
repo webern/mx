@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -34,12 +34,12 @@ class Wood final
     WoodValue m_value{};
 };
 
-Wood parseWood(pugi::xml_node el, const ParseContext &context);
+Wood parseWood(mxpugi::xml_node el, const ParseContext &context);
 
-void parseWoodContent(Wood &out, pugi::xml_node el, const ParseContext &context);
+void parseWoodContent(Wood &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeWood(const Wood &v, pugi::xml_node parent, const char *tag);
+void serializeWood(const Wood &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeWoodContent(const Wood &v, pugi::xml_node el);
+void serializeWoodContent(const Wood &v, mxpugi::xml_node el);
 
 } // namespace mx::core

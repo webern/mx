@@ -19,7 +19,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -96,12 +96,12 @@ class Pedal final
     std::optional<Token> m_id;
 };
 
-Pedal parsePedal(pugi::xml_node el, const ParseContext &context);
+Pedal parsePedal(mxpugi::xml_node el, const ParseContext &context);
 
-void parsePedalContent(Pedal &out, pugi::xml_node el, const ParseContext &context);
+void parsePedalContent(Pedal &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializePedal(const Pedal &v, pugi::xml_node parent, const char *tag);
+void serializePedal(const Pedal &v, mxpugi::xml_node parent, const char *tag);
 
-void serializePedalContent(const Pedal &v, pugi::xml_node el);
+void serializePedalContent(const Pedal &v, mxpugi::xml_node el);
 
 } // namespace mx::core

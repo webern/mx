@@ -31,7 +31,7 @@ void PageLayoutGroup::setPageWidth(Tenths value)
     m_pageWidth = std::move(value);
 }
 
-PageLayoutGroup parsePageLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+PageLayoutGroup parsePageLayoutGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor, const ParseContext &context)
 {
     PageLayoutGroup out;
     if (cursorIs(cursor, "page-height"))
@@ -55,7 +55,7 @@ PageLayoutGroup parsePageLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor, 
     return out;
 }
 
-void serializePageLayoutGroup(const PageLayoutGroup &v, pugi::xml_node el)
+void serializePageLayoutGroup(const PageLayoutGroup &v, mxpugi::xml_node el)
 {
     writeTextElement(el, "page-height", v.pageHeight().toString());
     writeTextElement(el, "page-width", v.pageWidth().toString());

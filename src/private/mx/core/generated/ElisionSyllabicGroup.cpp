@@ -31,7 +31,8 @@ void ElisionSyllabicGroup::setSyllabic(std::optional<Syllabic> value)
     m_syllabic = std::move(value);
 }
 
-ElisionSyllabicGroup parseElisionSyllabicGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+ElisionSyllabicGroup parseElisionSyllabicGroup(mxpugi::xml_node el, mxpugi::xml_node &cursor,
+                                               const ParseContext &context)
 {
     ElisionSyllabicGroup out;
     if (cursorIs(cursor, "elision"))
@@ -51,7 +52,7 @@ ElisionSyllabicGroup parseElisionSyllabicGroup(pugi::xml_node el, pugi::xml_node
     return out;
 }
 
-void serializeElisionSyllabicGroup(const ElisionSyllabicGroup &v, pugi::xml_node el)
+void serializeElisionSyllabicGroup(const ElisionSyllabicGroup &v, mxpugi::xml_node el)
 {
     serializeElision(v.elision(), el, "elision");
     if (v.syllabic())

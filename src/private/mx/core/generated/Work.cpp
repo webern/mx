@@ -41,10 +41,10 @@ void Work::setOpus(std::optional<Opus> value)
     m_opus = std::move(value);
 }
 
-Work parseWork(pugi::xml_node el, const ParseContext &context)
+Work parseWork(mxpugi::xml_node el, const ParseContext &context)
 {
     Work out;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -57,9 +57,9 @@ Work parseWork(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseWorkContent(Work &out, pugi::xml_node el, const ParseContext &context)
+void parseWorkContent(Work &out, mxpugi::xml_node el, const ParseContext &context)
 {
-    pugi::xml_node cursor = firstElement(el);
+    mxpugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "work-number"))
     {
         out.setWorkNumber(std::string{childText(cursor)});
@@ -85,13 +85,13 @@ void parseWorkContent(Work &out, pugi::xml_node el, const ParseContext &context)
     }
 }
 
-void serializeWork(const Work &v, pugi::xml_node parent, const char *tag)
+void serializeWork(const Work &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     serializeWorkContent(v, el);
 }
 
-void serializeWorkContent(const Work &v, pugi::xml_node el)
+void serializeWorkContent(const Work &v, mxpugi::xml_node el)
 {
     if (v.workNumber())
     {

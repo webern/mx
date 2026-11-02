@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -44,12 +44,12 @@ class MeasureRepeat final
     PositiveIntegerOrEmpty m_value{};
 };
 
-MeasureRepeat parseMeasureRepeat(pugi::xml_node el, const ParseContext &context);
+MeasureRepeat parseMeasureRepeat(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el, const ParseContext &context);
+void parseMeasureRepeatContent(MeasureRepeat &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMeasureRepeat(const MeasureRepeat &v, pugi::xml_node parent, const char *tag);
+void serializeMeasureRepeat(const MeasureRepeat &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMeasureRepeatContent(const MeasureRepeat &v, pugi::xml_node el);
+void serializeMeasureRepeatContent(const MeasureRepeat &v, mxpugi::xml_node el);
 
 } // namespace mx::core

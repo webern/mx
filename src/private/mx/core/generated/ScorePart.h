@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -80,12 +80,12 @@ class ScorePart final
     std::vector<ScorePartMIDIGroup> m_midiGroup;
 };
 
-ScorePart parseScorePart(pugi::xml_node el, const ParseContext &context);
+ScorePart parseScorePart(mxpugi::xml_node el, const ParseContext &context);
 
-void parseScorePartContent(ScorePart &out, pugi::xml_node el, const ParseContext &context);
+void parseScorePartContent(ScorePart &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeScorePart(const ScorePart &v, pugi::xml_node parent, const char *tag);
+void serializeScorePart(const ScorePart &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeScorePartContent(const ScorePart &v, pugi::xml_node el);
+void serializeScorePartContent(const ScorePart &v, mxpugi::xml_node el);
 
 } // namespace mx::core

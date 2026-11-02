@@ -61,11 +61,11 @@ void LineDetail::setPrintObject(std::optional<YesNo> value)
     m_printObject = std::move(value);
 }
 
-LineDetail parseLineDetail(pugi::xml_node el, const ParseContext &context)
+LineDetail parseLineDetail(mxpugi::xml_node el, const ParseContext &context)
 {
     LineDetail out;
     bool seen_line = false;
-    for (pugi::xml_attribute a : el.attributes())
+    for (mxpugi::xml_attribute a : el.attributes())
     {
         const std::string_view aname{a.name()};
         if (isNamespaceDecl(aname))
@@ -106,7 +106,7 @@ LineDetail parseLineDetail(pugi::xml_node el, const ParseContext &context)
     return out;
 }
 
-void parseLineDetailContent(LineDetail &out, pugi::xml_node el, const ParseContext &context)
+void parseLineDetailContent(LineDetail &out, mxpugi::xml_node el, const ParseContext &context)
 {
     (void)out;
     (void)context;
@@ -116,9 +116,9 @@ void parseLineDetailContent(LineDetail &out, pugi::xml_node el, const ParseConte
     }
 }
 
-void serializeLineDetail(const LineDetail &v, pugi::xml_node parent, const char *tag)
+void serializeLineDetail(const LineDetail &v, mxpugi::xml_node parent, const char *tag)
 {
-    pugi::xml_node el = parent.append_child(tag);
+    mxpugi::xml_node el = parent.append_child(tag);
     setAttribute(el, "line", v.line().toString());
     if (v.width())
     {
@@ -139,7 +139,7 @@ void serializeLineDetail(const LineDetail &v, pugi::xml_node parent, const char 
     serializeLineDetailContent(v, el);
 }
 
-void serializeLineDetailContent(const LineDetail &v, pugi::xml_node el)
+void serializeLineDetailContent(const LineDetail &v, mxpugi::xml_node el)
 {
     (void)v;
     (void)el;

@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi
+namespace mxpugi
 {
 class xml_node;
 }
@@ -36,12 +36,12 @@ class Miscellaneous final
     std::vector<MiscellaneousField> m_miscellaneousField;
 };
 
-Miscellaneous parseMiscellaneous(pugi::xml_node el, const ParseContext &context);
+Miscellaneous parseMiscellaneous(mxpugi::xml_node el, const ParseContext &context);
 
-void parseMiscellaneousContent(Miscellaneous &out, pugi::xml_node el, const ParseContext &context);
+void parseMiscellaneousContent(Miscellaneous &out, mxpugi::xml_node el, const ParseContext &context);
 
-void serializeMiscellaneous(const Miscellaneous &v, pugi::xml_node parent, const char *tag);
+void serializeMiscellaneous(const Miscellaneous &v, mxpugi::xml_node parent, const char *tag);
 
-void serializeMiscellaneousContent(const Miscellaneous &v, pugi::xml_node el);
+void serializeMiscellaneousContent(const Miscellaneous &v, mxpugi::xml_node el);
 
 } // namespace mx::core

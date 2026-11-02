@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "pugixml.hpp"
+#include "mxpugi/mxpugi.hpp"
 
 #include <string>
 #include <vector>
@@ -47,7 +47,7 @@ class Fixer
         return !myFixups.empty();
     }
 
-    void applyToExpected(pugi::xml_document &expected) const;
+    void applyToExpected(mxpugi::xml_document &expected) const;
 
   private:
     std::vector<Fixup> myFixups;
