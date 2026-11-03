@@ -253,7 +253,7 @@ void NoteFunctions::parseNotations() const
                 break;
             }
             case core::NotationsChoice::Kind::tuplet: {
-                TupletReader reader{notationsChoice.asTuplet(), myCursor, myNote};
+                TupletReader reader{notationsChoice.asTuplet(), myCursor, myNote, myDiagnostics};
                 reader.parseTuplet(myOutNoteData.noteAttachmentData.tupletStarts,
                                    myOutNoteData.noteAttachmentData.tupletStops);
                 break;
