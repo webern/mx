@@ -69,7 +69,8 @@ consumes the output.
 The `Makefile` is the entrypoint for all build processes; it drives `cmake` and runs everything
 inside the `mx-sdk` Docker image unless `MX_TOOLCHAIN=native` (see the README's Build section).
 Lean on it and suggest improvements when it doesn't have what you need. Run `make help` for the
-target list. Extend the `mx-sdk` image when new tools are needed.
+target list. Extend the `mx-sdk` image when new tools are needed. Without Docker, run
+`MX_TOOLCHAIN=native make <target>`; `make doctor` reports which targets this machine can run.
 
 ## The corert (core roundtrip) test
 
