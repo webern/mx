@@ -61,11 +61,16 @@ ifneq ($(ACTIONS_RUNTIME_TOKEN),)
 DOCKER_CACHE := --cache-from type=gha --cache-to type=gha,mode=max
 endif
 
-# Docker SDK image + build volume. Incremental state persists across runs.
-# Volume name includes a path hash so parallel worktrees get isolated caches.
-DOCKER_IMAGE  := mx-sdk
-DOCKER_VOLUME ?= mx-build-$(shell printf '%s' '$(CURDIR)' | md5sum 2>/dev/null | cut -c1-8 || printf '%s' '$(CURDIR)' | md5 -q | cut -c1-8)
-DOCKER_STAMP  := $(BUILD_ROOT)/.docker-image-stamp
+# Docker SDK image and volumes. Each worktree gets its own build volume, named
+# with a hash of its path, so builds in two worktrees cannot clash. The
+# compiler caches (ccache, Emscripten, Go) live in one cache volume that every
+# worktree shares. Every worktree is mounted at /workspace, so the compile
+# commands match and a cache entry from one worktree is a hit in another.
+# Deleting a worktree does not lose the cache.
+DOCKER_IMAGE        := mx-sdk
+DOCKER_VOLUME       ?= mx-build-$(shell printf '%s' '$(CURDIR)' | md5sum 2>/dev/null | cut -c1-8 || printf '%s' '$(CURDIR)' | md5 -q | cut -c1-8)
+DOCKER_CACHE_VOLUME ?= mx-cache
+DOCKER_STAMP        := $(BUILD_ROOT)/.docker-image-stamp
 
 # Prevent root-owned files on Linux.
 UNAME_S := $(shell uname -s)
@@ -76,6 +81,7 @@ endif
 DOCKER_RUN := $(DOCKER) run --rm \
 	-v $(CURDIR):/workspace \
 	-v $(DOCKER_VOLUME):/workspace/build \
+	-v $(DOCKER_CACHE_VOLUME):/cache \
 	-e JOBS=$(JOBS) \
 	$(DOCKER_USER) \
 	$(DOCKER_IMAGE)
@@ -91,7 +97,8 @@ DOCKER_TARGETS := \
 	gen-test audit-test gen-quality gen-lint \
 	fmt fmt-check gen gen-cpp gen-go gen-c gen-schema \
 	audit audit-force \
-	build-go build-c test-go test-c
+	build-go build-c test-go test-c \
+	cache-stats
 
 # C++ to format. Skip the vendored pugixml (src/private/mxpugi, written by
 # scripts/vendor_pugixml.py) and the cpul/Catch test harness.
@@ -104,7 +111,7 @@ FIND_CPP := find src \
 
 .DEFAULT_GOAL := help
 .PHONY: help sdk vendor-pugixml quality-venv clean clean-docker check-docker docker-volume \
-        $(DOCKER_TARGETS)
+        clean-docker-all $(DOCKER_TARGETS)
 
 help:
 	@echo 'mx targets (see AGENTS.md). They run in the mx-sdk Docker image by default'
@@ -167,7 +174,11 @@ help:
 	@echo '  make sdk            Build the mx-sdk Docker toolchain image.'
 	@echo '  make vendor-pugixml VERSION=x.y  Refresh src/private/mxpugi from a pugixml release (runs on the host).'
 	@echo '  make clean          Remove the build/ tree and gen build artifacts.'
-	@echo '  make clean-docker   Remove the sdk image and build volume.'
+	@echo '  make cache-stats    Show ccache statistics (the shared cache volume in Docker mode).'
+	@echo '  make clean-docker   Remove this worktree'"'"'s build volume. Keeps the image and the shared cache.'
+	@echo '  make clean-docker-all  Remove the mx-sdk image, the shared cache volume, and the'
+	@echo '                      build volume of EVERY worktree, not just this one. The other'
+	@echo '                      worktrees still work; their next build starts cold.'
 
 # --- Housekeeping -----------------------------------------------------------
 
@@ -182,11 +193,30 @@ vendor-pugixml:
 	@test -n "$(VERSION)" || { echo "usage: make vendor-pugixml VERSION=1.16"; exit 1; }
 	python3 -I scripts/vendor_pugixml.py --version $(VERSION) --out src/private/mxpugi
 
+# Removes only what belongs to this worktree. The stamp goes too, so the next
+# run checks the image again.
 clean-docker:
-	-rm -f $(DOCKER_STAMP)
-	-$(DOCKER) rmi $(DOCKER_IMAGE) 2>/dev/null || true
-	-$(DOCKER) volume rm $(DOCKER_VOLUME) 2>/dev/null || true
-	@echo "Removed mx-sdk image and mx-build volume."
+	rm -f $(DOCKER_STAMP)
+	@if $(DOCKER) volume inspect $(DOCKER_VOLUME) >/dev/null 2>&1; then \
+	  $(DOCKER) volume rm $(DOCKER_VOLUME) >/dev/null && echo "Removed volume $(DOCKER_VOLUME)."; \
+	else echo "No volume $(DOCKER_VOLUME) to remove."; fi
+
+# Removes everything mx keeps in Docker, for all worktrees. Build volumes are
+# matched by name: mx-build plus an 8-character path hash, or plain mx-build
+# as CI names it. That also catches volumes left behind by deleted worktrees.
+# A volume or image that is still in use is not removed; Docker prints why and
+# the rest are removed anyway.
+MX_BUILD_VOLUME_PATTERN := ^mx-build(-[0-9a-f]{8})?$$
+
+clean-docker-all:
+	rm -f $(DOCKER_STAMP)
+	-@for v in $$($(DOCKER) volume ls -q --filter name=mx-build | grep -E '$(MX_BUILD_VOLUME_PATTERN)') \
+	          $$($(DOCKER) volume ls -q --filter name=$(DOCKER_CACHE_VOLUME) | grep -Fx '$(DOCKER_CACHE_VOLUME)'); do \
+	  $(DOCKER) volume rm "$$v" >/dev/null && echo "Removed volume $$v."; \
+	done; true
+	-@if $(DOCKER) image inspect $(DOCKER_IMAGE) >/dev/null 2>&1; then \
+	  $(DOCKER) rmi $(DOCKER_IMAGE) >/dev/null && echo "Removed image $(DOCKER_IMAGE)."; \
+	fi; true
 
 check-docker:
 	@command -v $(DOCKER) >/dev/null 2>&1 || \
@@ -202,6 +232,19 @@ check-docker:
 ifeq ($(MX_TOOLCHAIN),native)
 
 # ----- MX_TOOLCHAIN=native: run the tools here (also inside the container) --
+
+# Use ccache when it is installed. CMake reads these variables when it first
+# configures a build tree. The mx-sdk image and the macOS CI job set them
+# already, and a setting from the environment wins. CCACHE_BASEDIR lets
+# worktrees at different paths share ccache entries.
+ifeq ($(origin CMAKE_CXX_COMPILER_LAUNCHER),undefined)
+ifneq ($(shell command -v ccache 2>/dev/null),)
+export CMAKE_C_COMPILER_LAUNCHER := ccache
+export CMAKE_CXX_COMPILER_LAUNCHER := ccache
+endif
+endif
+CCACHE_BASEDIR ?= $(CURDIR)
+export CCACHE_BASEDIR
 
 # All C++ suites: the core substrate (corert + unit) and the api product
 # surface (mxtest + examples + corpus round-trip). The deep gate; CI runs it
@@ -432,6 +475,10 @@ $(QUALITY_VENV_STAMP): $(QUALITY_REQS)
 CHECK_QUALITY_VENV = @test -x $(QUALITY_VENV)/bin/python || \
 	{ echo "No Python venv at $(QUALITY_VENV). Run: make quality-venv"; exit 1; }
 
+cache-stats:
+	@if command -v ccache >/dev/null 2>&1; then ccache -s; \
+	else echo "ccache is not installed."; fi
+
 # Static analysis of the gen/ generator. quality.py measures and writes the
 # report tree to the workspace mount; the floor check below is the gate.
 gen-quality:
@@ -503,6 +550,16 @@ else
 
 # ----- MX_TOOLCHAIN=docker: build the image, then docker run ----------------
 
+# clean-docker-all in another worktree can delete the image while this
+# worktree's stamp stays behind. Treat a missing image as a stale stamp.
+ifneq ($(wildcard $(DOCKER_STAMP)),)
+ifneq ($(shell command -v $(DOCKER) 2>/dev/null),)
+ifeq ($(shell $(DOCKER) image inspect $(DOCKER_IMAGE) >/dev/null 2>&1 && echo found),)
+$(shell rm -f $(DOCKER_STAMP))
+endif
+endif
+endif
+
 $(DOCKER_STAMP): Dockerfile $(QUALITY_REQS) | check-docker
 	@mkdir -p $(BUILD_ROOT)
 	$(DOCKER) buildx build $(DOCKER_CACHE) --load -t $(DOCKER_IMAGE) . \
@@ -516,8 +573,9 @@ quality-venv:
 	@echo 'quality-venv is for MX_TOOLCHAIN=native. The mx-sdk image has its own venv.'
 
 docker-volume: | check-docker
-	@$(DOCKER) volume inspect $(DOCKER_VOLUME) >/dev/null 2>&1 \
-		|| $(DOCKER) volume create $(DOCKER_VOLUME) >/dev/null
+	@for v in $(DOCKER_VOLUME) $(DOCKER_CACHE_VOLUME); do \
+	  $(DOCKER) volume inspect $$v >/dev/null 2>&1 || $(DOCKER) volume create $$v >/dev/null; \
+	done
 
 # Forward each toolchain target into the container, which runs the same make
 # target there. A target that needs extra host-side steps, before or after the

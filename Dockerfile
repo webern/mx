@@ -35,11 +35,9 @@ RUN git clone --depth 1 --branch ${EMSDK_VERSION} https://github.com/emscripten-
     && ln -s "$(find /opt/emsdk/node -maxdepth 2 -type d -name bin)" /opt/emsdk/node/current-bin \
     && rm -rf /opt/emsdk/downloads
 
-# EM_CACHE: like CCACHE_DIR, avoids writing under root-owned /opt/emsdk at runtime.
 # PATH is appended, not prepended -- emsdk's own dirs shadow real tools by name (node, cmake).
 ENV EMSDK=/opt/emsdk \
     EM_CONFIG=/opt/emsdk/.emscripten \
-    EM_CACHE=/workspace/build/.emcache \
     PATH="${PATH}:/opt/emsdk/node/current-bin:/opt/emsdk/upstream/emscripten"
 
 # Python quality tooling for `make gen-quality` / `make gen-lint`. Isolated in a
@@ -53,24 +51,29 @@ RUN python3 -m venv /opt/quality-venv \
 ENV QUALITY_VENV=/opt/quality-venv
 
 # MX_TOOLCHAIN=native makes the Makefile run the tools directly instead of
-# forwarding into Docker again. Build with the pinned GCC; ccache state lives
-# under the mounted build volume.
+# forwarding into Docker again. Build with the pinned GCC through ccache.
 ENV MX_TOOLCHAIN=native \
     CC=gcc-14 \
     CXX=g++-14 \
     CMAKE_C_COMPILER_LAUNCHER=ccache \
-    CMAKE_CXX_COMPILER_LAUNCHER=ccache \
-    CCACHE_DIR=/workspace/build/.ccache \
-    CCACHE_MAXSIZE=2G
+    CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
-# The container runs as the caller's uid:gid (DOCKER_USER), which has no passwd
-# entry, so HOME defaults to "/". Go would then place GOPATH at /go and GOCACHE
-# at /.cache/go-build -- both unwritable -- and `make test-go` dies with
-# "could not create module cache: mkdir /go: permission denied". Pin the Go
-# caches under the writable build volume, exactly as CCACHE_DIR above. The Go
-# module is vendored, so no network fetch is needed.
-ENV GOPATH=/workspace/build/go \
-    GOCACHE=/workspace/build/go/cache \
+# The compiler caches live in /cache, where the Makefile mounts a volume that
+# every worktree shares. On Linux the container runs as the caller's uid:gid
+# (DOCKER_USER), not root. Docker gives a new, empty volume the permissions of
+# the directory it is mounted over, so /cache is made writable by anyone.
+#
+# That uid has no passwd entry, so HOME is "/". Left alone, Go would put its
+# caches under /go and /.cache, which it cannot write, and Emscripten would
+# write its cache under the root-owned /opt/emsdk. So every cache is set here.
+# GOPATH stays in the per-worktree build volume: the Go module is vendored, so
+# nothing is downloaded into it.
+RUN mkdir -p /cache && chmod 1777 /cache
+ENV CCACHE_DIR=/cache/ccache \
+    CCACHE_MAXSIZE=10G \
+    EM_CACHE=/cache/em \
+    GOCACHE=/cache/go/build \
+    GOPATH=/workspace/build/go \
     GOMODCACHE=/workspace/build/go/pkg/mod
 
 WORKDIR /workspace
