@@ -110,7 +110,7 @@ FIND_CPP := find src \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
 .DEFAULT_GOAL := help
-.PHONY: help sdk vendor-pugixml quality-venv clean clean-docker check-docker docker-volume \
+.PHONY: help doctor sdk vendor-pugixml quality-venv clean clean-docker check-docker docker-volume \
         clean-docker-all $(DOCKER_TARGETS)
 
 help:
@@ -169,6 +169,7 @@ help:
 	@echo '  make test-c         Run C corert tests.'
 	@echo ''
 	@echo '  Housekeeping:'
+	@echo '  make doctor         Report which targets this machine can run, with Docker or natively.'
 	@echo '  make fmt            Format C++ under src/ with clang-format.'
 	@echo '  make fmt-check      clang-format gate (checks formatting; builds nothing).'
 	@echo '  make sdk            Build the mx-sdk Docker toolchain image.'
@@ -181,6 +182,12 @@ help:
 	@echo '                      worktrees still work; their next build starts cold.'
 
 # --- Housekeeping -----------------------------------------------------------
+
+# Always runs on the host, in either mode. The tool names come from this file
+# so the report checks the same programs the recipes run.
+doctor:
+	@DOCKER='$(DOCKER)' CMAKE='$(CMAKE)' CLANG_FORMAT='$(CLANG_FORMAT)' GCOV='$(GCOV)' \
+		QUALITY_VENV='$(QUALITY_VENV)' sh scripts/doctor.sh
 
 clean:
 	rm -rf $(BUILD_ROOT)
