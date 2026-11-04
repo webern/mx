@@ -6,7 +6,7 @@ Read @./README.md
 interface of MusicXML backed by the strongly-typed `mx::core` model.
 
 Quickstart: `make core-roundtrip-test` (fast corert gate) - `make fmt` (format) - `make help` (all
-targets). Everything runs in the `mx-sdk` Docker image unless `MX_RUNNING_IN_DOCKER=1`.
+targets). Everything runs in the `mx-sdk` Docker image unless `MX_TOOLCHAIN=native`.
 
 If a Markdown file has `llm-edit: false` or `llm_edit: false` in its frontmatter, it means the owner
 does *not* want you to automatically edit prose. The owner will ask you if prose edits are desired.
@@ -67,9 +67,10 @@ consumes the output.
 ## Build system
 
 The `Makefile` is the entrypoint for all build processes; it drives `cmake` and runs everything
-inside the `mx-sdk` Docker image unless `MX_RUNNING_IN_DOCKER=1` (see the README's Build section).
+inside the `mx-sdk` Docker image unless `MX_TOOLCHAIN=native` (see the README's Build section).
 Lean on it and suggest improvements when it doesn't have what you need. Run `make help` for the
-target list. Extend the `mx-sdk` image when new tools are needed.
+target list. Extend the `mx-sdk` image when new tools are needed. Without Docker, run
+`MX_TOOLCHAIN=native make <target>`; `make doctor` reports which targets this machine can run.
 
 ## The corert (core roundtrip) test
 

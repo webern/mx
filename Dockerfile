@@ -2,6 +2,14 @@
 #
 # mx-sdk: the pinned developer toolchain for mx. Not a project deliverable.
 
+# deslag is built in its own stage so the image does not carry a Rust
+# toolchain, only the binary. The Makefile reads DESLAG_VERSION from the ARG
+# below for native installs, so this is the only place the version is pinned.
+# Bookworm's glibc is older than Ubuntu 24.04's, so the binary runs there.
+FROM rust:1.91.1-slim-bookworm AS deslag
+ARG DESLAG_VERSION=0.0.6
+RUN cargo install deslag --version ${DESLAG_VERSION} --locked --root /opt/deslag
+
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -24,18 +32,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Python quality tooling for `make gen-quality` / `make gen-lint`. Isolated in a
-# venv (Ubuntu 24.04 marks the system Python externally-managed) and version
-# pinned: the gen-quality floor compares an exact score, so the analyzers must
-# be reproducible across CI runs.
-RUN python3 -m venv /opt/quality-venv \
-    && /opt/quality-venv/bin/pip install --no-cache-dir \
-        radon==6.0.1 \
-        astroid==4.0.4 \
-        pylint==4.0.5 \
-        cognitive_complexity==1.3.0
-
-# Unversioned name so the Makefile invokes the formatter without the suffix.
+# Unversioned name, for running the formatter by hand in the container.
 RUN ln -sf /usr/bin/clang-format-18 /usr/local/bin/clang-format
 
 # emsdk: pinned Emscripten toolchain for building mx to WebAssembly (#386).
@@ -46,31 +43,48 @@ RUN git clone --depth 1 --branch ${EMSDK_VERSION} https://github.com/emscripten-
     && ln -s "$(find /opt/emsdk/node -maxdepth 2 -type d -name bin)" /opt/emsdk/node/current-bin \
     && rm -rf /opt/emsdk/downloads
 
-# EM_CACHE: like CCACHE_DIR, avoids writing under root-owned /opt/emsdk at runtime.
 # PATH is appended, not prepended -- emsdk's own dirs shadow real tools by name (node, cmake).
 ENV EMSDK=/opt/emsdk \
     EM_CONFIG=/opt/emsdk/.emscripten \
-    EM_CACHE=/workspace/build/.emcache \
     PATH="${PATH}:/opt/emsdk/node/current-bin:/opt/emsdk/upstream/emscripten"
 
-# MX_RUNNING_IN_DOCKER flips the Makefile to its in-container branch. Build with
-# the pinned GCC; ccache state lives under the mounted build volume.
-ENV MX_RUNNING_IN_DOCKER=1 \
+# Python quality tooling for `make gen-quality` / `make gen-lint`. Isolated in a
+# venv (Ubuntu 24.04 marks the system Python externally-managed) and pinned in
+# gen/requirements-quality.txt: the gen-quality floor compares an exact score,
+# so the analyzers must be reproducible across CI runs. This comes after emsdk
+# so a change to the requirements does not reinstall emsdk.
+COPY gen/requirements-quality.txt /opt/requirements-quality.txt
+RUN python3 -m venv /opt/quality-venv \
+    && /opt/quality-venv/bin/pip install --no-cache-dir -r /opt/requirements-quality.txt
+ENV QUALITY_VENV=/opt/quality-venv
+
+COPY --from=deslag /opt/deslag/bin/deslag /usr/local/bin/deslag
+ENV DESLAG=/usr/local/bin/deslag
+
+# MX_TOOLCHAIN=native makes the Makefile run the tools directly instead of
+# forwarding into Docker again. Build with the pinned GCC through ccache.
+ENV MX_TOOLCHAIN=native \
     CC=gcc-14 \
     CXX=g++-14 \
     CMAKE_C_COMPILER_LAUNCHER=ccache \
-    CMAKE_CXX_COMPILER_LAUNCHER=ccache \
-    CCACHE_DIR=/workspace/build/.ccache \
-    CCACHE_MAXSIZE=2G
+    CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
-# The container runs as the caller's uid:gid (DOCKER_USER), which has no passwd
-# entry, so HOME defaults to "/". Go would then place GOPATH at /go and GOCACHE
-# at /.cache/go-build -- both unwritable -- and `make test-go` dies with
-# "could not create module cache: mkdir /go: permission denied". Pin the Go
-# caches under the writable build volume, exactly as CCACHE_DIR above. The Go
-# module is vendored, so no network fetch is needed.
-ENV GOPATH=/workspace/build/go \
-    GOCACHE=/workspace/build/go/cache \
+# The compiler caches live in /cache, where the Makefile mounts a volume that
+# every worktree shares. On Linux the container runs as the caller's uid:gid
+# (DOCKER_USER), not root. Docker gives a new, empty volume the permissions of
+# the directory it is mounted over, so /cache is made writable by anyone.
+#
+# That uid has no passwd entry, so HOME is "/". Left alone, Go would put its
+# caches under /go and /.cache, which it cannot write, and Emscripten would
+# write its cache under the root-owned /opt/emsdk. So every cache is set here.
+# GOPATH stays in the per-worktree build volume: the Go module is vendored, so
+# nothing is downloaded into it.
+RUN mkdir -p /cache && chmod 1777 /cache
+ENV CCACHE_DIR=/cache/ccache \
+    CCACHE_MAXSIZE=10G \
+    EM_CACHE=/cache/em \
+    GOCACHE=/cache/go/build \
+    GOPATH=/workspace/build/go \
     GOMODCACHE=/workspace/build/go/pkg/mod
 
 WORKDIR /workspace

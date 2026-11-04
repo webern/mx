@@ -36,7 +36,7 @@ make core-roundtrip-test
 
 Run `make` (or `make help`) to list every target. There is a `Dockerfile` which defines `mx-sdk`,
 ostensibly intended to make builds reproducible and match CI, but it is easy to work around if you
-prefer not to use it (`MX_RUNNING_IN_DOCKER=1`).
+prefer not to use it (`MX_TOOLCHAIN=native`).
 
 ### Build Tenets
 

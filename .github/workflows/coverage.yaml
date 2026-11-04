@@ -79,23 +79,26 @@ jobs:
         with:
           ref: ${{ steps.pr.outputs.sha || github.sha }}
 
-      # Same container-driver + runtime-token + bind-backed volume + ccache
+      # Same container-driver + runtime-token + bind-backed volumes + ccache
       # setup as ci.yaml's Linux jobs so the instrumented builds reuse the warm
       # toolchain layer cache.
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
 
-      - name: Create bind-backed build volume
+      - name: Create bind-backed volumes
         run: |
-          mkdir -p build/docker
+          mkdir -p build/docker build/docker-cache
           docker volume create --driver local \
             --opt type=none --opt o=bind \
             --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker-cache" mx-cache
 
       - name: Cache ccache
         uses: actions/cache@v4
         with:
-          path: build/docker/.ccache
+          path: build/docker-cache/ccache
           key: ccache-${{ runner.os }}-coverage-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-coverage-
 

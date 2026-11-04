@@ -1,2 +1,4 @@
 # Ignore everything: the image is a developer tooling sdk.
 *
+# Except the pinned Python analyzers the image installs.
+!gen/requirements-quality.txt

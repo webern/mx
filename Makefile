@@ -2,14 +2,29 @@
 # ============================================================================
 #
 # The generated mx::core C++ model lives in src/private/mx/core/generated
-# (emitted by `make gen-cpp`, committed). Every gate runs through the pinned
-# `mx-sdk` Docker toolchain: outside a container a target builds the image
-# once and re-invokes itself inside it; inside (MX_RUNNING_IN_DOCKER, set by
-# the image) it drives the tools directly. Setting MX_RUNNING_IN_DOCKER=1 on
-# a dev machine runs natively with the host toolchain instead (used by the
-# macOS CI job, which has no Docker). Requires CMake >= 3.13.
+# (emitted by `make gen-cpp`, committed). MX_TOOLCHAIN picks where the
+# targets run:
+#
+#   docker (default)  Build the pinned `mx-sdk` image once and run the same
+#                     make target inside it.
+#   native            Run the tools directly on this machine. The mx-sdk
+#                     image sets this, and so does the macOS CI job, which has
+#                     no Docker. You need the host tools a target uses.
+#
+# MX_RUNNING_IN_DOCKER is the old name for native mode and still works.
+# Requires CMake >= 3.13.
 #
 # ============================================================================
+
+ifneq ($(MX_RUNNING_IN_DOCKER),)
+MX_TOOLCHAIN := native
+endif
+MX_TOOLCHAIN ?= docker
+ifneq ($(MX_TOOLCHAIN),docker)
+ifneq ($(MX_TOOLCHAIN),native)
+$(error MX_TOOLCHAIN must be docker or native, not '$(MX_TOOLCHAIN)')
+endif
+endif
 
 CMAKE      ?= cmake
 DOCKER     ?= docker
@@ -17,20 +32,36 @@ BUILD_TYPE ?= Debug
 BUILD_ROOT := build
 JOBS       ?= $(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
 
-# Coverage report output. gcov-14 matches the pinned g++-14 toolchain.
+# Tool names. Each prefers the version the mx-sdk image pins and falls back to
+# the plain name, so native mode works on a machine that has only the plain
+# one. gcov must match the compiler: gcov-14 goes with g++-14.
+CLANG_FORMAT ?= $(if $(shell command -v clang-format-18 2>/dev/null),clang-format-18,clang-format)
+GCOV         ?= $(if $(shell command -v gcov-14 2>/dev/null),gcov-14,gcov)
+
+# Coverage report output.
 COV_DIR := data/testOutput/coverage
-GCOV    ?= gcov-14
 
 # gen-quality / gen-lint: static analysis of the gen/ generator. The floors are
 # the CI gate -- a build fails below them; ratchet them upward as the generator
 # improves. gen-quality scores design (size + complexity); gen-lint enforces
-# genuine lint defects. Pinned analyzers live in the mx-sdk venv (see
-# Dockerfile). GEN_PY is every .py under gen/ except the measurer itself.
-QUALITY_VENV      := /opt/quality-venv
+# genuine lint defects. The analyzers are pinned in QUALITY_REQS and run from
+# the Python venv at QUALITY_VENV. The mx-sdk image has its own venv and sets
+# QUALITY_VENV to it. Natively, `make quality-venv` builds one under build/.
+# GEN_PY is every .py under gen/ except the measurer itself.
+QUALITY_VENV      ?= $(CURDIR)/$(BUILD_ROOT)/quality-venv
+QUALITY_REQS      := gen/requirements-quality.txt
 QUALITY_DIR       := data/testOutput/gen-quality
 GEN_PY            := $(shell find gen -name '*.py' ! -name quality.py | sort)
 GEN_QUALITY_FLOOR ?= 84.5
 GEN_LINT_FLOOR    ?= 9.29
+
+# deslag, a Rust CLI. No target uses it yet. The version is pinned once, in the
+# Dockerfile. The mx-sdk image installs it and sets DESLAG to it. Natively,
+# `make deslag` installs it under build/ with a cargo home of its own, so it
+# does not use or change the deslag or the cargo home in your home directory.
+DESLAG_VERSION := $(shell sed -n 's/^ARG DESLAG_VERSION=//p' Dockerfile)
+DESLAG_HOME    := $(CURDIR)/$(BUILD_ROOT)/cargo-home
+DESLAG         ?= $(DESLAG_HOME)/bin/deslag
 
 # For GitHub Actions. When present, push/pull the Docker layer cache to the
 # GitHub Actions cache.
@@ -38,11 +69,16 @@ ifneq ($(ACTIONS_RUNTIME_TOKEN),)
 DOCKER_CACHE := --cache-from type=gha --cache-to type=gha,mode=max
 endif
 
-# Docker SDK image + build volume. Incremental state persists across runs.
-# Volume name includes a path hash so parallel worktrees get isolated caches.
-DOCKER_IMAGE  := mx-sdk
-DOCKER_VOLUME ?= mx-build-$(shell printf '%s' '$(CURDIR)' | md5sum 2>/dev/null | cut -c1-8 || printf '%s' '$(CURDIR)' | md5 -q | cut -c1-8)
-DOCKER_STAMP  := $(BUILD_ROOT)/.docker-image-stamp
+# Docker SDK image and volumes. Each worktree gets its own build volume, named
+# with a hash of its path, so builds in two worktrees cannot clash. The
+# compiler caches (ccache, Emscripten, Go) live in one cache volume that every
+# worktree shares. Every worktree is mounted at /workspace, so the compile
+# commands match and a cache entry from one worktree is a hit in another.
+# Deleting a worktree does not lose the cache.
+DOCKER_IMAGE        := mx-sdk
+DOCKER_VOLUME       ?= mx-build-$(shell printf '%s' '$(CURDIR)' | md5sum 2>/dev/null | cut -c1-8 || printf '%s' '$(CURDIR)' | md5 -q | cut -c1-8)
+DOCKER_CACHE_VOLUME ?= mx-cache
+DOCKER_STAMP        := $(BUILD_ROOT)/.docker-image-stamp
 
 # Prevent root-owned files on Linux.
 UNAME_S := $(shell uname -s)
@@ -53,9 +89,24 @@ endif
 DOCKER_RUN := $(DOCKER) run --rm \
 	-v $(CURDIR):/workspace \
 	-v $(DOCKER_VOLUME):/workspace/build \
+	-v $(DOCKER_CACHE_VOLUME):/cache \
 	-e JOBS=$(JOBS) \
 	$(DOCKER_USER) \
 	$(DOCKER_IMAGE)
+
+# Targets that need the toolchain. With MX_TOOLCHAIN=docker each one is
+# forwarded into the mx-sdk image (see the end of this file).
+DOCKER_TARGETS := \
+	test-all symbol-check backend-pugixml-test \
+	api-lib api-build api-test api-examples api-roundtrip \
+	api-roundtrip-discover api-roundtrip-dump api-roundtrip-classify api-coverage \
+	wasm-lib wasm-build wasm-test \
+	core-build core-roundtrip-test core-unit core-coverage \
+	gen-test audit-test gen-quality gen-lint \
+	fmt fmt-check gen gen-cpp gen-go gen-c gen-schema \
+	audit audit-force \
+	build-go build-c test-go test-c \
+	cache-stats
 
 # C++ to format. Skip the vendored pugixml (src/private/mxpugi, written by
 # scripts/vendor_pugixml.py) and the cpul/Catch test harness.
@@ -67,20 +118,12 @@ FIND_CPP := find src \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
 .DEFAULT_GOAL := help
-.PHONY: help sdk fmt fmt-check test-all symbol-check vendor-pugixml backend-pugixml-test \
-        core-build core-roundtrip-test core-unit core-coverage \
-        api-lib api-build api-test api-examples api-roundtrip \
-        api-roundtrip-discover api-roundtrip-dump api-roundtrip-classify api-coverage \
-        wasm-lib wasm-build wasm-test \
-        gen-test audit-test gen-quality gen-lint \
-        gen gen-cpp gen-go gen-c gen-schema \
-        audit audit-force \
-        build-go build-c test-go test-c \
-        clean clean-docker check-docker docker-volume
+.PHONY: help doctor sdk vendor-pugixml quality-venv deslag clean clean-docker check-docker docker-volume \
+        clean-docker-all $(DOCKER_TARGETS)
 
 help:
-	@echo 'mx targets (see AGENTS.md). All run via the mx-sdk Docker toolchain;'
-	@echo 'set MX_RUNNING_IN_DOCKER=1 to run natively on the host instead.'
+	@echo 'mx targets (see AGENTS.md). They run in the mx-sdk Docker image by default'
+	@echo '(MX_TOOLCHAIN=docker). Set MX_TOOLCHAIN=native to run them with the host tools.'
 	@echo ''
 	@echo '  Everything C++ (the default deep gate, run in CI on Linux):'
 	@echo '  make test-all       core-roundtrip-test + core-unit + api-test + api-roundtrip.'
@@ -118,6 +161,7 @@ help:
 	@echo '  make gen-schema     Run the generator for the JSON Schema target.'
 	@echo '  make gen-quality    Score gen/ design quality; fail below the floor.'
 	@echo '  make gen-lint       Lint gen/ with pylint; fail below the floor.'
+	@echo '  make quality-venv   Native only: build the Python venv gen-quality/gen-lint use, at $(QUALITY_VENV).'
 	@echo ''
 	@echo '  Feature audit (audit/):'
 	@echo '  make audit          Write missing *.features.xml sidecars + rebuild data/corpus.xml.'
@@ -133,14 +177,26 @@ help:
 	@echo '  make test-c         Run C corert tests.'
 	@echo ''
 	@echo '  Housekeeping:'
-	@echo '  make fmt            Format C++ under src/ via mx-sdk.'
+	@echo '  make doctor         Report which targets this machine can run, with Docker or natively.'
+	@echo '  make deslag         Native only: install deslag $(DESLAG_VERSION) at $(DESLAG_HOME) (needs cargo). No target uses it yet.'
+	@echo '  make fmt            Format C++ under src/ with clang-format.'
 	@echo '  make fmt-check      clang-format gate (checks formatting; builds nothing).'
 	@echo '  make sdk            Build the mx-sdk Docker toolchain image.'
 	@echo '  make vendor-pugixml VERSION=x.y  Refresh src/private/mxpugi from a pugixml release (runs on the host).'
 	@echo '  make clean          Remove the build/ tree and gen build artifacts.'
-	@echo '  make clean-docker   Remove the sdk image and build volume.'
+	@echo '  make cache-stats    Show ccache statistics (the shared cache volume in Docker mode).'
+	@echo '  make clean-docker   Remove this worktree'"'"'s build volume. Keeps the image and the shared cache.'
+	@echo '  make clean-docker-all  Remove the mx-sdk image, the shared cache volume, and the'
+	@echo '                      build volume of EVERY worktree, not just this one. The other'
+	@echo '                      worktrees still work; their next build starts cold.'
 
 # --- Housekeeping -----------------------------------------------------------
+
+# Always runs on the host, in either mode. The tool names come from this file
+# so the report checks the same programs the recipes run.
+doctor:
+	@DOCKER='$(DOCKER)' CMAKE='$(CMAKE)' CLANG_FORMAT='$(CLANG_FORMAT)' GCOV='$(GCOV)' \
+		QUALITY_VENV='$(QUALITY_VENV)' DESLAG='$(DESLAG)' sh scripts/doctor.sh
 
 clean:
 	rm -rf $(BUILD_ROOT)
@@ -153,22 +209,58 @@ vendor-pugixml:
 	@test -n "$(VERSION)" || { echo "usage: make vendor-pugixml VERSION=1.16"; exit 1; }
 	python3 -I scripts/vendor_pugixml.py --version $(VERSION) --out src/private/mxpugi
 
+# Removes only what belongs to this worktree. The stamp goes too, so the next
+# run checks the image again.
 clean-docker:
-	-rm -f $(DOCKER_STAMP)
-	-$(DOCKER) rmi $(DOCKER_IMAGE) 2>/dev/null || true
-	-$(DOCKER) volume rm $(DOCKER_VOLUME) 2>/dev/null || true
-	@echo "Removed mx-sdk image and mx-build volume."
+	rm -f $(DOCKER_STAMP)
+	@if $(DOCKER) volume inspect $(DOCKER_VOLUME) >/dev/null 2>&1; then \
+	  $(DOCKER) volume rm $(DOCKER_VOLUME) >/dev/null && echo "Removed volume $(DOCKER_VOLUME)."; \
+	else echo "No volume $(DOCKER_VOLUME) to remove."; fi
+
+# Removes everything mx keeps in Docker, for all worktrees. Build volumes are
+# matched by name: mx-build plus an 8-character path hash, or plain mx-build
+# as CI names it. That also catches volumes left behind by deleted worktrees.
+# A volume or image that is still in use is not removed; Docker prints why and
+# the rest are removed anyway.
+MX_BUILD_VOLUME_PATTERN := ^mx-build(-[0-9a-f]{8})?$$
+
+clean-docker-all:
+	rm -f $(DOCKER_STAMP)
+	-@for v in $$($(DOCKER) volume ls -q --filter name=mx-build | grep -E '$(MX_BUILD_VOLUME_PATTERN)') \
+	          $$($(DOCKER) volume ls -q --filter name=$(DOCKER_CACHE_VOLUME) | grep -Fx '$(DOCKER_CACHE_VOLUME)'); do \
+	  $(DOCKER) volume rm "$$v" >/dev/null && echo "Removed volume $$v."; \
+	done; true
+	-@if $(DOCKER) image inspect $(DOCKER_IMAGE) >/dev/null 2>&1; then \
+	  $(DOCKER) rmi $(DOCKER_IMAGE) >/dev/null && echo "Removed image $(DOCKER_IMAGE)."; \
+	fi; true
 
 check-docker:
 	@command -v $(DOCKER) >/dev/null 2>&1 || \
-		{ echo "Docker not found. Install it to use the mx-sdk gates:"; \
-		  echo "  https://docs.docker.com/get-docker/"; exit 1; }
+		{ echo "Docker not found ($(DOCKER)). Install it to use the mx-sdk image:"; \
+		  echo "  https://docs.docker.com/get-docker/"; \
+		  echo "Or run with the host tools instead:"; \
+		  echo "  MX_TOOLCHAIN=native make $(or $(MAKECMDGOALS),<target>)"; \
+		  echo "'make doctor' lists which host tools each target needs."; \
+		  exit 1; }
 
-# === Docker-gated targets ===================================================
+# === Toolchain targets ======================================================
 
-ifdef MX_RUNNING_IN_DOCKER
+ifeq ($(MX_TOOLCHAIN),native)
 
-# ----- Inside the container (or native via MX_RUNNING_IN_DOCKER=1) ----------
+# ----- MX_TOOLCHAIN=native: run the tools here (also inside the container) --
+
+# Use ccache when it is installed. CMake reads these variables when it first
+# configures a build tree. The mx-sdk image and the macOS CI job set them
+# already, and a setting from the environment wins. CCACHE_BASEDIR lets
+# worktrees at different paths share ccache entries.
+ifeq ($(origin CMAKE_CXX_COMPILER_LAUNCHER),undefined)
+ifneq ($(shell command -v ccache 2>/dev/null),)
+export CMAKE_C_COMPILER_LAUNCHER := ccache
+export CMAKE_CXX_COMPILER_LAUNCHER := ccache
+endif
+endif
+CCACHE_BASEDIR ?= $(CURDIR)
+export CCACHE_BASEDIR
 
 # All C++ suites: the core substrate (corert + unit) and the api product
 # surface (mxtest + examples + corpus round-trip). The deep gate; CI runs it
@@ -383,9 +475,45 @@ gen-test:
 audit-test:
 	python3 -m unittest discover -s audit/tests -t . $(ARGS)
 
+# The venv for gen-quality and gen-lint. The stamp records which requirements
+# file it was built from, so it is rebuilt only when that file changes.
+QUALITY_VENV_STAMP := $(QUALITY_VENV)/.mx-requirements-stamp
+
+quality-venv: $(QUALITY_VENV_STAMP)
+
+$(QUALITY_VENV_STAMP): $(QUALITY_REQS)
+	python3 -m venv $(QUALITY_VENV)
+	$(QUALITY_VENV)/bin/pip install --quiet --disable-pip-version-check -r $(QUALITY_REQS)
+	@touch $@
+
+# gen-quality and gen-lint do not build the venv themselves. That would mean a
+# network install in the middle of a check. They stop with a hint instead.
+CHECK_QUALITY_VENV = @test -x $(QUALITY_VENV)/bin/python || \
+	{ echo "No Python venv at $(QUALITY_VENV). Run: make quality-venv"; exit 1; }
+
+# cargo uses the machine's Rust toolchain, but CARGO_HOME keeps its registry
+# cache and the installed binary under build/. The stamp is named with the
+# version, so a rerun does nothing and a new pin installs again.
+DESLAG_STAMP := $(DESLAG_HOME)/.mx-deslag-$(DESLAG_VERSION)
+
+deslag: $(DESLAG_STAMP)
+
+$(DESLAG_STAMP):
+	@test -n '$(DESLAG_VERSION)' || { echo 'No ARG DESLAG_VERSION= line found in the Dockerfile.'; exit 1; }
+	@command -v cargo >/dev/null 2>&1 || \
+		{ echo "deslag is installed with cargo, which was not found. See https://rustup.rs"; exit 1; }
+	CARGO_HOME='$(DESLAG_HOME)' cargo install deslag --version $(DESLAG_VERSION) --locked --root '$(DESLAG_HOME)'
+	@rm -f $(DESLAG_HOME)/.mx-deslag-*
+	@touch $@
+
+cache-stats:
+	@if command -v ccache >/dev/null 2>&1; then ccache -s; \
+	else echo "ccache is not installed."; fi
+
 # Static analysis of the gen/ generator. quality.py measures and writes the
 # report tree to the workspace mount; the floor check below is the gate.
 gen-quality:
+	$(CHECK_QUALITY_VENV)
 	@$(QUALITY_VENV)/bin/python gen/quality.py --floor $(GEN_QUALITY_FLOOR)
 	@score=$$(python3 -c "import json; print(json.load(open('$(QUALITY_DIR)/score.json'))['composite'])"); \
 	 if awk "BEGIN{exit !($$score < $(GEN_QUALITY_FLOOR))}"; then \
@@ -395,6 +523,7 @@ gen-quality:
 # pylint as a binary gate (model-A ratchet). --exit-zero so the parsed rating,
 # not pylint's message-category exit bitmask, decides pass/fail.
 gen-lint:
+	$(CHECK_QUALITY_VENV)
 	@out=$$($(QUALITY_VENV)/bin/pylint --rcfile=gen/.pylintrc --exit-zero $(GEN_PY) 2>&1); \
 	 echo "$$out"; \
 	 rating=$$(echo "$$out" | sed -n 's/.*rated at \([0-9.]*\)\/10.*/\1/p'); \
@@ -404,11 +533,11 @@ gen-lint:
 	 else echo "=== gen-lint OK: $$rating >= floor $(GEN_LINT_FLOOR) ==="; fi
 
 fmt:
-	@$(FIND_CPP) | xargs -r clang-format -i
+	@$(FIND_CPP) | xargs -r $(CLANG_FORMAT) -i
 	@echo "Formatted C++ under src/."
 
 fmt-check:
-	@$(FIND_CPP) | xargs -r clang-format --dry-run --Werror
+	@$(FIND_CPP) | xargs -r $(CLANG_FORMAT) --dry-run --Werror
 	@echo "fmt-check passed."
 
 gen: gen-cpp gen-go gen-c gen-schema
@@ -450,9 +579,19 @@ test-c: build-c
 
 else
 
-# ----- Outside the container: build image, then docker run ------------------
+# ----- MX_TOOLCHAIN=docker: build the image, then docker run ----------------
 
-$(DOCKER_STAMP): Dockerfile | check-docker
+# clean-docker-all in another worktree can delete the image while this
+# worktree's stamp stays behind. Treat a missing image as a stale stamp.
+ifneq ($(wildcard $(DOCKER_STAMP)),)
+ifneq ($(shell command -v $(DOCKER) 2>/dev/null),)
+ifeq ($(shell $(DOCKER) image inspect $(DOCKER_IMAGE) >/dev/null 2>&1 && echo found),)
+$(shell rm -f $(DOCKER_STAMP))
+endif
+endif
+endif
+
+$(DOCKER_STAMP): Dockerfile $(QUALITY_REQS) | check-docker
 	@mkdir -p $(BUILD_ROOT)
 	$(DOCKER) buildx build $(DOCKER_CACHE) --load -t $(DOCKER_IMAGE) . \
 		|| $(DOCKER) build -t $(DOCKER_IMAGE) .
@@ -460,128 +599,43 @@ $(DOCKER_STAMP): Dockerfile | check-docker
 
 sdk: $(DOCKER_STAMP)
 
+# The image has its own venv (see Dockerfile).
+quality-venv:
+	@echo 'quality-venv is for MX_TOOLCHAIN=native. The mx-sdk image has its own venv.'
+
+deslag:
+	@echo 'deslag is for MX_TOOLCHAIN=native. The mx-sdk image has its own deslag.'
+
 docker-volume: | check-docker
-	@$(DOCKER) volume inspect $(DOCKER_VOLUME) >/dev/null 2>&1 \
-		|| $(DOCKER) volume create $(DOCKER_VOLUME) >/dev/null
+	@for v in $(DOCKER_VOLUME) $(DOCKER_CACHE_VOLUME); do \
+	  $(DOCKER) volume inspect $$v >/dev/null 2>&1 || $(DOCKER) volume create $$v >/dev/null; \
+	done
 
-test-all: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make test-all BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
+# Forward each toolchain target into the container, which runs the same make
+# target there. A target that needs extra host-side steps, before or after the
+# container run, sets them in DOCKER_BEFORE or DOCKER_AFTER below.
+$(DOCKER_TARGETS): $(DOCKER_STAMP) docker-volume
+	$(DOCKER_BEFORE)
+	$(DOCKER_RUN) make $@ BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
+	$(DOCKER_AFTER)
 
-symbol-check: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make symbol-check BUILD_TYPE=$(BUILD_TYPE)
-
-backend-pugixml-test: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make backend-pugixml-test BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-
-api-lib: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-lib BUILD_TYPE=$(BUILD_TYPE)
-
-api-build: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-build BUILD_TYPE=$(BUILD_TYPE)
-
-api-test: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-test BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-
-api-examples: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-examples BUILD_TYPE=$(BUILD_TYPE)
-
-api-roundtrip: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-roundtrip BUILD_TYPE=$(BUILD_TYPE)
-
-api-roundtrip-discover: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-roundtrip-discover BUILD_TYPE=$(BUILD_TYPE)
-
-api-roundtrip-dump: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-roundtrip-dump BUILD_TYPE=$(BUILD_TYPE)
-	@rm -rf $(BUILD_ROOT)/api/roundtrip-dump
-	@mkdir -p $(BUILD_ROOT)/api/roundtrip-dump
+# The build volume is not visible from the host, so copy results out of it.
+api-roundtrip-dump: DOCKER_AFTER = rm -rf $(BUILD_ROOT)/api/roundtrip-dump && \
+	mkdir -p $(BUILD_ROOT)/api/roundtrip-dump && \
 	$(DOCKER) run --rm -v $(DOCKER_VOLUME):/vol:ro -v $(CURDIR)/$(BUILD_ROOT)/api/roundtrip-dump:/out \
 		alpine sh -c 'cp -a /vol/api/roundtrip-dump/. /out/'
 
-api-roundtrip-classify: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-roundtrip-classify BUILD_TYPE=$(BUILD_TYPE)
-	@mkdir -p $(BUILD_ROOT)/api
+api-roundtrip-classify: DOCKER_AFTER = mkdir -p $(BUILD_ROOT)/api && \
 	$(DOCKER) run --rm -v $(DOCKER_VOLUME):/vol:ro -v $(CURDIR)/$(BUILD_ROOT)/api:/out \
 		alpine cp /vol/api/classified.json /out/classified.json
 
-api-coverage: $(DOCKER_STAMP) docker-volume
-	@rm -rf $(COV_DIR)/api
-	$(DOCKER_RUN) make api-coverage BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-	@echo "API coverage written to $(COV_DIR)/api/ (open $(COV_DIR)/api/index.html)"
+# Reports land on the workspace mount; clear old ones first.
+api-coverage: DOCKER_BEFORE = @rm -rf $(COV_DIR)/api
+api-coverage: DOCKER_AFTER = @echo "API coverage written to $(COV_DIR)/api/ (open $(COV_DIR)/api/index.html)"
 
-wasm-lib: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make wasm-lib BUILD_TYPE=$(BUILD_TYPE)
+core-coverage: DOCKER_BEFORE = @rm -rf $(COV_DIR)
+core-coverage: DOCKER_AFTER = @echo "Coverage written to $(COV_DIR)/ (open $(COV_DIR)/index.html)"
 
-wasm-build: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make wasm-build BUILD_TYPE=$(BUILD_TYPE)
-
-wasm-test: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make wasm-test BUILD_TYPE=$(BUILD_TYPE)
-
-core-build: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make core-build BUILD_TYPE=$(BUILD_TYPE)
-
-core-roundtrip-test: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make core-roundtrip-test BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-
-core-unit: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make core-unit BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-
-core-coverage: $(DOCKER_STAMP) docker-volume
-	@rm -rf $(COV_DIR)
-	$(DOCKER_RUN) make core-coverage BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-	@echo "Coverage written to $(COV_DIR)/ (open $(COV_DIR)/index.html)"
-
-gen-test: $(DOCKER_STAMP)
-	$(DOCKER_RUN) make gen-test ARGS='$(ARGS)'
-
-audit-test: $(DOCKER_STAMP)
-	$(DOCKER_RUN) make audit-test ARGS='$(ARGS)'
-
-gen-quality: $(DOCKER_STAMP)
-	@rm -rf $(QUALITY_DIR)
-	$(DOCKER_RUN) make gen-quality
-
-gen-lint: $(DOCKER_STAMP)
-	$(DOCKER_RUN) make gen-lint
-
-fmt: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make fmt
-
-fmt-check: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make fmt-check
-
-gen: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen
-
-gen-cpp: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen-cpp
-
-gen-go: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen-go
-
-gen-c: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen-c
-
-gen-schema: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen-schema
-
-audit: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make audit
-
-audit-force: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make audit-force
-
-build-go: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make build-go
-
-test-go: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make test-go ARGS='$(ARGS)'
-
-build-c: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make build-c BUILD_TYPE=$(BUILD_TYPE)
-
-test-c: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make test-c BUILD_TYPE=$(BUILD_TYPE)
+gen-quality: DOCKER_BEFORE = @rm -rf $(QUALITY_DIR)
 
 endif

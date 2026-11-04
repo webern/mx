@@ -16,7 +16,8 @@ concurrency:
 # Pin the Docker build-volume name so CI's bind-backed "mx-build" volume
 # (created per-job below) is the one the Makefile actually mounts. Without
 # this the Makefile computes a CURDIR-hashed name (for worktree isolation)
-# that doesn't match the pre-created volume.
+# that doesn't match the pre-created volume. The cache volume needs no pin:
+# "mx-cache" is already the Makefile's default name.
 env:
   DOCKER_VOLUME: mx-build
 
@@ -74,21 +75,26 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
 
-      # Back the mx-build volume with a workspace path so actions/cache can
-      # persist the ccache dir it holds. Not circular: Docker resolves this
-      # backing dir host-side, and the volume shadows /workspace/build inside
-      # the container.
-      - name: Create bind-backed build volume
+      # Back both Docker volumes with workspace paths so actions/cache can
+      # save the compiler caches. mx-build is the build tree; mx-cache holds
+      # the caches (ccache, Emscripten, Go). They must exist before make runs,
+      # or the Makefile creates plain volumes that actions/cache cannot see.
+      # Not circular: Docker resolves the backing dirs host-side, and the
+      # build volume shadows /workspace/build inside the container.
+      - name: Create bind-backed volumes
         run: |
-          mkdir -p build/docker
+          mkdir -p build/docker build/docker-cache
           docker volume create --driver local \
             --opt type=none --opt o=bind \
             --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker-cache" mx-cache
 
       - name: Cache ccache
         uses: actions/cache@v4
         with:
-          path: build/docker/.ccache
+          path: build/docker-cache/ccache
           key: ccache-${{ runner.os }}-test-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-test-
 
@@ -113,26 +119,29 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
 
-      - name: Create bind-backed build volume
+      - name: Create bind-backed volumes
         run: |
-          mkdir -p build/docker
+          mkdir -p build/docker build/docker-cache
           docker volume create --driver local \
             --opt type=none --opt o=bind \
             --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker-cache" mx-cache
 
-      # ccache for mx's own object files; EM_CACHE (below) is Emscripten's
+      # ccache for mx's own object files; the em dir (below) is Emscripten's
       # separate cache for its compiled system libraries.
       - name: Cache ccache
         uses: actions/cache@v4
         with:
-          path: build/docker/.ccache
+          path: build/docker-cache/ccache
           key: ccache-${{ runner.os }}-wasm-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-wasm-
 
       - name: Cache EM_CACHE
         uses: actions/cache@v4
         with:
-          path: build/docker/.emcache
+          path: build/docker-cache/em
           key: emcache-${{ runner.os }}-wasm-${{ github.sha }}
           restore-keys: emcache-${{ runner.os }}-wasm-
 
@@ -155,17 +164,20 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
 
-      - name: Create bind-backed build volume
+      - name: Create bind-backed volumes
         run: |
-          mkdir -p build/docker
+          mkdir -p build/docker build/docker-cache
           docker volume create --driver local \
             --opt type=none --opt o=bind \
             --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker-cache" mx-cache
 
       - name: Cache ccache
         uses: actions/cache@v4
         with:
-          path: build/docker/.ccache
+          path: build/docker-cache/ccache
           key: ccache-${{ runner.os }}-backend-pugixml-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-backend-pugixml-
 
@@ -184,12 +196,12 @@ jobs:
   test-macos:
     runs-on: macos-latest
 
-    # No Docker on the macOS runners: MX_RUNNING_IN_DOCKER=1 flips the Makefile
-    # to its direct-invocation branch so the build runs natively. CMake reads the
+    # No Docker on the macOS runners: MX_TOOLCHAIN=native makes the Makefile
+    # run the tools directly on the runner. CMake reads the
     # *_COMPILER_LAUNCHER env vars as launcher defaults (the Makefile passes no -D
     # launcher flag), the same mechanism the mx-sdk image uses for Linux.
     env:
-      MX_RUNNING_IN_DOCKER: 1
+      MX_TOOLCHAIN: native
       CMAKE_C_COMPILER_LAUNCHER: ccache
       CMAKE_CXX_COMPILER_LAUNCHER: ccache
 
@@ -323,17 +335,20 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
 
-      - name: Create bind-backed build volume
+      - name: Create bind-backed volumes
         run: |
-          mkdir -p build/docker
+          mkdir -p build/docker build/docker-cache
           docker volume create --driver local \
             --opt type=none --opt o=bind \
             --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker-cache" mx-cache
 
       - name: Cache ccache
         uses: actions/cache@v4
         with:
-          path: build/docker/.ccache
+          path: build/docker-cache/ccache
           key: ccache-${{ runner.os }}-quality-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-quality-
 
@@ -369,17 +384,20 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
 
-      - name: Create bind-backed build volume
+      - name: Create bind-backed volumes
         run: |
-          mkdir -p build/docker
+          mkdir -p build/docker build/docker-cache
           docker volume create --driver local \
             --opt type=none --opt o=bind \
             --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker-cache" mx-cache
 
       - name: Cache ccache
         uses: actions/cache@v4
         with:
-          path: build/docker/.ccache
+          path: build/docker-cache/ccache
           key: ccache-${{ runner.os }}-gen-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-gen-
 

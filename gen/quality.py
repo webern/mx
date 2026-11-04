@@ -26,7 +26,8 @@ So a partial win (CC 208 -> 30) registers even before it crosses the target,
 and a stub-spam can't flatter the score because tiny items carry little weight.
 
 Setup: requires radon and cognitive_complexity importable by the interpreter
-running this file. In the mx-sdk container that is /opt/quality-venv/bin/python.
+running this file. In the mx-sdk container that is /opt/quality-venv/bin/python;
+natively, `make quality-venv` builds one under build/.
 
 Usage:
     python3 gen/quality.py                # score, write report, print summary
