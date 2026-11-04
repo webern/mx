@@ -55,6 +55,14 @@ GEN_PY            := $(shell find gen -name '*.py' ! -name quality.py | sort)
 GEN_QUALITY_FLOOR ?= 84.5
 GEN_LINT_FLOOR    ?= 9.29
 
+# deslag, a Rust CLI. No target uses it yet. The version is pinned once, in the
+# Dockerfile. The mx-sdk image installs it and sets DESLAG to it. Natively,
+# `make deslag` installs it under build/ with a cargo home of its own, so it
+# does not use or change the deslag or the cargo home in your home directory.
+DESLAG_VERSION := $(shell sed -n 's/^ARG DESLAG_VERSION=//p' Dockerfile)
+DESLAG_HOME    := $(CURDIR)/$(BUILD_ROOT)/cargo-home
+DESLAG         ?= $(DESLAG_HOME)/bin/deslag
+
 # For GitHub Actions. When present, push/pull the Docker layer cache to the
 # GitHub Actions cache.
 ifneq ($(ACTIONS_RUNTIME_TOKEN),)
@@ -110,7 +118,7 @@ FIND_CPP := find src \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
 .DEFAULT_GOAL := help
-.PHONY: help doctor sdk vendor-pugixml quality-venv clean clean-docker check-docker docker-volume \
+.PHONY: help doctor sdk vendor-pugixml quality-venv deslag clean clean-docker check-docker docker-volume \
         clean-docker-all $(DOCKER_TARGETS)
 
 help:
@@ -170,6 +178,7 @@ help:
 	@echo ''
 	@echo '  Housekeeping:'
 	@echo '  make doctor         Report which targets this machine can run, with Docker or natively.'
+	@echo '  make deslag         Native only: install deslag $(DESLAG_VERSION) at $(DESLAG_HOME) (needs cargo). No target uses it yet.'
 	@echo '  make fmt            Format C++ under src/ with clang-format.'
 	@echo '  make fmt-check      clang-format gate (checks formatting; builds nothing).'
 	@echo '  make sdk            Build the mx-sdk Docker toolchain image.'
@@ -187,7 +196,7 @@ help:
 # so the report checks the same programs the recipes run.
 doctor:
 	@DOCKER='$(DOCKER)' CMAKE='$(CMAKE)' CLANG_FORMAT='$(CLANG_FORMAT)' GCOV='$(GCOV)' \
-		QUALITY_VENV='$(QUALITY_VENV)' sh scripts/doctor.sh
+		QUALITY_VENV='$(QUALITY_VENV)' DESLAG='$(DESLAG)' sh scripts/doctor.sh
 
 clean:
 	rm -rf $(BUILD_ROOT)
@@ -482,6 +491,21 @@ $(QUALITY_VENV_STAMP): $(QUALITY_REQS)
 CHECK_QUALITY_VENV = @test -x $(QUALITY_VENV)/bin/python || \
 	{ echo "No Python venv at $(QUALITY_VENV). Run: make quality-venv"; exit 1; }
 
+# cargo uses the machine's Rust toolchain, but CARGO_HOME keeps its registry
+# cache and the installed binary under build/. The stamp is named with the
+# version, so a rerun does nothing and a new pin installs again.
+DESLAG_STAMP := $(DESLAG_HOME)/.mx-deslag-$(DESLAG_VERSION)
+
+deslag: $(DESLAG_STAMP)
+
+$(DESLAG_STAMP):
+	@test -n '$(DESLAG_VERSION)' || { echo 'No ARG DESLAG_VERSION= line found in the Dockerfile.'; exit 1; }
+	@command -v cargo >/dev/null 2>&1 || \
+		{ echo "deslag is installed with cargo, which was not found. See https://rustup.rs"; exit 1; }
+	CARGO_HOME='$(DESLAG_HOME)' cargo install deslag --version $(DESLAG_VERSION) --locked --root '$(DESLAG_HOME)'
+	@rm -f $(DESLAG_HOME)/.mx-deslag-*
+	@touch $@
+
 cache-stats:
 	@if command -v ccache >/dev/null 2>&1; then ccache -s; \
 	else echo "ccache is not installed."; fi
@@ -578,6 +602,9 @@ sdk: $(DOCKER_STAMP)
 # The image has its own venv (see Dockerfile).
 quality-venv:
 	@echo 'quality-venv is for MX_TOOLCHAIN=native. The mx-sdk image has its own venv.'
+
+deslag:
+	@echo 'deslag is for MX_TOOLCHAIN=native. The mx-sdk image has its own deslag.'
 
 docker-volume: | check-docker
 	@for v in $(DOCKER_VOLUME) $(DOCKER_CACHE_VOLUME); do \

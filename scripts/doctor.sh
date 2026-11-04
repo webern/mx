@@ -11,6 +11,7 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 DOCKER=${DOCKER:-docker}
 CMAKE=${CMAKE:-cmake}
 QUALITY_VENV=${QUALITY_VENV:-$ROOT/build/quality-venv}
+DESLAG=${DESLAG:-$ROOT/build/cargo-home/bin/deslag}
 if [ -z "$CLANG_FORMAT" ]; then
     if command -v clang-format-18 >/dev/null 2>&1; then CLANG_FORMAT=clang-format-18; else CLANG_FORMAT=clang-format; fi
 fi
@@ -112,6 +113,13 @@ if ! libxml2_found; then
     if [ "$c_status" = 'ok' ]; then c_status='MISSING libxml2'; else c_status="$c_status libxml2"; fi
 fi
 row 'build-c, test-c' "$c_status"
+if [ -x "$DESLAG" ]; then
+    row 'deslag (not used by targets yet)' 'ok'
+elif has cargo; then
+    row 'deslag (not used by targets yet)' 'MISSING; run make deslag'
+else
+    row 'deslag (not used by targets yet)' 'MISSING; make deslag needs cargo'
+fi
 if has ccache; then
     row 'ccache (optional)' 'found; native builds use it'
 else
@@ -136,6 +144,9 @@ version "$CLANG_FORMAT" --version
 version gcovr --version
 version "$GCOV" --version
 version ccache --version
+if [ -x "$DESLAG" ]; then
+    row deslag "$("$DESLAG" --version 2>/dev/null | awk 'NF { print; exit }' | cut -c1-60)"
+fi
 echo 'CI pins its own tool versions in the mx-sdk image; a different local'
 echo 'version is usually fine and CI is the final check.'
 

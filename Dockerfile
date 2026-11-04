@@ -2,6 +2,14 @@
 #
 # mx-sdk: the pinned developer toolchain for mx. Not a project deliverable.
 
+# deslag is built in its own stage so the image does not carry a Rust
+# toolchain, only the binary. The Makefile reads DESLAG_VERSION from the ARG
+# below for native installs, so this is the only place the version is pinned.
+# Bookworm's glibc is older than Ubuntu 24.04's, so the binary runs there.
+FROM rust:1.91.1-slim-bookworm AS deslag
+ARG DESLAG_VERSION=0.0.6
+RUN cargo install deslag --version ${DESLAG_VERSION} --locked --root /opt/deslag
+
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -49,6 +57,9 @@ COPY gen/requirements-quality.txt /opt/requirements-quality.txt
 RUN python3 -m venv /opt/quality-venv \
     && /opt/quality-venv/bin/pip install --no-cache-dir -r /opt/requirements-quality.txt
 ENV QUALITY_VENV=/opt/quality-venv
+
+COPY --from=deslag /opt/deslag/bin/deslag /usr/local/bin/deslag
+ENV DESLAG=/usr/local/bin/deslag
 
 # MX_TOOLCHAIN=native makes the Makefile run the tools directly instead of
 # forwarding into Docker again. Build with the pinned GCC through ccache.
