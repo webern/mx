@@ -57,6 +57,19 @@ DOCKER_RUN := $(DOCKER) run --rm \
 	$(DOCKER_USER) \
 	$(DOCKER_IMAGE)
 
+# Targets that need the toolchain. Outside the container each one is forwarded
+# into the mx-sdk image (see the end of this file).
+DOCKER_TARGETS := \
+	test-all symbol-check backend-pugixml-test \
+	api-lib api-build api-test api-examples api-roundtrip \
+	api-roundtrip-discover api-roundtrip-dump api-roundtrip-classify api-coverage \
+	wasm-lib wasm-build wasm-test \
+	core-build core-roundtrip-test core-unit core-coverage \
+	gen-test audit-test gen-quality gen-lint \
+	fmt fmt-check gen gen-cpp gen-go gen-c gen-schema \
+	audit audit-force \
+	build-go build-c test-go test-c
+
 # C++ to format. Skip the vendored pugixml (src/private/mxpugi, written by
 # scripts/vendor_pugixml.py) and the cpul/Catch test harness.
 FIND_CPP := find src \
@@ -67,16 +80,8 @@ FIND_CPP := find src \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
 .DEFAULT_GOAL := help
-.PHONY: help sdk fmt fmt-check test-all symbol-check vendor-pugixml backend-pugixml-test \
-        core-build core-roundtrip-test core-unit core-coverage \
-        api-lib api-build api-test api-examples api-roundtrip \
-        api-roundtrip-discover api-roundtrip-dump api-roundtrip-classify api-coverage \
-        wasm-lib wasm-build wasm-test \
-        gen-test audit-test gen-quality gen-lint \
-        gen gen-cpp gen-go gen-c gen-schema \
-        audit audit-force \
-        build-go build-c test-go test-c \
-        clean clean-docker check-docker docker-volume
+.PHONY: help sdk vendor-pugixml clean clean-docker check-docker docker-volume \
+        $(DOCKER_TARGETS)
 
 help:
 	@echo 'mx targets (see AGENTS.md). All run via the mx-sdk Docker toolchain;'
@@ -464,124 +469,31 @@ docker-volume: | check-docker
 	@$(DOCKER) volume inspect $(DOCKER_VOLUME) >/dev/null 2>&1 \
 		|| $(DOCKER) volume create $(DOCKER_VOLUME) >/dev/null
 
-test-all: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make test-all BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
+# Forward each toolchain target into the container, which runs the same make
+# target there. A target that needs extra host-side steps, before or after the
+# container run, sets them in DOCKER_BEFORE or DOCKER_AFTER below.
+$(DOCKER_TARGETS): $(DOCKER_STAMP) docker-volume
+	$(DOCKER_BEFORE)
+	$(DOCKER_RUN) make $@ BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
+	$(DOCKER_AFTER)
 
-symbol-check: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make symbol-check BUILD_TYPE=$(BUILD_TYPE)
-
-backend-pugixml-test: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make backend-pugixml-test BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-
-api-lib: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-lib BUILD_TYPE=$(BUILD_TYPE)
-
-api-build: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-build BUILD_TYPE=$(BUILD_TYPE)
-
-api-test: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-test BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-
-api-examples: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-examples BUILD_TYPE=$(BUILD_TYPE)
-
-api-roundtrip: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-roundtrip BUILD_TYPE=$(BUILD_TYPE)
-
-api-roundtrip-discover: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-roundtrip-discover BUILD_TYPE=$(BUILD_TYPE)
-
-api-roundtrip-dump: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-roundtrip-dump BUILD_TYPE=$(BUILD_TYPE)
-	@rm -rf $(BUILD_ROOT)/api/roundtrip-dump
-	@mkdir -p $(BUILD_ROOT)/api/roundtrip-dump
+# The build volume is not visible from the host, so copy results out of it.
+api-roundtrip-dump: DOCKER_AFTER = rm -rf $(BUILD_ROOT)/api/roundtrip-dump && \
+	mkdir -p $(BUILD_ROOT)/api/roundtrip-dump && \
 	$(DOCKER) run --rm -v $(DOCKER_VOLUME):/vol:ro -v $(CURDIR)/$(BUILD_ROOT)/api/roundtrip-dump:/out \
 		alpine sh -c 'cp -a /vol/api/roundtrip-dump/. /out/'
 
-api-roundtrip-classify: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make api-roundtrip-classify BUILD_TYPE=$(BUILD_TYPE)
-	@mkdir -p $(BUILD_ROOT)/api
+api-roundtrip-classify: DOCKER_AFTER = mkdir -p $(BUILD_ROOT)/api && \
 	$(DOCKER) run --rm -v $(DOCKER_VOLUME):/vol:ro -v $(CURDIR)/$(BUILD_ROOT)/api:/out \
 		alpine cp /vol/api/classified.json /out/classified.json
 
-api-coverage: $(DOCKER_STAMP) docker-volume
-	@rm -rf $(COV_DIR)/api
-	$(DOCKER_RUN) make api-coverage BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-	@echo "API coverage written to $(COV_DIR)/api/ (open $(COV_DIR)/api/index.html)"
+# Reports land on the workspace mount; clear old ones first.
+api-coverage: DOCKER_BEFORE = @rm -rf $(COV_DIR)/api
+api-coverage: DOCKER_AFTER = @echo "API coverage written to $(COV_DIR)/api/ (open $(COV_DIR)/api/index.html)"
 
-wasm-lib: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make wasm-lib BUILD_TYPE=$(BUILD_TYPE)
+core-coverage: DOCKER_BEFORE = @rm -rf $(COV_DIR)
+core-coverage: DOCKER_AFTER = @echo "Coverage written to $(COV_DIR)/ (open $(COV_DIR)/index.html)"
 
-wasm-build: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make wasm-build BUILD_TYPE=$(BUILD_TYPE)
-
-wasm-test: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make wasm-test BUILD_TYPE=$(BUILD_TYPE)
-
-core-build: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make core-build BUILD_TYPE=$(BUILD_TYPE)
-
-core-roundtrip-test: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make core-roundtrip-test BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-
-core-unit: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make core-unit BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-
-core-coverage: $(DOCKER_STAMP) docker-volume
-	@rm -rf $(COV_DIR)
-	$(DOCKER_RUN) make core-coverage BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
-	@echo "Coverage written to $(COV_DIR)/ (open $(COV_DIR)/index.html)"
-
-gen-test: $(DOCKER_STAMP)
-	$(DOCKER_RUN) make gen-test ARGS='$(ARGS)'
-
-audit-test: $(DOCKER_STAMP)
-	$(DOCKER_RUN) make audit-test ARGS='$(ARGS)'
-
-gen-quality: $(DOCKER_STAMP)
-	@rm -rf $(QUALITY_DIR)
-	$(DOCKER_RUN) make gen-quality
-
-gen-lint: $(DOCKER_STAMP)
-	$(DOCKER_RUN) make gen-lint
-
-fmt: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make fmt
-
-fmt-check: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make fmt-check
-
-gen: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen
-
-gen-cpp: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen-cpp
-
-gen-go: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen-go
-
-gen-c: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen-c
-
-gen-schema: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make gen-schema
-
-audit: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make audit
-
-audit-force: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make audit-force
-
-build-go: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make build-go
-
-test-go: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make test-go ARGS='$(ARGS)'
-
-build-c: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make build-c BUILD_TYPE=$(BUILD_TYPE)
-
-test-c: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make test-c BUILD_TYPE=$(BUILD_TYPE)
+gen-quality: DOCKER_BEFORE = @rm -rf $(QUALITY_DIR)
 
 endif
