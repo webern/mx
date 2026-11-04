@@ -32,16 +32,24 @@ BUILD_TYPE ?= Debug
 BUILD_ROOT := build
 JOBS       ?= $(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
 
-# Coverage report output. gcov-14 matches the pinned g++-14 toolchain.
+# Tool names. Each prefers the version the mx-sdk image pins and falls back to
+# the plain name, so native mode works on a machine that has only the plain
+# one. gcov must match the compiler: gcov-14 goes with g++-14.
+CLANG_FORMAT ?= $(if $(shell command -v clang-format-18 2>/dev/null),clang-format-18,clang-format)
+GCOV         ?= $(if $(shell command -v gcov-14 2>/dev/null),gcov-14,gcov)
+
+# Coverage report output.
 COV_DIR := data/testOutput/coverage
-GCOV    ?= gcov-14
 
 # gen-quality / gen-lint: static analysis of the gen/ generator. The floors are
 # the CI gate -- a build fails below them; ratchet them upward as the generator
 # improves. gen-quality scores design (size + complexity); gen-lint enforces
-# genuine lint defects. Pinned analyzers live in the mx-sdk venv (see
-# Dockerfile). GEN_PY is every .py under gen/ except the measurer itself.
-QUALITY_VENV      := /opt/quality-venv
+# genuine lint defects. The analyzers are pinned in QUALITY_REQS and run from
+# the Python venv at QUALITY_VENV. The mx-sdk image has its own venv and sets
+# QUALITY_VENV to it. Natively, `make quality-venv` builds one under build/.
+# GEN_PY is every .py under gen/ except the measurer itself.
+QUALITY_VENV      ?= $(CURDIR)/$(BUILD_ROOT)/quality-venv
+QUALITY_REQS      := gen/requirements-quality.txt
 QUALITY_DIR       := data/testOutput/gen-quality
 GEN_PY            := $(shell find gen -name '*.py' ! -name quality.py | sort)
 GEN_QUALITY_FLOOR ?= 84.5
@@ -95,7 +103,7 @@ FIND_CPP := find src \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
 .DEFAULT_GOAL := help
-.PHONY: help sdk vendor-pugixml clean clean-docker check-docker docker-volume \
+.PHONY: help sdk vendor-pugixml quality-venv clean clean-docker check-docker docker-volume \
         $(DOCKER_TARGETS)
 
 help:
@@ -138,6 +146,7 @@ help:
 	@echo '  make gen-schema     Run the generator for the JSON Schema target.'
 	@echo '  make gen-quality    Score gen/ design quality; fail below the floor.'
 	@echo '  make gen-lint       Lint gen/ with pylint; fail below the floor.'
+	@echo '  make quality-venv   Native only: build the Python venv gen-quality/gen-lint use, at $(QUALITY_VENV).'
 	@echo ''
 	@echo '  Feature audit (audit/):'
 	@echo '  make audit          Write missing *.features.xml sidecars + rebuild data/corpus.xml.'
@@ -407,9 +416,26 @@ gen-test:
 audit-test:
 	python3 -m unittest discover -s audit/tests -t . $(ARGS)
 
+# The venv for gen-quality and gen-lint. The stamp records which requirements
+# file it was built from, so it is rebuilt only when that file changes.
+QUALITY_VENV_STAMP := $(QUALITY_VENV)/.mx-requirements-stamp
+
+quality-venv: $(QUALITY_VENV_STAMP)
+
+$(QUALITY_VENV_STAMP): $(QUALITY_REQS)
+	python3 -m venv $(QUALITY_VENV)
+	$(QUALITY_VENV)/bin/pip install --quiet --disable-pip-version-check -r $(QUALITY_REQS)
+	@touch $@
+
+# gen-quality and gen-lint do not build the venv themselves. That would mean a
+# network install in the middle of a check. They stop with a hint instead.
+CHECK_QUALITY_VENV = @test -x $(QUALITY_VENV)/bin/python || \
+	{ echo "No Python venv at $(QUALITY_VENV). Run: make quality-venv"; exit 1; }
+
 # Static analysis of the gen/ generator. quality.py measures and writes the
 # report tree to the workspace mount; the floor check below is the gate.
 gen-quality:
+	$(CHECK_QUALITY_VENV)
 	@$(QUALITY_VENV)/bin/python gen/quality.py --floor $(GEN_QUALITY_FLOOR)
 	@score=$$(python3 -c "import json; print(json.load(open('$(QUALITY_DIR)/score.json'))['composite'])"); \
 	 if awk "BEGIN{exit !($$score < $(GEN_QUALITY_FLOOR))}"; then \
@@ -419,6 +445,7 @@ gen-quality:
 # pylint as a binary gate (model-A ratchet). --exit-zero so the parsed rating,
 # not pylint's message-category exit bitmask, decides pass/fail.
 gen-lint:
+	$(CHECK_QUALITY_VENV)
 	@out=$$($(QUALITY_VENV)/bin/pylint --rcfile=gen/.pylintrc --exit-zero $(GEN_PY) 2>&1); \
 	 echo "$$out"; \
 	 rating=$$(echo "$$out" | sed -n 's/.*rated at \([0-9.]*\)\/10.*/\1/p'); \
@@ -428,11 +455,11 @@ gen-lint:
 	 else echo "=== gen-lint OK: $$rating >= floor $(GEN_LINT_FLOOR) ==="; fi
 
 fmt:
-	@$(FIND_CPP) | xargs -r clang-format -i
+	@$(FIND_CPP) | xargs -r $(CLANG_FORMAT) -i
 	@echo "Formatted C++ under src/."
 
 fmt-check:
-	@$(FIND_CPP) | xargs -r clang-format --dry-run --Werror
+	@$(FIND_CPP) | xargs -r $(CLANG_FORMAT) --dry-run --Werror
 	@echo "fmt-check passed."
 
 gen: gen-cpp gen-go gen-c gen-schema
@@ -476,13 +503,17 @@ else
 
 # ----- MX_TOOLCHAIN=docker: build the image, then docker run ----------------
 
-$(DOCKER_STAMP): Dockerfile | check-docker
+$(DOCKER_STAMP): Dockerfile $(QUALITY_REQS) | check-docker
 	@mkdir -p $(BUILD_ROOT)
 	$(DOCKER) buildx build $(DOCKER_CACHE) --load -t $(DOCKER_IMAGE) . \
 		|| $(DOCKER) build -t $(DOCKER_IMAGE) .
 	@touch $@
 
 sdk: $(DOCKER_STAMP)
+
+# The image has its own venv (see Dockerfile).
+quality-venv:
+	@echo 'quality-venv is for MX_TOOLCHAIN=native. The mx-sdk image has its own venv.'
 
 docker-volume: | check-docker
 	@$(DOCKER) volume inspect $(DOCKER_VOLUME) >/dev/null 2>&1 \

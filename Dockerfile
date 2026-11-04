@@ -24,18 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Python quality tooling for `make gen-quality` / `make gen-lint`. Isolated in a
-# venv (Ubuntu 24.04 marks the system Python externally-managed) and version
-# pinned: the gen-quality floor compares an exact score, so the analyzers must
-# be reproducible across CI runs.
-RUN python3 -m venv /opt/quality-venv \
-    && /opt/quality-venv/bin/pip install --no-cache-dir \
-        radon==6.0.1 \
-        astroid==4.0.4 \
-        pylint==4.0.5 \
-        cognitive_complexity==1.3.0
-
-# Unversioned name so the Makefile invokes the formatter without the suffix.
+# Unversioned name, for running the formatter by hand in the container.
 RUN ln -sf /usr/bin/clang-format-18 /usr/local/bin/clang-format
 
 # emsdk: pinned Emscripten toolchain for building mx to WebAssembly (#386).
@@ -52,6 +41,16 @@ ENV EMSDK=/opt/emsdk \
     EM_CONFIG=/opt/emsdk/.emscripten \
     EM_CACHE=/workspace/build/.emcache \
     PATH="${PATH}:/opt/emsdk/node/current-bin:/opt/emsdk/upstream/emscripten"
+
+# Python quality tooling for `make gen-quality` / `make gen-lint`. Isolated in a
+# venv (Ubuntu 24.04 marks the system Python externally-managed) and pinned in
+# gen/requirements-quality.txt: the gen-quality floor compares an exact score,
+# so the analyzers must be reproducible across CI runs. This comes after emsdk
+# so a change to the requirements does not reinstall emsdk.
+COPY gen/requirements-quality.txt /opt/requirements-quality.txt
+RUN python3 -m venv /opt/quality-venv \
+    && /opt/quality-venv/bin/pip install --no-cache-dir -r /opt/requirements-quality.txt
+ENV QUALITY_VENV=/opt/quality-venv
 
 # MX_TOOLCHAIN=native makes the Makefile run the tools directly instead of
 # forwarding into Docker again. Build with the pinned GCC; ccache state lives
