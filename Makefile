@@ -2,14 +2,29 @@
 # ============================================================================
 #
 # The generated mx::core C++ model lives in src/private/mx/core/generated
-# (emitted by `make gen-cpp`, committed). Every gate runs through the pinned
-# `mx-sdk` Docker toolchain: outside a container a target builds the image
-# once and re-invokes itself inside it; inside (MX_RUNNING_IN_DOCKER, set by
-# the image) it drives the tools directly. Setting MX_RUNNING_IN_DOCKER=1 on
-# a dev machine runs natively with the host toolchain instead (used by the
-# macOS CI job, which has no Docker). Requires CMake >= 3.13.
+# (emitted by `make gen-cpp`, committed). MX_TOOLCHAIN picks where the
+# targets run:
+#
+#   docker (default)  Build the pinned `mx-sdk` image once and run the same
+#                     make target inside it.
+#   native            Run the tools directly on this machine. The mx-sdk
+#                     image sets this, and so does the macOS CI job, which has
+#                     no Docker. You need the host tools a target uses.
+#
+# MX_RUNNING_IN_DOCKER is the old name for native mode and still works.
+# Requires CMake >= 3.13.
 #
 # ============================================================================
+
+ifneq ($(MX_RUNNING_IN_DOCKER),)
+MX_TOOLCHAIN := native
+endif
+MX_TOOLCHAIN ?= docker
+ifneq ($(MX_TOOLCHAIN),docker)
+ifneq ($(MX_TOOLCHAIN),native)
+$(error MX_TOOLCHAIN must be docker or native, not '$(MX_TOOLCHAIN)')
+endif
+endif
 
 CMAKE      ?= cmake
 DOCKER     ?= docker
@@ -57,8 +72,8 @@ DOCKER_RUN := $(DOCKER) run --rm \
 	$(DOCKER_USER) \
 	$(DOCKER_IMAGE)
 
-# Targets that need the toolchain. Outside the container each one is forwarded
-# into the mx-sdk image (see the end of this file).
+# Targets that need the toolchain. With MX_TOOLCHAIN=docker each one is
+# forwarded into the mx-sdk image (see the end of this file).
 DOCKER_TARGETS := \
 	test-all symbol-check backend-pugixml-test \
 	api-lib api-build api-test api-examples api-roundtrip \
@@ -84,8 +99,8 @@ FIND_CPP := find src \
         $(DOCKER_TARGETS)
 
 help:
-	@echo 'mx targets (see AGENTS.md). All run via the mx-sdk Docker toolchain;'
-	@echo 'set MX_RUNNING_IN_DOCKER=1 to run natively on the host instead.'
+	@echo 'mx targets (see AGENTS.md). They run in the mx-sdk Docker image by default'
+	@echo '(MX_TOOLCHAIN=docker). Set MX_TOOLCHAIN=native to run them with the host tools.'
 	@echo ''
 	@echo '  Everything C++ (the default deep gate, run in CI on Linux):'
 	@echo '  make test-all       core-roundtrip-test + core-unit + api-test + api-roundtrip.'
@@ -138,7 +153,7 @@ help:
 	@echo '  make test-c         Run C corert tests.'
 	@echo ''
 	@echo '  Housekeeping:'
-	@echo '  make fmt            Format C++ under src/ via mx-sdk.'
+	@echo '  make fmt            Format C++ under src/ with clang-format.'
 	@echo '  make fmt-check      clang-format gate (checks formatting; builds nothing).'
 	@echo '  make sdk            Build the mx-sdk Docker toolchain image.'
 	@echo '  make vendor-pugixml VERSION=x.y  Refresh src/private/mxpugi from a pugixml release (runs on the host).'
@@ -166,14 +181,18 @@ clean-docker:
 
 check-docker:
 	@command -v $(DOCKER) >/dev/null 2>&1 || \
-		{ echo "Docker not found. Install it to use the mx-sdk gates:"; \
-		  echo "  https://docs.docker.com/get-docker/"; exit 1; }
+		{ echo "Docker not found ($(DOCKER)). Install it to use the mx-sdk image:"; \
+		  echo "  https://docs.docker.com/get-docker/"; \
+		  echo "Or run with the host tools instead:"; \
+		  echo "  MX_TOOLCHAIN=native make $(or $(MAKECMDGOALS),<target>)"; \
+		  echo "'make doctor' lists which host tools each target needs."; \
+		  exit 1; }
 
-# === Docker-gated targets ===================================================
+# === Toolchain targets ======================================================
 
-ifdef MX_RUNNING_IN_DOCKER
+ifeq ($(MX_TOOLCHAIN),native)
 
-# ----- Inside the container (or native via MX_RUNNING_IN_DOCKER=1) ----------
+# ----- MX_TOOLCHAIN=native: run the tools here (also inside the container) --
 
 # All C++ suites: the core substrate (corert + unit) and the api product
 # surface (mxtest + examples + corpus round-trip). The deep gate; CI runs it
@@ -455,7 +474,7 @@ test-c: build-c
 
 else
 
-# ----- Outside the container: build image, then docker run ------------------
+# ----- MX_TOOLCHAIN=docker: build the image, then docker run ----------------
 
 $(DOCKER_STAMP): Dockerfile | check-docker
 	@mkdir -p $(BUILD_ROOT)

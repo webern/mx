@@ -184,12 +184,12 @@ jobs:
   test-macos:
     runs-on: macos-latest
 
-    # No Docker on the macOS runners: MX_RUNNING_IN_DOCKER=1 flips the Makefile
-    # to its direct-invocation branch so the build runs natively. CMake reads the
+    # No Docker on the macOS runners: MX_TOOLCHAIN=native makes the Makefile
+    # run the tools directly on the runner. CMake reads the
     # *_COMPILER_LAUNCHER env vars as launcher defaults (the Makefile passes no -D
     # launcher flag), the same mechanism the mx-sdk image uses for Linux.
     env:
-      MX_RUNNING_IN_DOCKER: 1
+      MX_TOOLCHAIN: native
       CMAKE_C_COMPILER_LAUNCHER: ccache
       CMAKE_CXX_COMPILER_LAUNCHER: ccache
 

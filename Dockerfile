@@ -53,9 +53,10 @@ ENV EMSDK=/opt/emsdk \
     EM_CACHE=/workspace/build/.emcache \
     PATH="${PATH}:/opt/emsdk/node/current-bin:/opt/emsdk/upstream/emscripten"
 
-# MX_RUNNING_IN_DOCKER flips the Makefile to its in-container branch. Build with
-# the pinned GCC; ccache state lives under the mounted build volume.
-ENV MX_RUNNING_IN_DOCKER=1 \
+# MX_TOOLCHAIN=native makes the Makefile run the tools directly instead of
+# forwarding into Docker again. Build with the pinned GCC; ccache state lives
+# under the mounted build volume.
+ENV MX_TOOLCHAIN=native \
     CC=gcc-14 \
     CXX=g++-14 \
     CMAKE_C_COMPILER_LAUNCHER=ccache \
