@@ -82,6 +82,31 @@ class MeasureReader
     // chord cannot be split across staff buckets; -1 means "no previous note"
     mutable int myPreviousNoteBucketStaffIndex;
 
+    // The notes of one staff between two <backup>s are split into voices by the text of their
+    // <voice> element (see findVoiceBucket). A group is one such voice: the <voice> text that
+    // named it, empty until a note names it, and the voice bucket its notes go into.
+    struct VoiceGroup
+    {
+        std::string name;
+        int bucket = 0;
+    };
+
+    // The voice groups of one staff since the last <backup>. run is the cursor's backup count
+    // when they were made; a later count means a <backup> came since, and the groups start over.
+    struct StaffVoiceGroups
+    {
+        int run = -1;
+        std::vector<VoiceGroup> groups;
+        int previousNoteBucket = -1;
+    };
+
+    // keyed by staff bucket
+    mutable std::map<int, StaffVoiceGroups> myVoiceGroups;
+
+    // The next voice bucket to hand out. Buckets count up through the measure, so on each staff
+    // they sort by backup run first and by order of appearance within the run.
+    mutable int myNextVoiceBucket;
+
   private:
     static api::FigureData parseFigure(const core::Figure &figure);
     static int figuredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData &measure,
@@ -123,6 +148,7 @@ class MeasureReader
     void importStaffDetails(const core::Attributes &inMxAttributes) const;
     void importClefs(std::span<const core::Clef> inClefs) const;
     void importClef(const core::Clef &inClef) const;
+    int findVoiceBucket(int staff, bool isChordContinuation, const std::string &voiceText) const;
     void insertNoteData(api::NoteData &&noteData, int staff, int voice, const std::string &voiceLabel) const;
     void insertClef(api::ClefData &&clefData, int staff) const;
     void consolidateVoicesForAllStaves() const;

@@ -44,12 +44,219 @@
 #include "mx/impl/ScoreWriter.h"
 #include "mx/utility/Throw.h"
 
+#include <algorithm>
+#include <iterator>
 #include <limits>
+#include <map>
+#include <string>
+#include <vector>
 
 namespace mx
 {
 namespace impl
 {
+using MeasureWriterVoiceIter = std::map<int, api::VoiceData>::const_iterator;
+
+// A note, or the notes of a chord, that a voice plays at one tick. It lasts from its tick until the
+// write position moves on after it, which for a chord is the end of its last note.
+struct MeasureWriterVoiceUnit
+{
+    MeasureWriterVoiceIter voice;
+    size_t firstNote = 0;
+    size_t noteCount = 0;
+    int start = 0;
+    int end = 0;
+};
+
+// Voices of one staff that are written as one stream, in time order, with no <backup> inside it.
+// Most passes hold one voice; makeMeasureWriterVoicePasses says when a pass holds more.
+struct MeasureWriterVoicePass
+{
+    // the pass's voices, in key order
+    std::vector<MeasureWriterVoiceIter> voices;
+
+    // the notes in the order they are written, when the pass has more than one voice
+    std::vector<api::NoteData> mergedNotes;
+
+    // the voice of each note, in the order they are written
+    std::vector<MeasureWriterVoiceIter> noteVoices;
+
+    const std::vector<api::NoteData> &notes() const
+    {
+        return voices.size() == 1 ? voices.front()->second.notes : mergedNotes;
+    }
+};
+
+static std::vector<MeasureWriterVoiceUnit> makeMeasureWriterVoiceUnits(MeasureWriterVoiceIter voice)
+{
+    std::vector<MeasureWriterVoiceUnit> units;
+    const auto &notes = voice->second.notes;
+
+    for (size_t first = 0; first < notes.size();)
+    {
+        // chord notes at one tick end together, as in MeasureWriter::isAdvanceNeeded
+        size_t last = first;
+        while (notes.at(last).isChord && last + 1 < notes.size() &&
+               notes.at(last + 1).tickTimePosition == notes.at(last).tickTimePosition)
+        {
+            ++last;
+        }
+
+        // as in MeasureWriter::advanceCursorIfNeeded
+        const auto &lastNote = notes.at(last);
+        const int duration = lastNote.isGrace ? 0 : std::max(lastNote.durationData.durationTimeTicks, 0);
+        const int start = notes.at(first).tickTimePosition;
+        units.push_back(MeasureWriterVoiceUnit{voice, first, last - first + 1, start, start + duration});
+        first = last + 1;
+    }
+
+    return units;
+}
+
+// The text NoteWriter puts in each note's <voice> element.
+static std::string measureWriterVoiceText(MeasureWriterVoiceIter voice)
+{
+    return voice->second.label.empty() ? std::to_string(voice->first + 1) : voice->second.label;
+}
+
+// Whether a voice can be written inside the pass before it, filling the pass's gaps instead of
+// following it after a <backup>. On success, outMerged holds the units of both in written order.
+//
+// The voice must start before the pass ends; a voice that starts later is written after it as
+// usual. Together, the units must form a single line in time: each starts no earlier than the one
+// before it ends. Two voices may not start a unit at the same tick, since the order of the two
+// would then be a guess; that keeps a grace note of one voice apart from a note of another. Each
+// voice must make its first entrance in key order, and its <voice> text must differ from those of
+// the pass, so that a reader sorting notes by their <voice> text gets the same voices back.
+static bool canJoinMeasureWriterVoicePass(const std::vector<MeasureWriterVoiceUnit> &passUnits,
+                                          const std::vector<MeasureWriterVoiceIter> &passVoices,
+                                          const std::vector<MeasureWriterVoiceUnit> &voiceUnits,
+                                          MeasureWriterVoiceIter voice, std::vector<MeasureWriterVoiceUnit> &outMerged)
+{
+    if (passUnits.empty() || voiceUnits.empty())
+    {
+        return false;
+    }
+
+    const auto passEnd = std::max_element(passUnits.cbegin(), passUnits.cend(), [](const auto &a, const auto &b) {
+                             return a.end < b.end;
+                         })->end;
+
+    if (voiceUnits.front().start >= passEnd)
+    {
+        return false;
+    }
+
+    const auto text = measureWriterVoiceText(voice);
+    auto voices = passVoices;
+    voices.push_back(voice);
+
+    for (const auto &v : voices)
+    {
+        if (v != voice && measureWriterVoiceText(v) == text)
+        {
+            return false;
+        }
+
+        // a note without a position has no place in a timeline
+        const auto &notes = v->second.notes;
+        if (std::any_of(notes.cbegin(), notes.cend(), [](const auto &note) { return note.tickTimePosition < 0; }))
+        {
+            return false;
+        }
+    }
+
+    std::vector<MeasureWriterVoiceUnit> merged;
+    merged.reserve(passUnits.size() + voiceUnits.size());
+    std::merge(passUnits.cbegin(), passUnits.cend(), voiceUnits.cbegin(), voiceUnits.cend(), std::back_inserter(merged),
+               [](const auto &a, const auto &b) { return a.start < b.start; });
+
+    std::vector<MeasureWriterVoiceIter> entrances;
+
+    for (size_t i = 0; i < merged.size(); ++i)
+    {
+        const auto &unit = merged.at(i);
+
+        if (i > 0)
+        {
+            const auto &previous = merged.at(i - 1);
+            if (unit.start < previous.end || (unit.start == previous.start && unit.voice != previous.voice))
+            {
+                return false;
+            }
+        }
+
+        if (std::find(entrances.cbegin(), entrances.cend(), unit.voice) == entrances.cend())
+        {
+            entrances.push_back(unit.voice);
+        }
+    }
+
+    if (entrances != voices)
+    {
+        return false;
+    }
+
+    outMerged = std::move(merged);
+    return true;
+}
+
+static void finishMeasureWriterVoicePass(MeasureWriterVoicePass &pass, const std::vector<MeasureWriterVoiceUnit> &units)
+{
+    for (const auto &unit : units)
+    {
+        const auto &notes = unit.voice->second.notes;
+        for (size_t i = unit.firstNote; i < unit.firstNote + unit.noteCount; ++i)
+        {
+            if (pass.voices.size() > 1)
+            {
+                pass.mergedNotes.push_back(notes.at(i));
+            }
+            pass.noteVoices.push_back(unit.voice);
+        }
+    }
+}
+
+// Groups a staff's voices, in key order, into passes. Each voice joins the pass before it when it
+// fits into that pass's gaps (canJoinMeasureWriterVoicePass); otherwise it starts a pass of its own.
+// MusicXML reads a change of <voice> text between two notes as a change of voice, so a voice that
+// only plays while another rests can be written in that rest without a <forward> and a <backup>.
+static std::vector<MeasureWriterVoicePass> makeMeasureWriterVoicePasses(const api::StaffData &inStaff)
+{
+    std::vector<MeasureWriterVoicePass> passes;
+    std::vector<MeasureWriterVoiceUnit> passUnits;
+
+    for (auto voice = inStaff.voices.cbegin(); voice != inStaff.voices.cend(); ++voice)
+    {
+        auto voiceUnits = makeMeasureWriterVoiceUnits(voice);
+        std::vector<MeasureWriterVoiceUnit> merged;
+
+        if (!passes.empty() &&
+            canJoinMeasureWriterVoicePass(passUnits, passes.back().voices, voiceUnits, voice, merged))
+        {
+            passes.back().voices.push_back(voice);
+            passUnits = std::move(merged);
+            continue;
+        }
+
+        if (!passes.empty())
+        {
+            finishMeasureWriterVoicePass(passes.back(), passUnits);
+        }
+
+        passes.emplace_back();
+        passes.back().voices.push_back(voice);
+        passUnits = std::move(voiceUnits);
+    }
+
+    if (!passes.empty())
+    {
+        finishMeasureWriterVoicePass(passes.back(), passUnits);
+    }
+
+    return passes;
+}
+
 MeasureWriter::MeasureWriter(const api::MeasureData &inMeasureData, const MeasureCursor &inCursor,
                              const ScoreWriter &inScoreWriter)
     : myMeasureData{inMeasureData}, myOutMeasure{}, myPreviousCursor{inCursor}, myScoreWriter{inScoreWriter},
@@ -614,25 +821,32 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
     auto directionIter = inStaff.directions.cbegin();
     auto directionEnd = inStaff.directions.cend();
 
-    for (const auto &voice : inStaff.voices)
+    for (const auto &pass : makeMeasureWriterVoicePasses(inStaff))
     {
         bool isFirstNote = true;
         int currentChordTickPosition = -1;
         int previousChordTickPosition = -2;
         bool previousChordNoteWasGrace = false;
-        myHistory.setVoiceIndex(voice.first);
-        auto noteIter = voice.second.notes.cbegin();
-        auto noteEnd = voice.second.notes.cend();
+        myHistory.setVoiceIndex(pass.voices.front()->first);
+        const auto &notes = pass.notes();
+        auto noteIter = notes.cbegin();
+        auto noteEnd = notes.cend();
 
         if (directionIter != directionEnd)
         {
             backupToLeadingDirection(directionIter, directionEnd, noteIter, noteEnd);
-            writeDirections(directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd);
+            writeDirections(directionIter, directionEnd, noteIter, std::cbegin(notes), noteEnd);
         }
 
         for (; noteIter != noteEnd; ++noteIter)
         {
             bool isStartOfChord = false;
+            const auto &voice = *pass.noteVoices.at(static_cast<size_t>(noteIter - notes.cbegin()));
+
+            if (voice.first != myHistory.getCursor().voiceIndex)
+            {
+                myHistory.setVoiceIndex(voice.first);
+            }
 
             myHistory.setChord(noteIter->isChord);
             const auto &apiNote = *noteIter;
@@ -705,7 +919,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
             }
 
             myPropertiesWriter->flushBuffer();
-            writeDirections(directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd);
+            writeDirections(directionIter, directionEnd, noteIter, std::cbegin(notes), noteEnd);
 
             NoteWriter writer{
                 apiNote,   myHistory.getCursor(), myScoreWriter, myPreviousCursor.isChordActive, voice.second.notes,
@@ -719,10 +933,9 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
 
         } // foreach note
 
-        writeDirections(directionIter, directionEnd, std::cend(voice.second.notes), std::cbegin(voice.second.notes),
-                        std::cend(voice.second.notes));
+        writeDirections(directionIter, directionEnd, std::cend(notes), std::cbegin(notes), std::cend(notes));
 
-    } // foreach voice
+    } // foreach pass
 
     std::vector<api::NoteData> fakeEmptyNoteVector;
     const auto iterBegin = std::cbegin(fakeEmptyNoteVector);
