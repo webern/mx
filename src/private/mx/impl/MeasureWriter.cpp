@@ -1035,7 +1035,17 @@ void MeasureWriter::writeBarline(const api::BarlineData &barline)
             ending.setValue(endingData.text);
         }
 
+        // <ending> has the position attributes but not placement, halign or valign, so
+        // setAttributesFromPositionData skips those members. Say so rather than drop them quietly.
         setAttributesFromPositionData(endingData.positionData, ending);
+        if (endingData.positionData.placement != api::Placement::unspecified ||
+            endingData.positionData.horizontalAlignment != api::HorizontalAlignment::unspecified ||
+            endingData.positionData.verticalAlignment != api::VerticalAlignment::unspecified)
+        {
+            myScoreWriter.getDiagnostics().report(
+                api::Severity::error, api::DiagnosticCode::droppedData, measureOnlyLocation(myHistory.getCursor()),
+                "an ending's placement and alignment are not written; an ending has neither attribute");
+        }
 
         if (endingData.endLength.has_value())
         {
