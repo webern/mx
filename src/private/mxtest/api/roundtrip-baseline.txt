@@ -840,3 +840,12 @@ musuite/testNoteheads.xml
 # first; the rest of the credit's text is now carried along.
 musetrainer/Bach_Minuet_in_G_Major_BWV_Anh._114.xml
 musetrainer/Canon_in_D.xml
+
+# Unblocked by writing ties, then tuplets, then slurs inside <notations>. A note with a tie and a
+# slur, or a tuplet and a slur, had its slur stops written among the tie stops and its slur starts
+# among the tie starts, all ahead of the tuplets, so the children came back in a different order.
+foundsuite/Invention 1.xml
+musetrainer/Ave_Maria_D839_-_Schubert_-_Solo_Piano_Arrg..xml
+musetrainer/Prlude_No._4_in_E_Minor_Op._28_-_Frdric_Chopin.xml
+musetrainer/Sonata_No._16_1st_Movement_K._545.xml
+musetrainer/Waltz_of_the_Flowers.xml
