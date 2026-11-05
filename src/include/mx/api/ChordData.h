@@ -246,6 +246,11 @@ class ChordData
 
     Step root;
     int rootAlter;
+    // How the root is spelled in place of its letter name, such as "Do" for C or "H" for B. Leave
+    // absent to print the letter. An empty string is different from absent: nothing is printed for
+    // the root, so the symbol shows only the kind's text. rootAlter is shown beside the text, so
+    // B-flat in solfege is "Si" with a rootAlter of -1.
+    std::optional<std::string> rootText;
 
     // The deprecated MusicXML <function> element: Roman numeral text such as "V". Used only when
     // harmonyChordSource == function.
@@ -281,6 +286,10 @@ class ChordData
     Bool parenthesesDegrees;
     Step bass;
     int bassAlter;
+    // How the bass note after the slash is spelled in place of its letter name, such as "Sol" for the
+    // G of C/G. Leave absent to print the letter. An empty string prints nothing for the bass note.
+    // bassAlter is shown beside the text. Used only when bass is set.
+    std::optional<std::string> bassText;
     // The MusicXML <inversion> (0 = root position, 1 = first inversion, ...). Present only when
     // hasInversion is true.
     int inversion;
@@ -300,6 +309,7 @@ MXAPI_EQUALS_BEGIN(ChordData)
 MXAPI_EQUALS_MEMBER(harmonyChordSource)
 MXAPI_EQUALS_MEMBER(root)
 MXAPI_EQUALS_MEMBER(rootAlter)
+MXAPI_EQUALS_MEMBER(rootText)
 MXAPI_EQUALS_MEMBER(functionText)
 MXAPI_EQUALS_MEMBER(numeralRoot)
 MXAPI_EQUALS_MEMBER(numeralRootText)
@@ -315,6 +325,7 @@ MXAPI_EQUALS_MEMBER(stackDegrees)
 MXAPI_EQUALS_MEMBER(parenthesesDegrees)
 MXAPI_EQUALS_MEMBER(bass)
 MXAPI_EQUALS_MEMBER(bassAlter)
+MXAPI_EQUALS_MEMBER(bassText)
 MXAPI_EQUALS_MEMBER(inversion)
 MXAPI_EQUALS_MEMBER(hasInversion)
 MXAPI_EQUALS_MEMBER(extensions)

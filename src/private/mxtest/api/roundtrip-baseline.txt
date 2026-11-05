@@ -854,3 +854,10 @@ musetrainer/Waltz_of_the_Flowers.xml
 # default-y and end-length, so a volta bracket set at its own height and hook length came back
 # at the defaults.
 recsuite/Saltarello.xml
+
+# Unblocked by ChordData::rootText and ChordData::bassText. <root-step text="..."> and
+# <bass-step text="..."> spell the root or bass in place of its letter, and an empty text prints
+# nothing for it. The text was dropped on read, so a chord symbol meant to show only "rit." came
+# back showing "Crit.". This file also needed <tied>, <tuplet>, <slur> written in that order
+# inside <notations>.
+musetrainer/Hungarian_Dance_No_5_in_G_Minor.xml

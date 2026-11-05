@@ -473,4 +473,126 @@ TEST(harmonyKindTextAbsentIsNotWritten, HarmonyExtrasApi)
 
 T_END;
 
+// B-flat spelled in solfege: the root text replaces the letter and the alter is still written.
+TEST(harmonyRootTextRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::b;
+    chord.rootAlter = -1;
+    chord.rootText = "Si";
+    chord.chordKind = ChordKind::major;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<root-step text=\"Si\">B</root-step>") != std::string::npos);
+    CHECK(xml.find("<root-alter>") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    CHECK(outChord.rootText == std::optional<std::string>{"Si"});
+    CHECK(Step::b == outChord.root);
+    CHECK(-1 == outChord.rootAlter);
+}
+
+T_END;
+
+// An empty root text is different from an absent one: nothing is printed for the root, which is how
+// a chord symbol shows only its kind text, such as "rit.".
+TEST(harmonyRootTextEmptyRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.rootText = "";
+    chord.chordKind = ChordKind::none;
+    chord.text = "rit.";
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<root-step text=\"\">C</root-step>") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    CHECK(firstChord(out).rootText == std::optional<std::string>{""});
+}
+
+T_END;
+
+TEST(harmonyRootTextAbsentIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<root-step>C</root-step>") != std::string::npos);
+    CHECK(xml.find("<root-step text=") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    CHECK(!firstChord(out).rootText.has_value());
+}
+
+T_END;
+
+TEST(harmonyBassTextRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.bass = Step::g;
+    chord.bassText = "Sol";
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<bass-step text=\"Sol\">G</bass-step>") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    CHECK(Step::g == outChord.bass);
+    CHECK(outChord.bassText == std::optional<std::string>{"Sol"});
+    CHECK(!outChord.rootText.has_value());
+}
+
+T_END;
+
+// The bass text belongs to a bass note, so without one there is nothing to write.
+TEST(harmonyBassTextWithoutBassIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.bassText = "Sol";
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<bass") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    CHECK(!firstChord(out).bassText.has_value());
+}
+
+T_END;
+
+TEST(harmonyRootAndBassTextEquality, HarmonyExtrasApi)
+{
+    const ChordData base;
+
+    ChordData withRootText;
+    withRootText.rootText = "Do";
+    CHECK(base != withRootText);
+
+    ChordData withEmptyRootText;
+    withEmptyRootText.rootText = "";
+    CHECK(base != withEmptyRootText);
+
+    ChordData withBassText;
+    withBassText.bassText = "Sol";
+    CHECK(base != withBassText);
+
+    ChordData withEmptyBassText;
+    withEmptyBassText.bassText = "";
+    CHECK(base != withEmptyBassText);
+}
+
+T_END;
+
 #endif

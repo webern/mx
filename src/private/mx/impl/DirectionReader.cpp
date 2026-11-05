@@ -1194,6 +1194,7 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         chord.harmonyChordSource = api::HarmonyChordSource::root;
         const auto &root = choice.asRoot();
         chord.root = myConverter.convert(root.rootStep().value());
+        chord.rootText = root.rootStep().text();
 
         if (root.rootAlter().has_value())
         {
@@ -1298,6 +1299,7 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
     {
         const auto &bass = *inGrp.bass();
         chord.bass = myConverter.convert(bass.bassStep().value());
+        chord.bassText = bass.bassStep().text();
 
         if (bass.bassAlter().has_value())
         {
