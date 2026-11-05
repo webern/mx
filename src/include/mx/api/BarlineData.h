@@ -61,7 +61,25 @@ class EndingData
     // set it only when the label differs from them, as when passes 1, 2, and 3 are labeled "1-3".
     std::string text;
 
-    EndingData() : type{EndingType::start}, numbers{}, text{}
+    // Where the bracket is drawn, in tenths. defaultY sets the height of the bracket line above
+    // the top line of the staff, and defaultX moves the start of the bracket left or right of the
+    // barline. relativeX and relativeY shift the bracket from wherever it would otherwise be drawn.
+    // Set the matching is...Specified flag along with each value. Placement and alignment do not
+    // apply to an ending. Leave this alone to let the program place the bracket.
+    PositionData positionData;
+
+    // The length, in tenths, of the bracket's downward jog. On a stop it is the closing jog at the
+    // right; on a start, programs use it for the hook at the left. A discontinue does not draw a
+    // jog. Leave it empty for the usual length.
+    std::optional<double> endLength;
+
+    // Where the label starts, in tenths from the start of the bracket line: textX to the right and
+    // textY up. Together they place the baseline of the label's first character. Leave them empty
+    // to let the program place the label.
+    std::optional<double> textX;
+    std::optional<double> textY;
+
+    EndingData() : type{EndingType::start}, numbers{}, text{}, positionData{}, endLength{}, textX{}, textY{}
     {
     }
 };
@@ -70,6 +88,10 @@ MXAPI_EQUALS_BEGIN(EndingData)
 MXAPI_EQUALS_MEMBER(type)
 MXAPI_EQUALS_MEMBER(numbers)
 MXAPI_EQUALS_MEMBER(text)
+MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(endLength)
+MXAPI_EQUALS_MEMBER(textX)
+MXAPI_EQUALS_MEMBER(textY)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(EndingData);
 

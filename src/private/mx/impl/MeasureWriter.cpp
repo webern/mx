@@ -40,6 +40,7 @@
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/NoteWriter.h"
+#include "mx/impl/PositionFunctions.h"
 #include "mx/impl/ScoreWriter.h"
 #include "mx/utility/Throw.h"
 
@@ -1032,6 +1033,23 @@ void MeasureWriter::writeBarline(const api::BarlineData &barline)
         if (!endingData.text.empty())
         {
             ending.setValue(endingData.text);
+        }
+
+        setAttributesFromPositionData(endingData.positionData, ending);
+
+        if (endingData.endLength.has_value())
+        {
+            ending.setEndLength(core::Tenths{core::Decimal{*endingData.endLength}});
+        }
+
+        if (endingData.textX.has_value())
+        {
+            ending.setTextX(core::Tenths{core::Decimal{*endingData.textX}});
+        }
+
+        if (endingData.textY.has_value())
+        {
+            ending.setTextY(core::Tenths{core::Decimal{*endingData.textY}});
         }
 
         barlineElement.setEnding(ending);

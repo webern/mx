@@ -63,6 +63,7 @@
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/NoteReader.h"
+#include "mx/impl/PositionFunctions.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/TimeReader.h"
 #include "mx/impl/TuningFunctions.h"
@@ -1167,6 +1168,22 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
         const auto numValues = mxEnding.number().values();
         endingData.numbers.assign(numValues.begin(), numValues.end());
         endingData.text = mxEnding.value();
+        endingData.positionData = impl::getPositionData(mxEnding);
+
+        if (mxEnding.endLength().has_value())
+        {
+            endingData.endLength = static_cast<double>(mxEnding.endLength()->value().value());
+        }
+
+        if (mxEnding.textX().has_value())
+        {
+            endingData.textX = static_cast<double>(mxEnding.textX()->value().value());
+        }
+
+        if (mxEnding.textY().has_value())
+        {
+            endingData.textY = static_cast<double>(mxEnding.textY()->value().value());
+        }
 
         barline.ending = std::move(endingData);
     }
