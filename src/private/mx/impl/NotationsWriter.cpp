@@ -255,9 +255,11 @@ core::Notations NotationsWriter::getNotations() const
 
     const auto &spannerResolver = myScoreWriter.getSpannerResolver();
 
-    // Spanners are written ties first, then tuplets, then slurs. That is the order exporters
-    // almost always use, as in <tied type="start"/><tuplet type="start"/><slur type="stop"/>.
-    // Within each kind, stops still come before starts.
+    // MusicXML lets the children of <notations> come in any order, but notation programs put ties
+    // ahead of tuplets and tuplets ahead of slurs, as in
+    // <tied type="start"/><tuplet type="start"/><slur type="stop"/>, and mx writes them the same
+    // way: ties, the let-ring tie, glissandos and slides, tuplets, then slurs. Each kind keeps its
+    // own order, described where it is written.
     reportUnwritableCurves();
     addCurves(api::CurveType::tie, outNotations);
 

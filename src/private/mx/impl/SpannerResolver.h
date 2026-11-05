@@ -36,10 +36,11 @@ namespace impl
 // order a streaming reader encounters them, even when they sit on different
 // staves of the part. So resolvePart walks the part in the exact order
 // MeasureWriter serializes it: measures in order, staves in order, voices
-// ascending, notes in vector order (curve stops/continues/starts, then
-// glissando/slide stops then starts, then tuplet starts then stops, then
-// wavy-line stops/continues/starts, per note -- mirroring NotationsWriter),
-// and each staff's directions in
+// ascending, notes in vector order (curve stops/continues/starts,
+// glissando/slide stops then starts, tuplet starts then stops, wavy-line
+// stops/continues/starts, per note -- mirroring NotationsWriter within each
+// class; the order between classes does not matter, since each class has its
+// own pool), and each staff's directions in
 // vector order (mirroring DirectionWriter's per-direction emission order). An
 // identity spanner takes the lowest number that is free across its whole
 // serialized extent -- from its first event to its last, whichever of
