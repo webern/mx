@@ -22,10 +22,17 @@ using namespace mxtest;
 
 namespace voiceInterleaveApiTest
 {
-// A one-part, one-staff score in 3/4 with one division per quarter, holding a single measure
-// whose music is inMeasureBody.
-inline std::string makeScoreXml(const std::string &inMeasureBody)
+// A one-part score in 3/4 with one division per quarter, holding a single measure whose music is
+// inMeasureBody. With two staves, the second has a bass clef.
+inline std::string makeScoreXml(const std::string &inMeasureBody, int inStaves = 1)
 {
+    const std::string staves = inStaves == 1 ? "" : "        <staves>2</staves>\n";
+    const std::string clefNumber = inStaves == 1 ? "" : R"( number="1")";
+    const std::string bassClef = inStaves == 1 ? "" : R"(        <clef number="2">
+          <sign>F</sign>
+          <line>4</line>
+        </clef>
+)";
     return std::string{R"(<score-partwise version="3.0">
   <part-list>
     <score-part id="P1">
@@ -40,21 +47,24 @@ inline std::string makeScoreXml(const std::string &inMeasureBody)
           <beats>3</beats>
           <beat-type>4</beat-type>
         </time>
-        <clef>
+)"} + staves +
+           "        <clef" + clefNumber + R"(>
           <sign>G</sign>
           <line>2</line>
         </clef>
-      </attributes>
-)"} + inMeasureBody +
+)" + bassClef +
+           R"(      </attributes>
+)" + inMeasureBody +
            R"(    </measure>
   </part>
 </score-partwise>
 )";
 }
 
-// A <note> in octave 4. An empty inVoice leaves the <voice> element out.
+// A <note> in octave 4. An empty inVoice leaves the <voice> element out, and so does a zero
+// inStaff for the <staff> element.
 inline std::string makeNoteXml(const std::string &inStep, int inDuration, const std::string &inVoice,
-                               bool inIsChord = false)
+                               bool inIsChord = false, int inStaff = 0)
 {
     std::string xml = "      <note>\n";
     if (inIsChord)
@@ -68,6 +78,10 @@ inline std::string makeNoteXml(const std::string &inStep, int inDuration, const 
         xml += "        <voice>" + inVoice + "</voice>\n";
     }
     xml += inDuration == 3 ? "        <type>half</type>\n        <dot/>\n" : "        <type>quarter</type>\n";
+    if (inStaff > 0)
+    {
+        xml += "        <staff>" + std::to_string(inStaff) + "</staff>\n";
+    }
     xml += "      </note>\n";
     return xml;
 }
@@ -75,6 +89,11 @@ inline std::string makeNoteXml(const std::string &inStep, int inDuration, const 
 inline std::string makeBackupXml(int inDuration)
 {
     return "      <backup>\n        <duration>" + std::to_string(inDuration) + "</duration>\n      </backup>\n";
+}
+
+inline std::string makeForwardXml(int inDuration)
+{
+    return "      <forward>\n        <duration>" + std::to_string(inDuration) + "</duration>\n      </forward>\n";
 }
 
 inline size_t countOccurrences(const std::string &haystack, const std::string &needle)
@@ -160,6 +179,7 @@ inline ScoreData makeGapFillScore()
     voices[4].notes = {makeQuarter(Step::f, 1)};
     return score;
 }
+
 // The number and type of every <slur>, in document order, as "1 start", "2 stop" and so on.
 inline std::vector<std::string> findSlurs(const std::string &inXml)
 {
@@ -323,6 +343,58 @@ TEST(aVoiceRepeatedAfterABackupStaysSeparate, VoiceInterleave)
 
 T_END;
 
+// A voice change after a <forward> is another voice too. The second voice starts after the first
+// ends, so it is written after it as before, with the <forward> between them and no <backup>.
+TEST(aVoiceChangeAfterAForwardStartsAnotherVoice, VoiceInterleave)
+{
+    const auto xml = makeScoreXml(makeNoteXml("C", 1, "1") + makeForwardXml(1) + makeNoteXml("E", 1, "2"));
+    const auto score = fromXml(xml);
+    REQUIRE(score.parts.size() == 1);
+    const auto &voices = voicesOf(score);
+    REQUIRE(voices.size() == 2);
+    REQUIRE(voices.count(0) == 1);
+    REQUIRE(voices.count(1) == 1);
+    REQUIRE(voices.at(0).notes.size() == 1);
+    CHECK_EQUAL(0, voices.at(0).notes.at(0).tickTimePosition);
+    REQUIRE(voices.at(1).notes.size() == 1);
+    CHECK_EQUAL(2 * score.ticksPerQuarter, voices.at(1).notes.at(0).tickTimePosition);
+
+    const auto written = toXml(score);
+    CHECK_EQUAL(0, countOccurrences(written, "<backup>"));
+    CHECK_EQUAL(1, countOccurrences(written, "<forward>"));
+    const std::vector<std::string> expectedTexts{"1", "2"};
+    CHECK(expectedTexts == findVoiceTexts(written));
+}
+
+T_END;
+
+// Voices are told apart by name within each staff: the names on each staff of a piano part split
+// that staff into voices as they would on a single staff.
+TEST(voiceNamesAreGroupedPerStaff, VoiceInterleave)
+{
+    const auto xml = makeScoreXml(makeNoteXml("F", 1, "1", false, 1) + makeNoteXml("F", 1, "2", false, 1) +
+                                      makeNoteXml("F", 1, "1", false, 1) + makeBackupXml(3) +
+                                      makeNoteXml("C", 1, "5", false, 2) + makeNoteXml("D", 2, "6", false, 2),
+                                  2);
+    const auto score = fromXml(xml);
+    REQUIRE(score.parts.size() == 1);
+    const auto &staves = score.parts.at(0).measures.at(0).staves;
+    REQUIRE(staves.size() == 2);
+    REQUIRE(staves.at(0).voices.size() == 2);
+    CHECK_EQUAL(2, staves.at(0).voices.cbegin()->second.notes.size());
+    CHECK_EQUAL(1, std::next(staves.at(0).voices.cbegin())->second.notes.size());
+    REQUIRE(staves.at(1).voices.size() == 2);
+
+    const auto written = toXml(score);
+    CHECK_EQUAL(1, countOccurrences(written, "<backup>"));
+    CHECK_EQUAL(0, countOccurrences(written, "<forward>"));
+    const std::vector<std::string> expectedTexts{"1", "2", "1", "5", "6"};
+    CHECK(expectedTexts == findVoiceTexts(written));
+    CHECK(score.parts == fromXml(written).parts);
+}
+
+T_END;
+
 // Voices that sound at the same time are written one after the other, with a <backup> between them.
 TEST(completeVoicesAreWrittenOneAfterAnother, VoiceInterleave)
 {
@@ -374,7 +446,6 @@ TEST(aGraceNoteOnAVoiceBoundaryIsNotInlined, VoiceInterleave)
 
 T_END;
 
-
 // Slurs that an author names by identity are numbered in the order the notes are written. With the
 // second voice written in the first voice's gap, its slur opens while the first voice's slur is
 // still open, so the two need different numbers.
@@ -395,7 +466,6 @@ TEST(slursInAGapFillAreNumberedInWrittenOrder, VoiceInterleave)
 }
 
 T_END;
-
 
 // On a staff where two voices have the same name, no voice is written in another's gap: a reader
 // puts notes with one name together when no <backup> lies between them, and here the voice before
@@ -418,6 +488,74 @@ TEST(aGapFillOnAStaffWithARepeatedNameIsNotInlined, VoiceInterleave)
 
 T_END;
 
+// Two voices can fill the gaps of a third, and the voice after them still backs up from the end of
+// the stream they make. The next staff starts with its own <backup>, as before.
+TEST(aMergedPassIsFollowedByABackup, VoiceInterleave)
+{
+    auto score = makeScore();
+    score.parts.at(0).measures.at(0).staves.emplace_back();
+    auto &voices = voicesOf(score);
+    voices[0].notes = {makeQuarter(Step::c, 0), makeQuarter(Step::f, 3)};
+    voices[1].notes = {makeQuarter(Step::d, 1)};
+    voices[2].notes = {makeQuarter(Step::e, 2)};
+    voices[3].notes = {makeNote(Step::g, 0, 4, DurationName::whole)};
+    auto &lowerStaff = score.parts.at(0).measures.at(0).staves.at(1).voices;
+    lowerStaff[0].notes = {makeNote(Step::a, 0, 4, DurationName::whole)};
+
+    const auto xml = toXml(score);
+    CHECK_EQUAL(2, countOccurrences(xml, "<backup>"));
+    CHECK_EQUAL(0, countOccurrences(xml, "<forward>"));
+    CHECK_EQUAL(std::string{"CDEFGA"}, findSteps(xml));
+    const std::vector<std::string> expectedTexts{"1", "2", "3", "1", "4"};
+    CHECK(expectedTexts == findVoiceTexts(xml));
+
+    const auto out = roundTrip(score);
+    REQUIRE(out.parts.size() == 1);
+    CHECK_EQUAL(describeVoices(voicesOf(score)), describeVoices(voicesOf(out)));
+    CHECK_EQUAL(describeVoices(lowerStaff), describeVoices(out.parts.at(0).measures.at(0).staves.at(1).voices));
+}
+
+T_END;
+
+// A chord fills a gap as one unit, and a clef and a direction in the gap are written at the tick
+// where they belong.
+TEST(aChordClefAndDirectionInAGapFill, VoiceInterleave)
+{
+    auto score = makeGapFillScore();
+    auto &voices = voicesOf(score);
+    auto chordNote = makeQuarter(Step::a, 1);
+    chordNote.isChord = true;
+    voices.at(4).notes.at(0).isChord = true;
+    voices.at(4).notes.push_back(chordNote);
+
+    auto &staff = score.parts.at(0).measures.at(0).staves.at(0);
+    ClefData clef;
+    clef.setBass();
+    clef.tickTimePosition = 1;
+    clef.location = ClefLocation::midMeasure;
+    staff.clefs.push_back(clef);
+    DirectionData direction;
+    direction.tickTimePosition = 1;
+    direction.directionTypes.emplace_back(DirectionChoice{DampData{}});
+    staff.directions.push_back(direction);
+
+    const auto xml = toXml(score);
+    CHECK_EQUAL(0, countOccurrences(xml, "<backup>"));
+    CHECK_EQUAL(0, countOccurrences(xml, "<forward>"));
+    CHECK_EQUAL(std::string{"FFAF"}, findSteps(xml));
+
+    const auto out = roundTrip(score);
+    REQUIRE(out.parts.size() == 1);
+    CHECK_EQUAL(describeVoices(voicesOf(score)), describeVoices(voicesOf(out)));
+    const auto &outStaff = out.parts.at(0).measures.at(0).staves.at(0);
+    REQUIRE(outStaff.directions.size() == 1);
+    CHECK_EQUAL(1, outStaff.directions.at(0).tickTimePosition);
+    CHECK(!outStaff.directions.at(0).offset.has_value());
+    REQUIRE(outStaff.clefs.size() == 1);
+    CHECK_EQUAL(1, outStaff.clefs.at(0).tickTimePosition);
+}
+
+T_END;
 
 // Whether or not the writer puts voices in one another's gaps, the voices read back as they were
 // written, and slurs named by identity never share a number while both are open. Many small staves
