@@ -15,6 +15,7 @@ namespace mx
 namespace core
 {
 class Ornaments;
+class OrnamentsGroup;
 class OrnamentsGroupChoice;
 } // namespace core
 
@@ -35,9 +36,9 @@ class OrnamentsFunctions
     DiagnosticsContext myDiagnostics;
 
   private:
-    void parseOrnamentsSet(api::NoteAttachmentData &outAttachments) const;
-    void parseAccidentalMarkSet(std::vector<api::MarkData> &outMarks) const;
     void parseOrnament(const core::OrnamentsGroupChoice &choiceObj, api::MarkData &outMark) const;
+    api::OrnamentMarkData parseOwnedAccidentals(const core::OrnamentsGroup &group) const;
+    void parseStandaloneAccidentals(const core::OrnamentsGroup &group, std::vector<api::MarkData> &outMarks) const;
 };
 } // namespace impl
 } // namespace mx

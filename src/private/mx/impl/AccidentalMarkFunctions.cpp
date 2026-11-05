@@ -30,5 +30,14 @@ api::MarkData AccidentalMarkFunctions::parseAccidentalMark() const
 
     return markData;
 }
+
+api::OrnamentAccidental AccidentalMarkFunctions::parseOrnamentAccidental() const
+{
+    Converter converter;
+    api::OrnamentAccidental accidental;
+    accidental.accidental = converter.convert(myAccidentalMark.value());
+    accidental.positionData = impl::getPositionData(myAccidentalMark);
+    return accidental;
+}
 } // namespace impl
 } // namespace mx

@@ -40,6 +40,46 @@ void ornamentsFunctionsParseMordentSpecificAttributes(const core::Mordent &m, ap
     }
 }
 
+// The ornaments that hold the accidentals written after them: a trill, a turn of any kind, a
+// shake, a mordent, an inverted mordent, a schleifer or a haydn.
+bool ornamentsFunctionsCanOwnAccidentals(core::OrnamentsGroupChoice::Kind kind)
+{
+    switch (kind)
+    {
+    case core::OrnamentsGroupChoice::Kind::trillMark:
+    case core::OrnamentsGroupChoice::Kind::turn:
+    case core::OrnamentsGroupChoice::Kind::delayedTurn:
+    case core::OrnamentsGroupChoice::Kind::invertedTurn:
+    case core::OrnamentsGroupChoice::Kind::delayedInvertedTurn:
+    case core::OrnamentsGroupChoice::Kind::verticalTurn:
+    case core::OrnamentsGroupChoice::Kind::invertedVerticalTurn:
+    case core::OrnamentsGroupChoice::Kind::shake:
+    case core::OrnamentsGroupChoice::Kind::mordent:
+    case core::OrnamentsGroupChoice::Kind::invertedMordent:
+    case core::OrnamentsGroupChoice::Kind::schleifer:
+    case core::OrnamentsGroupChoice::Kind::haydn:
+        return true;
+    default:
+        return false;
+    }
+}
+
+// Names an ornament that cannot hold accidentals, for diagnostics.
+std::string ornamentsFunctionsHostName(core::OrnamentsGroupChoice::Kind kind)
+{
+    switch (kind)
+    {
+    case core::OrnamentsGroupChoice::Kind::tremolo:
+        return "a tremolo";
+    case core::OrnamentsGroupChoice::Kind::otherOrnament:
+        return "an other-ornament";
+    case core::OrnamentsGroupChoice::Kind::wavyLine:
+        return "a wavy-line";
+    default:
+        return "an ornament";
+    }
+}
+
 OrnamentsFunctions::OrnamentsFunctions(const core::Ornaments &inOrnaments, MeasureCursor inCursor,
                                        DiagnosticsContext diagnostics)
     : myOrnaments{inOrnaments}, myCursor{inCursor}, myDiagnostics{diagnostics}
@@ -48,12 +88,10 @@ OrnamentsFunctions::OrnamentsFunctions(const core::Ornaments &inOrnaments, Measu
 
 void OrnamentsFunctions::parseOrnaments(api::NoteAttachmentData &outAttachments) const
 {
-    parseOrnamentsSet(outAttachments);
-    parseAccidentalMarkSet(outAttachments.marks);
-}
+    // Accidentals that cannot belong to the ornament before them are added after every ornament
+    // of this <ornaments> element, as standalone accidental marks.
+    std::vector<api::MarkData> standaloneAccidentals;
 
-void OrnamentsFunctions::parseOrnamentsSet(api::NoteAttachmentData &outAttachments) const
-{
     for (const auto &group : myOrnaments.group())
     {
         const auto &choiceObj = group.choice();
@@ -63,6 +101,7 @@ void OrnamentsFunctions::parseOrnamentsSet(api::NoteAttachmentData &outAttachmen
         if (choiceObj.kind() == core::OrnamentsGroupChoice::Kind::wavyLine)
         {
             parseWavyLine(choiceObj.asWavyLine(), outAttachments);
+            parseStandaloneAccidentals(group, standaloneAccidentals);
             continue;
         }
 
@@ -73,22 +112,62 @@ void OrnamentsFunctions::parseOrnamentsSet(api::NoteAttachmentData &outAttachmen
         parseOrnament(choiceObj, markData);
         markData.tickTimePosition = myCursor.tickTimePosition;
 
+        if (ornamentsFunctionsCanOwnAccidentals(choiceObj.kind()))
+        {
+            markData.choice = parseOwnedAccidentals(group);
+        }
+        else
+        {
+            parseStandaloneAccidentals(group, standaloneAccidentals);
+        }
+
         if (markData.markType != api::MarkType::unknownOrnament)
         {
             outAttachments.marks.emplace_back(std::move(markData));
         }
     }
+
+    for (auto &accidental : standaloneAccidentals)
+    {
+        outAttachments.marks.emplace_back(std::move(accidental));
+    }
 }
 
-void OrnamentsFunctions::parseAccidentalMarkSet(std::vector<api::MarkData> &outMarks) const
+api::OrnamentMarkData OrnamentsFunctions::parseOwnedAccidentals(const core::OrnamentsGroup &group) const
 {
-    for (const auto &group : myOrnaments.group())
+    api::OrnamentMarkData payload;
+    for (const auto &am : group.accidentalMark())
     {
-        for (const auto &am : group.accidentalMark())
+        AccidentalMarkFunctions funcs{am, myCursor};
+        auto accidental = funcs.parseOrnamentAccidental();
+        if (accidental.accidental == api::Accidental::none)
         {
-            AccidentalMarkFunctions funcs{am, myCursor};
-            outMarks.emplace_back(funcs.parseAccidentalMark());
+            auto location = measureLocation(myCursor);
+            location.staffIndex = myCursor.staffIndex;
+            myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, std::move(location),
+                                 "an ornament's accidental-mark \"" + std::string{am.value().toString()} +
+                                     "\" is not supported and is not read");
+            continue;
         }
+        payload.accidentals.emplace_back(std::move(accidental));
+    }
+    return payload;
+}
+
+// MusicXML lets an accidental follow a tremolo, an other-ornament or a wavy line, but none of
+// these hold accidentals in the api, so the accidental is read as a standalone accidental mark.
+void OrnamentsFunctions::parseStandaloneAccidentals(const core::OrnamentsGroup &group,
+                                                    std::vector<api::MarkData> &outMarks) const
+{
+    for (const auto &am : group.accidentalMark())
+    {
+        AccidentalMarkFunctions funcs{am, myCursor};
+        outMarks.emplace_back(funcs.parseAccidentalMark());
+        auto location = measureLocation(myCursor);
+        location.staffIndex = myCursor.staffIndex;
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, std::move(location),
+                             "an accidental-mark after " + ornamentsFunctionsHostName(group.choice().kind()) +
+                                 " is read as a standalone accidental mark");
     }
 }
 

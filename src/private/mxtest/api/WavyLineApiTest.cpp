@@ -230,6 +230,46 @@ TEST(writesInsideOrnaments, WavyLine)
 
 T_END
 
+// A trill's accidental stays with the trill: it is written right after the trill-mark, and the
+// wavy line that starts on the same note follows.
+TEST(trillAccidentalPrecedesWavyLineStart, WavyLine)
+{
+    using namespace wavyLineApiTest;
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    voice.notes.push_back(makeGraceNote(Step::c, 4));
+    auto &note = voice.notes.back();
+    MarkData trill{Placement::above, MarkType::trillMark};
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+    trill.choice = OrnamentMarkData{{sharp}};
+    note.noteAttachmentData.marks.push_back(trill);
+    note.noteAttachmentData.wavyLineStarts.push_back(WavyLineStart{});
+
+    const auto xml = toXml(score);
+    mxpugi::xml_document xdoc;
+    REQUIRE(xdoc.load_string(xml.c_str()));
+    const auto ornaments =
+        xdoc.document_element().child("part").child("measure").child("note").child("notations").child("ornaments");
+    REQUIRE(ornaments);
+    std::vector<std::string> names;
+    for (const auto &child : ornaments.children())
+    {
+        names.emplace_back(child.name());
+    }
+    const std::vector<std::string> expected{"trill-mark", "accidental-mark", "wavy-line"};
+    CHECK(expected == names);
+}
+
+T_END
+
 // Requirement 9: the synthetic fixtures parse and surface pairing plus the shared attributes.
 TEST(readsSyntheticWavyLineFixture, WavyLine)
 {

@@ -26,6 +26,10 @@ class AccidentalMarkFunctions
     AccidentalMarkFunctions(AccidentalMarkFunctions &&) = default;
     api::MarkData parseAccidentalMark() const;
 
+    // Reads an accidental-mark that follows an ornament inside <ornaments> as one of that
+    // ornament's accidentals. An accidental value the api has no member for comes back as none.
+    api::OrnamentAccidental parseOrnamentAccidental() const;
+
   private:
     const core::AccidentalMark &myAccidentalMark;
     const impl::Cursor myCursor;

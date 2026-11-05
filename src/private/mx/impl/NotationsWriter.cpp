@@ -383,6 +383,12 @@ core::Notations NotationsWriter::getNotations() const
         {
             this->addOrnament(mark, ornaments);
         }
+        else if (mark.choice.isOrnament())
+        {
+            myScoreWriter.getDiagnostics().report(
+                api::Severity::error, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
+                "ornament accidentals on a mark that is not an ornament are not written");
+        }
         if (isMarkAccidentalMark(mark.markType))
         {
             this->addAccidentalMark(mark, outNotations);
@@ -1170,14 +1176,39 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, core::Ornaments &ou
         return;
     }
 
+    addOrnamentAccidentals(mark, group);
     outOrnaments.addGroup(group);
 }
 
-// An accidental mark is written at the notations level. MusicXML also allows one inside
-// <ornaments>, next to the ornament it decorates, but the api does not record which of the two
-// places a mark came from -- both arrive here as the same MarkType -- and an <ornaments> group is
-// required to carry an ornament, so putting one there would mean inventing an ornament. Marks
-// from either place are written here instead.
+// An ornament's accidentals go in its own group, right after it, which is where MusicXML says an
+// accidental belongs to the ornament before it.
+void NotationsWriter::addOrnamentAccidentals(const api::MarkData &mark, core::OrnamentsGroup &outGroup) const
+{
+    if (!mark.choice.isOrnament())
+    {
+        return;
+    }
+
+    const auto payload = mark.choice.ornament();
+    for (const auto &accidental : payload.accidentals)
+    {
+        if (accidental.accidental == api::Accidental::none)
+        {
+            myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                                  cursorLocation(myCursor),
+                                                  "an ornament accidental of none is not written");
+            continue;
+        }
+
+        core::AccidentalMark accidentalMark;
+        accidentalMark.setValue(myConverter.convert(accidental.accidental));
+        setAttributesFromPositionData(accidental.positionData, accidentalMark);
+        outGroup.addAccidentalMark(accidentalMark);
+    }
+}
+
+// A standalone accidental mark is written directly in <notations>. An accidental that belongs to an
+// ornament is not a mark of its own; addOrnamentAccidentals writes it inside <ornaments>.
 void NotationsWriter::addAccidentalMark(const api::MarkData &mark, core::Notations &outNotations) const
 {
     if (!isMarkAccidentalMark(mark.markType))

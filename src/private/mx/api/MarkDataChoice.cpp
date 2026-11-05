@@ -58,6 +58,20 @@ MarkDataChoice::MarkDataChoice(HarmonicMarkData value) : myValue{std::move(value
 {
 }
 
+// An ornament with no accidentals is stored as none, so a plain trill compares equal however it
+// was built.
+MarkDataChoice::MarkDataChoice(OrnamentMarkData value)
+{
+    if (value.accidentals.empty())
+    {
+        myValue = std::monostate{};
+    }
+    else
+    {
+        myValue = std::move(value);
+    }
+}
+
 MarkDataChoice::Kind MarkDataChoice::kind() const
 {
     if (std::holds_alternative<TremoloMarkData>(myValue))
@@ -91,6 +105,10 @@ MarkDataChoice::Kind MarkDataChoice::kind() const
     if (std::holds_alternative<HarmonicMarkData>(myValue))
     {
         return Kind::harmonic;
+    }
+    if (std::holds_alternative<OrnamentMarkData>(myValue))
+    {
+        return Kind::ornament;
     }
     return Kind::none;
 }
@@ -210,6 +228,20 @@ const HarmonicMarkData MarkDataChoice::harmonic() const
         return *value;
     }
     return HarmonicMarkData{};
+}
+
+bool MarkDataChoice::isOrnament() const
+{
+    return std::holds_alternative<OrnamentMarkData>(myValue);
+}
+
+const OrnamentMarkData MarkDataChoice::ornament() const
+{
+    if (const auto *value = std::get_if<OrnamentMarkData>(&myValue))
+    {
+        return *value;
+    }
+    return OrnamentMarkData{};
 }
 
 bool MarkDataChoice::operator==(const MarkDataChoice &other) const
