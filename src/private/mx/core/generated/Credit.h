@@ -7,6 +7,7 @@
 #include "mx/core/generated/Bookmark.h"
 #include "mx/core/generated/CreditChoice.h"
 #include "mx/core/generated/Link.h"
+#include "mx/core/generated/PositiveInteger.h"
 
 #include <optional>
 #include <span>
@@ -43,8 +44,8 @@ class ParseContext;
 class Credit final
 {
   public:
-    const std::optional<int> &page() const noexcept;
-    void setPage(std::optional<int> value);
+    const std::optional<PositiveInteger> &page() const noexcept;
+    void setPage(std::optional<PositiveInteger> value);
     const std::optional<Token> &id() const noexcept;
     void setID(std::optional<Token> value);
     std::span<const std::string> creditType() const noexcept;
@@ -61,7 +62,7 @@ class Credit final
     bool operator==(const Credit &other) const = default;
 
   private:
-    std::optional<int> m_page;
+    std::optional<PositiveInteger> m_page;
     std::optional<Token> m_id;
     std::vector<std::string> m_creditType;
     std::vector<Link> m_link;

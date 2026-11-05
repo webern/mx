@@ -3,6 +3,7 @@
 #pragma once
 
 #include "mx/core/generated/BackwardForward.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/Winged.h"
 #include "mx/core/generated/YesNo.h"
 
@@ -29,8 +30,8 @@ class Repeat final
   public:
     const BackwardForward &direction() const noexcept;
     void setDirection(BackwardForward value);
-    const std::optional<int> &times() const noexcept;
-    void setTimes(std::optional<int> value);
+    const std::optional<NonNegativeInteger> &times() const noexcept;
+    void setTimes(std::optional<NonNegativeInteger> value);
     const std::optional<YesNo> &afterJump() const noexcept;
     void setAfterJump(std::optional<YesNo> value);
     const std::optional<Winged> &winged() const noexcept;
@@ -39,7 +40,7 @@ class Repeat final
 
   private:
     BackwardForward m_direction{};
-    std::optional<int> m_times;
+    std::optional<NonNegativeInteger> m_times;
     std::optional<YesNo> m_afterJump;
     std::optional<Winged> m_winged;
 };

@@ -22,10 +22,12 @@
 #include "mx/core/generated/InstrumentSound.h"
 #include "mx/core/generated/MIDI16.h"
 #include "mx/core/generated/Mode.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/NoteTypeValue.h"
 #include "mx/core/generated/NumberOrNormal.h"
 #include "mx/core/generated/Octave.h"
 #include "mx/core/generated/PositiveDivisions.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/PositiveIntegerOrEmpty.h"
 #include "mx/core/generated/RotationDegrees.h"
 #include "mx/core/generated/ShowType.h"
@@ -84,6 +86,49 @@ TEST(NumberLexicalThenClampParse, Values)
     CHECK(!MIDI16::tryParse("12abc", v));
     CHECK_EQUAL(0, Octave::parse("-4").value());
     CHECK_EQUAL(9, Octave::parse("99").value());
+}
+
+// PositiveInteger and NonNegativeInteger stand in for xs:positiveInteger and xs:nonNegativeInteger
+// where the schema uses them directly (<staff>, <staves>, ...), so the bare primitives clamp like
+// any named number type.
+TEST(PrimitiveIntegerClampOnConstructAndSet, Values)
+{
+    CHECK_EQUAL(1, PositiveInteger{0}.value());
+    CHECK_EQUAL(1, PositiveInteger{-3}.value());
+    CHECK_EQUAL(5, PositiveInteger{5}.value());
+    CHECK_EQUAL(1, PositiveInteger{}.value());
+    PositiveInteger positive{4};
+    positive.setValue(0);
+    CHECK_EQUAL(1, positive.value());
+
+    CHECK_EQUAL(0, NonNegativeInteger{-1}.value());
+    CHECK_EQUAL(0, NonNegativeInteger{0}.value());
+    CHECK_EQUAL(3, NonNegativeInteger{3}.value());
+    CHECK_EQUAL(0, NonNegativeInteger{}.value());
+    NonNegativeInteger nonNegative{4};
+    nonNegative.setValue(-7);
+    CHECK_EQUAL(0, nonNegative.value());
+}
+
+TEST(PrimitiveIntegerParseOutcome, Values)
+{
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    CHECK_EQUAL(1, PositiveInteger::parse("0", outcome).value());
+    CHECK(ValueParseOutcome::adjusted == outcome);
+    CHECK_EQUAL(3, PositiveInteger::parse("3", outcome).value());
+    CHECK(ValueParseOutcome::valid == outcome);
+    CHECK_EQUAL(1, PositiveInteger::parse("garbage", outcome).value());
+    CHECK(ValueParseOutcome::invalid == outcome);
+
+    CHECK_EQUAL(0, NonNegativeInteger::parse("-1", outcome).value());
+    CHECK(ValueParseOutcome::adjusted == outcome);
+    CHECK_EQUAL(0, NonNegativeInteger::parse("0", outcome).value());
+    CHECK(ValueParseOutcome::valid == outcome);
+    CHECK_EQUAL(0, NonNegativeInteger::parse("garbage", outcome).value());
+    CHECK(ValueParseOutcome::invalid == outcome);
+
+    CHECK_EQUAL(std::string{"7"}, PositiveInteger{7}.toString());
+    CHECK_EQUAL(std::string{"0"}, NonNegativeInteger{0}.toString());
 }
 
 TEST(DecimalClampAndTextFace, Values)

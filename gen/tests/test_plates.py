@@ -460,6 +460,14 @@ class RealTargets(unittest.TestCase):
                 for d in plate.deps:
                     self.assertNotEqual(d.category, "primitive")
 
+    def test_integer_primitive_promotion_is_opt_in(self):
+        """Only the C++ target lists promote-primitives."""
+        staff = self.cpp.plate("note").member("staff", kind="element").type_ref
+        self.assertEqual(staff.ident, "PositiveInteger")
+        for plates in (self.go, self.c):
+            self.assertFalse(plates.has_plate("positive-integer"))
+            self.assertFalse(plates.has_plate("non-negative-integer"))
+
     def test_primitive_refs_never_become_deps(self):
         # instrument-sound (C target, sounds folded) is sound-id | string;
         # the open `string` member is a PRIMITIVE, but a complex type named
@@ -550,6 +558,14 @@ class ConfigParsing(unittest.TestCase):
             self._load("[naming]\nacronyms = 'midi'\n")
         with self.assertRaises(ConfigError):
             self._load("[reserved]\nwords = 'class'\n")
+
+    def test_promote_primitives_parses(self):
+        """An array of primitive names; absent means none, a bare string fails."""
+        config = self._load('[target]\npromote-primitives = ["positive_integer"]\n')
+        self.assertEqual(config.target.promote_primitives, ("positive_integer",))
+        self.assertEqual(self._load("").target.promote_primitives, ())
+        with self.assertRaises(ConfigError):
+            self._load("[target]\npromote-primitives = 'positive_integer'\n")
 
     def test_empty_rename_entry_fails(self):
         with self.assertRaises(ConfigError):

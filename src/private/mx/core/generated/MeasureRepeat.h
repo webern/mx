@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/PositiveIntegerOrEmpty.h"
 #include "mx/core/generated/StartStop.h"
 
@@ -32,15 +33,15 @@ class MeasureRepeat final
   public:
     const StartStop &type() const noexcept;
     void setType(StartStop value);
-    const std::optional<int> &slashes() const noexcept;
-    void setSlashes(std::optional<int> value);
+    const std::optional<PositiveInteger> &slashes() const noexcept;
+    void setSlashes(std::optional<PositiveInteger> value);
     const PositiveIntegerOrEmpty &value() const noexcept;
     void setValue(PositiveIntegerOrEmpty value);
     bool operator==(const MeasureRepeat &other) const = default;
 
   private:
     StartStop m_type{};
-    std::optional<int> m_slashes;
+    std::optional<PositiveInteger> m_slashes;
     PositiveIntegerOrEmpty m_value{};
 };
 

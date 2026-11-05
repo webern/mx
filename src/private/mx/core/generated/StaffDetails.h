@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/ShowFrets.h"
 #include "mx/core/generated/StaffDetailsGroup.h"
 #include "mx/core/generated/StaffNumber.h"
@@ -51,8 +52,8 @@ class StaffDetails final
     std::span<const StaffTuning> staffTuning() const noexcept;
     void addStaffTuning(StaffTuning value);
     void setStaffTuning(std::vector<StaffTuning> value);
-    const std::optional<int> &capo() const noexcept;
-    void setCapo(std::optional<int> value);
+    const std::optional<NonNegativeInteger> &capo() const noexcept;
+    void setCapo(std::optional<NonNegativeInteger> value);
     const std::optional<StaffSize> &staffSize() const noexcept;
     void setStaffSize(std::optional<StaffSize> value);
     bool operator==(const StaffDetails &other) const = default;
@@ -65,7 +66,7 @@ class StaffDetails final
     std::optional<StaffType> m_staffType;
     std::optional<StaffDetailsGroup> m_group;
     std::vector<StaffTuning> m_staffTuning;
-    std::optional<int> m_capo;
+    std::optional<NonNegativeInteger> m_capo;
     std::optional<StaffSize> m_staffSize;
 };
 

@@ -9,6 +9,7 @@
 #include "mx/api/TupletData.h"
 #include "mx/core/generated/Empty.h"
 #include "mx/core/generated/EmptyPlacement.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/Note.h"
 #include "mx/core/generated/NoteType.h"
 #include "mx/core/generated/NoteTypeValue.h"
@@ -28,7 +29,7 @@ using namespace mx::impl;
 TEST(guessesMissingNormalWithoutClobberingExplicitActual, TupletReader)
 {
     core::TupletNumber explicitActualNumber;
-    explicitActualNumber.setValue(5);
+    explicitActualNumber.setValue(core::NonNegativeInteger{5});
     core::TupletPortion actualPortion;
     actualPortion.setTupletNumber(explicitActualNumber);
 
@@ -38,8 +39,8 @@ TEST(guessesMissingNormalWithoutClobberingExplicitActual, TupletReader)
     // tuplet-normal is left absent; it must be guessed from time-modification.
 
     core::TimeModification timeMod;
-    timeMod.setActualNotes(3);
-    timeMod.setNormalNotes(2);
+    timeMod.setActualNotes(core::NonNegativeInteger{3});
+    timeMod.setNormalNotes(core::NonNegativeInteger{2});
 
     core::Note note;
     note.setTimeModification(timeMod);
@@ -64,7 +65,7 @@ T_END
 TEST(guessesMissingActualWithoutClobberingExplicitNormal, TupletReader)
 {
     core::TupletNumber explicitNormalNumber;
-    explicitNormalNumber.setValue(7);
+    explicitNormalNumber.setValue(core::NonNegativeInteger{7});
     core::TupletPortion normalPortion;
     normalPortion.setTupletNumber(explicitNormalNumber);
 
@@ -74,8 +75,8 @@ TEST(guessesMissingActualWithoutClobberingExplicitNormal, TupletReader)
     // tuplet-actual is left absent; it must be guessed from time-modification.
 
     core::TimeModification timeMod;
-    timeMod.setActualNotes(3);
-    timeMod.setNormalNotes(2);
+    timeMod.setActualNotes(core::NonNegativeInteger{3});
+    timeMod.setNormalNotes(core::NonNegativeInteger{2});
 
     core::Note note;
     note.setTimeModification(timeMod);
@@ -106,8 +107,8 @@ TEST(guessesBothFromTimeModificationWhenBothAbsent, TupletReader)
     // both tuplet-actual and tuplet-normal are absent.
 
     core::TimeModification timeMod;
-    timeMod.setActualNotes(3);
-    timeMod.setNormalNotes(2);
+    timeMod.setActualNotes(core::NonNegativeInteger{3});
+    timeMod.setNormalNotes(core::NonNegativeInteger{2});
 
     core::Note note;
     note.setTimeModification(timeMod);
@@ -140,8 +141,8 @@ TEST(guessesActualDurationFromNormalTypeNotFromNoteType, TupletReader)
     group.setNormalType(core::NoteTypeValue::quarter());
 
     core::TimeModification timeMod;
-    timeMod.setActualNotes(3);
-    timeMod.setNormalNotes(2);
+    timeMod.setActualNotes(core::NonNegativeInteger{3});
+    timeMod.setNormalNotes(core::NonNegativeInteger{2});
     timeMod.setGroup(group);
 
     core::NoteType noteType;
@@ -174,8 +175,8 @@ TEST(guessesNormalDotsFromNoteDots, TupletReader)
     tuplet.setType(core::StartStop::start());
 
     core::TimeModification timeMod;
-    timeMod.setActualNotes(3);
-    timeMod.setNormalNotes(2);
+    timeMod.setActualNotes(core::NonNegativeInteger{3});
+    timeMod.setNormalNotes(core::NonNegativeInteger{2});
 
     core::NoteType noteType;
     noteType.setValue(core::NoteTypeValue::quarter());
@@ -207,8 +208,8 @@ TEST(guessesTwoNormalDotsFromTwoNoteDots, TupletReader)
     tuplet.setType(core::StartStop::start());
 
     core::TimeModification timeMod;
-    timeMod.setActualNotes(3);
-    timeMod.setNormalNotes(2);
+    timeMod.setActualNotes(core::NonNegativeInteger{3});
+    timeMod.setNormalNotes(core::NonNegativeInteger{2});
 
     core::NoteType noteType;
     noteType.setValue(core::NoteTypeValue::quarter());
@@ -244,8 +245,8 @@ TEST(explicitNormalDotsWinOverNoteDots, TupletReader)
     group.addNormalDot(core::Empty{});
 
     core::TimeModification timeMod;
-    timeMod.setActualNotes(3);
-    timeMod.setNormalNotes(2);
+    timeMod.setActualNotes(core::NonNegativeInteger{3});
+    timeMod.setNormalNotes(core::NonNegativeInteger{2});
     timeMod.setGroup(group);
 
     core::NoteType noteType;
@@ -282,8 +283,8 @@ TEST(guessesZeroNormalDotsWhenNoteHasNoDots, TupletReader)
     tuplet.setType(core::StartStop::start());
 
     core::TimeModification timeMod;
-    timeMod.setActualNotes(3);
-    timeMod.setNormalNotes(2);
+    timeMod.setActualNotes(core::NonNegativeInteger{3});
+    timeMod.setNormalNotes(core::NonNegativeInteger{2});
 
     core::NoteType noteType;
     noteType.setValue(core::NoteTypeValue::quarter());

@@ -310,7 +310,7 @@ TEST(rightBarlineRepeatTimes, MeasureWriter)
     CHECK(outBarline != nullptr);
     CHECK(outBarline->repeat().has_value());
     CHECK(outBarline->repeat()->times().has_value());
-    CHECK_EQUAL(5, *outBarline->repeat()->times());
+    CHECK_EQUAL(5, outBarline->repeat()->times()->value());
 }
 
 T_END
@@ -530,7 +530,7 @@ TEST(staffDetailsWritesStaffLines, MeasureWriter)
 
     const auto &details = props.staffDetails().front();
     CHECK(details.group().has_value());
-    CHECK_EQUAL(1, details.group()->staffLines());
+    CHECK_EQUAL(1, details.group()->staffLines().value());
     CHECK(!details.number().has_value());
 }
 
@@ -664,7 +664,7 @@ TEST(staffDetailsWritesStaffLinesAndStaffSize, MeasureWriter)
 
     const auto &details = props.staffDetails().front();
     CHECK(details.group().has_value());
-    CHECK_EQUAL(1, details.group()->staffLines());
+    CHECK_EQUAL(1, details.group()->staffLines().value());
     CHECK(details.staffSize().has_value());
     CHECK(80.5 == details.staffSize()->value().value().value());
     CHECK(!details.staffSize()->scaling().has_value());

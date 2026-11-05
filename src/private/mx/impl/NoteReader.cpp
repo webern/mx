@@ -322,7 +322,7 @@ void NoteReader::setStaffNumber()
     myIsStaffSpecified = myNote.staff().has_value();
     if (myIsStaffSpecified)
     {
-        myStaffNumber = *myNote.staff();
+        myStaffNumber = myNote.staff()->value();
     }
 }
 
@@ -424,8 +424,8 @@ void NoteReader::setTimeModification()
     }
 
     const auto &mxTimeMod = *myNote.timeModification();
-    myTimeModificationActualNotes = mxTimeMod.actualNotes();
-    myTimeModificationNormalNotes = mxTimeMod.normalNotes();
+    myTimeModificationActualNotes = mxTimeMod.actualNotes().value();
+    myTimeModificationNormalNotes = mxTimeMod.normalNotes().value();
 
     if (mxTimeMod.group().has_value())
     {

@@ -61,12 +61,12 @@ void TupletNumber::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-const int &TupletNumber::value() const noexcept
+const NonNegativeInteger &TupletNumber::value() const noexcept
 {
     return m_value;
 }
 
-void TupletNumber::setValue(int value)
+void TupletNumber::setValue(NonNegativeInteger value)
 {
     m_value = std::move(value);
 }
@@ -112,7 +112,7 @@ TupletNumber parseTupletNumber(mx::xml::Node el, const ParseContext &context)
 
 void parseTupletNumberContent(TupletNumber &out, mx::xml::Node el, const ParseContext &context)
 {
-    out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
+    out.setValue(parseValue<NonNegativeInteger>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));
@@ -147,7 +147,7 @@ void serializeTupletNumber(const TupletNumber &v, mx::xml::Node parent, const ch
 
 void serializeTupletNumberContent(const TupletNumber &v, mx::xml::Node el)
 {
-    setText(el, formatInt(v.value()));
+    setText(el, v.value().toString());
 }
 
 } // namespace mx::core

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "mx/core/generated/LineDetail.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 
 #include <optional>
 #include <span>
@@ -25,15 +26,15 @@ class ParseContext;
 class StaffDetailsGroup final
 {
   public:
-    const int &staffLines() const noexcept;
-    void setStaffLines(int value);
+    const NonNegativeInteger &staffLines() const noexcept;
+    void setStaffLines(NonNegativeInteger value);
     std::span<const LineDetail> lineDetail() const noexcept;
     void addLineDetail(LineDetail value);
     void setLineDetail(std::vector<LineDetail> value);
     bool operator==(const StaffDetailsGroup &other) const = default;
 
   private:
-    int m_staffLines{};
+    NonNegativeInteger m_staffLines{};
     std::vector<LineDetail> m_lineDetail;
 };
 

@@ -41,12 +41,12 @@ void Print::setNewPage(std::optional<YesNo> value)
     m_newPage = std::move(value);
 }
 
-const std::optional<int> &Print::blankPage() const noexcept
+const std::optional<PositiveInteger> &Print::blankPage() const noexcept
 {
     return m_blankPage;
 }
 
-void Print::setBlankPage(std::optional<int> value)
+void Print::setBlankPage(std::optional<PositiveInteger> value)
 {
     m_blankPage = std::move(value);
 }
@@ -145,7 +145,7 @@ Print parsePrint(mx::xml::Node el, const ParseContext &context)
         }
         else if (aname == "blank-page")
         {
-            out.setBlankPage(parseIntegerValue(a.value(), context, el, "blank-page"));
+            out.setBlankPage(parseValue<PositiveInteger>(a.value(), context, el, "blank-page"));
         }
         else if (aname == "page-number")
         {
@@ -221,7 +221,7 @@ void serializePrint(const Print &v, mx::xml::Node parent, const char *tag)
     }
     if (v.blankPage())
     {
-        setAttribute(el, "blank-page", formatInt(*v.blankPage()));
+        setAttribute(el, "blank-page", v.blankPage()->toString());
     }
     if (v.pageNumber())
     {

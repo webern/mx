@@ -11,12 +11,12 @@
 namespace mx::core
 {
 
-const std::optional<int> &Credit::page() const noexcept
+const std::optional<PositiveInteger> &Credit::page() const noexcept
 {
     return m_page;
 }
 
-void Credit::setPage(std::optional<int> value)
+void Credit::setPage(std::optional<PositiveInteger> value)
 {
     m_page = std::move(value);
 }
@@ -98,7 +98,7 @@ Credit parseCredit(mx::xml::Node el, const ParseContext &context)
         }
         if (aname == "page")
         {
-            out.setPage(parseIntegerValue(a.value(), context, el, "page"));
+            out.setPage(parseValue<PositiveInteger>(a.value(), context, el, "page"));
         }
         else if (aname == "id")
         {
@@ -156,7 +156,7 @@ void serializeCredit(const Credit &v, mx::xml::Node parent, const char *tag)
     mx::xml::Node el = parent.appendChild(tag);
     if (v.page())
     {
-        setAttribute(el, "page", formatInt(*v.page()));
+        setAttribute(el, "page", v.page()->toString());
     }
     if (v.id())
     {

@@ -34,6 +34,7 @@
 #include "mx/core/generated/HorizontalTurn.h"
 #include "mx/core/generated/Mordent.h"
 #include "mx/core/generated/NonArpeggiate.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/NotationsChoice.h"
 #include "mx/core/generated/NumberLevel.h"
 #include "mx/core/generated/OrnamentsGroup.h"
@@ -198,7 +199,7 @@ core::TupletPortion notationsWriterMakeTupletPortion(const NotationsWriterTuplet
     if (inPortion.number != api::VALUE_UNSPECIFIED)
     {
         core::TupletNumber tupletNumber;
-        tupletNumber.setValue(inPortion.number);
+        tupletNumber.setValue(core::NonNegativeInteger{inPortion.number});
         outPortion.setTupletNumber(tupletNumber);
     }
 
@@ -1233,7 +1234,7 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &o
                 api::Severity::warning, api::DiagnosticCode::invalidValue, cursorLocation(myCursor),
                 "fret \"" + mark.name + "\" is not a number; using " + std::to_string(fretValue));
         }
-        f.setValue(fretValue);
+        f.setValue(core::NonNegativeInteger{fretValue});
         outTechnical.addChoice(core::TechnicalChoice::fret(f));
         break;
     }

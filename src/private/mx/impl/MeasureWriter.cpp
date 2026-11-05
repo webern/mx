@@ -18,6 +18,7 @@
 #include "mx/core/generated/MeasureNumbering.h"
 #include "mx/core/generated/MeasureText.h"
 #include "mx/core/generated/MusicDataChoice.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/PageLayout.h"
 #include "mx/core/generated/PageLayoutGroup.h"
 #include "mx/core/generated/PageMargins.h"
@@ -1068,7 +1069,7 @@ void MeasureWriter::writeBarline(const api::BarlineData &barline)
 
         if (barline.repeatTimes > 0)
         {
-            repeatElement.setTimes(barline.repeatTimes);
+            repeatElement.setTimes(core::NonNegativeInteger{barline.repeatTimes});
         }
 
         if (barline.repeatAfterJump != api::Bool::unspecified)

@@ -31,12 +31,12 @@ void FirstFret::setLocation(std::optional<LeftRight> value)
     m_location = std::move(value);
 }
 
-const int &FirstFret::value() const noexcept
+const PositiveInteger &FirstFret::value() const noexcept
 {
     return m_value;
 }
 
-void FirstFret::setValue(int value)
+void FirstFret::setValue(PositiveInteger value)
 {
     m_value = std::move(value);
 }
@@ -70,7 +70,7 @@ FirstFret parseFirstFret(mx::xml::Node el, const ParseContext &context)
 
 void parseFirstFretContent(FirstFret &out, mx::xml::Node el, const ParseContext &context)
 {
-    out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
+    out.setValue(parseValue<PositiveInteger>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));
@@ -93,7 +93,7 @@ void serializeFirstFret(const FirstFret &v, mx::xml::Node parent, const char *ta
 
 void serializeFirstFretContent(const FirstFret &v, mx::xml::Node el)
 {
-    setText(el, formatInt(v.value()));
+    setText(el, v.value().toString());
 }
 
 } // namespace mx::core

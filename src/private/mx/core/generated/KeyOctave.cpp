@@ -11,12 +11,12 @@
 namespace mx::core
 {
 
-const int &KeyOctave::number() const noexcept
+const PositiveInteger &KeyOctave::number() const noexcept
 {
     return m_number;
 }
 
-void KeyOctave::setNumber(int value)
+void KeyOctave::setNumber(PositiveInteger value)
 {
     m_number = std::move(value);
 }
@@ -55,7 +55,7 @@ KeyOctave parseKeyOctave(mx::xml::Node el, const ParseContext &context)
         if (aname == "number")
         {
             seen_number = true;
-            out.setNumber(parseIntegerValue(a.value(), context, el, "number"));
+            out.setNumber(parseValue<PositiveInteger>(a.value(), context, el, "number"));
         }
         else if (aname == "cancel")
         {
@@ -86,7 +86,7 @@ void parseKeyOctaveContent(KeyOctave &out, mx::xml::Node el, const ParseContext 
 void serializeKeyOctave(const KeyOctave &v, mx::xml::Node parent, const char *tag)
 {
     mx::xml::Node el = parent.appendChild(tag);
-    setAttribute(el, "number", formatInt(v.number()));
+    setAttribute(el, "number", v.number().toString());
     if (v.cancel())
     {
         setAttribute(el, "cancel", v.cancel()->toString());

@@ -7,6 +7,7 @@
 #include "mx/core/generated/FontSize.h"
 #include "mx/core/generated/FontStyle.h"
 #include "mx/core/generated/FontWeight.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 
 #include <optional>
 #include <string>
@@ -36,8 +37,8 @@ class Fret final
     void setFontWeight(std::optional<FontWeight> value);
     const std::optional<Color> &color() const noexcept;
     void setColor(std::optional<Color> value);
-    const int &value() const noexcept;
-    void setValue(int value);
+    const NonNegativeInteger &value() const noexcept;
+    void setValue(NonNegativeInteger value);
     bool operator==(const Fret &other) const = default;
 
   private:
@@ -46,7 +47,7 @@ class Fret final
     std::optional<FontSize> m_fontSize;
     std::optional<FontWeight> m_fontWeight;
     std::optional<Color> m_color;
-    int m_value{};
+    NonNegativeInteger m_value{};
 };
 
 Fret parseFret(mx::xml::Node el, const ParseContext &context);

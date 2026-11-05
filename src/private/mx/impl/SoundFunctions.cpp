@@ -7,6 +7,7 @@
 #include "mx/core/generated/Empty.h"
 #include "mx/core/generated/InstrumentChange.h"
 #include "mx/core/generated/NonNegativeDecimal.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Sound.h"
 #include "mx/core/generated/SoundGroup.h"
 #include "mx/core/generated/Swing.h"
@@ -53,8 +54,8 @@ api::SwingData soundFunctionsToApiSwingData(const core::Swing &inSwing)
     {
         out.isStraight = false;
         const auto &group = inSwing.choice().asGroup();
-        out.ratioFirst = group.first();
-        out.ratioSecond = group.second();
+        out.ratioFirst = group.first().value();
+        out.ratioSecond = group.second().value();
 
         if (group.swingType().has_value())
         {
@@ -81,8 +82,8 @@ core::Swing soundFunctionsToCoreSwing(const api::SwingData &inSwingData)
     else
     {
         core::SwingChoiceGroup group{};
-        group.setFirst(inSwingData.ratioFirst);
-        group.setSecond(inSwingData.ratioSecond);
+        group.setFirst(core::PositiveInteger{inSwingData.ratioFirst});
+        group.setSecond(core::PositiveInteger{inSwingData.ratioSecond});
 
         if (inSwingData.noteType != api::SwingNoteType::unspecified)
         {

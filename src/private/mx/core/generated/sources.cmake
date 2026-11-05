@@ -247,6 +247,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/NameDisplayChoice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/NonArpeggiate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/NonNegativeDecimal.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/NonNegativeInteger.cpp
     ${CMAKE_CURRENT_LIST_DIR}/NonTraditionalKeyGroup.cpp
     ${CMAKE_CURRENT_LIST_DIR}/NormalNoteGroup.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Notations.cpp
@@ -313,6 +314,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/PlayChoice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Player.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PositiveDivisions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/PositiveInteger.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PositiveIntegerOrEmpty.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PrincipalVoice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PrincipalVoiceSymbol.cpp
@@ -705,6 +707,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/NameDisplayChoice.h
     ${CMAKE_CURRENT_LIST_DIR}/NonArpeggiate.h
     ${CMAKE_CURRENT_LIST_DIR}/NonNegativeDecimal.h
+    ${CMAKE_CURRENT_LIST_DIR}/NonNegativeInteger.h
     ${CMAKE_CURRENT_LIST_DIR}/NonTraditionalKeyGroup.h
     ${CMAKE_CURRENT_LIST_DIR}/NormalNoteGroup.h
     ${CMAKE_CURRENT_LIST_DIR}/Notations.h
@@ -771,6 +774,7 @@ set(MX_CORE_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/PlayChoice.h
     ${CMAKE_CURRENT_LIST_DIR}/Player.h
     ${CMAKE_CURRENT_LIST_DIR}/PositiveDivisions.h
+    ${CMAKE_CURRENT_LIST_DIR}/PositiveInteger.h
     ${CMAKE_CURRENT_LIST_DIR}/PositiveIntegerOrEmpty.h
     ${CMAKE_CURRENT_LIST_DIR}/PrincipalVoice.h
     ${CMAKE_CURRENT_LIST_DIR}/PrincipalVoiceSymbol.h

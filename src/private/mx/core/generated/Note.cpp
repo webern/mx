@@ -331,12 +331,12 @@ void Note::setNoteheadText(std::optional<NoteheadText> value)
     m_noteheadText = std::move(value);
 }
 
-const std::optional<int> &Note::staff() const noexcept
+const std::optional<PositiveInteger> &Note::staff() const noexcept
 {
     return m_staff;
 }
 
-void Note::setStaff(std::optional<int> value)
+void Note::setStaff(std::optional<PositiveInteger> value)
 {
     m_staff = std::move(value);
 }
@@ -572,7 +572,7 @@ void parseNoteContent(Note &out, mx::xml::Node el, const ParseContext &context)
     }
     if (cursorIs(cursor, "staff"))
     {
-        out.setStaff(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setStaff(parseValue<PositiveInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "beam"))
@@ -749,7 +749,7 @@ void serializeNoteContent(const Note &v, mx::xml::Node el)
     }
     if (v.staff())
     {
-        writeTextElement(el, "staff", formatInt(*v.staff()));
+        writeTextElement(el, "staff", v.staff()->toString());
     }
     for (const auto &item : v.beam())
     {

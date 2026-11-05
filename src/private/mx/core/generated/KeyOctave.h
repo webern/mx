@@ -3,6 +3,7 @@
 #pragma once
 
 #include "mx/core/generated/Octave.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/YesNo.h"
 
 #include <optional>
@@ -28,8 +29,8 @@ class ParseContext;
 class KeyOctave final
 {
   public:
-    const int &number() const noexcept;
-    void setNumber(int value);
+    const PositiveInteger &number() const noexcept;
+    void setNumber(PositiveInteger value);
     const std::optional<YesNo> &cancel() const noexcept;
     void setCancel(std::optional<YesNo> value);
     const Octave &value() const noexcept;
@@ -37,7 +38,7 @@ class KeyOctave final
     bool operator==(const KeyOctave &other) const = default;
 
   private:
-    int m_number{};
+    PositiveInteger m_number{};
     std::optional<YesNo> m_cancel;
     Octave m_value{};
 };

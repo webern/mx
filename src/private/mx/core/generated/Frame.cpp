@@ -121,22 +121,22 @@ void Frame::setID(std::optional<Token> value)
     m_id = std::move(value);
 }
 
-const int &Frame::frameStrings() const noexcept
+const PositiveInteger &Frame::frameStrings() const noexcept
 {
     return m_frameStrings;
 }
 
-void Frame::setFrameStrings(int value)
+void Frame::setFrameStrings(PositiveInteger value)
 {
     m_frameStrings = std::move(value);
 }
 
-const int &Frame::frameFrets() const noexcept
+const PositiveInteger &Frame::frameFrets() const noexcept
 {
     return m_frameFrets;
 }
 
-void Frame::setFrameFrets(int value)
+void Frame::setFrameFrets(PositiveInteger value)
 {
     m_frameFrets = std::move(value);
 }
@@ -234,7 +234,7 @@ void parseFrameContent(Frame &out, mx::xml::Node el, const ParseContext &context
     mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "frame-strings"))
     {
-        out.setFrameStrings(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setFrameStrings(parseValue<PositiveInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -243,7 +243,7 @@ void parseFrameContent(Frame &out, mx::xml::Node el, const ParseContext &context
     }
     if (cursorIs(cursor, "frame-frets"))
     {
-        out.setFrameFrets(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setFrameFrets(parseValue<PositiveInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -329,8 +329,8 @@ void serializeFrame(const Frame &v, mx::xml::Node parent, const char *tag)
 
 void serializeFrameContent(const Frame &v, mx::xml::Node el)
 {
-    writeTextElement(el, "frame-strings", formatInt(v.frameStrings()));
-    writeTextElement(el, "frame-frets", formatInt(v.frameFrets()));
+    writeTextElement(el, "frame-strings", v.frameStrings().toString());
+    writeTextElement(el, "frame-frets", v.frameFrets().toString());
     if (v.firstFret())
     {
         serializeFirstFret(*v.firstFret(), el, "first-fret");

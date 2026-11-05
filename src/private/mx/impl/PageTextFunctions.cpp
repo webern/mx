@@ -13,6 +13,7 @@
 #include "mx/core/generated/CreditChoiceGroupGroupChoice.h"
 #include "mx/core/generated/FormattedTextID.h"
 #include "mx/core/generated/Image.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/ScoreHeaderGroup.h"
 #include "mx/core/generated/Tenths.h"
 #include "mx/impl/Converter.h"
@@ -166,7 +167,7 @@ void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &ou
 
         if (p.pageNumber > 0)
         {
-            credit.setPage(p.pageNumber);
+            credit.setPage(core::PositiveInteger{p.pageNumber});
         }
 
         outHeader.addCredit(credit);
@@ -179,7 +180,7 @@ void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &ou
 
         if (img.pageNumber > 0)
         {
-            credit.setPage(img.pageNumber);
+            credit.setPage(core::PositiveInteger{img.pageNumber});
         }
 
         outHeader.addCredit(credit);
@@ -190,7 +191,7 @@ void createCredits(const core::ScoreHeaderGroup &inHeader, api::ScoreData &outSc
 {
     for (const auto &c : inHeader.credit())
     {
-        const int pageNumber = c.page().has_value() ? *c.page() : 0;
+        const int pageNumber = c.page().has_value() ? c.page()->value() : 0;
 
         if (c.choice().isCreditImage())
         {

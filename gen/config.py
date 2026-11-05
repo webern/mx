@@ -69,6 +69,8 @@ class TargetSection:
     symbol_prefix: str = ""  # prepended to type idents and composed constants
     inheritance: bool = True  # derived types: inherit (True) or flatten
     variant_scope: str = "bare"  # constant scoping: "bare" | "composed"
+    # Numeric primitives whose direct uses project as named number types.
+    promote_primitives: tuple[str, ...] = ()
 
 
 @dataclass
@@ -243,11 +245,16 @@ def _check_keys(table: dict, allowed: set[str], where: str) -> None:
 
 
 def _target(t: dict) -> TargetSection:
-    _check_keys(t, {"symbol-prefix", "inheritance", "variant-scope"}, "target")
+    _check_keys(
+        t, {"symbol-prefix", "inheritance", "variant-scope", "promote-primitives"}, "target"
+    )
     section = TargetSection(
         symbol_prefix=t.get("symbol-prefix", ""),
         inheritance=bool(t.get("inheritance", True)),
         variant_scope=t.get("variant-scope", "bare"),
+        promote_primitives=_string_list(
+            t.get("promote-primitives", []), "target.promote-primitives"
+        ),
     )
     if section.variant_scope not in ("bare", "composed"):
         raise ConfigError(

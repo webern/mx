@@ -323,6 +323,15 @@ The IR primitive set (`string`, `token`, `decimal`, `integer`, `positive_integer
 seeded from `[types]` in `config.toml`. This is the single place a target decides that
 `decimal` is a `Decimal` wrapper or that `token` is `std::string`.
 
+A target can also list numeric primitives under `[target] promote-primitives`. Plates then
+synthesizes a facet-free number type for each one, named after it (`positive_integer` ->
+`positive-integer`), and resolves every direct reference to the primitive (attribute, element,
+content field, value body) to that type instead. The type gets the primitive's implied bound as
+its clamp, so a target that renders number types as clamping wrappers cannot hold an
+out-of-range value where the schema names the bare primitive. Named restrictions keep the
+`[types]` spelling as the type they wrap, and union members are not promoted (they already carry
+the implied clamp). The IR does not change: a target that does not opt in sees no new types.
+
 #### Clamp policy
 
 `NumberPlate.clamp` carries resolved `ClampStep`s: facet bounds merged with primitive-implied
@@ -461,6 +470,8 @@ reference to any language:
   must stay in the projection so the collision gate certifies *final* identifiers.
 - `[target] variant-scope = "bare" | "composed"`: how enum constants are scoped.
 - `[target] inheritance = true | false`: selects the `inherit` vs `flatten` derived strategy.
+- `[target] promote-primitives`: numeric primitives whose direct uses project as synthesized
+  number types (see Primitive -> target type).
 - `[types]`: primitive -> spelling map. Required for any target emitting typed code.
 - `[reserved] words`, `members`, `type-suffixes`: keyword lists plus names the templates
   synthesize (e.g. Go's `Children` field), fed to the existing collision gate.

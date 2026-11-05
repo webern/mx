@@ -8,6 +8,7 @@
 #include "mx/core/generated/EditorialGroup.h"
 #include "mx/core/generated/Key.h"
 #include "mx/core/generated/MeasureStyle.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/PartSymbol.h"
 #include "mx/core/generated/PositiveDivisions.h"
 #include "mx/core/generated/StaffDetails.h"
@@ -46,12 +47,12 @@ class Attributes final
     std::span<const Time> time() const noexcept;
     void addTime(Time value);
     void setTime(std::vector<Time> value);
-    const std::optional<int> &staves() const noexcept;
-    void setStaves(std::optional<int> value);
+    const std::optional<NonNegativeInteger> &staves() const noexcept;
+    void setStaves(std::optional<NonNegativeInteger> value);
     const std::optional<PartSymbol> &partSymbol() const noexcept;
     void setPartSymbol(std::optional<PartSymbol> value);
-    const std::optional<int> &instruments() const noexcept;
-    void setInstruments(std::optional<int> value);
+    const std::optional<NonNegativeInteger> &instruments() const noexcept;
+    void setInstruments(std::optional<NonNegativeInteger> value);
     std::span<const Clef> clef() const noexcept;
     void addClef(Clef value);
     void setClef(std::vector<Clef> value);
@@ -73,9 +74,9 @@ class Attributes final
     std::optional<PositiveDivisions> m_divisions;
     std::vector<Key> m_key;
     std::vector<Time> m_time;
-    std::optional<int> m_staves;
+    std::optional<NonNegativeInteger> m_staves;
     std::optional<PartSymbol> m_partSymbol;
-    std::optional<int> m_instruments;
+    std::optional<NonNegativeInteger> m_instruments;
     std::vector<Clef> m_clef;
     std::vector<StaffDetails> m_staffDetails;
     AttributesChoice m_choice{};

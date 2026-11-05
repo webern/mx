@@ -21,12 +21,12 @@ void Repeat::setDirection(BackwardForward value)
     m_direction = std::move(value);
 }
 
-const std::optional<int> &Repeat::times() const noexcept
+const std::optional<NonNegativeInteger> &Repeat::times() const noexcept
 {
     return m_times;
 }
 
-void Repeat::setTimes(std::optional<int> value)
+void Repeat::setTimes(std::optional<NonNegativeInteger> value)
 {
     m_times = std::move(value);
 }
@@ -69,7 +69,7 @@ Repeat parseRepeat(mx::xml::Node el, const ParseContext &context)
         }
         else if (aname == "times")
         {
-            out.setTimes(parseIntegerValue(a.value(), context, el, "times"));
+            out.setTimes(parseValue<NonNegativeInteger>(a.value(), context, el, "times"));
         }
         else if (aname == "after-jump")
         {
@@ -108,7 +108,7 @@ void serializeRepeat(const Repeat &v, mx::xml::Node parent, const char *tag)
     setAttribute(el, "direction", v.direction().toString());
     if (v.times())
     {
-        setAttribute(el, "times", formatInt(*v.times()));
+        setAttribute(el, "times", v.times()->toString());
     }
     if (v.afterJump())
     {

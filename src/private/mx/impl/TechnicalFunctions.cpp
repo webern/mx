@@ -252,7 +252,7 @@ bool TechnicalFunctions::parseTechnicalMark(const core::TechnicalChoice &technic
     case core::TechnicalChoice::Kind::fret: {
         const auto &fret = technicalChoice.asFret();
         parseMarkDataAttributes(fret, outMarkData);
-        outMarkData.name = std::to_string(fret.value());
+        outMarkData.name = fret.value().toString();
         return true;
     }
     case core::TechnicalChoice::Kind::string: {

@@ -775,7 +775,7 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
 
     if (octaveShift.size().has_value())
     {
-        amount = *octaveShift.size();
+        amount = octaveShift.size()->value();
     }
 
     if (amount != 8 && amount != 15 && amount != 22)
@@ -1310,7 +1310,7 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
     if (inGrp.inversion().has_value())
     {
         chord.hasInversion = true;
-        chord.inversion = inGrp.inversion()->value();
+        chord.inversion = inGrp.inversion()->value().value();
     }
 
     const auto &degrees = inGrp.degree();
@@ -1323,7 +1323,7 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         const auto typeVal = degree.degreeType().value();
         const double rawAlter = degree.degreeAlter().value().value().value();
         const auto alter = mx::utility::roundTo<double, int>(rawAlter);
-        const auto value = degree.degreeValue().value();
+        const auto value = degree.degreeValue().value().value();
 
         if (alter < -2 || alter > 2)
         {
@@ -1435,8 +1435,8 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
     {
         chord.hasFrameData = true;
         const auto &frame = *inHarmony.frame();
-        chord.frameData.stringCount = frame.frameStrings();
-        chord.frameData.fretCount = frame.frameFrets();
+        chord.frameData.stringCount = frame.frameStrings().value();
+        chord.frameData.fretCount = frame.frameFrets().value();
         if (frame.unplayed().has_value())
         {
             chord.frameData.unplayed = *frame.unplayed();
@@ -1445,7 +1445,7 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         if (frame.firstFret().has_value())
         {
             chord.frameData.isFirstFretSpecified = true;
-            chord.frameData.firstFret = frame.firstFret()->value();
+            chord.frameData.firstFret = frame.firstFret()->value().value();
             chord.frameData.firstFretText = frame.firstFret()->text();
             if (frame.firstFret()->location().has_value())
             {
@@ -1457,7 +1457,7 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         {
             api::FrameNoteData frameNoteData;
             frameNoteData.stringNumber = frameNote.string().value().value();
-            frameNoteData.fretNumber = frameNote.fret().value();
+            frameNoteData.fretNumber = frameNote.fret().value().value();
 
             if (frameNote.fingering().has_value())
             {

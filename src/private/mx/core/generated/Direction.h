@@ -10,6 +10,7 @@
 #include "mx/core/generated/EditorialVoiceDirectionGroup.h"
 #include "mx/core/generated/Listening.h"
 #include "mx/core/generated/Offset.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Sound.h"
 #include "mx/core/generated/SystemRelation.h"
 #include "mx/core/generated/YesNo.h"
@@ -57,8 +58,8 @@ class Direction final
     void setOffset(std::optional<Offset> value);
     const EditorialVoiceDirectionGroup &editorialVoiceDirection() const noexcept;
     void setEditorialVoiceDirection(EditorialVoiceDirectionGroup value);
-    const std::optional<int> &staff() const noexcept;
-    void setStaff(std::optional<int> value);
+    const std::optional<PositiveInteger> &staff() const noexcept;
+    void setStaff(std::optional<PositiveInteger> value);
     const std::optional<Sound> &sound() const noexcept;
     void setSound(std::optional<Sound> value);
     const std::optional<Listening> &listening() const noexcept;
@@ -73,7 +74,7 @@ class Direction final
     OneOrMore<DirectionType> m_directionType;
     std::optional<Offset> m_offset;
     EditorialVoiceDirectionGroup m_editorialVoiceDirection{};
-    std::optional<int> m_staff;
+    std::optional<PositiveInteger> m_staff;
     std::optional<Sound> m_sound;
     std::optional<Listening> m_listening;
 };

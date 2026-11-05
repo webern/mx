@@ -21,12 +21,12 @@ void BeatRepeat::setType(StartStop value)
     m_type = std::move(value);
 }
 
-const std::optional<int> &BeatRepeat::slashes() const noexcept
+const std::optional<PositiveInteger> &BeatRepeat::slashes() const noexcept
 {
     return m_slashes;
 }
 
-void BeatRepeat::setSlashes(std::optional<int> value)
+void BeatRepeat::setSlashes(std::optional<PositiveInteger> value)
 {
     m_slashes = std::move(value);
 }
@@ -69,7 +69,7 @@ BeatRepeat parseBeatRepeat(mx::xml::Node el, const ParseContext &context)
         }
         else if (aname == "slashes")
         {
-            out.setSlashes(parseIntegerValue(a.value(), context, el, "slashes"));
+            out.setSlashes(parseValue<PositiveInteger>(a.value(), context, el, "slashes"));
         }
         else if (aname == "use-dots")
         {
@@ -111,7 +111,7 @@ void serializeBeatRepeat(const BeatRepeat &v, mx::xml::Node parent, const char *
     setAttribute(el, "type", v.type().toString());
     if (v.slashes())
     {
-        setAttribute(el, "slashes", formatInt(*v.slashes()));
+        setAttribute(el, "slashes", v.slashes()->toString());
     }
     if (v.useDots())
     {
