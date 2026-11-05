@@ -71,7 +71,8 @@ api::SwingData soundFunctionsToApiSwingData(const core::Swing &inSwing)
     return out;
 }
 
-core::Swing soundFunctionsToCoreSwing(const api::SwingData &inSwingData)
+core::Swing soundFunctionsToCoreSwing(const api::SwingData &inSwingData, const DiagnosticsContext &diagnostics,
+                                      const api::Location &location)
 {
     core::Swing outSwing{};
 
@@ -84,6 +85,8 @@ core::Swing soundFunctionsToCoreSwing(const api::SwingData &inSwingData)
         core::SwingChoiceGroup group{};
         group.setFirst(core::PositiveInteger{inSwingData.ratioFirst});
         group.setSecond(core::PositiveInteger{inSwingData.ratioSecond});
+        reportAdjusted(diagnostics, location, "swing first", inSwingData.ratioFirst, group.first().value());
+        reportAdjusted(diagnostics, location, "swing second", inSwingData.ratioSecond, group.second().value());
 
         if (inSwingData.noteType != api::SwingNoteType::unspecified)
         {
@@ -234,7 +237,7 @@ void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound, co
 
     if (inSoundData.swing.has_value())
     {
-        outSound.setSwing(soundFunctionsToCoreSwing(*inSoundData.swing));
+        outSound.setSwing(soundFunctionsToCoreSwing(*inSoundData.swing, diagnostics, location));
     }
 
     if (inSoundData.instrumentChange.has_value())

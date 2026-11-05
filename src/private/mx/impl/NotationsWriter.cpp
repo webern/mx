@@ -192,7 +192,9 @@ bool notationsWriterWriteTupletPortion(api::Bool inFidelity, const NotationsWrit
 }
 
 core::TupletPortion notationsWriterMakeTupletPortion(const NotationsWriterTupletPortion &inPortion,
-                                                     const Converter &inConverter)
+                                                     const Converter &inConverter,
+                                                     const DiagnosticsContext &diagnostics,
+                                                     const api::Location &location, const std::string &name)
 {
     core::TupletPortion outPortion;
 
@@ -200,6 +202,7 @@ core::TupletPortion notationsWriterMakeTupletPortion(const NotationsWriterTuplet
     {
         core::TupletNumber tupletNumber;
         tupletNumber.setValue(core::NonNegativeInteger{inPortion.number});
+        reportAdjusted(diagnostics, location, name, inPortion.number, tupletNumber.value().value());
         outPortion.setTupletNumber(tupletNumber);
     }
 
@@ -378,14 +381,16 @@ core::Notations NotationsWriter::getNotations() const
                                                   tupletStart.actualDots};
         if (notationsWriterWriteTupletPortion(tupletStart.writeActual, actual, impliedActual, noteHasTimeModification))
         {
-            tuplet.setTupletActual(notationsWriterMakeTupletPortion(actual, myConverter));
+            tuplet.setTupletActual(notationsWriterMakeTupletPortion(actual, myConverter, myScoreWriter.getDiagnostics(),
+                                                                    cursorLocation(myCursor), "tuplet-actual number"));
         }
 
         const NotationsWriterTupletPortion normal{tupletStart.normalNumber, tupletStart.normalDurationName,
                                                   tupletStart.normalDots};
         if (notationsWriterWriteTupletPortion(tupletStart.writeNormal, normal, impliedNormal, noteHasTimeModification))
         {
-            tuplet.setTupletNormal(notationsWriterMakeTupletPortion(normal, myConverter));
+            tuplet.setTupletNormal(notationsWriterMakeTupletPortion(normal, myConverter, myScoreWriter.getDiagnostics(),
+                                                                    cursorLocation(myCursor), "tuplet-normal number"));
         }
 
         const auto resolvedNumber = spannerResolver.emittedNumber(tupletStart.number, &tupletStart);
@@ -1227,14 +1232,19 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &o
             {
             }
         }
+        f.setValue(core::NonNegativeInteger{fretValue});
         // reported outside the try so a throwing diagnostic handler is not swallowed
         if (length != mark.name.size())
         {
             myScoreWriter.getDiagnostics().report(
                 api::Severity::warning, api::DiagnosticCode::invalidValue, cursorLocation(myCursor),
-                "fret \"" + mark.name + "\" is not a number; using " + std::to_string(fretValue));
+                "fret \"" + mark.name + "\" is not a number; using " + f.value().toString());
         }
-        f.setValue(core::NonNegativeInteger{fretValue});
+        else
+        {
+            reportAdjusted(myScoreWriter.getDiagnostics(), cursorLocation(myCursor), "fret", fretValue,
+                           f.value().value());
+        }
         outTechnical.addChoice(core::TechnicalChoice::fret(f));
         break;
     }
