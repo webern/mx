@@ -340,18 +340,103 @@ TEST(endingSerializesPositionAndEndLength, Repeat)
     EndingData ending;
     ending.type = EndingType::start;
     ending.numbers = {1};
+    ending.positionData.isDefaultXSpecified = true;
+    ending.positionData.defaultX = 5.0;
     ending.positionData.isDefaultYSpecified = true;
     ending.positionData.defaultY = 40.0;
+    ending.positionData.isRelativeXSpecified = true;
+    ending.positionData.relativeX = 1.0;
+    ending.positionData.isRelativeYSpecified = true;
+    ending.positionData.relativeY = -1.0;
     ending.endLength = 20.0;
     ending.textX = 3.0;
     ending.textY = -2.0;
     barline.ending = ending;
 
     const auto xml = toXml(score);
+    CHECK(xml.find(R"(default-x="5")") != std::string::npos);
     CHECK(xml.find(R"(default-y="40")") != std::string::npos);
+    CHECK(xml.find(R"(relative-x="1")") != std::string::npos);
+    CHECK(xml.find(R"(relative-y="-1")") != std::string::npos);
     CHECK(xml.find(R"(end-length="20")") != std::string::npos);
     CHECK(xml.find(R"(text-x="3")") != std::string::npos);
     CHECK(xml.find(R"(text-y="-2")") != std::string::npos);
+}
+
+T_END;
+
+// A value of zero is a real setting, not the same as leaving the field empty: it is written and
+// reads back as zero.
+TEST(endingZeroLayoutValuesAreWritten, Repeat)
+{
+    auto score = makeScoreWithBarlineForRepeat();
+    auto &barline = score.parts.back().measures.back().barlines.back();
+    barline.location = HorizontalAlignment::left;
+    EndingData ending;
+    ending.type = EndingType::start;
+    ending.numbers = {1};
+    ending.positionData.isDefaultYSpecified = true;
+    ending.positionData.defaultY = 0.0;
+    ending.endLength = 0.0;
+    ending.textX = 0.0;
+    ending.textY = 0.0;
+    barline.ending = ending;
+
+    const auto xml = toXml(score);
+    CHECK(xml.find(R"(default-y="0")") != std::string::npos);
+    CHECK(xml.find(R"(end-length="0")") != std::string::npos);
+    CHECK(xml.find(R"(text-x="0")") != std::string::npos);
+    CHECK(xml.find(R"(text-y="0")") != std::string::npos);
+
+    const auto out = roundTrip(score);
+    const auto &ob = out.parts.back().measures.back().barlines.front();
+    REQUIRE(ob.ending.has_value());
+    CHECK(ending == *ob.ending);
+}
+
+T_END;
+
+// A first ending that closes with a jog of its own length reads that length from the stop.
+TEST(endingStopEndLengthReadFromXml, Repeat)
+{
+    const auto score = fromXml(endingXmlForRepeat(R"(<ending end-length="14" number="1" type="stop"/>)"));
+    const auto &ob = score.parts.back().measures.back().barlines.front();
+    REQUIRE(ob.ending.has_value());
+    CHECK(EndingType::stop == ob.ending->type);
+    REQUIRE(ob.ending->endLength.has_value());
+    CHECK_DOUBLES_EQUAL(14.0, *ob.ending->endLength, 0.0001);
+    CHECK(PositionData{} == ob.ending->positionData);
+    CHECK(!ob.ending->textX.has_value());
+    CHECK(!ob.ending->textY.has_value());
+}
+
+T_END;
+
+// The layout fields come back on a stop and on a discontinue ending, not only on a start.
+TEST(endingStopAndDiscontinueLayoutRoundTrip, Repeat)
+{
+    for (const auto type : {EndingType::stop, EndingType::discontinue})
+    {
+        auto score = makeScoreWithBarlineForRepeat();
+        auto &barline = score.parts.back().measures.back().barlines.back();
+        barline.location = HorizontalAlignment::right;
+        EndingData ending;
+        ending.type = type;
+        ending.numbers = {2};
+        ending.positionData.isRelativeXSpecified = true;
+        ending.positionData.relativeX = -4.0;
+        ending.positionData.isDefaultYSpecified = true;
+        ending.positionData.defaultY = 45.0;
+        ending.endLength = 14.0;
+        ending.textX = 6.0;
+        ending.textY = -18.0;
+        barline.ending = ending;
+
+        const auto out = roundTrip(score);
+        const auto &ob = out.parts.back().measures.back().barlines.front();
+        REQUIRE(ob.ending.has_value());
+        CHECK(ending == *ob.ending);
+    }
 }
 
 T_END;
