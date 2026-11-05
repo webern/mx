@@ -74,6 +74,7 @@ jobs:
       # the toolchain-install layer warm across runs.
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
+      - uses: ./.github/actions/mx-sdk
 
       # Back both Docker volumes with workspace paths so actions/cache can
       # save the compiler caches. mx-build is the build tree; mx-cache holds
@@ -118,6 +119,7 @@ jobs:
 
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
+      - uses: ./.github/actions/mx-sdk
 
       - name: Create bind-backed volumes
         run: |
@@ -163,6 +165,7 @@ jobs:
 
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
+      - uses: ./.github/actions/mx-sdk
 
       - name: Create bind-backed volumes
         run: |
@@ -334,6 +337,7 @@ jobs:
 
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
+      - uses: ./.github/actions/mx-sdk
 
       - name: Create bind-backed volumes
         run: |
@@ -383,6 +387,7 @@ jobs:
 
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
+      - uses: ./.github/actions/mx-sdk
 
       - name: Create bind-backed volumes
         run: |

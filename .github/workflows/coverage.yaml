@@ -84,6 +84,7 @@ jobs:
       # toolchain layer cache.
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
+      - uses: ./.github/actions/mx-sdk
 
       - name: Create bind-backed volumes
         run: |

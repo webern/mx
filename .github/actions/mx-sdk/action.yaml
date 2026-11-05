@@ -1,0 +1,29 @@
+name: mx-sdk
+description: >
+  Make disk room on a GitHub-hosted Linux runner, then build the mx-sdk image
+  and drop the builder's copy of it. Run it after docker/setup-buildx-action
+  and crazy-max/ghaction-github-runtime, so the build can use the GitHub
+  Actions layer cache.
+
+runs:
+  using: composite
+  steps:
+    # The runner image comes with large toolchains that mx does not use. A
+    # Debug build of mx plus the image can fill the disk on smaller runners.
+    - name: Free disk space
+      shell: bash
+      run: |
+        df -h /
+        sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+          /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+        df -h /
+
+    # The buildx builder keeps its own copy of every layer after loading the
+    # image into Docker, so the image would sit on disk twice. The layer cache
+    # has already been exported to GitHub by then, so prune the builder.
+    - name: Build the mx-sdk image
+      shell: bash
+      run: |
+        make sdk
+        docker buildx prune --all --force
+        df -h /
