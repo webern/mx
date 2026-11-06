@@ -346,6 +346,38 @@ TEST(AdditionalRightsWithoutCopyright, MusicXml)
 
 T_END
 
+// An additional statement with empty text is still written, so the statements after it keep
+// their places.
+TEST(RoundTrip_additionalRights_emptyText, MusicXml)
+{
+    auto input = ScoreData{};
+    input.copyright = "Music © 2001 A. Composer";
+    input.additionalRights.push_back(RightsData{"", std::nullopt});
+    input.additionalRights.push_back(RightsData{"Words © 2001 A. Poet", std::string{"words"}});
+
+    const auto output = roundTripScore(input);
+    CHECK(input.copyright == output.copyright);
+    CHECK(input.additionalRights == output.additionalRights);
+}
+
+T_END
+
+TEST(NoRightsWritesNoRightsElement, MusicXml)
+{
+    const auto input = ScoreData{};
+    std::stringstream ss;
+    auto createResult = fromScore(input);
+    REQUIRE(createResult.ok());
+    std::move(createResult).value().writeToStream(ss);
+    CHECK(ss.str().find("<rights") == std::string::npos);
+
+    const auto output = roundTripScore(input);
+    CHECK(output.copyright.empty());
+    CHECK(output.additionalRights.empty());
+}
+
+T_END
+
 TEST(AdditionalRightsTakePartInEquality, MusicXml)
 {
     const auto base = RightsData{"Words © 2001 A. Poet", std::string{"words"}};
