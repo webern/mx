@@ -72,6 +72,22 @@ MarkDataChoice::MarkDataChoice(OrnamentMarkData value)
     }
 }
 
+// An accidental mark with nothing set is stored as none, so a plain accidental mark compares equal
+// however it was built.
+MarkDataChoice::MarkDataChoice(AccidentalMarkData value)
+{
+    const bool isEmpty = value.parentheses == Bool::unspecified && value.bracket == Bool::unspecified &&
+                         value.size == SymbolSize::unspecified && !value.smufl.has_value() && !value.id.has_value();
+    if (isEmpty)
+    {
+        myValue = std::monostate{};
+    }
+    else
+    {
+        myValue = std::move(value);
+    }
+}
+
 MarkDataChoice::Kind MarkDataChoice::kind() const
 {
     if (std::holds_alternative<TremoloMarkData>(myValue))
@@ -109,6 +125,10 @@ MarkDataChoice::Kind MarkDataChoice::kind() const
     if (std::holds_alternative<OrnamentMarkData>(myValue))
     {
         return Kind::ornament;
+    }
+    if (std::holds_alternative<AccidentalMarkData>(myValue))
+    {
+        return Kind::accidentalMark;
     }
     return Kind::none;
 }
@@ -242,6 +262,20 @@ const OrnamentMarkData MarkDataChoice::ornament() const
         return *value;
     }
     return OrnamentMarkData{};
+}
+
+bool MarkDataChoice::isAccidentalMark() const
+{
+    return std::holds_alternative<AccidentalMarkData>(myValue);
+}
+
+const AccidentalMarkData MarkDataChoice::accidentalMark() const
+{
+    if (const auto *value = std::get_if<AccidentalMarkData>(&myValue))
+    {
+        return *value;
+    }
+    return AccidentalMarkData{};
 }
 
 bool MarkDataChoice::operator==(const MarkDataChoice &other) const

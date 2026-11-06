@@ -38,6 +38,9 @@ class NotationsWriter
     void addOrnament(const api::MarkData &markData, core::Ornaments &outOrnaments) const;
     void addOrnamentAccidentals(const api::MarkData &markData, core::OrnamentsGroup &outGroup) const;
     void addAccidentalMark(const api::MarkData &markData, core::Notations &outNotations) const;
+    template <typename ACCIDENTAL_FIELDS>
+    void setAccidentalMarkAttributes(const ACCIDENTAL_FIELDS &inFields, const api::PositionData &inPositionData,
+                                     const api::PrintData &inPrintData, core::AccidentalMark &outAccidentalMark) const;
     void addTechnical(const api::MarkData &markData, core::Technical &outTechnical) const;
 
     // Kept as their own (non-inlined) methods rather than loops inlined in getNotations(), the

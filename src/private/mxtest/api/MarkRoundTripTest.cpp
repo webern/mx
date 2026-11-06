@@ -353,6 +353,23 @@ TEST(HarmonicDefaultsToNoPayload, MarkRoundTrip)
 
 T_END;
 
+// A plain accidental mark has no payload, so one authored with only its MarkType reads back equal.
+TEST(AccidentalMarkDefaultsToNoPayload, MarkRoundTrip)
+{
+    const MarkData mark{MarkType::accidentalMarkSharp};
+    const auto marks = roundTripMarkData(mark);
+    REQUIRE(marks.size() == 1);
+    CHECK(marks.front().choice.isNone());
+
+    // The reader spells the accidental out in name, which the writer ignores.
+    auto readBack = marks.front();
+    CHECK("sharp" == readBack.name);
+    readBack.name = mark.name;
+    CHECK(mark == readBack);
+}
+
+T_END;
+
 TEST(CaesuraEmpty, MarkRoundTrip)
 {
     // The common empty form <caesura/> must not acquire a "normal" text value on write.
@@ -575,6 +592,182 @@ TEST(OrnamentChoiceAccessorsAndEquality, MarkRoundTrip)
     CHECK(OrnamentMarkData{{sharp}} != OrnamentMarkData{{sharp, sharp}});
     CHECK(ornament != MarkDataChoice{OrnamentMarkData{{flat}}});
     CHECK(ornament != MarkDataChoice{OrnamentMarkData{{below}}});
+}
+
+T_END;
+
+// A standalone accidental mark keeps how it is drawn: its payload, its font and color, and its
+// position.
+TEST(AccidentalMarkAttributes, MarkRoundTrip)
+{
+    MarkData mark{Placement::above, MarkType::accidentalMarkFlat};
+    mark.positionData.isDefaultXSpecified = true;
+    mark.positionData.defaultX = 3.5;
+    mark.printData.fontData.fontFamily = {"Bravura"};
+    mark.printData.fontData.style = FontStyle::italic;
+    mark.printData.fontData.weight = FontWeight::bold;
+    mark.printData.fontData.sizeType = FontSizeType::point;
+    mark.printData.fontData.sizePoint = 12.0;
+    mark.printData.isColorSpecified = true;
+    mark.printData.color.red = 255;
+    mark.printData.color.green = 0;
+    mark.printData.color.blue = 0;
+
+    AccidentalMarkData payload;
+    payload.parentheses = Bool::yes;
+    payload.bracket = Bool::no;
+    payload.size = SymbolSize::cue;
+    payload.smufl = "accidentalFlatSmall";
+    payload.id = "acc-1";
+    mark.choice = payload;
+
+    const auto marks = roundTripMarkData(mark);
+    REQUIRE(marks.size() == 1);
+    CHECK(MarkType::accidentalMarkFlat == marks.front().markType);
+    REQUIRE(marks.front().choice.isAccidentalMark());
+    CHECK(payload == marks.front().choice.accidentalMark());
+    CHECK(mark.printData == marks.front().printData);
+    CHECK(mark.positionData == marks.front().positionData);
+}
+
+T_END;
+
+// Every size reads back as written.
+TEST(AccidentalMarkSizes, MarkRoundTrip)
+{
+    for (const auto size : {SymbolSize::full, SymbolSize::cue, SymbolSize::graceCue, SymbolSize::large})
+    {
+        MarkData mark{MarkType::accidentalMarkNatural};
+        AccidentalMarkData payload;
+        payload.size = size;
+        mark.choice = payload;
+
+        const auto marks = roundTripMarkData(mark);
+        REQUIRE(marks.size() == 1);
+        CHECK(size == marks.front().choice.accidentalMark().size);
+    }
+}
+
+T_END;
+
+// An ornament's accidental keeps how it is drawn, just as a standalone one does.
+TEST(OrnamentAccidentalAttributes, MarkRoundTrip)
+{
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+    sharp.positionData.placement = Placement::above;
+    sharp.printData.fontData.fontFamily = {"Bravura"};
+    sharp.printData.fontData.style = FontStyle::normal;
+    sharp.printData.isColorSpecified = true;
+    sharp.printData.color.red = 0;
+    sharp.printData.color.green = 0;
+    sharp.printData.color.blue = 255;
+    sharp.parentheses = Bool::no;
+    sharp.bracket = Bool::yes;
+    sharp.size = SymbolSize::large;
+    sharp.smufl = "accidentalSharp";
+    sharp.id = "trill-sharp";
+
+    MarkData trill{Placement::unspecified, MarkType::trillMark};
+    trill.choice = OrnamentMarkData{{sharp}};
+    const auto marks = roundTripMarkData(trill);
+    REQUIRE(marks.size() == 1);
+    CHECK(MarkType::trillMark == marks.front().markType);
+    REQUIRE(marks.front().choice.isOrnament());
+    const auto accidentals = marks.front().choice.ornament().accidentals;
+    REQUIRE(accidentals.size() == 1);
+    CHECK(sharp == accidentals.front());
+}
+
+T_END;
+
+// A smufl name that is not a SMuFL accidental is not written, and the write reports it. The
+// accidental itself is still written.
+TEST(AccidentalMarkSmuflNotAnAccidental, MarkRoundTrip)
+{
+    const std::string message = "accidental-mark smufl \"noteheadBlack\" is not a SMuFL accidental glyph name and is "
+                                "not written";
+
+    MarkData mark{MarkType::accidentalMarkSharp};
+    AccidentalMarkData payload;
+    payload.smufl = "noteheadBlack";
+    mark.choice = payload;
+
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+    sharp.smufl = "noteheadBlack";
+    MarkData trill{Placement::unspecified, MarkType::trillMark};
+    trill.choice = OrnamentMarkData{{sharp}};
+
+    for (const auto &input : {mark, trill})
+    {
+        Diagnostics diagnostics;
+        const auto xml = markRoundTripWriteWithDiagnostics(input, diagnostics);
+        CHECK(xml.find(">sharp</accidental-mark>") != std::string::npos);
+        CHECK(xml.find("smufl=") == std::string::npos);
+        const auto dropped = markRoundTripDiagnosticsWithMessage(diagnostics, message);
+        REQUIRE(dropped.size() == 1);
+        CHECK(Severity::error == dropped.front().severity);
+        CHECK(DiagnosticCode::droppedData == dropped.front().code);
+    }
+}
+
+T_END;
+
+// An accidental mark payload with nothing set is none, asking for the wrong kind returns a default
+// value, and every field of both accidental shapes takes part in equality.
+TEST(AccidentalMarkChoiceAccessorsAndEquality, MarkRoundTrip)
+{
+    const MarkDataChoice empty{AccidentalMarkData{}};
+    CHECK(empty.isNone());
+    CHECK(!empty.isAccidentalMark());
+    CHECK(empty == MarkDataChoice{});
+
+    AccidentalMarkData parenthesized;
+    parenthesized.parentheses = Bool::yes;
+    const MarkDataChoice choice{parenthesized};
+    CHECK(MarkDataChoice::Kind::accidentalMark == choice.kind());
+    CHECK(choice.isAccidentalMark());
+    CHECK(choice.ornament().accidentals.empty());
+    CHECK(MarkDataChoice{}.accidentalMark() == AccidentalMarkData{});
+    CHECK(MarkDataChoice{HarmonicMarkData{}}.accidentalMark() == AccidentalMarkData{});
+
+    const AccidentalMarkData base;
+    auto changed = base;
+    changed.parentheses = Bool::yes;
+    CHECK(base != changed);
+    changed = base;
+    changed.bracket = Bool::yes;
+    CHECK(base != changed);
+    changed = base;
+    changed.size = SymbolSize::cue;
+    CHECK(base != changed);
+    changed = base;
+    changed.smufl = "accidentalSharp";
+    CHECK(base != changed);
+    changed = base;
+    changed.id = "acc-1";
+    CHECK(base != changed);
+
+    const OrnamentAccidental owned;
+    auto ownedChanged = owned;
+    ownedChanged.printData.isColorSpecified = true;
+    CHECK(owned != ownedChanged);
+    ownedChanged = owned;
+    ownedChanged.parentheses = Bool::yes;
+    CHECK(owned != ownedChanged);
+    ownedChanged = owned;
+    ownedChanged.bracket = Bool::yes;
+    CHECK(owned != ownedChanged);
+    ownedChanged = owned;
+    ownedChanged.size = SymbolSize::cue;
+    CHECK(owned != ownedChanged);
+    ownedChanged = owned;
+    ownedChanged.smufl = "accidentalSharp";
+    CHECK(owned != ownedChanged);
+    ownedChanged = owned;
+    ownedChanged.id = "acc-1";
+    CHECK(owned != ownedChanged);
 }
 
 T_END;

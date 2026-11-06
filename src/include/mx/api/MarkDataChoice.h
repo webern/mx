@@ -9,6 +9,7 @@
 #include "mx/api/Id.h"
 #include "mx/api/PitchData.h"
 #include "mx/api/PositionData.h"
+#include "mx/api/PrintData.h"
 
 #include <optional>
 #include <string>
@@ -198,6 +199,41 @@ MXAPI_EQUALS_MEMBER(pitch)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(HarmonicMarkData);
 
+// Payload for the accidental mark types (MarkType::accidentalMarkSharp and the rest): how the
+// accidental is drawn. Its font and color are in MarkData::printData. Leaving every field at its
+// default is the same as having no payload.
+struct AccidentalMarkData
+{
+    // yes: the accidental is drawn in parentheses. Parentheses and square brackets are common ways
+    // to show an editorial accidental. Leave it unspecified to let the application decide.
+    Bool parentheses = Bool::unspecified;
+
+    // yes: the accidental is drawn in square brackets. Leave it unspecified to let the application
+    // decide.
+    Bool bracket = Bool::unspecified;
+
+    // How large the accidental is drawn.
+    SymbolSize size = SymbolSize::unspecified;
+
+    // The SMuFL glyph to draw when a specific one is wanted, for example "accidentalSharp". It must
+    // be the name of a SMuFL accidental, one that starts with acc, medRenFla, medRenNatura,
+    // medRenShar or kievanAccidental; another name is not written. Leave it absent to draw the
+    // accidental the MarkType names.
+    std::optional<std::string> smufl;
+
+    // An identifier for this accidental, unique in the document (see Id.h).
+    std::optional<Id> id;
+};
+
+MXAPI_EQUALS_BEGIN(AccidentalMarkData)
+MXAPI_EQUALS_MEMBER(parentheses)
+MXAPI_EQUALS_MEMBER(bracket)
+MXAPI_EQUALS_MEMBER(size)
+MXAPI_EQUALS_MEMBER(smufl)
+MXAPI_EQUALS_MEMBER(id)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(AccidentalMarkData);
+
 // An accidental printed with an ornament: the sharp over a trill that raises its upper note, or the
 // accidentals above and below a turn that alter its upper and lower notes.
 struct OrnamentAccidental
@@ -209,11 +245,35 @@ struct OrnamentAccidental
     // above puts the accidental over the ornament, below puts it under. The horizontal and vertical
     // alignment fields are not used.
     PositionData positionData;
+
+    // The accidental's font and color. printObject is not used.
+    PrintData printData;
+
+    // As AccidentalMarkData::parentheses.
+    Bool parentheses = Bool::unspecified;
+
+    // As AccidentalMarkData::bracket.
+    Bool bracket = Bool::unspecified;
+
+    // As AccidentalMarkData::size.
+    SymbolSize size = SymbolSize::unspecified;
+
+    // As AccidentalMarkData::smufl. Leave it absent to draw the accidental named by accidental.
+    std::optional<std::string> smufl;
+
+    // As AccidentalMarkData::id.
+    std::optional<Id> id;
 };
 
 MXAPI_EQUALS_BEGIN(OrnamentAccidental)
 MXAPI_EQUALS_MEMBER(accidental)
 MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(printData)
+MXAPI_EQUALS_MEMBER(parentheses)
+MXAPI_EQUALS_MEMBER(bracket)
+MXAPI_EQUALS_MEMBER(size)
+MXAPI_EQUALS_MEMBER(smufl)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(OrnamentAccidental);
 
@@ -264,7 +324,8 @@ class MarkDataChoice
         compoundDynamics,
         otherNotation,
         harmonic,
-        ornament
+        ornament,
+        accidentalMark
     };
 
     MarkDataChoice();
@@ -292,6 +353,10 @@ class MarkDataChoice
     // an ornament without accidentals needs no payload.
     MarkDataChoice(OrnamentMarkData value);
 
+    // Builds an accidental mark payload, unless every field is left at its default, in which case
+    // the result is none.
+    MarkDataChoice(AccidentalMarkData value);
+
     Kind kind() const;
     bool isNone() const;
     bool isTremolo() const;
@@ -303,6 +368,7 @@ class MarkDataChoice
     bool isOtherNotation() const;
     bool isHarmonic() const;
     bool isOrnament() const;
+    bool isAccidentalMark() const;
 
     // Returns a copy of the internally held TremoloMarkData.
     //
@@ -346,11 +412,18 @@ class MarkDataChoice
     // OrnamentMarkData, with no accidentals, is returned.
     const OrnamentMarkData ornament() const;
 
+    // Returns a copy of the internally held AccidentalMarkData.
+    //
+    // Check isAccidentalMark() first. If this is not an accidental mark payload, a default
+    // constructed AccidentalMarkData is returned.
+    const AccidentalMarkData accidentalMark() const;
+
     bool operator==(const MarkDataChoice &other) const;
 
   private:
     std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData, OtherMarkData,
-                 StandardDynamic, CompoundDynamicsData, OtherNotationMarkData, HarmonicMarkData, OrnamentMarkData>
+                 StandardDynamic, CompoundDynamicsData, OtherNotationMarkData, HarmonicMarkData, OrnamentMarkData,
+                 AccidentalMarkData>
         myValue;
 };
 

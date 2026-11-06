@@ -28,7 +28,7 @@
           <missing>other</missing>
         </enum>
       </enums>
-      <notes>In &lt;notations&gt;: api::MarkType accidentalMark*. In &lt;ornaments&gt; after an ornament: api::OrnamentAccidental (api::Accidental) in the ornament mark's OrnamentMarkData; after tremolo, other-ornament or wavy-line it falls back to an accidentalMark* mark. All members mapped except AccidentalValue::other (no api member). Only value, position and placement are kept.</notes>
+      <notes>In &lt;notations&gt;: api::MarkType accidentalMark*. In &lt;ornaments&gt; after an ornament: api::OrnamentAccidental (api::Accidental) in the ornament mark's OrnamentMarkData; after tremolo, other-ornament or wavy-line it falls back to an accidentalMark* mark. All members mapped except AccidentalValue::other (no api member). Every attribute is kept: parentheses, bracket, size (api::SymbolSize), smufl and id in api::AccidentalMarkData (MarkDataChoice) or directly on api::OrnamentAccidental; font and color in PrintData; position and placement in PositionData.</notes>
     </feature>
     <feature name="accidental-text" support="partial">
       <notes>Accidental as text (key/ornament context) (suspected).</notes>

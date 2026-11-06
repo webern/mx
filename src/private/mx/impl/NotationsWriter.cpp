@@ -1212,13 +1212,57 @@ void NotationsWriter::addOrnamentAccidentals(const api::MarkData &mark, core::Or
 
         core::AccidentalMark accidentalMark;
         accidentalMark.setValue(myConverter.convert(accidental.accidental));
-        setAttributesFromPositionData(accidental.positionData, accidentalMark);
+        setAccidentalMarkAttributes(accidental, accidental.positionData, accidental.printData, accidentalMark);
         outGroup.addAccidentalMark(accidentalMark);
     }
 }
 
+// Writes how an accidental-mark is drawn from either api shape that holds it: a standalone mark's
+// AccidentalMarkData, whose position and print data live on the MarkData, or an OrnamentAccidental,
+// which has the same fields itself. accidental-mark has no print-object, so printObject is dropped
+// by setAttributesFromPrintData.
+template <typename ACCIDENTAL_FIELDS>
+void NotationsWriter::setAccidentalMarkAttributes(const ACCIDENTAL_FIELDS &inFields,
+                                                  const api::PositionData &inPositionData,
+                                                  const api::PrintData &inPrintData,
+                                                  core::AccidentalMark &outAccidentalMark) const
+{
+    setAttributesFromPositionData(inPositionData, outAccidentalMark);
+    setAttributesFromPrintData(inPrintData, outAccidentalMark);
+    if (inFields.parentheses != api::Bool::unspecified)
+    {
+        outAccidentalMark.setParentheses(myConverter.convert(inFields.parentheses));
+    }
+    if (inFields.bracket != api::Bool::unspecified)
+    {
+        outAccidentalMark.setBracket(myConverter.convert(inFields.bracket));
+    }
+    if (inFields.size != api::SymbolSize::unspecified)
+    {
+        outAccidentalMark.setSize(myConverter.convert(inFields.size));
+    }
+    if (inFields.smufl.has_value())
+    {
+        // The strict parse: the lenient one would repair a wrong name into some other glyph.
+        core::SmuflAccidentalGlyphName glyph;
+        if (core::SmuflAccidentalGlyphName::tryParse(*inFields.smufl, glyph))
+        {
+            outAccidentalMark.setSmufl(glyph);
+        }
+        else
+        {
+            myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                                  cursorLocation(myCursor),
+                                                  "accidental-mark smufl \"" + *inFields.smufl +
+                                                      "\" is not a SMuFL accidental glyph name and is not written");
+        }
+    }
+    setId(inFields.id, outAccidentalMark, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
+}
+
 // A standalone accidental mark is written directly in <notations>. An accidental that belongs to an
-// ornament is not a mark of its own; addOrnamentAccidentals writes it inside <ornaments>.
+// ornament is not a mark of its own; addOrnamentAccidentals writes it inside <ornaments>. A choice
+// that holds anything but AccidentalMarkData is ignored.
 void NotationsWriter::addAccidentalMark(const api::MarkData &mark, core::Notations &outNotations) const
 {
     if (!isMarkAccidentalMark(mark.markType))
@@ -1228,7 +1272,7 @@ void NotationsWriter::addAccidentalMark(const api::MarkData &mark, core::Notatio
 
     core::AccidentalMark accidentalMark;
     accidentalMark.setValue(myConverter.convertAccidentalMark(mark.markType));
-    setAttributesFromPositionData(mark.positionData, accidentalMark);
+    setAccidentalMarkAttributes(mark.choice.accidentalMark(), mark.positionData, mark.printData, accidentalMark);
     outNotations.addChoice(core::NotationsChoice::accidentalMark(accidentalMark));
 }
 
