@@ -192,6 +192,8 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         // The source carried an explicit <offset>: a drawn-position nudge measured from the
         // direction's anchor (tickTimePosition). Re-emit it verbatim, with no sound attribute -- an
         // <offset> moves only where the direction is drawn, so playback stays at the anchor.
+        // MeasureWriter moves the cursor to the anchor before this whenever it can do so without
+        // splitting a voice.
         offset = *myDirectionData.offset;
         if (offset != 0)
         {

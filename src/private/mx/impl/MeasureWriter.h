@@ -14,6 +14,7 @@
 #include "mx/impl/PropertiesWriter.h"
 
 #include <list>
+#include <optional>
 #include <sstream>
 
 namespace mx
@@ -230,7 +231,14 @@ class MeasureWriter
                                   const NoteIter &notesEnd);
     void writeDirections(dIter &directionIter, const dIter &directionEnd, const NoteIter &inNoteIter,
                          const NoteIter &inNotesBegin, const NoteIter &inNoteEnd);
-    void writeDirection(const api::DirectionData &inDirectionData);
+
+    // Writes a direction where the write position stands. inNextNoteTick is the tick of the voice's
+    // next note still to be written, or nullopt when no note of the voice follows.
+    void writeDirection(const api::DirectionData &inDirectionData, std::optional<int> inNextNoteTick);
+
+    // Moves the write position to a direction's tick when the direction has its own <offset> and
+    // the move does not fall between two notes of one voice.
+    void moveToDirection(const api::DirectionData &inDirectionData, std::optional<int> inNextNoteTick);
 
     inline const MeasureCursor &cursor() const
     {
