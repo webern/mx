@@ -12,6 +12,7 @@
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/MarginType.h"
 #include "mx/core/generated/PageLayout.h"
+#include "mxtest/api/TestHelpers.h"
 #include "mxtest/file/Path.h"
 
 #include <new>
@@ -524,7 +525,7 @@ T_END
 // Reads a minimal one-note score whose <identification> holds the given elements.
 inline ScoreData readScoreWithIdentification(const std::string &identificationXml)
 {
-    std::istringstream iss{std::string{R"(<?xml version="1.0" encoding="UTF-8"?>
+    return mxtest::fromXml(std::string{R"(<?xml version="1.0" encoding="UTF-8"?>
 <score-partwise version="4.0">
   <identification>
 )"} + identificationXml +
@@ -537,12 +538,7 @@ inline ScoreData readScoreWithIdentification(const std::string &identificationXm
       <note><rest/><duration>1</duration><voice>1</voice><type>quarter</type></note>
     </measure>
   </part>
-</score-partwise>)"};
-    auto docResult = MusicXml::fromStream(iss);
-    REQUIRE(docResult.ok());
-    const auto scoreResult = getScore(std::move(docResult).value());
-    REQUIRE(scoreResult.ok());
-    return scoreResult.value();
+</score-partwise>)");
 }
 
 // A score credited to a composer and a poet, with a second arranger and a credit that does not
@@ -556,11 +552,7 @@ TEST(RoundTrip_additionalCreators, MusicXml)
     input.additionalCreators.push_back(CreatorData{"B. Arranger", std::string{"arranger"}});
     input.additionalCreators.push_back(CreatorData{"Anonymous", std::nullopt});
 
-    std::stringstream ss;
-    auto createResult = fromScore(input);
-    REQUIRE(createResult.ok());
-    std::move(createResult).value().writeToStream(ss);
-    const auto xml = ss.str();
+    const auto xml = mxtest::toXml(input);
     const auto composer = xml.find(R"(<creator type="composer">A. Composer</creator>)");
     const auto arranger = xml.find(R"(<creator type="arranger">A. Arranger</creator>)");
     const auto poet = xml.find(R"(<creator type="poet">Walter Scott</creator>)");
@@ -658,14 +650,45 @@ TEST(AdditionalComposerWithoutComposer, MusicXml)
 
 T_END
 
+// With composer left empty and no one credited as composer, an additional creator with no role is
+// written untyped, read back as the composer, and from then on written typed composer.
+TEST(AdditionalUntypedCreatorWithoutComposer, MusicXml)
+{
+    auto input = ScoreData{};
+    input.additionalCreators.push_back(CreatorData{"Anonymous", std::nullopt});
+    CHECK(mxtest::toXml(input).find(R"(<creator>Anonymous</creator>)") != std::string::npos);
+
+    const auto output = roundTripScore(input);
+    CHECK_EQUAL(std::string{"Anonymous"}, output.composer);
+    CHECK(output.additionalCreators.empty());
+    CHECK(mxtest::toXml(output).find(R"(<creator type="composer">Anonymous</creator>)") != std::string::npos);
+}
+
+T_END
+
+// A creator typed composer with an empty name still fills composer, so a second composer follows
+// in additionalCreators. The empty composer is not written, so when the score is written and read
+// again the second composer fills composer.
+TEST(EmptyComposerCreatorFillsComposer, MusicXml)
+{
+    const auto score = readScoreWithIdentification(R"(
+    <creator type="composer"></creator>
+    <creator type="composer">B. Composer</creator>)");
+    CHECK(score.composer.empty());
+    const auto expected = std::vector<CreatorData>{CreatorData{"B. Composer", std::string{"composer"}}};
+    CHECK(expected == score.additionalCreators);
+
+    const auto output = roundTripScore(score);
+    CHECK_EQUAL(std::string{"B. Composer"}, output.composer);
+    CHECK(output.additionalCreators.empty());
+}
+
+T_END
+
 TEST(NoCreatorsWritesNoCreatorElement, MusicXml)
 {
     const auto input = ScoreData{};
-    std::stringstream ss;
-    auto createResult = fromScore(input);
-    REQUIRE(createResult.ok());
-    std::move(createResult).value().writeToStream(ss);
-    CHECK(ss.str().find("<creator") == std::string::npos);
+    CHECK(mxtest::toXml(input).find("<creator") == std::string::npos);
 
     const auto output = roundTripScore(input);
     CHECK(output.composer.empty());
