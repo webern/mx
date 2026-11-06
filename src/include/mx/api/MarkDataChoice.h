@@ -200,8 +200,8 @@ MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(HarmonicMarkData);
 
 // Payload for the accidental mark types (MarkType::accidentalMarkSharp and the rest): how the
-// accidental is drawn. Its font and color are in MarkData::printData. Leaving every field at its
-// default is the same as having no payload.
+// accidental is drawn. Its font and color are in MarkData::printData, whose printObject is not used.
+// Leaving every field at its default is the same as having no payload.
 struct AccidentalMarkData
 {
     // yes: the accidental is drawn in parentheses. Parentheses and square brackets are common ways
@@ -212,7 +212,8 @@ struct AccidentalMarkData
     // decide.
     Bool bracket = Bool::unspecified;
 
-    // How large the accidental is drawn.
+    // How large the accidental is drawn. Like parentheses and brackets, a different size is a common
+    // way to show an editorial accidental.
     SymbolSize size = SymbolSize::unspecified;
 
     // The SMuFL glyph to draw when a specific one is wanted, for example "accidentalSharp". It must

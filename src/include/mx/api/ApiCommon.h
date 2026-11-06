@@ -114,16 +114,16 @@ enum class Enclosure
 // How large a symbol is drawn compared with ordinary notation, MusicXML's size attribute.
 enum class SymbolSize
 {
-    // Leave the size unstated, so the application draws the symbol at its usual size.
+    // Leave the size unstated and let the application choose.
     unspecified,
 
     // The normal size, stated explicitly.
     full,
 
-    // The smaller size used for cue notes.
+    // The size of a cue note or a grace note.
     cue,
 
-    // The smaller size used for grace notes in a cue passage.
+    // The size of a grace note that is also a cue note.
     graceCue,
 
     // Larger than normal.
