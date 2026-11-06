@@ -232,12 +232,14 @@ class MeasureWriter
     void writeDirections(dIter &directionIter, const dIter &directionEnd, const NoteIter &inNoteIter,
                          const NoteIter &inNotesBegin, const NoteIter &inNoteEnd);
 
-    // Writes a direction where the write position stands. inNextNoteTick is the tick of the voice's
-    // next note still to be written, or nullopt when no note of the voice follows.
+    // Writes a direction, after moving the write position to it when moveToDirection allows.
+    // inNextNoteTick is the tick of the voice's next note still to be written, or nullopt when no
+    // note of the voice follows.
     void writeDirection(const api::DirectionData &inDirectionData, std::optional<int> inNextNoteTick);
 
     // Moves the write position to a direction's tick when the direction has its own <offset> and
-    // the move does not fall between two notes of one voice.
+    // the move does not fall between two notes of one voice. Middle barlines passed on the way are
+    // written at their own ticks.
     void moveToDirection(const api::DirectionData &inDirectionData, std::optional<int> inNextNoteTick);
 
     inline const MeasureCursor &cursor() const

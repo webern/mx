@@ -998,24 +998,39 @@ void MeasureWriter::moveToDirection(const api::DirectionData &inDirectionData, s
         return;
     }
 
-    // As around a note's <forward> or <backup>: a middle barline the write position has already
-    // reached goes ahead of the move, and one the move reaches goes ahead of the direction.
+    // A middle barline the write position has already reached goes ahead of the move.
     writeMidMeasureBarlines();
     if (myPropertiesWriter)
     {
         myPropertiesWriter->flushBuffer();
     }
 
-    if (isForward)
-    {
-        forward(gap);
-    }
-    else
+    if (isBackup)
     {
         backup(-gap);
+        return;
     }
 
-    writeMidMeasureBarlines();
+    // A middle barline on the way to the direction stops the <forward>, so that it is read back at
+    // its own tick and not at the direction's.
+    while (myBarlinesIter != myBarlinesEnd && myBarlinesIter->location == api::HorizontalAlignment::center &&
+           myBarlinesIter->tickTimePosition <= directionTick)
+    {
+        const int step = myBarlinesIter->tickTimePosition - cursor().tickTimePosition;
+        if (step > 0)
+        {
+            forward(step);
+        }
+
+        writeBarline(*myBarlinesIter);
+        ++myBarlinesIter;
+    }
+
+    const int rest = directionTick - cursor().tickTimePosition;
+    if (rest > 0)
+    {
+        forward(rest);
+    }
 }
 
 void MeasureWriter::writeDirection(const api::DirectionData &inDirectionData, std::optional<int> inNextNoteTick)

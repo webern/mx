@@ -612,4 +612,33 @@ TEST(OffsetDirectionOnStaffWithoutNotesKeepsTick, DirectionData)
 
 T_END;
 
+// A middle barline between the last note and the direction is written where it stands, so the
+// <forward> to the direction is split in two around it.
+TEST(MiddleBarlineBeforeOffsetDirectionKeepsTick, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    staff.voices[0].notes.push_back(directionDataTestNote(0, 10, DurationName::quarter));
+    staff.directions.push_back(directionDataTestOffsetForte(30, 3));
+    BarlineData barline{};
+    barline.tickTimePosition = 20;
+    barline.location = HorizontalAlignment::center;
+    barline.barlineType = BarlineType::dashed;
+    measure.barlines.push_back(barline);
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rmeasure = rscore.parts.front().measures.front();
+    REQUIRE(rmeasure.barlines.size() == 1);
+    CHECK_EQUAL(20, rmeasure.barlines.front().tickTimePosition);
+    REQUIRE(rmeasure.staves.size() == 1);
+    REQUIRE(rmeasure.staves.front().directions.size() == 1);
+    CHECK_EQUAL(30, rmeasure.staves.front().directions.front().tickTimePosition);
+    CHECK(rscore.parts.front().measures == score.parts.front().measures);
+}
+
+T_END;
+
 #endif
