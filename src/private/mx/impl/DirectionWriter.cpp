@@ -383,6 +383,14 @@ void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, const void 
     {
         wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStop.spread)}});
     }
+
+    // a diminuendo's niente comes from its start and is written here, at the hairpin's point
+    const auto niente = mySpannerResolver.wedgeStopNiente(inIdentity);
+    if (niente != api::Bool::unspecified)
+    {
+        wedge.setNiente(myConverter.convert(niente));
+    }
+
     setAttributesFromPositionData(wedgeStop.positionData, wedge);
     setId(wedgeStop.id, wedge, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
@@ -414,6 +422,12 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, const vo
     if (wedgeStart.isSpreadSpecified)
     {
         wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStart.spread)}});
+    }
+
+    // a crescendo's point is at its start; a diminuendo's niente is written on its stop
+    if (wedgeStart.wedgeType != api::WedgeType::diminuendo && wedgeStart.niente != api::Bool::unspecified)
+    {
+        wedge.setNiente(myConverter.convert(wedgeStart.niente));
     }
 
     setAttributesFromPositionData(wedgeStart.positionData, wedge);

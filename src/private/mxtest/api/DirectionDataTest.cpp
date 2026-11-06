@@ -14,6 +14,10 @@
 #include "mxtest/api/TestHelpers.h"
 #include "mxtest/file/Path.h"
 
+#include <sstream>
+#include <string>
+#include <vector>
+
 using namespace std;
 using namespace mx::api;
 using namespace mxtest;
@@ -479,6 +483,319 @@ TEST(WedgeUnspecifiedColorNoPhantomAttribute, DirectionData)
     REQUIRE(rdirections.front().directionTypes.size() == 1);
     REQUIRE(rdirections.front().directionTypes.front().isWedgeStart());
     CHECK(!rdirections.front().directionTypes.front().wedgeStart().isColorSpecified);
+}
+
+T_END;
+
+// A score with one part, one staff and inMeasures measures of one whole note each, at
+// ticksPerQuarter 10, for the wedge niente tests below.
+inline ScoreData wedgeNienteTestScore(int inMeasures)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    for (int i = 0; i < inMeasures; ++i)
+    {
+        part.measures.emplace_back();
+        auto &measure = part.measures.back();
+        measure.staves.emplace_back();
+        NoteData note{};
+        note.tickTimePosition = 0;
+        note.durationData.durationTimeTicks = 40;
+        note.durationData.durationName = DurationName::whole;
+        measure.staves.back().voices[0].notes.push_back(note);
+    }
+    return score;
+}
+
+// Adds a direction holding inChoice to the first staff of measure inMeasureIndex.
+inline void wedgeNienteTestAdd(ScoreData &ioScore, int inMeasureIndex, int inTick, DirectionChoice inChoice)
+{
+    DirectionData direction;
+    direction.tickTimePosition = inTick;
+    direction.directionTypes.emplace_back(std::move(inChoice));
+    ioScore.parts.front()
+        .measures.at(static_cast<size_t>(inMeasureIndex))
+        .staves.front()
+        .directions.push_back(direction);
+}
+
+inline WedgeStart wedgeNienteTestStart(WedgeType inType, Bool inNiente, SpannerNumber inNumber = SpannerNumber{})
+{
+    WedgeStart start;
+    start.wedgeType = inType;
+    start.niente = inNiente;
+    start.number = inNumber;
+    return start;
+}
+
+inline WedgeStop wedgeNienteTestStop(SpannerNumber inNumber = SpannerNumber{})
+{
+    WedgeStop stop;
+    stop.number = inNumber;
+    return stop;
+}
+
+// Every <wedge> tag in the XML, in document order.
+inline std::vector<std::string> wedgeNienteTestTags(const std::string &inXml)
+{
+    std::vector<std::string> tags;
+    auto begin = inXml.find("<wedge ");
+    while (begin != std::string::npos)
+    {
+        const auto end = inXml.find('>', begin);
+        tags.push_back(inXml.substr(begin, end - begin + 1));
+        begin = inXml.find("<wedge ", end);
+    }
+    return tags;
+}
+
+// Every WedgeStart in the score, in measure and direction order.
+inline std::vector<WedgeStart> wedgeNienteTestStarts(const ScoreData &inScore)
+{
+    std::vector<WedgeStart> starts;
+    for (const auto &measure : inScore.parts.front().measures)
+    {
+        for (const auto &staff : measure.staves)
+        {
+            for (const auto &direction : staff.directions)
+            {
+                for (const auto &choice : direction.directionTypes)
+                {
+                    if (choice.isWedgeStart())
+                    {
+                        starts.push_back(choice.wedgeStart());
+                    }
+                }
+            }
+        }
+    }
+    return starts;
+}
+
+inline Diagnostics wedgeNienteTestWriteDiagnostics(const ScoreData &inScore)
+{
+    Diagnostics diagnostics;
+    REQUIRE(fromScore(inScore, diagnostics).ok());
+    return diagnostics;
+}
+
+inline int wedgeNienteTestCount(const Diagnostics &inDiagnostics, DiagnosticCode inCode)
+{
+    int count = 0;
+    for (const auto &diagnostic : inDiagnostics.all())
+    {
+        if (diagnostic.code == inCode)
+        {
+            ++count;
+        }
+    }
+    return count;
+}
+
+// A crescendo out of nothing states niente on its start, the hairpin's point, even with no stop.
+TEST(WedgeNienteCrescendoWithoutStop, DirectionData)
+{
+    auto score = wedgeNienteTestScore(1);
+    wedgeNienteTestAdd(score, 0, 0, DirectionChoice{wedgeNienteTestStart(WedgeType::crescendo, Bool::yes)});
+
+    const auto tags = wedgeNienteTestTags(mxtest::toXml(score));
+    REQUIRE(tags.size() == 1);
+    CHECK(tags[0].find(R"(type="crescendo")") != std::string::npos);
+    CHECK(tags[0].find(R"(niente="yes")") != std::string::npos);
+
+    const auto starts = wedgeNienteTestStarts(mxtest::roundTrip(score));
+    REQUIRE(starts.size() == 1);
+    CHECK(Bool::yes == starts[0].niente);
+}
+
+T_END;
+
+// A wedge with an unspecified direction is written as a crescendo, so its niente goes on the start.
+TEST(WedgeNienteUnspecifiedTypeIsWrittenOnStart, DirectionData)
+{
+    auto score = wedgeNienteTestScore(1);
+    wedgeNienteTestAdd(score, 0, 0, DirectionChoice{wedgeNienteTestStart(WedgeType::unspecified, Bool::yes)});
+    wedgeNienteTestAdd(score, 0, 20, DirectionChoice{wedgeNienteTestStop()});
+
+    const auto tags = wedgeNienteTestTags(mxtest::toXml(score));
+    REQUIRE(tags.size() == 2);
+    CHECK(tags[0].find(R"(type="crescendo")") != std::string::npos);
+    CHECK(tags[0].find(R"(niente="yes")") != std::string::npos);
+    CHECK(tags[1].find("niente") == std::string::npos);
+}
+
+T_END;
+
+// A diminuendo to nothing is set on the start but written on the stop, here in a later measure.
+TEST(WedgeNienteDiminuendoStopInLaterMeasure, DirectionData)
+{
+    auto score = wedgeNienteTestScore(2);
+    wedgeNienteTestAdd(score, 0, 0, DirectionChoice{wedgeNienteTestStart(WedgeType::diminuendo, Bool::yes)});
+    wedgeNienteTestAdd(score, 1, 20, DirectionChoice{wedgeNienteTestStop()});
+
+    const auto tags = wedgeNienteTestTags(mxtest::toXml(score));
+    REQUIRE(tags.size() == 2);
+    CHECK(tags[0].find(R"(type="diminuendo")") != std::string::npos);
+    CHECK(tags[0].find("niente") == std::string::npos);
+    CHECK(tags[1].find(R"(type="stop")") != std::string::npos);
+    CHECK(tags[1].find(R"(niente="yes")") != std::string::npos);
+    CHECK(0 == wedgeNienteTestCount(wedgeNienteTestWriteDiagnostics(score), DiagnosticCode::droppedData));
+
+    const auto starts = wedgeNienteTestStarts(mxtest::roundTrip(score));
+    REQUIRE(starts.size() == 1);
+    CHECK(Bool::yes == starts[0].niente);
+}
+
+T_END;
+
+// Bool::no is written where MusicXML expects it for both directions and reads back as no.
+TEST(WedgeNienteNoOnBothShapes, DirectionData)
+{
+    auto score = wedgeNienteTestScore(2);
+    wedgeNienteTestAdd(score, 0, 0, DirectionChoice{wedgeNienteTestStart(WedgeType::crescendo, Bool::no)});
+    wedgeNienteTestAdd(score, 0, 20, DirectionChoice{wedgeNienteTestStop()});
+    wedgeNienteTestAdd(score, 1, 0, DirectionChoice{wedgeNienteTestStart(WedgeType::diminuendo, Bool::no)});
+    wedgeNienteTestAdd(score, 1, 20, DirectionChoice{wedgeNienteTestStop()});
+
+    const auto tags = wedgeNienteTestTags(mxtest::toXml(score));
+    REQUIRE(tags.size() == 4);
+    CHECK(tags[0].find(R"(niente="no")") != std::string::npos);
+    CHECK(tags[1].find("niente") == std::string::npos);
+    CHECK(tags[2].find("niente") == std::string::npos);
+    CHECK(tags[3].find(R"(niente="no")") != std::string::npos);
+
+    const auto starts = wedgeNienteTestStarts(mxtest::roundTrip(score));
+    REQUIRE(starts.size() == 2);
+    CHECK(Bool::no == starts[0].niente);
+    CHECK(Bool::no == starts[1].niente);
+}
+
+T_END;
+
+// A hairpin with niente left unspecified does not write a niente attribute on either end.
+TEST(WedgeNienteUnspecifiedIsNotWritten, DirectionData)
+{
+    auto score = wedgeNienteTestScore(2);
+    wedgeNienteTestAdd(score, 0, 0, DirectionChoice{wedgeNienteTestStart(WedgeType::crescendo, Bool::unspecified)});
+    wedgeNienteTestAdd(score, 0, 20, DirectionChoice{wedgeNienteTestStop()});
+    wedgeNienteTestAdd(score, 1, 0, DirectionChoice{wedgeNienteTestStart(WedgeType::diminuendo, Bool::unspecified)});
+    wedgeNienteTestAdd(score, 1, 20, DirectionChoice{wedgeNienteTestStop()});
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(wedgeNienteTestTags(xml).size() == 4);
+    CHECK(xml.find("niente") == std::string::npos);
+
+    const auto starts = wedgeNienteTestStarts(mxtest::roundTrip(score));
+    REQUIRE(starts.size() == 2);
+    CHECK(Bool::unspecified == starts[0].niente);
+    CHECK(Bool::unspecified == starts[1].niente);
+}
+
+T_END;
+
+// Two overlapping diminuendos told apart by number: each stop carries its own start's niente, and
+// each start reads back its own value.
+TEST(WedgeNienteOverlappingNumberedDiminuendos, DirectionData)
+{
+    auto score = wedgeNienteTestScore(2);
+    wedgeNienteTestAdd(score, 0, 0,
+                       DirectionChoice{wedgeNienteTestStart(WedgeType::diminuendo, Bool::yes, SpannerNumber{1})});
+    wedgeNienteTestAdd(score, 0, 20,
+                       DirectionChoice{wedgeNienteTestStart(WedgeType::diminuendo, Bool::no, SpannerNumber{2})});
+    wedgeNienteTestAdd(score, 1, 0, DirectionChoice{wedgeNienteTestStop(SpannerNumber{2})});
+    wedgeNienteTestAdd(score, 1, 20, DirectionChoice{wedgeNienteTestStop(SpannerNumber{1})});
+
+    const auto tags = wedgeNienteTestTags(mxtest::toXml(score));
+    REQUIRE(tags.size() == 4);
+    CHECK(tags[0].find("niente") == std::string::npos);
+    CHECK(tags[1].find("niente") == std::string::npos);
+    CHECK(tags[2].find(R"(number="2")") != std::string::npos);
+    CHECK(tags[2].find(R"(niente="no")") != std::string::npos);
+    CHECK(tags[3].find(R"(number="1")") != std::string::npos);
+    CHECK(tags[3].find(R"(niente="yes")") != std::string::npos);
+
+    const auto starts = wedgeNienteTestStarts(mxtest::roundTrip(score));
+    REQUIRE(starts.size() == 2);
+    CHECK(Bool::yes == starts[0].niente);
+    CHECK(Bool::no == starts[1].niente);
+}
+
+T_END;
+
+// A diminuendo's niente is written on its stop, so a diminuendo with no stop cannot write it.
+TEST(WedgeNienteDiminuendoWithoutStopIsReported, DirectionData)
+{
+    auto score = wedgeNienteTestScore(1);
+    wedgeNienteTestAdd(score, 0, 0, DirectionChoice{wedgeNienteTestStart(WedgeType::diminuendo, Bool::yes)});
+
+    CHECK(mxtest::toXml(score).find("niente") == std::string::npos);
+    const auto diagnostics = wedgeNienteTestWriteDiagnostics(score);
+    REQUIRE(1 == wedgeNienteTestCount(diagnostics, DiagnosticCode::droppedData));
+    for (const auto &diagnostic : diagnostics.all())
+    {
+        if (diagnostic.code == DiagnosticCode::droppedData)
+        {
+            CHECK(Severity::warning == diagnostic.severity);
+            CHECK(diagnostic.message.find("niente") != std::string::npos);
+        }
+    }
+}
+
+T_END;
+
+// niente read from a file: on a diminuendo's stop it belongs to the diminuendo, while on the wide
+// end of a hairpin (a diminuendo's start, a crescendo's stop) or on a continue segment it means
+// nothing and is reported. A continue segment does not close the hairpin it continues.
+TEST(WedgeNienteReadFromFile, DirectionData)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>One</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <direction><direction-type><wedge type="diminuendo" number="1"/></direction-type></direction>
+      <direction><direction-type><wedge type="diminuendo" number="2" niente="yes"/></direction-type></direction>
+      <direction><direction-type><wedge type="crescendo" number="3"/></direction-type></direction>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>
+    </measure>
+    <measure number="2">
+      <direction><direction-type><wedge type="continue" number="1" niente="no"/></direction-type></direction>
+      <direction><direction-type><wedge type="stop" number="3" niente="yes"/></direction-type></direction>
+      <direction><direction-type><wedge type="stop" number="2"/></direction-type></direction>
+      <direction><direction-type><wedge type="stop" number="1" niente="yes"/></direction-type></direction>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    std::istringstream stream{xml};
+    auto document = MusicXml::fromStream(stream);
+    REQUIRE(document.ok());
+    Diagnostics diagnostics;
+    const auto score = getScore(document.value(), diagnostics);
+    REQUIRE(score.ok());
+
+    const auto starts = wedgeNienteTestStarts(score.value());
+    REQUIRE(starts.size() == 4);
+    CHECK(Bool::yes == starts[0].niente);
+    CHECK(Bool::unspecified == starts[1].niente);
+    CHECK(Bool::unspecified == starts[2].niente);
+    CHECK(Bool::unspecified == starts[3].niente);
+    CHECK(3 == wedgeNienteTestCount(diagnostics, DiagnosticCode::droppedData));
+}
+
+T_END;
+
+TEST(WedgeStartEqualitySeesNiente, DirectionData)
+{
+    WedgeStart a;
+    WedgeStart b;
+    CHECK(a == b);
+    b.niente = Bool::yes;
+    CHECK(a != b);
 }
 
 T_END;

@@ -1208,8 +1208,9 @@
         <attribute name="type" support="yes"/>
         <attribute name="number" support="yes"/>
         <attribute name="spread" support="yes"/>
+        <attribute name="niente" support="yes"/>
       </attributes>
-      <notes>api::WedgeStart/WedgeStop; DirectionReader.parseWedge (stop/continue routed structurally, not via WedgeType enum).</notes>
+      <notes>api::WedgeStart/WedgeStop; DirectionReader.parseWedge (stop/continue routed structurally, not via WedgeType enum). niente lives on WedgeStart for either direction; a diminuendo's niente is read from and written to its stop.</notes>
     </feature>
     <feature name="with-bar" support="none">
       <notes>Part of bend; not modeled.</notes>

@@ -887,3 +887,9 @@ synthetic/creator.3.0.xml
 # how much time a grace note takes from the note before or after it, or adds; only slash was kept.
 lysuite/ly24d_AfterGrace.xml
 synthetic/grace.3.0.xml
+
+# Unblocked by WedgeStart::niente. <wedge niente="yes">, the small circle at a hairpin's point that
+# marks a crescendo out of nothing or a diminuendo to nothing, was dropped on read. A diminuendo
+# states it on its stop, so the writer puts it there.
+synthetic/wedge.3.0.xml
+synthetic/wedge.3.1.xml
