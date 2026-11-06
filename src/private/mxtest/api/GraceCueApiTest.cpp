@@ -11,6 +11,7 @@
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/api/TestHelpers.h"
 
+#include <limits>
 #include <sstream>
 #include <string>
 
@@ -597,6 +598,188 @@ TEST(graceTimeFieldsTakePartInEquality, GraceCue)
     NoteData makeTime;
     makeTime.graceMakeTimeTicks = 1;
     CHECK(!(base == makeTime));
+}
+
+T_END;
+
+// make-time is scaled with the divisions in force at the grace note. Divisions change from 2 to 3
+// in the second measure, so the score has 6 ticks per quarter: make-time 1 is 3 ticks in the first
+// measure and 2 in the second, and both are written against the single <divisions> of 6.
+TEST(graceMakeTimeFollowsDivisionsChange, GraceCue)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>One</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>2</divisions></attributes>
+      <note><grace make-time="1"/><pitch><step>D</step><octave>4</octave></pitch><type>eighth</type></note>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration><type>quarter</type></note>
+    </measure>
+    <measure number="2">
+      <attributes><divisions>3</divisions></attributes>
+      <note><grace make-time="1"/><pitch><step>D</step><octave>4</octave></pitch><type>eighth</type></note>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>3</duration><type>quarter</type></note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    Diagnostics diagnostics;
+    auto score = graceTimeRead(xml, diagnostics);
+    CHECK(diagnostics.all().empty());
+    CHECK_EQUAL(6, score.ticksPerQuarter);
+    const auto &measures = score.parts.front().measures;
+    REQUIRE(measures.size() == 2);
+    const auto &first = measures.at(0).staves.front().voices.at(0).notes.front();
+    const auto &second = measures.at(1).staves.front().voices.at(0).notes.front();
+    REQUIRE(first.graceMakeTimeTicks.has_value());
+    CHECK_EQUAL(3, *first.graceMakeTimeTicks);
+    REQUIRE(second.graceMakeTimeTicks.has_value());
+    CHECK_EQUAL(2, *second.graceMakeTimeTicks);
+
+    const auto written = mxtest::toXml(score);
+    CHECK(written.find("<divisions>6</divisions>") != std::string::npos);
+    CHECK(written.find(R"(make-time="3")") != std::string::npos);
+    CHECK(written.find(R"(make-time="2")") != std::string::npos);
+    CHECK(roundTrip(score) == score);
+}
+
+T_END;
+
+// A score without <divisions> has no tick scale to convert from, so make-time is read and written
+// as it is, and no <divisions> is added.
+TEST(graceMakeTimeWithoutDivisions, GraceCue)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>One</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <note><grace make-time="3"/><pitch><step>D</step><octave>4</octave></pitch><type>eighth</type></note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    Diagnostics diagnostics;
+    auto score = graceTimeRead(xml, diagnostics);
+    CHECK(diagnostics.all().empty());
+    CHECK_EQUAL(0, score.ticksPerQuarter);
+    REQUIRE(graceTimeNote(score).graceMakeTimeTicks.has_value());
+    CHECK_EQUAL(3, *graceTimeNote(score).graceMakeTimeTicks);
+
+    const auto written = mxtest::toXml(score);
+    CHECK(written.find("<divisions>") == std::string::npos);
+    CHECK(written.find(R"(make-time="3")") != std::string::npos);
+}
+
+T_END;
+
+// Every int, including the extremes, is written and read back exactly.
+TEST(graceMakeTimeExtremesRoundTrip, GraceCue)
+{
+    for (const int ticks : {std::numeric_limits<int>::max(), std::numeric_limits<int>::min(), 0})
+    {
+        auto score = graceTimeScore();
+        graceTimeNote(score).graceMakeTimeTicks = ticks;
+        auto out = roundTrip(score);
+        REQUIRE(graceTimeNote(out).graceMakeTimeTicks.has_value());
+        CHECK_EQUAL(ticks, *graceTimeNote(out).graceMakeTimeTicks);
+    }
+}
+
+T_END;
+
+// The ends of the range, 0 and 100, are written as they are and not reported.
+TEST(graceStealTimeBoundariesAreNotReported, GraceCue)
+{
+    auto score = graceTimeScore();
+    graceTimeNote(score).graceStealTimePrevious = 0.0;
+    graceTimeNote(score).graceStealTimeFollowing = 100.0;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find(R"(steal-time-previous="0")") != std::string::npos);
+    CHECK(xml.find(R"(steal-time-following="100")") != std::string::npos);
+    CHECK(graceTimeWriteDiagnostics(score).all().empty());
+
+    auto out = roundTrip(score);
+    CHECK(graceTimeNote(out).graceStealTimePrevious == 0.0);
+    CHECK(graceTimeNote(out).graceStealTimeFollowing == 100.0);
+}
+
+T_END;
+
+// A steal time just past the end of the range is clamped and reported.
+TEST(graceStealTimeJustPastRangeIsReported, GraceCue)
+{
+    auto score = graceTimeScore();
+    graceTimeNote(score).graceStealTimePrevious = 100.5;
+
+    const auto diagnostics = graceTimeWriteDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 1);
+    CHECK_EQUAL(std::string{"grace steal-time-previous 100.5 is out of range; using 100"},
+                diagnostics.all()[0].message);
+}
+
+T_END;
+
+// An infinite steal time is clamped like any other; one that is not a number is not written.
+TEST(nonFiniteGraceStealTime, GraceCue)
+{
+    auto score = graceTimeScore();
+    graceTimeNote(score).graceStealTimePrevious = std::numeric_limits<double>::infinity();
+    graceTimeNote(score).graceStealTimeFollowing = std::numeric_limits<double>::quiet_NaN();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find(R"(<grace steal-time-previous="100" />)") != std::string::npos);
+    CHECK(xml.find("steal-time-following") == std::string::npos);
+
+    const auto diagnostics = graceTimeWriteDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 2);
+    CHECK(DiagnosticCode::valueAdjusted == diagnostics.all()[0].code);
+    CHECK(Severity::error == diagnostics.all()[1].severity);
+    CHECK(DiagnosticCode::droppedData == diagnostics.all()[1].code);
+    CHECK_EQUAL(std::string{"a grace steal-time-following that is not a number is not written"},
+                diagnostics.all()[1].message);
+
+    auto out = roundTrip(score);
+    REQUIRE(graceTimeNote(out).graceStealTimePrevious.has_value());
+    CHECK_DOUBLES_EQUAL(100.0, *graceTimeNote(out).graceStealTimePrevious, 1e-9);
+    CHECK(!graceTimeNote(out).graceStealTimeFollowing.has_value());
+}
+
+T_END;
+
+// A file with a steal time outside 0 to 100 reads as the nearer end, is reported once, and then
+// writes and reads back unchanged.
+TEST(outOfRangeGraceStealTimeInFileIsClampedOnRead, GraceCue)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>One</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note><grace steal-time-previous="150"/><pitch><step>D</step><octave>4</octave></pitch><type>eighth</type></note>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration><type>quarter</type></note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    Diagnostics diagnostics;
+    std::istringstream stream{xml};
+    auto document = MusicXml::fromStream(stream, diagnostics);
+    REQUIRE(document.ok());
+    const auto read = getScore(document.value(), diagnostics);
+    REQUIRE(read.ok());
+    auto score = read.value();
+    REQUIRE(diagnostics.all().size() == 1);
+    CHECK(DiagnosticCode::valueAdjusted == diagnostics.all()[0].code);
+    REQUIRE(graceTimeNote(score).graceStealTimePrevious.has_value());
+    CHECK_DOUBLES_EQUAL(100.0, *graceTimeNote(score).graceStealTimePrevious, 1e-9);
+
+    CHECK(mxtest::toXml(score).find(R"(steal-time-previous="100")") != std::string::npos);
+    CHECK(graceTimeWriteDiagnostics(score).all().empty());
+    CHECK(roundTrip(score) == score);
 }
 
 T_END;
