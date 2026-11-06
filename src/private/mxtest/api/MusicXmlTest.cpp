@@ -459,8 +459,8 @@ ROUND_TRIP_TEST_SCALAR(int, encoding.encodingDate.year, year, 2016, 0);
 ROUND_TRIP_TEST_SCALAR(int, encoding.encodingDate.month, month, 9, 0);
 ROUND_TRIP_TEST_SCALAR(int, encoding.encodingDate.day, day, 12, 0);
 
-// The four <creator> types mx::api models are independent slots. The arranger used to be read
-// into ScoreData::lyricist and rewritten as type="lyricist", so a file carrying both lost the
+// The composer, lyricist, arranger and publisher fields are independent. The arranger used to be
+// read into ScoreData::lyricist and rewritten as type="lyricist", so a file carrying both lost the
 // lyricist; the publisher was dropped on the way out entirely.
 
 TEST(RoundTrip_AllCreatorTypes, MusicXml)
@@ -493,8 +493,8 @@ TEST(RoundTrip_AllCreatorTypes, MusicXml)
 T_END
 
 // Reading the same shape from a real file: musuite/testMetaData.xml carries an arranger, a
-// composer and a lyricist, plus creator types mx::api does not model, which must not disturb
-// the ones it does.
+// composer and a lyricist, then a poet, two transcribers and a translator, which follow in
+// additionalCreators without disturbing the named fields.
 
 TEST(ReadAllCreatorTypes, MusicXml)
 {
@@ -509,6 +509,189 @@ TEST(ReadAllCreatorTypes, MusicXml)
     CHECK_EQUAL("MetaLyricist", score.lyricist);
     CHECK_EQUAL("MetaArranger", score.arranger);
     CHECK_EQUAL("", score.publisher);
+
+    const auto expected = std::vector<CreatorData>{
+        CreatorData{"MetaPoet", std::string{"poet"}},
+        CreatorData{"MetaTranscriber", std::string{"transcriber"}},
+        CreatorData{"MetaSecondTranscriber", std::string{"transcriber"}},
+        CreatorData{"MetaTranslator", std::string{"translator"}},
+    };
+    CHECK(expected == score.additionalCreators);
+}
+
+T_END
+
+// Reads a minimal one-note score whose <identification> holds the given elements.
+inline ScoreData readScoreWithIdentification(const std::string &identificationXml)
+{
+    std::istringstream iss{std::string{R"(<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="4.0">
+  <identification>
+)"} + identificationXml +
+                           R"(
+  </identification>
+  <part-list><score-part id="P1"><part-name>Music</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note><rest/><duration>1</duration><voice>1</voice><type>quarter</type></note>
+    </measure>
+  </part>
+</score-partwise>)"};
+    auto docResult = MusicXml::fromStream(iss);
+    REQUIRE(docResult.ok());
+    const auto scoreResult = getScore(std::move(docResult).value());
+    REQUIRE(scoreResult.ok());
+    return scoreResult.value();
+}
+
+// A score credited to a composer and a poet, with a second arranger and a credit that does not
+// name its role: the named fields are written first, then additionalCreators in order.
+TEST(RoundTrip_additionalCreators, MusicXml)
+{
+    auto input = ScoreData{};
+    input.composer = "A. Composer";
+    input.arranger = "A. Arranger";
+    input.additionalCreators.push_back(CreatorData{"Walter Scott", std::string{"poet"}});
+    input.additionalCreators.push_back(CreatorData{"B. Arranger", std::string{"arranger"}});
+    input.additionalCreators.push_back(CreatorData{"Anonymous", std::nullopt});
+
+    std::stringstream ss;
+    auto createResult = fromScore(input);
+    REQUIRE(createResult.ok());
+    std::move(createResult).value().writeToStream(ss);
+    const auto xml = ss.str();
+    const auto composer = xml.find(R"(<creator type="composer">A. Composer</creator>)");
+    const auto arranger = xml.find(R"(<creator type="arranger">A. Arranger</creator>)");
+    const auto poet = xml.find(R"(<creator type="poet">Walter Scott</creator>)");
+    const auto secondArranger = xml.find(R"(<creator type="arranger">B. Arranger</creator>)");
+    const auto anonymous = xml.find(R"(<creator>Anonymous</creator>)");
+    REQUIRE(composer != std::string::npos);
+    REQUIRE(arranger != std::string::npos);
+    REQUIRE(poet != std::string::npos);
+    REQUIRE(secondArranger != std::string::npos);
+    REQUIRE(anonymous != std::string::npos);
+    CHECK(composer < arranger);
+    CHECK(arranger < poet);
+    CHECK(poet < secondArranger);
+    CHECK(secondArranger < anonymous);
+
+    const auto output = roundTripScore(input);
+    CHECK_EQUAL(input.composer, output.composer);
+    CHECK_EQUAL(input.arranger, output.arranger);
+    CHECK(input.additionalCreators == output.additionalCreators);
+}
+
+T_END
+
+// An additional creator with an empty name is still written, so the credits after it keep their
+// places.
+TEST(RoundTrip_additionalCreators_emptyName, MusicXml)
+{
+    auto input = ScoreData{};
+    input.composer = "A. Composer";
+    input.additionalCreators.push_back(CreatorData{"", std::string{"poet"}});
+    input.additionalCreators.push_back(CreatorData{"A. Translator", std::string{"translator"}});
+
+    const auto output = roundTripScore(input);
+    CHECK_EQUAL(input.composer, output.composer);
+    CHECK(input.additionalCreators == output.additionalCreators);
+}
+
+T_END
+
+// The first lyricist is the score's lyricist; a second one follows in additionalCreators.
+TEST(TwoLyricistsFirstIsLyricist, MusicXml)
+{
+    const auto score = readScoreWithIdentification(R"(
+    <creator type="lyricist">First Lyricist</creator>
+    <creator type="lyricist">Second Lyricist</creator>)");
+    CHECK_EQUAL(std::string{"First Lyricist"}, score.lyricist);
+    REQUIRE(score.additionalCreators.size() == 1);
+    CHECK_EQUAL(std::string{"Second Lyricist"}, score.additionalCreators.at(0).name);
+    REQUIRE(score.additionalCreators.at(0).type.has_value());
+    CHECK_EQUAL(std::string{"lyricist"}, *score.additionalCreators.at(0).type);
+}
+
+T_END
+
+// With no creator typed composer, the first untyped creator is the composer and the others follow
+// in additionalCreators, still untyped.
+TEST(UntypedCreatorsFirstIsComposer, MusicXml)
+{
+    const auto score = readScoreWithIdentification(R"(
+    <creator>First Name</creator>
+    <creator>Second Name</creator>)");
+    CHECK_EQUAL(std::string{"First Name"}, score.composer);
+    REQUIRE(score.additionalCreators.size() == 1);
+    CHECK_EQUAL(std::string{"Second Name"}, score.additionalCreators.at(0).name);
+    CHECK(!score.additionalCreators.at(0).type.has_value());
+}
+
+T_END
+
+// When a creator is typed composer, an untyped creator is not the composer, even when it comes
+// first.
+TEST(UntypedCreatorBeforeTypedComposer, MusicXml)
+{
+    const auto score = readScoreWithIdentification(R"(
+    <creator>Anonymous</creator>
+    <creator type="composer">A. Composer</creator>)");
+    CHECK_EQUAL(std::string{"A. Composer"}, score.composer);
+    REQUIRE(score.additionalCreators.size() == 1);
+    CHECK_EQUAL(std::string{"Anonymous"}, score.additionalCreators.at(0).name);
+    CHECK(!score.additionalCreators.at(0).type.has_value());
+}
+
+T_END
+
+// With composer left empty, an additional creator typed composer is the score's composer.
+TEST(AdditionalComposerWithoutComposer, MusicXml)
+{
+    auto input = ScoreData{};
+    input.additionalCreators.push_back(CreatorData{"A. Composer", std::string{"composer"}});
+
+    const auto output = roundTripScore(input);
+    CHECK_EQUAL(std::string{"A. Composer"}, output.composer);
+    CHECK(output.additionalCreators.empty());
+}
+
+T_END
+
+TEST(NoCreatorsWritesNoCreatorElement, MusicXml)
+{
+    const auto input = ScoreData{};
+    std::stringstream ss;
+    auto createResult = fromScore(input);
+    REQUIRE(createResult.ok());
+    std::move(createResult).value().writeToStream(ss);
+    CHECK(ss.str().find("<creator") == std::string::npos);
+
+    const auto output = roundTripScore(input);
+    CHECK(output.composer.empty());
+    CHECK(output.additionalCreators.empty());
+}
+
+T_END
+
+TEST(AdditionalCreatorsTakePartInEquality, MusicXml)
+{
+    const auto base = CreatorData{"Walter Scott", std::string{"poet"}};
+    CHECK(base == base);
+
+    auto differentName = base;
+    differentName.name = "Robert Burns";
+    CHECK(base != differentName);
+
+    auto differentType = base;
+    differentType.type = std::nullopt;
+    CHECK(base != differentType);
+
+    auto lhs = ScoreData{};
+    auto rhs = ScoreData{};
+    CHECK(lhs == rhs);
+    rhs.additionalCreators.push_back(base);
+    CHECK(lhs != rhs);
 }
 
 T_END

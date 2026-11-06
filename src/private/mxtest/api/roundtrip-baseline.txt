@@ -874,3 +874,10 @@ mjbsuite/processing_instructions.xml
 # first <rights> of any type, and additionalRights the rest, in order.
 lysuite/ly51c_MultipleRights.xml
 synthetic/rights.3.0.xml
+
+# Unblocked by ScoreData::additionalCreators. Only the first composer, the last lyricist and the
+# first arranger and publisher were kept, and any other <creator>, such as a poet or a second
+# arranger, was dropped. The first of each of those four roles now has its own field, and every
+# other <creator> follows in additionalCreators, in order.
+musuite/testTremolo.xml
+synthetic/creator.3.0.xml

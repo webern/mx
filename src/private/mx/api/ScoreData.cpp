@@ -13,8 +13,8 @@ namespace api
 
 ScoreData::ScoreData()
     : musicXmlVersion{api::MusicXmlVersion::unspecified}, declaredMusicXmlVersion{}, musicXmlType{"partwise"},
-      workTitle{}, workNumber{}, movementTitle{}, movementNumber{}, composer{}, lyricist{}, copyright{},
-      copyrightType{"copyright"}, additionalRights{}, source{}, encoding{}, pageTextItems{}, defaults{},
+      workTitle{}, workNumber{}, movementTitle{}, movementNumber{}, composer{}, lyricist{}, additionalCreators{},
+      copyright{}, copyrightType{"copyright"}, additionalRights{}, source{}, encoding{}, pageTextItems{}, defaults{},
       concertScore{false}, parts{}, partGroups{}, ticksPerQuarter{DEFAULT_TICKS_PER_QUARTER}
 {
 }

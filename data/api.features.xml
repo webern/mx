@@ -179,8 +179,8 @@
     <feature name="coda" support="full">
       <notes>api::CodaData; DirectionReader/Writer.</notes>
     </feature>
-    <feature name="creator" support="partial">
-      <notes>Only type=composer/lyricist/arranger/publisher recognized; other types dropped. ScoreReader.cpp:179-209, ScoreWriter.cpp:86-114.</notes>
+    <feature name="creator" support="full">
+      <notes>First &lt;creator&gt; of each type composer, lyricist, arranger and publisher in the ScoreData field of that name (an untyped one counts as composer when none is typed composer); every other &lt;creator&gt; in ScoreData.additionalCreators (CreatorData name and type), in order. The four named fields are written first, so a &lt;creator&gt; listed before them is written after them; an empty named field is not written.</notes>
     </feature>
     <feature name="credit" support="partial">
       <attributes>

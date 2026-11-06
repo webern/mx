@@ -144,6 +144,15 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
         hasIdentification = true;
     }
 
+    for (const auto &entry : myScoreData.additionalCreators)
+    {
+        core::TypedText creator{};
+        creator.setType(entry.type);
+        creator.setValue(entry.name);
+        identification.addCreator(creator);
+        hasIdentification = true;
+    }
+
     if (!myScoreData.copyright.empty())
     {
         core::TypedText copyright{};

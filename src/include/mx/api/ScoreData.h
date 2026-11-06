@@ -53,6 +53,26 @@ MXAPI_EQUALS_MEMBER(type)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(RightsData);
 
+// A person credited for the score, such as its composer, a poet or a translator. MusicXML calls
+// this <creator>.
+class CreatorData
+{
+  public:
+    // The person's name as it should be credited, for example "Walter Scott".
+    std::string name;
+
+    // What they did for the score. MusicXML suggests "composer", "lyricist" and "arranger" and
+    // allows any other word, such as "poet", "translator" or "transcriber". Unset by default,
+    // which means the credit does not say.
+    std::optional<std::string> type;
+};
+
+MXAPI_EQUALS_BEGIN(CreatorData)
+MXAPI_EQUALS_MEMBER(name)
+MXAPI_EQUALS_MEMBER(type)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(CreatorData);
+
 // ScoreData is the root of mx::api's data model: a parsed MusicXML score,
 // exposed as score-level metadata (title, composer, encoding, layout
 // defaults, etc.) plus the parts that make up the music itself.
@@ -77,10 +97,21 @@ class ScoreData
     std::string workNumber;
     std::string movementTitle;
     std::string movementNumber;
+
+    // The people credited for the score in its four most common roles, each written as a
+    // <creator> of that type. When a score credits several people in one role, these hold the
+    // first. A credit that does not name its role counts as the composer when no one is credited
+    // as composer. Leave a field empty when the score does not credit anyone in that role.
     std::string composer;
     std::string lyricist;
     std::string arranger;
     std::string publisher;
+
+    // Everyone else credited for the score, in order: for example a poet, a translator, a
+    // transcriber, or a second arranger. Empty when the four fields above say it all, which is
+    // the usual case. Put the first person in each of those four roles in its own field: an entry
+    // here in a role whose field is empty is still written, and is then that role's first credit.
+    std::vector<CreatorData> additionalCreators;
 
     // The score's rights statement, usually its copyright notice. When a score has several, this
     // is the first one, whatever it covers. Leave it empty when the score has none. MusicXML calls
@@ -164,6 +195,7 @@ MXAPI_EQUALS_MEMBER(composer)
 MXAPI_EQUALS_MEMBER(lyricist)
 MXAPI_EQUALS_MEMBER(arranger)
 MXAPI_EQUALS_MEMBER(publisher)
+MXAPI_EQUALS_MEMBER(additionalCreators)
 MXAPI_EQUALS_MEMBER(copyright)
 MXAPI_EQUALS_MEMBER(copyrightType)
 MXAPI_EQUALS_MEMBER(additionalRights)
