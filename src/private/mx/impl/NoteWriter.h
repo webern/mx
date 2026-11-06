@@ -10,9 +10,11 @@
 #include "mx/core/generated/Notations.h"
 #include "mx/core/generated/NotationsChoice.h"
 #include "mx/core/generated/Note.h"
+#include "mx/core/generated/Percent.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/MeasureCursor.h"
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -50,8 +52,12 @@ class NoteWriter
     void addTie(bool isStart) const;
     void setNoteChoiceAndFullNoteGroup(bool isStartOfChord) const;
     void assembleNoteChoice() const;
-    // The <grace> element of a grace note, reporting a steal time clamped into 0 to 100.
+    // The <grace> element of a grace note.
     core::Grace makeGrace() const;
+    // A steal time clamped into 0 to 100, reporting a clamp; empty, and reported, when it is not a
+    // number.
+    std::optional<core::Percent> stealTimePercent(const std::optional<double> &stealTime,
+                                                  const std::string &name) const;
     // The note's octave, reporting a clamp and an unspecified step, which the caller writes as C.
     core::Octave writtenOctave() const;
     void setFullNoteTypeChoice() const;

@@ -45,6 +45,7 @@
 #include "mx/impl/WriteRefusal.h"
 
 #include <algorithm>
+#include <cmath>
 
 namespace mx
 {
@@ -357,22 +358,8 @@ core::Grace NoteWriter::makeGrace() const
         grace.setSlash(myConverter.convert(myNoteData.graceSlash));
     }
 
-    const auto &diagnostics = myScoreWriter.getDiagnostics();
-    if (myNoteData.graceStealTimePrevious.has_value())
-    {
-        const core::Percent percent{core::Decimal{*myNoteData.graceStealTimePrevious}};
-        reportAdjusted(diagnostics, cursorLocation(myCursor), "grace steal-time-previous",
-                       *myNoteData.graceStealTimePrevious, percent.value().value());
-        grace.setStealTimePrevious(percent);
-    }
-
-    if (myNoteData.graceStealTimeFollowing.has_value())
-    {
-        const core::Percent percent{core::Decimal{*myNoteData.graceStealTimeFollowing}};
-        reportAdjusted(diagnostics, cursorLocation(myCursor), "grace steal-time-following",
-                       *myNoteData.graceStealTimeFollowing, percent.value().value());
-        grace.setStealTimeFollowing(percent);
-    }
+    grace.setStealTimePrevious(stealTimePercent(myNoteData.graceStealTimePrevious, "grace steal-time-previous"));
+    grace.setStealTimeFollowing(stealTimePercent(myNoteData.graceStealTimeFollowing, "grace steal-time-following"));
 
     // <divisions> is written as ScoreData::ticksPerQuarter, so ticks are written unchanged. The
     // schema's divisions type has no lower bound, so a negative value is written as it is.
@@ -382,6 +369,27 @@ core::Grace NoteWriter::makeGrace() const
     }
 
     return grace;
+}
+
+std::optional<core::Percent> NoteWriter::stealTimePercent(const std::optional<double> &stealTime,
+                                                          const std::string &name) const
+{
+    if (!stealTime.has_value())
+    {
+        return std::nullopt;
+    }
+
+    const auto &diagnostics = myScoreWriter.getDiagnostics();
+    if (std::isnan(*stealTime))
+    {
+        diagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
+                           "a " + name + " that is not a number is not written");
+        return std::nullopt;
+    }
+
+    const core::Percent percent{core::Decimal{*stealTime}};
+    reportAdjusted(diagnostics, cursorLocation(myCursor), name, *stealTime, percent.value().value());
+    return percent;
 }
 
 core::Octave NoteWriter::writtenOctave() const
