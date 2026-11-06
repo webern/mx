@@ -373,8 +373,6 @@ TEST(CaesuraVariants, MarkRoundTrip)
 
 T_END;
 
-// Writes a one-note score holding the given mark and returns the XML and the diagnostics the
-// write reported.
 // Returns the diagnostics carrying exactly the given message.
 inline std::vector<Diagnostic> markRoundTripDiagnosticsWithMessage(const Diagnostics &diagnostics,
                                                                    const std::string &message)
@@ -390,6 +388,8 @@ inline std::vector<Diagnostic> markRoundTripDiagnosticsWithMessage(const Diagnos
     return out;
 }
 
+// Writes a one-note score holding the given mark and returns the XML, collecting the diagnostics
+// the write reported.
 inline std::string markRoundTripWriteWithDiagnostics(const MarkData &inMarkData, Diagnostics &outDiagnostics)
 {
     ScoreData score;
@@ -477,10 +477,59 @@ TEST(OrnamentAccidentalsOnANonOrnamentAreDropped, MarkRoundTrip)
     CHECK(xml.find("<accent") != std::string::npos);
     CHECK(xml.find("<accidental-mark") == std::string::npos);
     const auto dropped = markRoundTripDiagnosticsWithMessage(
-        diagnostics, "ornament accidentals on a mark that is not an ornament are not written");
+        diagnostics, "ornament accidentals on a mark that cannot hold them are not written");
     REQUIRE(dropped.size() == 1);
     CHECK(Severity::error == dropped.front().severity);
     CHECK(DiagnosticCode::droppedData == dropped.front().code);
+}
+
+T_END;
+
+// A tremolo or an other-ornament cannot hold ornament accidentals, so they are not written after
+// it; otherwise they would read back as standalone accidental marks.
+TEST(OrnamentAccidentalsOnATremoloOrOtherOrnamentAreDropped, MarkRoundTrip)
+{
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+
+    for (const auto markType : {MarkType::tremoloSingleThree, MarkType::otherOrnament})
+    {
+        MarkData mark{Placement::unspecified, markType};
+        mark.choice = OrnamentMarkData{{sharp}};
+
+        Diagnostics diagnostics;
+        const auto xml = markRoundTripWriteWithDiagnostics(mark, diagnostics);
+        CHECK(xml.find("<ornaments>") != std::string::npos);
+        CHECK(xml.find("<accidental-mark") == std::string::npos);
+        const auto dropped = markRoundTripDiagnosticsWithMessage(
+            diagnostics, "ornament accidentals on a mark that cannot hold them are not written");
+        REQUIRE(dropped.size() == 1);
+        CHECK(Severity::error == dropped.front().severity);
+        CHECK(DiagnosticCode::droppedData == dropped.front().code);
+    }
+}
+
+T_END;
+
+// Every ornament that can hold accidentals writes them back and reads them again.
+TEST(EveryOrnamentKeepsItsAccidentals, MarkRoundTrip)
+{
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+    sharp.positionData.placement = Placement::above;
+
+    for (const auto markType :
+         {MarkType::trillMark, MarkType::turn, MarkType::delayedTurn, MarkType::invertedTurn,
+          MarkType::delayedInvertedTurn, MarkType::verticalTurn, MarkType::invertedVerticalTurn, MarkType::shake,
+          MarkType::mordent, MarkType::invertedMordent, MarkType::schleifer, MarkType::haydn})
+    {
+        MarkData mark{Placement::unspecified, markType};
+        mark.choice = OrnamentMarkData{{sharp}};
+        const auto marks = roundTripMarkData(mark);
+        REQUIRE(marks.size() == 1);
+        CHECK(markType == marks.front().markType);
+        CHECK(mark.choice == marks.front().choice);
+    }
 }
 
 T_END;

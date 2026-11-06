@@ -202,11 +202,12 @@ MXAPI_NOT_EQUALS_AND_VECTORS(HarmonicMarkData);
 // accidentals above and below a turn that alter its upper and lower notes.
 struct OrnamentAccidental
 {
-    // The accidental to show. An entry left at none is not drawn.
+    // The accidental to show. An entry left at none is not written.
     Accidental accidental = Accidental::none;
 
     // Where the accidental sits, measured from the ornament rather than from the note. Placement
-    // above puts the accidental over the ornament, below puts it under.
+    // above puts the accidental over the ornament, below puts it under. The horizontal and vertical
+    // alignment fields are not used.
     PositionData positionData;
 };
 
@@ -216,12 +217,14 @@ MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(OrnamentAccidental);
 
-// Payload for an ornament that has accidentals: a trill, a turn of any kind, a shake, a mordent, an
-// inverted mordent, a schleifer or a haydn. A trill whose upper note is sharpened is one
+// Payload for an ornament that has accidentals. A trill whose upper note is sharpened is one
 // MarkType::trillMark mark holding an OrnamentAccidental with Accidental::sharp.
 //
-// An accidental that stands above or below the note on its own, not tied to an ornament, is a
-// MarkType::accidentalMark* mark of its own instead.
+// These marks can hold accidentals: a trill, a turn of any kind, a shake, a mordent, an inverted
+// mordent, a schleifer and a haydn. A tremolo or an other-ornament cannot, because its choice
+// already carries TremoloMarkData or OtherMarkData; neither can a wavy line, which is not a mark.
+// An accidental written with one of those, or one that stands above or below the note on its own,
+// is a MarkType::accidentalMark* mark of its own. On any other mark this payload is not written.
 struct OrnamentMarkData
 {
     // The ornament's accidentals, usually one. A turn may have one above it and one below it.

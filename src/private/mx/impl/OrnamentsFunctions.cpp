@@ -40,8 +40,8 @@ void ornamentsFunctionsParseMordentSpecificAttributes(const core::Mordent &m, ap
     }
 }
 
-// The ornaments that hold the accidentals written after them: a trill, a turn of any kind, a
-// shake, a mordent, an inverted mordent, a schleifer or a haydn.
+// A trill, a turn of any kind, a shake, a mordent, an inverted mordent, a schleifer or a haydn. A
+// tremolo and an other-ornament already carry their own payload, and a wavy line is not a mark.
 bool ornamentsFunctionsCanOwnAccidentals(core::OrnamentsGroupChoice::Kind kind)
 {
     switch (kind)

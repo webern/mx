@@ -21,6 +21,11 @@ class OrnamentsGroupChoice;
 
 namespace impl
 {
+// Whether an ornament of this kind holds the accidental marks that follow it inside <ornaments>
+// (api::OrnamentMarkData). The reader and the writer share this so that what one keeps on an
+// ornament the other writes back there.
+bool ornamentsFunctionsCanOwnAccidentals(core::OrnamentsGroupChoice::Kind kind);
+
 class OrnamentsFunctions
 {
   public:

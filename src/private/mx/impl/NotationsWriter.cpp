@@ -67,6 +67,7 @@
 #include "mx/impl/GlissandoFunctions.h"
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
+#include "mx/impl/OrnamentsFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/ScoreWriter.h"
 #include "mx/impl/WavyLineFunctions.h"
@@ -387,7 +388,7 @@ core::Notations NotationsWriter::getNotations() const
         {
             myScoreWriter.getDiagnostics().report(
                 api::Severity::error, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
-                "ornament accidentals on a mark that is not an ornament are not written");
+                "ornament accidentals on a mark that cannot hold them are not written");
         }
         if (isMarkAccidentalMark(mark.markType))
         {
@@ -1181,11 +1182,20 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, core::Ornaments &ou
 }
 
 // An ornament's accidentals go in its own group, right after it, which is where MusicXML says an
-// accidental belongs to the ornament before it.
+// accidental belongs to the ornament before it. Only the ornaments the reader lets own accidentals
+// may write them; anything else would come back as standalone accidental marks.
 void NotationsWriter::addOrnamentAccidentals(const api::MarkData &mark, core::OrnamentsGroup &outGroup) const
 {
     if (!mark.choice.isOrnament())
     {
+        return;
+    }
+
+    if (!ornamentsFunctionsCanOwnAccidentals(outGroup.choice().kind()))
+    {
+        myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                              cursorLocation(myCursor),
+                                              "ornament accidentals on a mark that cannot hold them are not written");
         return;
     }
 
