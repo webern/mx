@@ -33,9 +33,8 @@ enum class MusicXmlVersion
     ThreePointZero,
 };
 
-// A statement about who holds the rights to the score: a copyright notice, a public-domain
-// release, or a notice that covers only the words or only the music. MusicXML calls this
-// <rights>.
+// A copyright or other rights notice for the score, such as a public-domain release or a notice
+// that covers only the words or only the music. MusicXML calls this <rights>.
 class RightsData
 {
   public:
@@ -43,7 +42,8 @@ class RightsData
     std::string text;
 
     // What the statement covers. MusicXML suggests "music", "words" and "arrangement" and allows
-    // any other word. Leave it unset when the statement does not say.
+    // any other word. Unset by default, which means the statement does not say. MusicXML only
+    // asks for a type when a score has more than one statement.
     std::optional<std::string> type;
 };
 
@@ -83,7 +83,8 @@ class ScoreData
     std::string publisher;
 
     // The score's rights statement, usually its copyright notice. When a score has several, this
-    // is the first. MusicXML calls this <rights>.
+    // is the first one, whatever it covers. Leave it empty when the score has none. MusicXML calls
+    // this <rights>.
     std::string copyright;
 
     // What kind of statement `copyright` is, or what it covers: "copyright" (the default), or for
@@ -92,8 +93,8 @@ class ScoreData
 
     // The rights statements that follow `copyright`, in order: for example separate notices for
     // the words and the music, or a later public-domain release. Empty when the score has one
-    // statement, which is the usual case. Fill `copyright` first: when it is empty, these are
-    // still written, and the first of them reads back as `copyright`.
+    // statement, which is the usual case. Set `copyright` first: if it is empty, these are still
+    // written, but when the file is read again the first of them becomes `copyright`.
     std::vector<RightsData> additionalRights;
 
     // Where the music came from: the edition, manuscript, or other publication this score was
