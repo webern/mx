@@ -6,6 +6,7 @@
 
 #include "mx/api/NoteData.h"
 #include "mx/core/generated/FullNoteGroup.h"
+#include "mx/core/generated/Grace.h"
 #include "mx/core/generated/Notations.h"
 #include "mx/core/generated/NotationsChoice.h"
 #include "mx/core/generated/Note.h"
@@ -49,6 +50,8 @@ class NoteWriter
     void addTie(bool isStart) const;
     void setNoteChoiceAndFullNoteGroup(bool isStartOfChord) const;
     void assembleNoteChoice() const;
+    // The <grace> element of a grace note, reporting a steal time clamped into 0 to 100.
+    core::Grace makeGrace() const;
     // The note's octave, reporting a clamp and an unspecified step, which the caller writes as C.
     core::Octave writtenOctave() const;
     void setFullNoteTypeChoice() const;

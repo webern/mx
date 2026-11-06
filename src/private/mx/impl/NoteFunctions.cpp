@@ -61,6 +61,12 @@ api::NoteData NoteFunctions::parseNote() const
     {
         myOutNoteData.graceSlash = converter.convert(reader.getGraceSlash());
     }
+    myOutNoteData.graceStealTimePrevious = reader.getGraceStealTimePrevious();
+    myOutNoteData.graceStealTimeFollowing = reader.getGraceStealTimeFollowing();
+    if (const auto makeTime = reader.getGraceMakeTime())
+    {
+        myOutNoteData.graceMakeTimeTicks = myCursor.convertDurationToGlobalTickScale(*makeTime);
+    }
     myOutNoteData.pitchData.step = converter.convert(reader.getStep());
     myOutNoteData.pitchData.alter = reader.getAlter();
     myOutNoteData.pitchData.cents = reader.getCents();

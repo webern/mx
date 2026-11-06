@@ -9,6 +9,7 @@
 #include "mx/core/generated/BeamLevel.h"
 #include "mx/core/generated/CueNoteGroup.h"
 #include "mx/core/generated/DisplayStepOctaveGroup.h"
+#include "mx/core/generated/Divisions.h"
 #include "mx/core/generated/Elision.h"
 #include "mx/core/generated/ElisionSyllabicGroup.h"
 #include "mx/core/generated/Extend.h"
@@ -24,6 +25,7 @@
 #include "mx/core/generated/NonNegativeDecimal.h"
 #include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/NormalNoteGroup.h"
+#include "mx/core/generated/Percent.h"
 #include "mx/core/generated/Pitch.h"
 #include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Rest.h"
@@ -298,12 +300,7 @@ void NoteWriter::assembleNoteChoice() const
     {
         // Grace notes have no wire <duration>; durationTimeTicks is ignored.
         core::GraceNoteGroup choiceObj;
-        if (myNoteData.graceSlash != api::Bool::unspecified)
-        {
-            core::Grace grace;
-            grace.setSlash(myConverter.convert(myNoteData.graceSlash));
-            choiceObj.setGrace(std::move(grace));
-        }
+        choiceObj.setGrace(makeGrace());
         if (myNoteData.isCue)
         {
             // <grace/> + <cue/>: the grace-cue group has no <tie> slot, so
@@ -350,6 +347,41 @@ void NoteWriter::assembleNoteChoice() const
         }
         myOutNote.setChoice(core::NoteChoice::normalNoteGroup(std::move(choiceObj)));
     }
+}
+
+core::Grace NoteWriter::makeGrace() const
+{
+    core::Grace grace;
+    if (myNoteData.graceSlash != api::Bool::unspecified)
+    {
+        grace.setSlash(myConverter.convert(myNoteData.graceSlash));
+    }
+
+    const auto &diagnostics = myScoreWriter.getDiagnostics();
+    if (myNoteData.graceStealTimePrevious.has_value())
+    {
+        const core::Percent percent{core::Decimal{*myNoteData.graceStealTimePrevious}};
+        reportAdjusted(diagnostics, cursorLocation(myCursor), "grace steal-time-previous",
+                       *myNoteData.graceStealTimePrevious, percent.value().value());
+        grace.setStealTimePrevious(percent);
+    }
+
+    if (myNoteData.graceStealTimeFollowing.has_value())
+    {
+        const core::Percent percent{core::Decimal{*myNoteData.graceStealTimeFollowing}};
+        reportAdjusted(diagnostics, cursorLocation(myCursor), "grace steal-time-following",
+                       *myNoteData.graceStealTimeFollowing, percent.value().value());
+        grace.setStealTimeFollowing(percent);
+    }
+
+    // <divisions> is written as ScoreData::ticksPerQuarter, so ticks are written unchanged. The
+    // schema's divisions type has no lower bound, so a negative value is written as it is.
+    if (myNoteData.graceMakeTimeTicks.has_value())
+    {
+        grace.setMakeTime(core::Divisions{core::Decimal{static_cast<double>(*myNoteData.graceMakeTimeTicks)}});
+    }
+
+    return grace;
 }
 
 core::Octave NoteWriter::writtenOctave() const

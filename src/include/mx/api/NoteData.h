@@ -141,6 +141,23 @@ class NoteData
     // <grace>'s slash attribute. Only meaningful when isGrace is true.
     Bool graceSlash;
 
+    // A grace note has no written duration, so a player takes its time from a neighbor note or
+    // adds time of its own. The next three fields say how. Leave them empty to let the player
+    // decide. They are independent of each other and only meaningful when isGrace is true. A steal
+    // time outside 0 to 100 is written as 0 or 100, whichever is nearer.
+
+    // The share of the previous note's time, as a percentage from 0 to 100, that this grace note
+    // takes. The grace note sounds before the beat.
+    std::optional<double> graceStealTimePrevious;
+
+    // The share of the following note's time, as a percentage from 0 to 100, that this grace note
+    // takes. The grace note sounds on the beat and delays the main note, as with an appoggiatura.
+    std::optional<double> graceStealTimeFollowing;
+
+    // Time this grace note adds instead of taking it from a neighbor, in ticks (see
+    // ScoreData::ticksPerQuarter). The music around it waits while it sounds.
+    std::optional<int> graceMakeTimeTicks;
+
     bool isCue;
 
     Notehead notehead;
@@ -250,6 +267,9 @@ MXAPI_EQUALS_MEMBER(tieLetRing)
 MXAPI_EQUALS_MEMBER(isGrace)
 MXAPI_EQUALS_MEMBER(isCue)
 MXAPI_EQUALS_MEMBER(graceSlash)
+MXAPI_EQUALS_MEMBER(graceStealTimePrevious)
+MXAPI_EQUALS_MEMBER(graceStealTimeFollowing)
+MXAPI_EQUALS_MEMBER(graceMakeTimeTicks)
 MXAPI_EQUALS_MEMBER(notehead)
 MXAPI_EQUALS_MEMBER(noteheadFilled)
 MXAPI_EQUALS_MEMBER(noteheadSmufl)
