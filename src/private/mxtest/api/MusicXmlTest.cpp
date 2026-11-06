@@ -210,9 +210,8 @@ TEST(RoundTrip_copyrightType_defaultIsCopyright, MusicXml)
 
 T_END
 
-// The reader only recognizes a <rights> typed "copyright" (or untyped) as the
-// source of ScoreData::copyright; any other type value is out of scope for
-// this simplified field, so only the write side is asserted here.
+// copyrightType is free-form, like the <rights> type attribute it is written to, so a type other
+// than "copyright" is written and read back as it is.
 TEST(WriteHonorsExplicitCopyrightType, MusicXml)
 {
     auto input = ScoreData{};
@@ -223,6 +222,12 @@ TEST(WriteHonorsExplicitCopyrightType, MusicXml)
     REQUIRE(createResult.ok());
     std::move(createResult).value().writeToStream(ss);
     CHECK(ss.str().find(R"(<rights type="mechanical">All rights reserved</rights>)") != std::string::npos);
+
+    const auto output = roundTripScore(input);
+    CHECK_EQUAL(input.copyright, output.copyright);
+    REQUIRE(output.copyrightType.has_value());
+    CHECK_EQUAL(std::string{"mechanical"}, *output.copyrightType);
+    CHECK(output.additionalRights.empty());
 }
 
 T_END
@@ -240,6 +245,125 @@ TEST(RoundTrip_copyrightType_unsetOmitsAttribute, MusicXml)
 
     const auto output = roundTripScore(input);
     CHECK(!output.copyrightType.has_value());
+}
+
+T_END
+
+// A score with separate notices for the music and the words: copyright holds the first and
+// additionalRights the rest, each written as its own <rights> in order.
+TEST(RoundTrip_additionalRights, MusicXml)
+{
+    auto input = ScoreData{};
+    input.copyright = "Music © 2001 A. Composer";
+    input.additionalRights.push_back(RightsData{"Words © 2001 A. Poet", std::string{"words"}});
+    input.additionalRights.push_back(RightsData{"Released to the public domain", std::nullopt});
+
+    std::stringstream ss;
+    auto createResult = fromScore(input);
+    REQUIRE(createResult.ok());
+    std::move(createResult).value().writeToStream(ss);
+    const auto xml = ss.str();
+    const auto first = xml.find(R"(<rights type="copyright">Music © 2001 A. Composer</rights>)");
+    const auto second = xml.find(R"(<rights type="words">Words © 2001 A. Poet</rights>)");
+    const auto third = xml.find(R"(<rights>Released to the public domain</rights>)");
+    REQUIRE(first != std::string::npos);
+    REQUIRE(second != std::string::npos);
+    REQUIRE(third != std::string::npos);
+    CHECK(first < second);
+    CHECK(second < third);
+
+    const auto output = roundTripScore(input);
+    CHECK(input.copyright == output.copyright);
+    CHECK(input.copyrightType == output.copyrightType);
+    CHECK(input.additionalRights == output.additionalRights);
+}
+
+T_END
+
+// Two untyped notices: the first, the copyright line, is the score's copyright.
+TEST(MultipleRightsFirstIsCopyright, MusicXml)
+{
+    auto docResult = MusicXml::fromFile(std::string{mxtest::getResourcesDirectoryPath()} +
+                                        std::string{"/lysuite/ly51c_MultipleRights.xml"});
+    REQUIRE(docResult.ok());
+    const auto scoreResult = getScore(std::move(docResult).value());
+    REQUIRE(scoreResult.ok());
+    const auto &score = scoreResult.value();
+    CHECK_EQUAL(std::string{"Copyright © XXXX by Y. ZZZZ."}, score.copyright);
+    CHECK(!score.copyrightType.has_value());
+    REQUIRE(score.additionalRights.size() == 1);
+    CHECK_EQUAL(std::string{"Released To The Public Domain."}, score.additionalRights.at(0).text);
+    CHECK(!score.additionalRights.at(0).type.has_value());
+}
+
+T_END
+
+// The first <rights> is the copyright even when a later one is typed "copyright".
+TEST(UntypedRightsBeforeTypedCopyright, MusicXml)
+{
+    std::istringstream iss{R"(<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="4.0">
+  <identification>
+    <rights>Words © 2001 A. Poet</rights>
+    <rights type="copyright">Music © 2001 A. Composer</rights>
+  </identification>
+  <part-list><score-part id="P1"><part-name>Music</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note><rest/><duration>1</duration><voice>1</voice><type>quarter</type></note>
+    </measure>
+  </part>
+</score-partwise>)"};
+    auto docResult = MusicXml::fromStream(iss);
+    REQUIRE(docResult.ok());
+    const auto scoreResult = getScore(std::move(docResult).value());
+    REQUIRE(scoreResult.ok());
+    const auto &score = scoreResult.value();
+    CHECK_EQUAL(std::string{"Words © 2001 A. Poet"}, score.copyright);
+    CHECK(!score.copyrightType.has_value());
+    REQUIRE(score.additionalRights.size() == 1);
+    CHECK_EQUAL(std::string{"Music © 2001 A. Composer"}, score.additionalRights.at(0).text);
+    REQUIRE(score.additionalRights.at(0).type.has_value());
+    CHECK_EQUAL(std::string{"copyright"}, *score.additionalRights.at(0).type);
+}
+
+T_END
+
+// With copyright left empty, the first additional statement is written first and reads back as
+// the copyright.
+TEST(AdditionalRightsWithoutCopyright, MusicXml)
+{
+    auto input = ScoreData{};
+    input.additionalRights.push_back(RightsData{"Words © 2001 A. Poet", std::string{"words"}});
+
+    const auto output = roundTripScore(input);
+    CHECK_EQUAL(std::string{"Words © 2001 A. Poet"}, output.copyright);
+    REQUIRE(output.copyrightType.has_value());
+    CHECK_EQUAL(std::string{"words"}, *output.copyrightType);
+    CHECK(output.additionalRights.empty());
+}
+
+T_END
+
+TEST(AdditionalRightsTakePartInEquality, MusicXml)
+{
+    const auto base = RightsData{"Words © 2001 A. Poet", std::string{"words"}};
+    CHECK(base == base);
+
+    auto differentText = base;
+    differentText.text = "Words © 2002 A. Poet";
+    CHECK(base != differentText);
+
+    auto differentType = base;
+    differentType.type = std::nullopt;
+    CHECK(base != differentType);
+
+    auto lhs = ScoreData{};
+    auto rhs = ScoreData{};
+    CHECK(lhs == rhs);
+    rhs.additionalRights.push_back(base);
+    CHECK(lhs != rhs);
 }
 
 T_END

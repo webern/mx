@@ -868,3 +868,9 @@ musetrainer/Hungarian_Dance_No_5_in_G_Minor.xml
 # chord moved to the downbeat.
 mjbsuite/chords_simple.xml
 mjbsuite/processing_instructions.xml
+
+# Unblocked by ScoreData::additionalRights. Only one <rights> was kept: the first typed
+# "copyright", else the last untyped one, and any other type was dropped. copyright now holds the
+# first <rights> of any type, and additionalRights the rest, in order.
+lysuite/ly51c_MultipleRights.xml
+synthetic/rights.3.0.xml
