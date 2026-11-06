@@ -2431,4 +2431,53 @@ TEST(standaloneAndOrnamentAccidentalsOnOneNote, NoteData)
 
 T_END;
 
+// A standalone accidental-mark reads how it is drawn into AccidentalMarkData and MarkData::printData
+// and writes each attribute back. One without these attributes has no payload and no print data.
+TEST(standaloneAccidentalMarkKeepsHowItIsDrawn, NoteData)
+{
+    const auto xml = noteDataTestOneNoteXml(
+        R"(          <accidental-mark parentheses="no" bracket="yes" size="grace-cue" font-size="10" color="#00FF00" placement="below" smufl="accidentalNaturalSmall" id="nat1">natural</accidental-mark>
+          <accidental-mark>flat</accidental-mark>)");
+
+    const auto score = fromXml(xml);
+    const auto &marks = noteDataTestFirstNoteMarks(score);
+    REQUIRE(2 == marks.size());
+
+    const auto &natural = marks.at(0);
+    CHECK(MarkType::accidentalMarkNatural == natural.markType);
+    CHECK(Placement::below == natural.positionData.placement);
+    CHECK(FontSizeType::point == natural.printData.fontData.sizeType);
+    CHECK_DOUBLES_EQUAL(10.0, natural.printData.fontData.sizePoint, 0.00001);
+    CHECK(natural.printData.isColorSpecified);
+    CHECK(0 == natural.printData.color.red);
+    CHECK(255 == natural.printData.color.green);
+    CHECK(0 == natural.printData.color.blue);
+    REQUIRE(natural.choice.isAccidentalMark());
+    const auto payload = natural.choice.accidentalMark();
+    CHECK(Bool::no == payload.parentheses);
+    CHECK(Bool::yes == payload.bracket);
+    CHECK(SymbolSize::graceCue == payload.size);
+    REQUIRE(payload.smufl.has_value());
+    CHECK("accidentalNaturalSmall" == *payload.smufl);
+    REQUIRE(payload.id.has_value());
+    CHECK("nat1" == payload.id->value());
+
+    const auto &flat = marks.at(1);
+    CHECK(MarkType::accidentalMarkFlat == flat.markType);
+    CHECK(flat.choice.isNone());
+    CHECK(PrintData{} == flat.printData);
+
+    const auto written = toXml(score);
+    for (const std::string attribute :
+         {"parentheses=\"no\"", "bracket=\"yes\"", "size=\"grace-cue\"", "font-size=\"10\"", "color=\"#00FF00\"",
+          "smufl=\"accidentalNaturalSmall\"", "id=\"nat1\""})
+    {
+        CHECK(written.find(attribute) != std::string::npos);
+    }
+    CHECK(written.find("<accidental-mark>flat</accidental-mark>") != std::string::npos);
+    CHECK(marks == noteDataTestFirstNoteMarks(fromXml(written)));
+}
+
+T_END;
+
 #endif

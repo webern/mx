@@ -353,7 +353,8 @@ TEST(HarmonicDefaultsToNoPayload, MarkRoundTrip)
 
 T_END;
 
-// A plain accidental mark has no payload, so one authored with only its MarkType reads back equal.
+// A plain accidental mark has no payload and no print data, so one authored with only its MarkType
+// reads back equal in everything but name.
 TEST(AccidentalMarkDefaultsToNoPayload, MarkRoundTrip)
 {
     const MarkData mark{MarkType::accidentalMarkSharp};
@@ -361,7 +362,8 @@ TEST(AccidentalMarkDefaultsToNoPayload, MarkRoundTrip)
     REQUIRE(marks.size() == 1);
     CHECK(marks.front().choice.isNone());
 
-    // The reader spells the accidental out in name, which the writer ignores.
+    // The reader spells the accidental out in name, which the writer ignores. The MarkData
+    // constructor leaves name empty for accidental marks, so name is the one field that differs.
     auto readBack = marks.front();
     CHECK("sharp" == readBack.name);
     readBack.name = mark.name;
