@@ -118,7 +118,9 @@ DirectionReader::DirectionReader(const core::Harmony &inHarmony, MeasureCursor i
 
 WedgeNiente DirectionReader::scanWedgeNiente(const core::PartwisePart &inPart)
 {
-    // A continue segment neither opens nor closes a hairpin, so it takes no part in the pairing.
+    // Every wedge that is not a stop opens. A continue segment is read as a WedgeStart, which is
+    // written as a crescendo start, so it opens here too and a stop pairs with the same start on
+    // read as on write.
     struct OpenWedge
     {
         const core::Wedge *wedge;
@@ -145,31 +147,20 @@ WedgeNiente DirectionReader::scanWedgeNiente(const core::PartwisePart &inPart)
                 const auto &wedge = directionType.choice().asWedge();
                 const auto number =
                     wedge.number().has_value() ? api::SpannerNumber(wedge.number()->value()) : api::SpannerNumber{};
-                switch (wedge.type().tag())
+                const auto tag = wedge.type().tag();
+                if (tag != core::WedgeType::Tag::stop)
                 {
-                case core::WedgeType::Tag::crescendo:
-                    pairing.open(number, OpenWedge{&wedge, false});
-                    break;
-
-                case core::WedgeType::Tag::diminuendo:
-                    pairing.open(number, OpenWedge{&wedge, true});
-                    break;
-
-                case core::WedgeType::Tag::stop: {
-                    const auto start = pairing.close(number);
-                    if (start.has_value() && start->isDiminuendo)
-                    {
-                        result.diminuendoStops.insert(&wedge);
-                        if (wedge.niente().has_value())
-                        {
-                            result.diminuendoNiente[start->wedge] = converter.convert(*wedge.niente());
-                        }
-                    }
-                    break;
+                    pairing.open(number, OpenWedge{&wedge, tag == core::WedgeType::Tag::diminuendo});
+                    continue;
                 }
-
-                default:
-                    break;
+                const auto start = pairing.close(number);
+                if (start.has_value() && start->isDiminuendo)
+                {
+                    result.diminuendoStops.insert(&wedge);
+                    if (wedge.niente().has_value())
+                    {
+                        result.diminuendoNiente[start->wedge] = converter.convert(*wedge.niente());
+                    }
                 }
             }
         }
@@ -614,7 +605,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         const bool closesDiminuendo = myWedgeNiente && myWedgeNiente->diminuendoStops.count(&wedge) > 0;
         if (wedge.niente().has_value() && !closesDiminuendo)
         {
-            report(api::Severity::warning, api::DiagnosticCode::droppedData,
+            report(api::Severity::error, api::DiagnosticCode::droppedData,
                    "wedge niente is only read on the start of a crescendo or the stop of a diminuendo; "
                    "niente on a stop that does not close a diminuendo is not read");
         }
@@ -654,7 +645,7 @@ api::Bool DirectionReader::parseWedgeStartNiente(const core::Wedge &wedge) const
 
     if (wedge.niente().has_value())
     {
-        report(api::Severity::warning, api::DiagnosticCode::droppedData,
+        report(api::Severity::error, api::DiagnosticCode::droppedData,
                tag == core::WedgeType::Tag::diminuendo
                    ? "wedge niente is only read on the start of a crescendo or the stop of a diminuendo; niente on "
                      "the start of a diminuendo is not read"

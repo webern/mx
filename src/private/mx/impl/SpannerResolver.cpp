@@ -502,7 +502,7 @@ static void spannerResolveWedgeNiente(const std::vector<SpannerWedgeEvent> &inEv
     {
         if (start->wedgeType == api::WedgeType::diminuendo && start->niente != api::Bool::unspecified)
         {
-            diagnostics.report(api::Severity::warning, api::DiagnosticCode::droppedData, start->location,
+            diagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, start->location,
                                "a diminuendo's niente is written on its stop, and this diminuendo has no stop; "
                                "niente is not written");
         }
