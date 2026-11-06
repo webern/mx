@@ -246,10 +246,11 @@ class ChordData
 
     Step root;
     int rootAlter;
-    // How the root is spelled in place of its letter name, such as "Do" for C or "H" for B. Leave
-    // absent to print the letter. An empty string is different from absent: nothing is printed for
-    // the root, so the symbol shows only the kind's text. rootAlter is shown beside the text, so
-    // B-flat in solfege is "Si" with a rootAlter of -1.
+    // How the root is spelled in place of its letter name, such as "Do" for C in solfege or "H" for
+    // B in German. Leave absent to print the letter. An empty string is different from absent: it
+    // prints nothing for the root, and the rest of the chord symbol still prints. Spell only the
+    // step, because rootAlter is still printed beside the text: B-flat in solfege is "Si" with a
+    // rootAlter of -1, not "Sib". Used only when harmonyChordSource == root.
     std::optional<std::string> rootText;
 
     // The deprecated MusicXML <function> element: Roman numeral text such as "V". Used only when
@@ -257,7 +258,9 @@ class ChordData
     std::string functionText;
 
     // The MusicXML 4.0 <numeral>. Used only when harmonyChordSource == numeral.
-    // numeralRoot is a scale degree 1-7; numeralRootText is its optional display text (e.g. "V").
+    // numeralRoot is a scale degree 1-7; numeralRootText is how it is shown, such as "V" as a Roman
+    // numeral or "5" as a Nashville number. Leave numeralRootText empty to let the notation software
+    // choose.
     int numeralRoot;
     std::string numeralRootText;
     // The numeral-alter (chromatic alteration of the numeral root), in semitones.
@@ -287,8 +290,9 @@ class ChordData
     Step bass;
     int bassAlter;
     // How the bass note after the slash is spelled in place of its letter name, such as "Sol" for the
-    // G of C/G. Leave absent to print the letter. An empty string prints nothing for the bass note.
-    // bassAlter is shown beside the text. Used only when bass is set.
+    // G of C/G. Leave absent to print the letter. An empty string is different from absent: it
+    // prints nothing for the bass note. Spell only the step, because bassAlter is still printed
+    // beside the text. Used only when bass is set.
     std::optional<std::string> bassText;
     // The MusicXML <inversion> (0 = root position, 1 = first inversion, ...). Present only when
     // hasInversion is true.
