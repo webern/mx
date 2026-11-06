@@ -572,6 +572,70 @@ TEST(harmonyBassTextWithoutBassIsNotWritten, HarmonyExtrasApi)
 
 T_END;
 
+// C over B-flat with an empty bass text: nothing is printed for the bass letter, and the alter is
+// still written beside it.
+TEST(harmonyBassTextEmptyRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.bass = Step::b;
+    chord.bassAlter = -1;
+    chord.bassText = "";
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<bass-step text=\"\">B</bass-step>") != std::string::npos);
+    CHECK(xml.find("<bass-alter>") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    CHECK(outChord.bassText == std::optional<std::string>{""});
+    CHECK(Step::b == outChord.bass);
+    CHECK(-1 == outChord.bassAlter);
+}
+
+T_END;
+
+TEST(harmonyBassTextAbsentIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.bass = Step::g;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<bass-step>G</bass-step>") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    CHECK(!firstChord(out).bassText.has_value());
+}
+
+T_END;
+
+// The root text belongs to a root, so a chord named by a numeral does not write it.
+TEST(harmonyRootTextOnNumeralChordIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.harmonyChordSource = HarmonyChordSource::numeral;
+    chord.numeralRoot = 5;
+    chord.chordKind = ChordKind::major;
+    chord.rootText = "Do";
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<root") == std::string::npos);
+    CHECK(xml.find("text=\"Do\"") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    CHECK(HarmonyChordSource::numeral == outChord.harmonyChordSource);
+    CHECK(!outChord.rootText.has_value());
+}
+
+T_END;
+
 TEST(harmonyRootAndBassTextEquality, HarmonyExtrasApi)
 {
     const ChordData base;
