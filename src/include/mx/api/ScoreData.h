@@ -98,10 +98,11 @@ class ScoreData
     std::string movementTitle;
     std::string movementNumber;
 
-    // The people credited for the score in its four most common roles, each written as a
-    // <creator> of that type. When a score credits several people in one role, these hold the
-    // first. A credit that does not name its role counts as the composer when no one is credited
-    // as composer. Leave a field empty when the score does not credit anyone in that role.
+    // The people credited for the score as its composer, lyricist, arranger and publisher, each
+    // written as a <creator> of that type. When a score credits several people in one role, these
+    // hold the first. When no one is credited as composer, the first credit that does not name its
+    // role counts as the composer. Leave a field empty when the score does not credit anyone in
+    // that role.
     std::string composer;
     std::string lyricist;
     std::string arranger;
@@ -109,8 +110,9 @@ class ScoreData
 
     // Everyone else credited for the score, in order: for example a poet, a translator, a
     // transcriber, or a second arranger. Empty when the four fields above say it all, which is
-    // the usual case. Put the first person in each of those four roles in its own field: an entry
-    // here in a role whose field is empty is still written, and is then that role's first credit.
+    // the usual case. Fill those four fields first: an entry here in one of their roles is still
+    // written when its field is empty, but when the file is read again it fills that field. An
+    // entry with no role does the same for composer when no one is credited as composer.
     std::vector<CreatorData> additionalCreators;
 
     // The score's rights statement, usually its copyright notice. When a score has several, this
