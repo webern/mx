@@ -110,6 +110,25 @@ enum class Enclosure
     decagon,
     none
 };
+
+// How large a symbol is drawn compared with ordinary notation, MusicXML's size attribute.
+enum class SymbolSize
+{
+    // Leave the size unstated and let the application choose.
+    unspecified,
+
+    // The normal size, stated explicitly.
+    full,
+
+    // The size of a cue note or a grace note.
+    cue,
+
+    // The size of a grace note that is also a cue note.
+    graceCue,
+
+    // Larger than normal.
+    large
+};
 } // namespace api
 } // namespace mx
 

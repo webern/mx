@@ -2097,6 +2097,61 @@ TEST(accidentalMarkSurvivesWriteAndRead, NoteData)
 
 T_END;
 
+// Parse the synthetic accidental-mark file, a trill with a sharp that sets every attribute
+// accidental-mark has, and confirm the trill's accidental carries all of them.
+TEST(readsSyntheticAccidentalMarkFixture, NoteData)
+{
+    const std::string path = mxtest::getResourcesDirectoryPath() + "synthetic/accidental-mark.3.1.xml";
+    auto docResult = MusicXml::fromFile(path);
+    REQUIRE(docResult.ok());
+    const auto scoreResult = getScore(std::move(docResult).value());
+    REQUIRE(scoreResult.ok());
+    const auto &score = scoreResult.value();
+
+    const auto &marks =
+        score.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
+    REQUIRE(1 == marks.size());
+    CHECK(MarkType::trillMark == marks.at(0).markType);
+    REQUIRE(marks.at(0).choice.isOrnament());
+    const auto accidentals = marks.at(0).choice.ornament().accidentals;
+    REQUIRE(1 == accidentals.size());
+    const auto &sharp = accidentals.at(0);
+
+    CHECK(Accidental::sharp == sharp.accidental);
+    CHECK(Bool::yes == sharp.parentheses);
+    CHECK(Bool::yes == sharp.bracket);
+    CHECK(SymbolSize::full == sharp.size);
+    REQUIRE(sharp.smufl.has_value());
+    CHECK("accidentalSharp" == *sharp.smufl);
+    REQUIRE(sharp.id.has_value());
+    CHECK("id3" == sharp.id->value());
+
+    CHECK(sharp.positionData.isDefaultXSpecified);
+    CHECK_DOUBLES_EQUAL(1.0, sharp.positionData.defaultX, 0.00001);
+    CHECK(sharp.positionData.isDefaultYSpecified);
+    CHECK_DOUBLES_EQUAL(1.0, sharp.positionData.defaultY, 0.00001);
+    CHECK(sharp.positionData.isRelativeXSpecified);
+    CHECK_DOUBLES_EQUAL(1.0, sharp.positionData.relativeX, 0.00001);
+    CHECK(sharp.positionData.isRelativeYSpecified);
+    CHECK_DOUBLES_EQUAL(1.0, sharp.positionData.relativeY, 0.00001);
+    CHECK(Placement::above == sharp.positionData.placement);
+
+    REQUIRE(1 == sharp.printData.fontData.fontFamily.size());
+    CHECK("x" == sharp.printData.fontData.fontFamily.at(0));
+    CHECK(FontStyle::normal == sharp.printData.fontData.style);
+    CHECK(FontWeight::normal == sharp.printData.fontData.weight);
+    CHECK(FontSizeType::point == sharp.printData.fontData.sizeType);
+    CHECK_DOUBLES_EQUAL(1.0, sharp.printData.fontData.sizePoint, 0.00001);
+    CHECK(sharp.printData.isColorSpecified);
+    CHECK(sharp.printData.color.isAlphaSpecified);
+    CHECK(255 == sharp.printData.color.alpha);
+    CHECK(0 == sharp.printData.color.red);
+    CHECK(0 == sharp.printData.color.green);
+    CHECK(0 == sharp.printData.color.blue);
+}
+
+T_END;
+
 // Builds a one-note score whose note carries the given <notations> content.
 inline std::string noteDataTestOneNoteXml(const std::string &notations)
 {
@@ -2371,6 +2426,55 @@ TEST(standaloneAndOrnamentAccidentalsOnOneNote, NoteData)
     REQUIRE(sharpPos != std::string::npos);
     CHECK(flatPos < ornamentsPos);
     CHECK(ornamentsPos < sharpPos);
+    CHECK(marks == noteDataTestFirstNoteMarks(fromXml(written)));
+}
+
+T_END;
+
+// A standalone accidental-mark reads how it is drawn into AccidentalMarkData and MarkData::printData
+// and writes each attribute back. One without these attributes has no payload and no print data.
+TEST(standaloneAccidentalMarkKeepsHowItIsDrawn, NoteData)
+{
+    const auto xml = noteDataTestOneNoteXml(
+        R"(          <accidental-mark parentheses="no" bracket="yes" size="grace-cue" font-size="10" color="#00FF00" placement="below" smufl="accidentalNaturalSmall" id="nat1">natural</accidental-mark>
+          <accidental-mark>flat</accidental-mark>)");
+
+    const auto score = fromXml(xml);
+    const auto &marks = noteDataTestFirstNoteMarks(score);
+    REQUIRE(2 == marks.size());
+
+    const auto &natural = marks.at(0);
+    CHECK(MarkType::accidentalMarkNatural == natural.markType);
+    CHECK(Placement::below == natural.positionData.placement);
+    CHECK(FontSizeType::point == natural.printData.fontData.sizeType);
+    CHECK_DOUBLES_EQUAL(10.0, natural.printData.fontData.sizePoint, 0.00001);
+    CHECK(natural.printData.isColorSpecified);
+    CHECK(0 == natural.printData.color.red);
+    CHECK(255 == natural.printData.color.green);
+    CHECK(0 == natural.printData.color.blue);
+    REQUIRE(natural.choice.isAccidentalMark());
+    const auto payload = natural.choice.accidentalMark();
+    CHECK(Bool::no == payload.parentheses);
+    CHECK(Bool::yes == payload.bracket);
+    CHECK(SymbolSize::graceCue == payload.size);
+    REQUIRE(payload.smufl.has_value());
+    CHECK("accidentalNaturalSmall" == *payload.smufl);
+    REQUIRE(payload.id.has_value());
+    CHECK("nat1" == payload.id->value());
+
+    const auto &flat = marks.at(1);
+    CHECK(MarkType::accidentalMarkFlat == flat.markType);
+    CHECK(flat.choice.isNone());
+    CHECK(PrintData{} == flat.printData);
+
+    const auto written = toXml(score);
+    for (const std::string attribute :
+         {"parentheses=\"no\"", "bracket=\"yes\"", "size=\"grace-cue\"", "font-size=\"10\"", "color=\"#00FF00\"",
+          "smufl=\"accidentalNaturalSmall\"", "id=\"nat1\""})
+    {
+        CHECK(written.find(attribute) != std::string::npos);
+    }
+    CHECK(written.find("<accidental-mark>flat</accidental-mark>") != std::string::npos);
     CHECK(marks == noteDataTestFirstNoteMarks(fromXml(written)));
 }
 

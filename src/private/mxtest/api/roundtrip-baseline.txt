@@ -401,6 +401,13 @@ synthetic/word-font.3.0.xml
 synthetic/work-number.3.0.xml
 synthetic/work-title.3.0.xml
 
+# Unblocked by AccidentalMarkData and the matching OrnamentAccidental fields. An
+# accidental-mark kept only its value and position; its parentheses, bracket, size,
+# smufl glyph, id, font and color are now carried too, both standalone and when it
+# belongs to an ornament, as the trill's sharp in these fixtures does.
+synthetic/accidental-mark.3.0.xml
+synthetic/accidental-mark.3.1.xml
+
 # Unblocked by the arpeggiate/non-arpeggiate attribute payloads
 # (ArpeggiateMarkData / NonArpeggiateMarkData in MarkDataChoice): number,
 # unbroken, id, and the non-arpeggiate top/bottom type now round-trip.

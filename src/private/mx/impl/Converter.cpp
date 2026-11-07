@@ -1629,6 +1629,13 @@ const Converter::EnumMap<core::EnclosureShape, api::Enclosure> Converter::enclos
     {core::EnclosureShape::none(), api::Enclosure::none},
 };
 
+const Converter::EnumMap<core::SymbolSize, api::SymbolSize> Converter::symbolSizeMap = {
+    {core::SymbolSize::full(), api::SymbolSize::full},
+    {core::SymbolSize::cue(), api::SymbolSize::cue},
+    {core::SymbolSize::graceCue(), api::SymbolSize::graceCue},
+    {core::SymbolSize::large(), api::SymbolSize::large},
+};
+
 api::Step Converter::convert(core::Step inStep) const
 {
     return findApiItem(stepMap, api::Step::c, inStep);
@@ -2196,6 +2203,16 @@ api::Enclosure Converter::convert(core::EnclosureShape value) const
 core::EnclosureShape Converter::convert(api::Enclosure value) const
 {
     return findCoreItem(enclosureMap, core::EnclosureShape::none(), value);
+}
+
+api::SymbolSize Converter::convert(core::SymbolSize value) const
+{
+    return findApiItem(symbolSizeMap, api::SymbolSize::unspecified, value);
+}
+
+core::SymbolSize Converter::convert(api::SymbolSize value) const
+{
+    return findCoreItem(symbolSizeMap, core::SymbolSize::full(), value);
 }
 
 double Converter::convertToAlter(int semitones, double cents)

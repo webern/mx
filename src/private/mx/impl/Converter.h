@@ -56,6 +56,7 @@
 #include "mx/core/generated/StickLocation.h"
 #include "mx/core/generated/StickMaterial.h"
 #include "mx/core/generated/StickType.h"
+#include "mx/core/generated/SymbolSize.h"
 #include "mx/core/generated/SystemRelation.h"
 #include "mx/core/generated/SystemRelationNumber.h"
 #include "mx/core/generated/TechnicalChoice.h"
@@ -259,6 +260,8 @@ class Converter
     core::TipDirection convert(api::TipDirection value) const;
     api::Enclosure convert(core::EnclosureShape value) const;
     core::EnclosureShape convert(api::Enclosure value) const;
+    api::SymbolSize convert(core::SymbolSize value) const;
+    core::SymbolSize convert(api::SymbolSize value) const;
 
     static double convertToAlter(int semitones, double cents);
     static std::pair<int, double> convertToSemitonesAndCents(double alter);
@@ -327,6 +330,7 @@ class Converter
     const static EnumMap<core::StickLocation, api::StickLocation> stickLocationMap;
     const static EnumMap<core::TipDirection, api::TipDirection> tipDirectionMap;
     const static EnumMap<core::EnclosureShape, api::Enclosure> enclosureMap;
+    const static EnumMap<core::SymbolSize, api::SymbolSize> symbolSizeMap;
 
   private:
     template <typename CORE_TYPE, typename API_TYPE>
