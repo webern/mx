@@ -223,43 +223,52 @@ api::ScoreData ScoreReader::getScoreData() const
     {
         const auto &ident = *myHeaderGroup.identification();
 
+        // The first composer, lyricist, arranger and publisher each have a field of their own; every
+        // other <creator> follows in additionalCreators, in order. An untyped <creator> counts as a
+        // composer when no <creator> is typed composer. An empty value still fills its field.
+        const auto creators = ident.creator();
+        const bool hasTypedComposer = std::any_of(creators.begin(), creators.end(), [](const core::TypedText &c) {
+            return c.type().has_value() && *c.type() == "composer";
+        });
         bool isComposerFound = false;
+        bool isLyricistFound = false;
         bool isArrangerFound = false;
         bool isPublisherFound = false;
 
-        for (const auto &i : ident.creator())
+        for (const auto &creator : creators)
         {
-            const bool hasType = i.type().has_value();
-            const std::string typeStr = hasType ? *i.type() : std::string{};
+            const std::string role = creator.type().value_or(hasTypedComposer ? "" : "composer");
+            const auto fillFirst = [&creator](bool &isFound, std::string &field) {
+                if (isFound)
+                {
+                    return false;
+                }
+                field = creator.value();
+                isFound = true;
+                return true;
+            };
 
-            if (typeStr == "composer" && !isComposerFound)
+            bool isNamed = false;
+            if (role == "composer")
             {
-                myOutScoreData.composer = i.value();
-                isComposerFound = true;
+                isNamed = fillFirst(isComposerFound, myOutScoreData.composer);
+            }
+            else if (role == "lyricist")
+            {
+                isNamed = fillFirst(isLyricistFound, myOutScoreData.lyricist);
+            }
+            else if (role == "arranger")
+            {
+                isNamed = fillFirst(isArrangerFound, myOutScoreData.arranger);
+            }
+            else if (role == "publisher")
+            {
+                isNamed = fillFirst(isPublisherFound, myOutScoreData.publisher);
             }
 
-            if (!isComposerFound && !hasType)
+            if (!isNamed)
             {
-                myOutScoreData.composer = i.value();
-            }
-
-            if (typeStr == "lyricist")
-            {
-                myOutScoreData.lyricist = i.value();
-            }
-
-            // ScoreData has one slot each for arranger and publisher, but MusicXML permits any
-            // number of <creator> elements of a given type. Keep the first of each.
-            if (typeStr == "arranger" && !isArrangerFound)
-            {
-                myOutScoreData.arranger = i.value();
-                isArrangerFound = true;
-            }
-
-            if (typeStr == "publisher" && !isPublisherFound)
-            {
-                myOutScoreData.publisher = i.value();
-                isPublisherFound = true;
+                myOutScoreData.additionalCreators.push_back(api::CreatorData{creator.value(), creator.type()});
             }
         }
 
