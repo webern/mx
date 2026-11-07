@@ -99,8 +99,21 @@
     <feature name="bass-alter" support="full">
       <notes>ChordData.bassAlter.</notes>
     </feature>
-    <feature name="bass-step" support="full">
-      <notes>ChordData.bass.</notes>
+    <feature name="bass-step" support="partial">
+      <attributes>
+        <attribute name="text" support="yes"/>
+        <attribute name="default-x" support="no"/>
+        <attribute name="default-y" support="no"/>
+        <attribute name="relative-x" support="no"/>
+        <attribute name="relative-y" support="no"/>
+        <attribute name="color" support="no"/>
+        <attribute name="font-family" support="no"/>
+        <attribute name="font-size" support="no"/>
+        <attribute name="font-style" support="no"/>
+        <attribute name="font-weight" support="no"/>
+      </attributes>
+      <notes>ChordData.bass; the text attribute (the spelling shown in place of the letter) as
+      ChordData.bassText. Position, font and color are not modeled.</notes>
     </feature>
     <feature name="beam" support="full">
       <notes>api::Beam via beamMap (complete).</notes>
@@ -861,8 +874,21 @@
     <feature name="root-alter" support="full">
       <notes>ChordData.rootAlter.</notes>
     </feature>
-    <feature name="root-step" support="full">
-      <notes>ChordData.root.</notes>
+    <feature name="root-step" support="partial">
+      <attributes>
+        <attribute name="text" support="yes"/>
+        <attribute name="default-x" support="no"/>
+        <attribute name="default-y" support="no"/>
+        <attribute name="relative-x" support="no"/>
+        <attribute name="relative-y" support="no"/>
+        <attribute name="color" support="no"/>
+        <attribute name="font-family" support="no"/>
+        <attribute name="font-size" support="no"/>
+        <attribute name="font-style" support="no"/>
+        <attribute name="font-weight" support="no"/>
+      </attributes>
+      <notes>ChordData.root; the text attribute (the spelling shown in place of the letter) as
+      ChordData.rootText. Position, font and color are not modeled.</notes>
     </feature>
     <feature name="scaling" support="full">
       <notes>DefaultsData.scalingMillimeters/scalingTenths; LayoutFunctions.cpp:252-265 / 112-132.</notes>

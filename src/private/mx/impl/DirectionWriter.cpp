@@ -1547,6 +1547,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             core::Root root{};
             core::RootStep rootStep{};
             rootStep.setValue(myConverter.convert(step));
+            rootStep.setText(chordIter->rootText);
             root.setRootStep(rootStep);
 
             if (chordIter->rootAlter != 0)
@@ -1566,6 +1567,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             core::Bass bass{};
             core::BassStep bassStep{};
             bassStep.setValue(myConverter.convert(chordIter->bass));
+            bassStep.setText(chordIter->bassText);
             bass.setBassStep(bassStep);
 
             if (chordIter->bassAlter != 0)
