@@ -544,9 +544,15 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
 }
 
 // A <backup> starts another voice. Between backups, MusicXML can also change voice from one note to
-// the next with nothing but the <voice> text, the next note starting where the last one ended. So
-// within a backup run, each staff's notes are grouped by their <voice> text, and each group becomes
-// a voice of its own. When a run names at most one voice, it is one group, as if text were ignored.
+// the next with nothing but the <voice> text, the next note starting where the last one ended.
+//
+// This returns the voice a note goes into, as its key in the staff's voices map. It looks at the
+// notes of the same staff since the last <backup> in the measure, or since the start of the measure
+// when there has not been one. Each different <voice> text among those notes gets a voice of its
+// own, and the note goes into the voice for its text. For example, three notes labelled 4, 5 and 4
+// make two voices: the first and third notes are in one, and the middle note is in the other. When
+// those notes name at most one voice (they all have the same text, or none of them has a <voice>),
+// they are all one voice. The header calls each of these voices a group.
 int MeasureReader::findVoiceBucket(int staff, bool isChordContinuation, const std::string &voiceText) const
 {
     auto &staffGroups = myVoiceGroups[staff];

@@ -13,6 +13,11 @@ namespace mx
 {
 namespace impl
 {
+// A pass is one trip forward through the time of a measure on one staff: notes written in time
+// order, with a <forward> over any gap and no <backup> in between. MeasureWriter writes a staff as
+// one or more passes, with a <backup> between them that goes back to where the next pass starts. A
+// pass usually holds one voice. It holds more than one when a voice only plays in the rests of the
+// voice before it, so that the voices can share the pass, each note carrying its own <voice> text.
 using VoicePassVoiceIter = std::map<int, api::VoiceData>::const_iterator;
 
 // One note of a pass and the voice it belongs to. note points into the ScoreData being written, so
