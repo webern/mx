@@ -153,6 +153,15 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
         hasIdentification = true;
     }
 
+    for (const auto &entry : myScoreData.additionalRights)
+    {
+        core::TypedText rights{};
+        rights.setType(entry.type);
+        rights.setValue(entry.text);
+        identification.addRights(rights);
+        hasIdentification = true;
+    }
+
     if (myScoreData.source.has_value())
     {
         identification.setSource(myScoreData.source);

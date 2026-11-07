@@ -865,8 +865,8 @@
     <feature name="right-margin" support="full">
       <notes>MarginsData.right.</notes>
     </feature>
-    <feature name="rights" support="partial">
-      <notes>Mapped to ScoreData.copyright; only copyright-type kept, others dropped. ScoreReader.cpp:211-225.</notes>
+    <feature name="rights" support="full">
+      <notes>First &lt;rights&gt; of any type in ScoreData.copyright and copyrightType; later ones in ScoreData.additionalRights (RightsData text and type), in order. An empty copyright is not written, so a first &lt;rights&gt; with empty text is dropped.</notes>
     </feature>
     <feature name="root" support="full">
       <notes>ChordData.root (Step) + rootAlter.</notes>

@@ -33,6 +33,26 @@ enum class MusicXmlVersion
     ThreePointZero,
 };
 
+// A copyright or other rights notice for the score, such as a public-domain release or a notice
+// that covers only the words or only the music. MusicXML calls this <rights>.
+class RightsData
+{
+  public:
+    // The statement as it should be printed, for example "Copyright © 2006 Douglas Anderson".
+    std::string text;
+
+    // What the statement covers. MusicXML suggests "music", "words" and "arrangement" and allows
+    // any other word. Unset by default, which means the statement does not say. MusicXML only
+    // asks for a type when a score has more than one statement.
+    std::optional<std::string> type;
+};
+
+MXAPI_EQUALS_BEGIN(RightsData)
+MXAPI_EQUALS_MEMBER(text)
+MXAPI_EQUALS_MEMBER(type)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(RightsData);
+
 // ScoreData is the root of mx::api's data model: a parsed MusicXML score,
 // exposed as score-level metadata (title, composer, encoding, layout
 // defaults, etc.) plus the parts that make up the music itself.
@@ -62,9 +82,20 @@ class ScoreData
     std::string arranger;
     std::string publisher;
 
+    // The score's rights statement, usually its copyright notice. When a score has several, this
+    // is the first one, whatever it covers. Leave it empty when the score has none. MusicXML calls
+    // this <rights>.
     std::string copyright;
-    // The <rights> type attribute for `copyright` (above).
+
+    // What kind of statement `copyright` is, or what it covers: "copyright" (the default), or for
+    // example "music" or "words". Unset when the statement does not say.
     std::optional<std::string> copyrightType;
+
+    // The rights statements that follow `copyright`, in order: for example separate notices for
+    // the words and the music, or a later public-domain release. Empty when the score has one
+    // statement, which is the usual case. Set `copyright` first: if it is empty, these are still
+    // written, but when the file is read again the first of them becomes `copyright`.
+    std::vector<RightsData> additionalRights;
 
     // Where the music came from: the edition, manuscript, or other publication this score was
     // made from. This is MusicXML's <source> element. It names the origin of the music, not of
@@ -135,6 +166,7 @@ MXAPI_EQUALS_MEMBER(arranger)
 MXAPI_EQUALS_MEMBER(publisher)
 MXAPI_EQUALS_MEMBER(copyright)
 MXAPI_EQUALS_MEMBER(copyrightType)
+MXAPI_EQUALS_MEMBER(additionalRights)
 MXAPI_EQUALS_MEMBER(source)
 MXAPI_EQUALS_MEMBER(encoding)
 MXAPI_EQUALS_MEMBER(pageTextItems)

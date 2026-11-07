@@ -226,7 +226,6 @@ api::ScoreData ScoreReader::getScoreData() const
         bool isComposerFound = false;
         bool isArrangerFound = false;
         bool isPublisherFound = false;
-        bool isCopyrightFound = false;
 
         for (const auto &i : ident.creator())
         {
@@ -264,23 +263,17 @@ api::ScoreData ScoreReader::getScoreData() const
             }
         }
 
-        for (const auto &r : ident.rights())
+        // The first <rights> is the score's main statement, whatever its type; the others follow it
+        // in order.
+        const auto rights = ident.rights();
+        if (!rights.empty())
         {
-            const bool hasType = r.type().has_value();
-            const std::string typeStr = hasType ? *r.type() : std::string{};
-
-            if (hasType && typeStr == "copyright" && !isCopyrightFound)
-            {
-                myOutScoreData.copyright = r.value();
-                myOutScoreData.copyrightType = typeStr;
-                isCopyrightFound = true;
-            }
-
-            if (!isCopyrightFound && !hasType)
-            {
-                myOutScoreData.copyright = r.value();
-                myOutScoreData.copyrightType = std::nullopt;
-            }
+            myOutScoreData.copyright = rights.front().value();
+            myOutScoreData.copyrightType = rights.front().type();
+        }
+        for (size_t r = 1; r < rights.size(); ++r)
+        {
+            myOutScoreData.additionalRights.push_back(api::RightsData{rights[r].value(), rights[r].type()});
         }
         myOutScoreData.source = ident.source();
 
