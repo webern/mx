@@ -250,4 +250,25 @@ TEST(sameNoteSlurStopAndStartAreMatched, WriteDiagnostics)
 
 T_END
 
+// Ties and slurs are written in separate passes, but a curve that is neither is reported only once.
+TEST(curveWithUnspecifiedTypeIsReportedOnce, WriteDiagnostics)
+{
+    auto score = writeDiagnosticsScore(2);
+    auto &first = writeDiagnosticsNote(score, 0).noteAttachmentData;
+    first.curveStarts.emplace_back(CurveType::tie);
+    first.curveStarts.emplace_back(CurveType::unspecified);
+    first.curveStarts.emplace_back(CurveType::slur);
+    auto &second = writeDiagnosticsNote(score, 1).noteAttachmentData;
+    second.curveStops.emplace_back(CurveType::slur);
+    second.curveStops.emplace_back(CurveType::tie);
+
+    const auto diagnostics = writeDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 1);
+    const auto &diagnostic = diagnostics.all().front();
+    writeDiagnosticsCheck(diagnostic, DiagnosticCode::droppedData, "a curve with an unspecified type is not written");
+    CHECK_EQUAL(0, diagnostic.location.measureIndex);
+}
+
+T_END
+
 #endif

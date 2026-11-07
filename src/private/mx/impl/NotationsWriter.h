@@ -48,6 +48,9 @@ class NotationsWriter
     void addGlissandoStop(const api::GlissandoStop &inGlissandoStop, core::Notations &outNotations) const;
     void addWavyLineStopsAndContinues(core::Ornaments &outOrnaments) const;
     void addWavyLineStarts(core::Ornaments &outOrnaments) const;
+    void reportUnwritableCurves() const;
+    void addCurves(api::CurveType inCurveType, core::Notations &outNotations) const;
+    void addCurveStop(const api::CurveStop &inCurveStop, core::Notations &outNotations) const;
 };
 } // namespace impl
 } // namespace mx

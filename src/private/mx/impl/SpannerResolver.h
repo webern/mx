@@ -36,10 +36,11 @@ namespace impl
 // order a streaming reader encounters them, even when they sit on different
 // staves of the part. So resolvePart walks the part in the exact order
 // MeasureWriter serializes it: measures in order, staves in order, voices
-// ascending, notes in vector order (curve stops/continues/starts, then
-// glissando/slide stops then starts, then tuplet starts then stops, then
-// wavy-line stops/continues/starts, per note -- mirroring NotationsWriter),
-// and each staff's directions in
+// ascending, notes in vector order (curve stops/continues/starts,
+// glissando/slide stops then starts, tuplet starts then stops, wavy-line
+// stops/continues/starts, per note -- mirroring NotationsWriter within each
+// class; the order between classes does not matter, since each class has its
+// own pool), and each staff's directions in
 // vector order (mirroring DirectionWriter's per-direction emission order). An
 // identity spanner takes the lowest number that is free across its whole
 // serialized extent -- from its first event to its last, whichever of
@@ -63,16 +64,19 @@ namespace impl
 //
 // A spanner can begin and end on one note. Finale produces this shape
 // routinely: it can only anchor a glissando or slide line to a notehead, so a
-// line drawn toward a rest starts and stops on the note it leaves from.
-// NotationsWriter must emit such a pair start-first, while a note that merely
-// chains two spanners (one ends where the next begins) keeps its
-// stop-before-start order (#139). The two shapes can carry identical numbers,
-// so a note cannot tell them apart on its own. The walk here can: a stop that
-// closes a spanner opened on an earlier note belongs to a chain, and a stop
-// that closes nothing pairs with a same-numbered start on its own note. Both
-// endpoints of each detected pair are recorded so the writer can ask about
-// either one (see sameNoteSpanPartner). Only the classes the writer reorders
-// are tracked: glissando, slide, and wavy-line (#429).
+// line drawn toward a rest starts and stops on the note it leaves from. A tie
+// can take the same shape, as a let-ring tie did before MusicXML had a
+// let-ring type. NotationsWriter must emit such a pair start-first, while a
+// note that merely chains two spanners (one ends where the next begins) keeps
+// its stop-before-start order (#139). The two shapes can carry identical
+// numbers, so a note cannot tell them apart on its own. The walk here can: a
+// stop that closes a spanner opened on an earlier note belongs to a chain, a
+// start that a later stop closes runs past its note, and a stop that closes
+// nothing pairs with a same-numbered start on its own note that nothing
+// closes. Both endpoints of each detected pair are recorded so the writer can
+// ask about either one (see sameNoteSpanPartner). Only the classes the writer
+// reorders this way are tracked: slur, tie, glissando, slide, and wavy-line
+// (#429). Tuplets are paired by the writer itself.
 //
 // == Octave-shift stop sizes ==
 //
@@ -118,8 +122,8 @@ class SpannerResolver
     // The other end of a spanner that starts and stops on the same note, or
     // nullptr when the spanner extends beyond its note. inObject must be the
     // address of the same start/stop object that resolvePart visited. Tracked
-    // for glissando, slide, and wavy-line only -- the writer does not reorder
-    // the other spanner classes.
+    // for slur, tie, glissando, slide, and wavy-line only -- the writer does
+    // not reorder the other spanner classes this way.
     const void *sameNoteSpanPartner(const void *inObject) const;
 
   private:

@@ -255,83 +255,8 @@ core::Notations NotationsWriter::getNotations() const
 
     const auto &spannerResolver = myScoreWriter.getSpannerResolver();
 
-    for (const auto &curve : myNoteData.noteAttachmentData.curveStops)
-    {
-        if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
-        {
-            myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
-                                                  cursorLocation(myCursor),
-                                                  "a curve with an unspecified type is not written");
-            continue;
-        }
-        const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
-        if (curve.curveType == api::CurveType::tie)
-        {
-            core::Tied tied;
-            writeAttributesFromCurveStop(curve, tied, resolvedNumber, myScoreWriter.getDiagnostics(),
-                                         cursorLocation(myCursor));
-            outNotations.addChoice(core::NotationsChoice::tied(tied));
-        }
-        else if (curve.curveType == api::CurveType::slur)
-        {
-            core::Slur slur;
-            writeAttributesFromCurveStop(curve, slur, resolvedNumber, myScoreWriter.getDiagnostics(),
-                                         cursorLocation(myCursor));
-            outNotations.addChoice(core::NotationsChoice::slur(slur));
-        }
-    }
-
-    for (const auto &curve : myNoteData.noteAttachmentData.curveContinuations)
-    {
-        if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
-        {
-            myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
-                                                  cursorLocation(myCursor),
-                                                  "a curve with an unspecified type is not written");
-            continue;
-        }
-        const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
-        if (curve.curveType == api::CurveType::tie)
-        {
-            core::Tied tied;
-            writeAttributesFromCurveContinue(curve, tied, resolvedNumber, myScoreWriter.getDiagnostics(),
-                                             cursorLocation(myCursor));
-            outNotations.addChoice(core::NotationsChoice::tied(tied));
-        }
-        else if (curve.curveType == api::CurveType::slur)
-        {
-            core::Slur slur;
-            writeAttributesFromCurveContinue(curve, slur, resolvedNumber, myScoreWriter.getDiagnostics(),
-                                             cursorLocation(myCursor));
-            outNotations.addChoice(core::NotationsChoice::slur(slur));
-        }
-    }
-
-    for (const auto &curve : myNoteData.noteAttachmentData.curveStarts)
-    {
-        if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
-        {
-            myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
-                                                  cursorLocation(myCursor),
-                                                  "a curve with an unspecified type is not written");
-            continue;
-        }
-        const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
-        if (curve.curveType == api::CurveType::tie)
-        {
-            core::Tied tied;
-            writeAttributesFromCurveStart(curve, tied, resolvedNumber, myScoreWriter.getDiagnostics(),
-                                          cursorLocation(myCursor));
-            outNotations.addChoice(core::NotationsChoice::tied(tied));
-        }
-        else if (curve.curveType == api::CurveType::slur)
-        {
-            core::Slur slur;
-            writeAttributesFromCurveStart(curve, slur, resolvedNumber, myScoreWriter.getDiagnostics(),
-                                          cursorLocation(myCursor));
-            outNotations.addChoice(core::NotationsChoice::slur(slur));
-        }
-    }
+    reportUnwritableCurves();
+    addCurves(api::CurveType::tie, outNotations);
 
     // A laissez-vibrer / let-ring tie is a lone <tied type="let-ring"> with no
     // start/stop pairing, so it is emitted from its own field rather than the
@@ -438,6 +363,8 @@ core::Notations NotationsWriter::getNotations() const
                                               myConverter, myScoreWriter.getDiagnostics(), cursorLocation(myCursor)));
         }
     }
+
+    addCurves(api::CurveType::slur, outNotations);
 
     // Wavy lines live inside <ornaments>, alongside trill-mark/shake/etc. Stops and continues are
     // emitted before the mark-derived ornaments below (stop-before-start, as with glissando/slide
@@ -657,6 +584,146 @@ core::Notations NotationsWriter::getNotations() const
     }
 
     return outNotations;
+}
+
+// A curve is written as <tied> when its type is tie and as <slur> when its type is slur. A curve
+// whose type is unspecified could be either one, so there is no element to write for it. Each such
+// curve is reported as dropped data, and addCurves skips it.
+void NotationsWriter::reportUnwritableCurves() const
+{
+    const auto &attachments = myNoteData.noteAttachmentData;
+    const auto report = [this]() {
+        myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                              cursorLocation(myCursor),
+                                              "a curve with an unspecified type is not written");
+    };
+    for (const auto &curve : attachments.curveStops)
+    {
+        if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
+        {
+            report();
+        }
+    }
+    for (const auto &curve : attachments.curveContinuations)
+    {
+        if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
+        {
+            report();
+        }
+    }
+    for (const auto &curve : attachments.curveStarts)
+    {
+        if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
+        {
+            report();
+        }
+    }
+}
+
+// Writes the note's ties or its slurs, whichever inCurveType names.
+//
+// MusicXML lets the children of <notations> come in any order, but notation programs put ties
+// ahead of tuplets and tuplets ahead of slurs, as in
+// <tied type="start"/><tuplet type="start"/><slur type="stop"/>. So getNotations calls this twice:
+// first for the ties, then again for the slurs once the glissandos, slides and tuplets are written.
+//
+// Within one kind, stops come before continues and continues before starts, so on a note where
+// one slur ends and the next begins, the slur that ends comes first (#139). The exception is a tie
+// or slur that starts and stops on this same note, the way a let-ring tie was written before
+// MusicXML had a let-ring type. Its start must come first, so its stop is held back and written
+// right after its start (#429).
+// The SpannerResolver decides which stops those are, because a note that chains two curves and a
+// note that holds a one-note curve can carry the same numbers.
+void NotationsWriter::addCurves(api::CurveType inCurveType, core::Notations &outNotations) const
+{
+    const auto &spannerResolver = myScoreWriter.getSpannerResolver();
+    const auto &attachments = myNoteData.noteAttachmentData;
+
+    for (const auto &curve : attachments.curveStops)
+    {
+        if (curve.curveType != inCurveType || spannerResolver.sameNoteSpanPartner(&curve) != nullptr)
+        {
+            continue;
+        }
+        addCurveStop(curve, outNotations);
+    }
+
+    for (const auto &curve : attachments.curveContinuations)
+    {
+        if (curve.curveType != inCurveType)
+        {
+            continue;
+        }
+        const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
+        if (inCurveType == api::CurveType::tie)
+        {
+            core::Tied tied;
+            writeAttributesFromCurveContinue(curve, tied, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                             cursorLocation(myCursor));
+            outNotations.addChoice(core::NotationsChoice::tied(tied));
+        }
+        else
+        {
+            core::Slur slur;
+            writeAttributesFromCurveContinue(curve, slur, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                             cursorLocation(myCursor));
+            outNotations.addChoice(core::NotationsChoice::slur(slur));
+        }
+    }
+
+    for (const auto &curve : attachments.curveStarts)
+    {
+        if (curve.curveType != inCurveType)
+        {
+            continue;
+        }
+        const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
+        if (inCurveType == api::CurveType::tie)
+        {
+            core::Tied tied;
+            writeAttributesFromCurveStart(curve, tied, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                          cursorLocation(myCursor));
+            outNotations.addChoice(core::NotationsChoice::tied(tied));
+        }
+        else
+        {
+            core::Slur slur;
+            writeAttributesFromCurveStart(curve, slur, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                          cursorLocation(myCursor));
+            outNotations.addChoice(core::NotationsChoice::slur(slur));
+        }
+
+        const void *sameNoteStop = spannerResolver.sameNoteSpanPartner(&curve);
+        if (sameNoteStop != nullptr)
+        {
+            for (const auto &stop : attachments.curveStops)
+            {
+                if (&stop == sameNoteStop)
+                {
+                    addCurveStop(stop, outNotations);
+                }
+            }
+        }
+    }
+}
+
+void NotationsWriter::addCurveStop(const api::CurveStop &inCurveStop, core::Notations &outNotations) const
+{
+    const auto resolvedNumber = myScoreWriter.getSpannerResolver().emittedNumber(inCurveStop.number, &inCurveStop);
+    if (inCurveStop.curveType == api::CurveType::tie)
+    {
+        core::Tied tied;
+        writeAttributesFromCurveStop(inCurveStop, tied, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                     cursorLocation(myCursor));
+        outNotations.addChoice(core::NotationsChoice::tied(tied));
+    }
+    else
+    {
+        core::Slur slur;
+        writeAttributesFromCurveStop(inCurveStop, slur, resolvedNumber, myScoreWriter.getDiagnostics(),
+                                     cursorLocation(myCursor));
+        outNotations.addChoice(core::NotationsChoice::slur(slur));
+    }
 }
 
 void NotationsWriter::addGlissandoAndSlide(core::Notations &outNotations) const
