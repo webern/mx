@@ -13,6 +13,7 @@
 #include <iterator>
 #include <map>
 #include <random>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -22,18 +23,36 @@ using namespace mxtest;
 
 namespace voiceInterleaveApiTest
 {
-// A one-part score in 3/4 with one division per quarter, holding a single measure whose music is
-// inMeasureBody. With two staves, the second has a bass clef.
-inline std::string makeScoreXml(const std::string &inMeasureBody, int inStaves = 1)
+// Replaces each {name} in inTemplate with the value inValues gives for name. An empty value stands
+// for an element the XML leaves out, and a line left with nothing but spaces is dropped.
+inline std::string fillXmlTemplate(const std::string &inTemplate, const std::map<std::string, std::string> &inValues)
 {
-    const std::string staves = inStaves == 1 ? "" : "        <staves>2</staves>\n";
-    const std::string clefNumber = inStaves == 1 ? "" : R"( number="1")";
-    const std::string bassClef = inStaves == 1 ? "" : R"(        <clef number="2">
-          <sign>F</sign>
-          <line>4</line>
-        </clef>
-)";
-    return std::string{R"(<score-partwise version="3.0">
+    std::string filled;
+    size_t pos = 0;
+    for (auto open = inTemplate.find('{'); open != std::string::npos; open = inTemplate.find('{', pos))
+    {
+        const auto close = inTemplate.find('}', open);
+        filled += inTemplate.substr(pos, open - pos);
+        filled += inValues.at(inTemplate.substr(open + 1, close - open - 1));
+        pos = close + 1;
+    }
+    filled += inTemplate.substr(pos);
+
+    std::string xml;
+    std::istringstream lines{filled};
+    for (std::string line; std::getline(lines, line);)
+    {
+        if (line.find_first_not_of(' ') != std::string::npos)
+        {
+            xml += line + "\n";
+        }
+    }
+    return xml;
+}
+
+// A one-part score in 3/4 with one division per quarter, holding a single measure. {staves},
+// {trebleClefNumber} and {bassClef} are empty for a single staff.
+constexpr const char *kVoiceInterleaveScoreXml = R"(<score-partwise version="3.0">
   <part-list>
     <score-part id="P1">
       <part-name>Flute</part-name>
@@ -47,53 +66,76 @@ inline std::string makeScoreXml(const std::string &inMeasureBody, int inStaves =
           <beats>3</beats>
           <beat-type>4</beat-type>
         </time>
-)"} + staves +
-           "        <clef" + clefNumber + R"(>
+        {staves}
+        <clef{trebleClefNumber}>
           <sign>G</sign>
           <line>2</line>
         </clef>
-)" + bassClef +
-           R"(      </attributes>
-)" + inMeasureBody +
-           R"(    </measure>
+        {bassClef}
+      </attributes>
+{measureBody}
+    </measure>
   </part>
 </score-partwise>
 )";
+
+// A note in octave 4. {chord}, {voice}, {dot} and {staff} are whole elements that a note can leave
+// out.
+constexpr const char *kVoiceInterleaveNoteXml = R"(      <note>
+        {chord}
+        <pitch>
+          <step>{step}</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>{duration}</duration>
+        {voice}
+        <type>{type}</type>
+        {dot}
+        {staff}
+      </note>
+)";
+
+// A <backup> or a <forward>, as {element}.
+constexpr const char *kVoiceInterleaveMoveXml = R"(      <{element}>
+        <duration>{duration}</duration>
+      </{element}>
+)";
+
+// The score above, holding inMeasureBody. With two staves, the second has a bass clef.
+inline std::string makeScoreXml(const std::string &inMeasureBody, int inStaves = 1)
+{
+    const bool isGrandStaff = inStaves != 1;
+    return fillXmlTemplate(kVoiceInterleaveScoreXml,
+                           {{"staves", isGrandStaff ? "<staves>2</staves>" : ""},
+                            {"trebleClefNumber", isGrandStaff ? R"( number="1")" : ""},
+                            {"bassClef", isGrandStaff ? R"(<clef number="2"><sign>F</sign><line>4</line></clef>)" : ""},
+                            {"measureBody", inMeasureBody}});
 }
 
-// A <note> in octave 4. An empty inVoice leaves the <voice> element out, and so does a zero
-// inStaff for the <staff> element.
+// A quarter note, or a dotted half when inDuration is 3. An empty inVoice leaves the <voice> element
+// out, and so does a zero inStaff for the <staff> element.
 inline std::string makeNoteXml(const std::string &inStep, int inDuration, const std::string &inVoice,
                                bool inIsChord = false, int inStaff = 0)
 {
-    std::string xml = "      <note>\n";
-    if (inIsChord)
-    {
-        xml += "        <chord/>\n";
-    }
-    xml += "        <pitch>\n          <step>" + inStep + "</step>\n          <octave>4</octave>\n        </pitch>\n";
-    xml += "        <duration>" + std::to_string(inDuration) + "</duration>\n";
-    if (!inVoice.empty())
-    {
-        xml += "        <voice>" + inVoice + "</voice>\n";
-    }
-    xml += inDuration == 3 ? "        <type>half</type>\n        <dot/>\n" : "        <type>quarter</type>\n";
-    if (inStaff > 0)
-    {
-        xml += "        <staff>" + std::to_string(inStaff) + "</staff>\n";
-    }
-    xml += "      </note>\n";
-    return xml;
+    const bool isDottedHalf = inDuration == 3;
+    return fillXmlTemplate(kVoiceInterleaveNoteXml,
+                           {{"chord", inIsChord ? "<chord/>" : ""},
+                            {"step", inStep},
+                            {"duration", std::to_string(inDuration)},
+                            {"voice", inVoice.empty() ? "" : "<voice>" + inVoice + "</voice>"},
+                            {"type", isDottedHalf ? "half" : "quarter"},
+                            {"dot", isDottedHalf ? "<dot/>" : ""},
+                            {"staff", inStaff > 0 ? "<staff>" + std::to_string(inStaff) + "</staff>" : ""}});
 }
 
 inline std::string makeBackupXml(int inDuration)
 {
-    return "      <backup>\n        <duration>" + std::to_string(inDuration) + "</duration>\n      </backup>\n";
+    return fillXmlTemplate(kVoiceInterleaveMoveXml, {{"element", "backup"}, {"duration", std::to_string(inDuration)}});
 }
 
 inline std::string makeForwardXml(int inDuration)
 {
-    return "      <forward>\n        <duration>" + std::to_string(inDuration) + "</duration>\n      </forward>\n";
+    return fillXmlTemplate(kVoiceInterleaveMoveXml, {{"element", "forward"}, {"duration", std::to_string(inDuration)}});
 }
 
 inline size_t countOccurrences(const std::string &haystack, const std::string &needle)
