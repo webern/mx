@@ -417,7 +417,7 @@
       <notes>Spanner; basic glissando (suspected partial).</notes>
     </feature>
     <feature name="grace" support="full">
-      <notes>NoteData grace flags (steal-time, slash).</notes>
+      <notes>NoteData.isGrace, graceSlash, graceStealTimePrevious, graceStealTimeFollowing, graceMakeTimeTicks.</notes>
     </feature>
     <feature name="group-abbreviation" support="full">
       <notes>api::PartGroupData.abbreviation.</notes>

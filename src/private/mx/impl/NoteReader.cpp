@@ -161,8 +161,8 @@ NoteReader::NoteReader(const core::Note &mxNote)
       myTimeModificationNormalTypeDots(0), myIsTimeModificationNormalTypeSpecified(false), myHasAccidental(false),
       myAccidental(core::AccidentalValue::natural()), myIsAccidentalParenthetical(false),
       myIsAccidentalCautionary{false}, myIsAccidentalEditorial{false}, myIsAccidentalBracketed{false},
-      myIsStemSpecified{false}, myStem{}, myIsGraceSlashSpecified{false}, myGraceSlash{}, myIsTieStart{false},
-      myIsTieStop{false}, myHasLyric{false}
+      myIsStemSpecified{false}, myStem{}, myIsGraceSlashSpecified{false}, myGraceSlash{}, myGraceStealTimePrevious{},
+      myGraceStealTimeFollowing{}, myGraceMakeTime{}, myIsTieStart{false}, myIsTieStop{false}, myHasLyric{false}
 {
     setNormalGraceCueItems();
     setRestPitchUnpitchedItems();
@@ -223,6 +223,18 @@ void NoteReader::setNormalGraceCueItems()
         {
             myIsGraceSlashSpecified = true;
             myGraceSlash = *noteGuts.grace().slash();
+        }
+        if (noteGuts.grace().stealTimePrevious().has_value())
+        {
+            myGraceStealTimePrevious = noteGuts.grace().stealTimePrevious()->value().value();
+        }
+        if (noteGuts.grace().stealTimeFollowing().has_value())
+        {
+            myGraceStealTimeFollowing = noteGuts.grace().stealTimeFollowing()->value().value();
+        }
+        if (noteGuts.grace().makeTime().has_value())
+        {
+            myGraceMakeTime = noteGuts.grace().makeTime()->value().value();
         }
         if (noteGuts.graceNoteChoice().isGraceNormalNoteGroup())
         {

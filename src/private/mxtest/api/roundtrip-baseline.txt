@@ -881,3 +881,9 @@ synthetic/rights.3.0.xml
 # other <creator> follows in additionalCreators, in order.
 musuite/testTremolo.xml
 synthetic/creator.3.0.xml
+
+# Unblocked by NoteData::graceStealTimePrevious, graceStealTimeFollowing and graceMakeTimeTicks.
+# <grace> lost its steal-time-previous, steal-time-following and make-time attributes, which say
+# how much time a grace note takes from the note before or after it, or adds; only slash was kept.
+lysuite/ly24d_AfterGrace.xml
+synthetic/grace.3.0.xml

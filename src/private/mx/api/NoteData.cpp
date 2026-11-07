@@ -10,7 +10,8 @@ namespace api
 {
 NoteData::NoteData()
     : isRest{false}, isMeasureRest{false}, isUnpitched{false}, isDisplayStepOctaveSpecified{false}, isChord{false},
-      isTieStart{false}, isTieStop{false}, tieLetRing{}, isGrace{false}, graceSlash{Bool::unspecified}, isCue{false},
+      isTieStart{false}, isTieStop{false}, tieLetRing{}, isGrace{false}, graceSlash{Bool::unspecified},
+      graceStealTimePrevious{}, graceStealTimeFollowing{}, graceMakeTimeTicks{}, isCue{false},
       notehead{Notehead::normal}, noteheadFilled{Bool::unspecified}, noteheadSmufl{},
       noteheadParentheses{Bool::unspecified}, noteheadColor{}, pitchData{}, velocityStart{}, velocityStop{},
       userRequestedVoiceNumber{VALUE_UNSPECIFIED}, writeStaffNumber{Bool::unspecified}, stem{Stem::unspecified},

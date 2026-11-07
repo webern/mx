@@ -521,6 +521,10 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
 
     reportBeamRepairs(inMxNote, noteReader, location);
     reportRoundedDuration("note", noteReader.getDurationValue(), location);
+    if (const auto makeTime = noteReader.getGraceMakeTime())
+    {
+        reportRoundedDuration("grace make-time", *makeTime, location);
+    }
 
     bool isThisNotePartOfAChord = noteData.isChord || isNextNotePartOfAChord;
     noteData.isChord = isThisNotePartOfAChord;

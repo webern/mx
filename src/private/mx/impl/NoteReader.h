@@ -258,6 +258,22 @@ class NoteReader
         return myGraceSlash;
     }
 
+    inline std::optional<double> getGraceStealTimePrevious() const
+    {
+        return myGraceStealTimePrevious;
+    }
+
+    inline std::optional<double> getGraceStealTimeFollowing() const
+    {
+        return myGraceStealTimeFollowing;
+    }
+
+    // The make-time attribute in the measure's own divisions, not yet scaled to the score's ticks.
+    inline std::optional<double> getGraceMakeTime() const
+    {
+        return myGraceMakeTime;
+    }
+
     bool getIsTieStart() const
     {
         return myIsTieStart;
@@ -319,6 +335,9 @@ class NoteReader
     core::StemValue myStem;
     bool myIsGraceSlashSpecified;
     core::YesNo myGraceSlash;
+    std::optional<double> myGraceStealTimePrevious;
+    std::optional<double> myGraceStealTimeFollowing;
+    std::optional<double> myGraceMakeTime;
     bool myIsTieStart;
     bool myIsTieStop;
     bool myHasLyric;
