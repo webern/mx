@@ -861,3 +861,10 @@ recsuite/Saltarello.xml
 # back showing "Crit.". This file also needed <tied>, <tuplet>, <slur> written in that order
 # inside <notations>.
 musetrainer/Hungarian_Dance_No_5_in_G_Minor.xml
+
+# Unblocked by moving the write position to a direction that has its own <offset>. An <offset> only
+# moves where a direction is drawn, so a chord symbol after a <forward> in a measure without notes
+# was written at the start of the measure with its <offset> alone: the <forward> was lost and the
+# chord moved to the downbeat.
+mjbsuite/chords_simple.xml
+mjbsuite/processing_instructions.xml

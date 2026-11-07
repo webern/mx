@@ -911,6 +911,8 @@ void MeasureWriter::writeDirections(dIter &directionIter, const dIter &direction
     }
 
     const bool isNotesEnd = inNoteIter == inNotesEnd;
+    const std::optional<int> nextNoteTick =
+        isNotesEnd ? std::nullopt : std::optional<int>{inNoteIter->tickTimePosition};
     const bool isLastNote = isNotesEnd || (inNoteIter + 1 == inNotesEnd);
     const bool isFirstNote = !isLastNote && !isNotesEnd && (inNoteIter == inNotesBegin);
     const bool isOnlyNote = inNoteIter == inNotesBegin && isLastNote;
@@ -927,7 +929,7 @@ void MeasureWriter::writeDirections(dIter &directionIter, const dIter &direction
                directionIter->tickTimePosition <= std::max(0, inNoteIter->tickTimePosition);
              ++directionIter)
         {
-            writeDirection(*directionIter);
+            writeDirection(*directionIter, nextNoteTick);
         }
 
         return;
@@ -936,7 +938,7 @@ void MeasureWriter::writeDirections(dIter &directionIter, const dIter &direction
     {
         for (; directionIter != directionEnd; ++directionIter)
         {
-            writeDirection(*directionIter);
+            writeDirection(*directionIter, nextNoteTick);
         }
 
         return;
@@ -959,15 +961,82 @@ void MeasureWriter::writeDirections(dIter &directionIter, const dIter &direction
 
         for (; directionIter != directionEnd && directionIter->tickTimePosition < currentNoteEndTime; ++directionIter)
         {
-            writeDirection(*directionIter);
+            writeDirection(*directionIter, nextNoteTick);
         }
 
         return;
     }
 }
 
-void MeasureWriter::writeDirection(const api::DirectionData &inDirectionData)
+void MeasureWriter::moveToDirection(const api::DirectionData &inDirectionData, std::optional<int> inNextNoteTick)
 {
+    // A direction with its own <offset> is placed by the write position alone: the <offset> only
+    // nudges where it is drawn. So the write position must stand at the direction's tick, or a reader
+    // would place the direction wherever the previous note or staff happened to end. A direction
+    // without an <offset> is left where it is; DirectionWriter reaches its tick with an <offset>
+    // that carries sound.
+    //
+    // The move must not split a voice. A <forward> may go up to the voice's next note, whose own
+    // <forward> covers the rest of the gap. A <backup> is only written when no note of the voice
+    // follows, because a reader starts a new voice at every <backup>.
+    if (!inDirectionData.offset.has_value())
+    {
+        return;
+    }
+
+    if (inNextNoteTick.has_value() && *inNextNoteTick < 0)
+    {
+        return;
+    }
+
+    const int directionTick = std::max(0, inDirectionData.tickTimePosition);
+    const int gap = directionTick - cursor().tickTimePosition;
+    const bool isForward = gap > 0 && (!inNextNoteTick.has_value() || directionTick <= *inNextNoteTick);
+    const bool isBackup = gap < 0 && !inNextNoteTick.has_value();
+    if (!isForward && !isBackup)
+    {
+        return;
+    }
+
+    // A middle barline the write position has already reached goes ahead of the move.
+    writeMidMeasureBarlines();
+    if (myPropertiesWriter)
+    {
+        myPropertiesWriter->flushBuffer();
+    }
+
+    if (isBackup)
+    {
+        backup(-gap);
+        return;
+    }
+
+    // A middle barline on the way to the direction stops the <forward>, so that it is read back at
+    // its own tick and not at the direction's.
+    while (myBarlinesIter != myBarlinesEnd && myBarlinesIter->location == api::HorizontalAlignment::center &&
+           myBarlinesIter->tickTimePosition <= directionTick)
+    {
+        const int step = myBarlinesIter->tickTimePosition - cursor().tickTimePosition;
+        if (step > 0)
+        {
+            forward(step);
+        }
+
+        writeBarline(*myBarlinesIter);
+        ++myBarlinesIter;
+    }
+
+    const int rest = directionTick - cursor().tickTimePosition;
+    if (rest > 0)
+    {
+        forward(rest);
+    }
+}
+
+void MeasureWriter::writeDirection(const api::DirectionData &inDirectionData, std::optional<int> inNextNoteTick)
+{
+    moveToDirection(inDirectionData, inNextNoteTick);
+
     if (myPropertiesWriter)
     {
         myPropertiesWriter->flushBuffer();

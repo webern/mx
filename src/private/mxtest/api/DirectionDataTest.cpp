@@ -483,4 +483,244 @@ TEST(WedgeUnspecifiedColorNoPhantomAttribute, DirectionData)
 
 T_END;
 
+// A note for the tests below, which use ticksPerQuarter 10.
+inline NoteData directionDataTestNote(int inTick, int inTicks, DurationName inName)
+{
+    NoteData note{};
+    note.tickTimePosition = inTick;
+    note.durationData.durationTimeTicks = inTicks;
+    note.durationData.durationName = inName;
+    return note;
+}
+
+// A forte at inTick, drawn inOffset ticks to the right of it.
+inline DirectionData directionDataTestOffsetForte(int inTick, int inOffset)
+{
+    MarkData mark{StandardDynamic::f};
+    mark.tickTimePosition = inTick;
+    DirectionData direction{};
+    direction.tickTimePosition = inTick;
+    direction.offset = inOffset;
+    direction.directionTypes.assign(1, DirectionChoice{mark});
+    return direction;
+}
+
+// A chord symbol after a <forward> in a measure without notes keeps its tick. Its <offset> only moves
+// where it is drawn, so the writer must reach the tick with a <forward>.
+TEST(OffsetHarmonyInMeasureWithoutNotesKeepsTick, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+
+    DirectionData direction{};
+    direction.tickTimePosition = 10;
+    direction.offset = 3;
+    auto &chord = direction.chords.emplace_back();
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    staff.directions.push_back(direction);
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<forward>") != std::string::npos);
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 1);
+    CHECK_EQUAL(10, rdirections.front().tickTimePosition);
+    REQUIRE(rdirections.front().offset.has_value());
+    CHECK_EQUAL(3, *rdirections.front().offset);
+    CHECK_EQUAL(1, rdirections.front().chords.size());
+}
+
+T_END;
+
+TEST(OffsetDirectionAfterLastNoteKeepsTick, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    staff.voices[0].notes.push_back(directionDataTestNote(0, 10, DurationName::quarter));
+    staff.directions.push_back(directionDataTestOffsetForte(30, 2));
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rstaff = rscore.parts.front().measures.front().staves.front();
+    REQUIRE(rstaff.directions.size() == 1);
+    CHECK_EQUAL(30, rstaff.directions.front().tickTimePosition);
+    REQUIRE(rstaff.directions.front().offset.has_value());
+    CHECK_EQUAL(2, *rstaff.directions.front().offset);
+    REQUIRE(rstaff.voices.size() == 1);
+    REQUIRE(rstaff.voices.cbegin()->second.notes.size() == 1);
+    CHECK_EQUAL(0, rstaff.voices.cbegin()->second.notes.front().tickTimePosition);
+}
+
+T_END;
+
+TEST(OffsetDirectionBeforeFirstNoteKeepsTick, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    auto &notes = staff.voices[0].notes;
+    notes.push_back(directionDataTestNote(20, 10, DurationName::quarter));
+    notes.push_back(directionDataTestNote(30, 10, DurationName::quarter));
+    staff.directions.push_back(directionDataTestOffsetForte(10, 2));
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rstaff = rscore.parts.front().measures.front().staves.front();
+    REQUIRE(rstaff.directions.size() == 1);
+    CHECK_EQUAL(10, rstaff.directions.front().tickTimePosition);
+    REQUIRE(rstaff.directions.front().offset.has_value());
+    CHECK_EQUAL(2, *rstaff.directions.front().offset);
+    REQUIRE(rstaff.voices.size() == 1);
+    const auto &rnotes = rstaff.voices.cbegin()->second.notes;
+    REQUIRE(rnotes.size() == 2);
+    CHECK_EQUAL(20, rnotes.front().tickTimePosition);
+    CHECK_EQUAL(30, rnotes.back().tickTimePosition);
+}
+
+T_END;
+
+// The second staff has only a direction. The first staff's whole note leaves the write position at
+// the end of the measure, so the writer backs up to reach the direction's tick.
+TEST(OffsetDirectionOnStaffWithoutNotesKeepsTick, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &upper = measure.staves.emplace_back();
+    upper.voices[0].notes.push_back(directionDataTestNote(0, 40, DurationName::whole));
+    auto &lower = measure.staves.emplace_back();
+    lower.directions.push_back(directionDataTestOffsetForte(0, 5));
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rstaves = rscore.parts.front().measures.front().staves;
+    REQUIRE(rstaves.size() == 2);
+    CHECK(rstaves.front().directions.empty());
+    REQUIRE(rstaves.back().directions.size() == 1);
+    CHECK_EQUAL(0, rstaves.back().directions.front().tickTimePosition);
+    REQUIRE(rstaves.back().directions.front().offset.has_value());
+    CHECK_EQUAL(5, *rstaves.back().directions.front().offset);
+}
+
+T_END;
+
+// The first voice ends on beat 2 and the direction is on beat 3. The writer reaches it with a
+// <forward> after the first voice, and the second voice's <backup> starts from there.
+TEST(OffsetDirectionAfterFirstOfTwoVoicesKeepsTick, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    staff.voices[0].notes.push_back(directionDataTestNote(0, 10, DurationName::quarter));
+    staff.voices[1].notes.push_back(directionDataTestNote(0, 40, DurationName::whole));
+    staff.directions.push_back(directionDataTestOffsetForte(20, 2));
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rstaff = rscore.parts.front().measures.front().staves.front();
+    REQUIRE(rstaff.directions.size() == 1);
+    CHECK_EQUAL(20, rstaff.directions.front().tickTimePosition);
+    REQUIRE(rstaff.directions.front().offset.has_value());
+    CHECK_EQUAL(2, *rstaff.directions.front().offset);
+    REQUIRE(rstaff.voices.size() == 2);
+    const auto &rfirst = rstaff.voices.cbegin()->second.notes;
+    const auto &rsecond = std::next(rstaff.voices.cbegin())->second.notes;
+    REQUIRE(rfirst.size() == 1);
+    CHECK_EQUAL(0, rfirst.front().tickTimePosition);
+    CHECK_EQUAL(10, rfirst.front().durationData.durationTimeTicks);
+    REQUIRE(rsecond.size() == 1);
+    CHECK_EQUAL(0, rsecond.front().tickTimePosition);
+    CHECK_EQUAL(40, rsecond.front().durationData.durationTimeTicks);
+}
+
+T_END;
+
+// Each direction after the last note moves the write position on from the one before. A direction
+// without an offset does not move it, so it is written where the previous one left it, with an
+// <offset> that reaches its tick.
+TEST(SeveralOffsetDirectionsAfterLastNoteKeepTicks, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    staff.voices[0].notes.push_back(directionDataTestNote(0, 10, DurationName::quarter));
+    staff.directions.push_back(directionDataTestOffsetForte(20, 0));
+    staff.directions.push_back(directionDataTestOffsetForte(30, 2));
+    auto plain = directionDataTestOffsetForte(35, 0);
+    plain.offset.reset();
+    staff.directions.push_back(plain);
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 3);
+    CHECK_EQUAL(20, rdirections.at(0).tickTimePosition);
+    CHECK_EQUAL(30, rdirections.at(1).tickTimePosition);
+    REQUIRE(rdirections.at(1).offset.has_value());
+    CHECK_EQUAL(2, *rdirections.at(1).offset);
+    REQUIRE(rdirections.at(2).offset.has_value());
+    CHECK_EQUAL(35, rdirections.at(2).tickTimePosition + *rdirections.at(2).offset);
+}
+
+T_END;
+
+// The middle staff has only a direction. The writer backs up to it from the end of the first staff,
+// and the third staff, which starts at the same tick, follows without a <backup> of its own.
+TEST(OffsetDirectionOnMiddleStaffWithoutNotesRoundTrips, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    measure.staves.resize(3);
+    measure.staves.at(0).voices[0].notes.push_back(directionDataTestNote(0, 40, DurationName::whole));
+    measure.staves.at(1).directions.push_back(directionDataTestOffsetForte(10, 3));
+    measure.staves.at(2).voices[0].notes.push_back(directionDataTestNote(10, 30, DurationName::half));
+
+    const auto rscore = mxtest::roundTrip(score);
+    REQUIRE(rscore.parts.size() == 1);
+    CHECK(rscore.parts.front().measures == score.parts.front().measures);
+}
+
+T_END;
+
+// A middle barline between the last note and the direction is written where it stands, so the
+// <forward> to the direction is split in two around it.
+TEST(MiddleBarlineBeforeOffsetDirectionKeepsTick, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    staff.voices[0].notes.push_back(directionDataTestNote(0, 10, DurationName::quarter));
+    staff.directions.push_back(directionDataTestOffsetForte(30, 3));
+    BarlineData barline{};
+    barline.tickTimePosition = 20;
+    barline.location = HorizontalAlignment::center;
+    barline.barlineType = BarlineType::dashed;
+    measure.barlines.push_back(barline);
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rmeasure = rscore.parts.front().measures.front();
+    REQUIRE(rmeasure.barlines.size() == 1);
+    CHECK_EQUAL(20, rmeasure.barlines.front().tickTimePosition);
+    REQUIRE(rmeasure.staves.size() == 1);
+    REQUIRE(rmeasure.staves.front().directions.size() == 1);
+    CHECK_EQUAL(30, rmeasure.staves.front().directions.front().tickTimePosition);
+    CHECK(rscore.parts.front().measures == score.parts.front().measures);
+}
+
+T_END;
+
 #endif
