@@ -887,3 +887,9 @@ synthetic/creator.3.0.xml
 # how much time a grace note takes from the note before or after it, or adds; only slash was kept.
 lysuite/ly24d_AfterGrace.xml
 synthetic/grace.3.0.xml
+
+# Unblocked by reading a change of <voice> without a <backup> as another voice. Three notes
+# labelled 4, 5, 4 in a row were read as one voice with one name, so the middle note came back
+# as voice 4. They are now two voices, and the writer puts the voice-5 note in the gap it fills
+# rather than adding a <forward> and a <backup>.
+musuite/testVoiceMapper1.xml

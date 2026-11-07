@@ -42,6 +42,7 @@
 #include "mx/impl/NoteWriter.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/ScoreWriter.h"
+#include "mx/impl/VoicePass.h"
 #include "mx/utility/Throw.h"
 
 #include <limits>
@@ -614,28 +615,36 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
     auto directionIter = inStaff.directions.cbegin();
     auto directionEnd = inStaff.directions.cend();
 
-    for (const auto &voice : inStaff.voices)
+    for (const auto &pass : makeVoicePasses(inStaff))
     {
         bool isFirstNote = true;
         int currentChordTickPosition = -1;
         int previousChordTickPosition = -2;
         bool previousChordNoteWasGrace = false;
-        myHistory.setVoiceIndex(voice.first);
-        auto noteIter = voice.second.notes.cbegin();
-        auto noteEnd = voice.second.notes.cend();
+        myHistory.setVoiceIndex(pass.voices.front()->first);
+        const auto &notes = pass.notes();
+        auto noteIter = notes.cbegin();
+        auto noteEnd = notes.cend();
 
         if (directionIter != directionEnd)
         {
             backupToLeadingDirection(directionIter, directionEnd, noteIter, noteEnd);
-            writeDirections(directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd);
+            writeDirections(directionIter, directionEnd, noteIter, std::cbegin(notes), noteEnd);
         }
 
         for (; noteIter != noteEnd; ++noteIter)
         {
             bool isStartOfChord = false;
+            const auto &written = pass.written.at(static_cast<size_t>(noteIter - notes.cbegin()));
+            const auto &voice = *written.voice;
+            const auto &apiNote = *written.note;
+
+            if (voice.first != myHistory.getCursor().voiceIndex)
+            {
+                myHistory.setVoiceIndex(voice.first);
+            }
 
             myHistory.setChord(noteIter->isChord);
-            const auto &apiNote = *noteIter;
 
             // Middle barlines are checked before this note's <backup> or <forward>, so that one at the
             // end of a voice stays ahead of the <backup> into the next voice, and again after it, for
@@ -705,7 +714,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
             }
 
             myPropertiesWriter->flushBuffer();
-            writeDirections(directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd);
+            writeDirections(directionIter, directionEnd, noteIter, std::cbegin(notes), noteEnd);
 
             NoteWriter writer{
                 apiNote,   myHistory.getCursor(), myScoreWriter, myPreviousCursor.isChordActive, voice.second.notes,
@@ -719,10 +728,9 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
 
         } // foreach note
 
-        writeDirections(directionIter, directionEnd, std::cend(voice.second.notes), std::cbegin(voice.second.notes),
-                        std::cend(voice.second.notes));
+        writeDirections(directionIter, directionEnd, std::cend(notes), std::cbegin(notes), std::cend(notes));
 
-    } // foreach voice
+    } // foreach pass
 
     std::vector<api::NoteData> fakeEmptyNoteVector;
     const auto iterBegin = std::cbegin(fakeEmptyNoteVector);

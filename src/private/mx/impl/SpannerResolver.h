@@ -35,12 +35,14 @@ namespace impl
 // never the staff: two spanners conflict exactly when they overlap in the
 // order a streaming reader encounters them, even when they sit on different
 // staves of the part. So resolvePart walks the part in the exact order
-// MeasureWriter serializes it: measures in order, staves in order, voices
-// ascending, notes in vector order (curve stops/continues/starts,
-// glissando/slide stops then starts, tuplet starts then stops, wavy-line
-// stops/continues/starts, per note -- mirroring NotationsWriter within each
-// class; the order between classes does not matter, since each class has its
-// own pool), and each staff's directions in
+// MeasureWriter serializes it: measures in order, staves in order, each
+// staff's notes in the order makeVoicePasses gives them (voices ascending,
+// except where a voice is written in the gaps of the voice before it), and
+// within a note curve stops/continues/starts, glissando/slide stops then
+// starts, tuplet starts then stops, wavy-line stops/continues/starts
+// (mirroring NotationsWriter within each class; the order between classes
+// does not matter, since each class has its own pool), and each staff's
+// directions in
 // vector order (mirroring DirectionWriter's per-direction emission order). An
 // identity spanner takes the lowest number that is free across its whole
 // serialized extent -- from its first event to its last, whichever of

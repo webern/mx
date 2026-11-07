@@ -5,6 +5,7 @@
 #include "mx/impl/SpannerResolver.h"
 #include "mx/api/GlissandoData.h"
 #include "mx/impl/OttavaFunctions.h"
+#include "mx/impl/VoicePass.h"
 #include "mx/impl/WriteRefusal.h"
 #include "mx/utility/Throw.h"
 
@@ -638,12 +639,12 @@ void SpannerResolver::resolvePart(const api::PartData &inPart, int partIndex, Di
         for (const auto &staff : measure.staves)
         {
             collector.setStaff(staffIndex);
-            for (const auto &voicePair : staff.voices)
+            for (const auto &pass : makeVoicePasses(staff))
             {
-                collector.setVoice(voicePair.first);
-                for (const auto &note : voicePair.second.notes)
+                for (const auto &written : pass.written)
                 {
-                    collector.addNote(note);
+                    collector.setVoice(written.voice->first);
+                    collector.addNote(*written.note);
                 }
             }
             for (const auto &direction : staff.directions)

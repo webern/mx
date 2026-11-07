@@ -166,7 +166,7 @@ MeasureReader::MeasureReader(const core::PartwiseMeasure &inPartwiseMeasureRef, 
                              const MeasureCursor &previousMeasureCursor, DiagnosticsContext diagnostics)
     : myMutex{}, myPartwiseMeasure{inPartwiseMeasureRef}, myConverter{}, myDiagnostics{diagnostics}, myOutMeasureData{},
       myCurrentCursor{cursor}, myPreviousMeasureCursor{previousMeasureCursor}, myHistory{}, myCrossStaffHomes{},
-      myPreviousNoteBucketStaffIndex{-1}
+      myPreviousNoteBucketStaffIndex{-1}, myVoiceGroups{}, myNextVoiceBucket{0}
 {
     HistoryRecord initialCursorRecord;
     initialCursorRecord.amount = 0;
@@ -224,6 +224,8 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
 
     myCrossStaffHomes.clear();
     myPreviousNoteBucketStaffIndex = -1;
+    myVoiceGroups.clear();
+    myNextVoiceBucket = 0;
     scanForCrossStaffBeamGroups();
 
     const auto mdcSpan = myPartwiseMeasure.musicData();
@@ -537,8 +539,74 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
     MX_ASSERT(bucketStaffIndex >= 0);
     MX_ASSERT(static_cast<size_t>(bucketStaffIndex) < myOutMeasureData.staves.size());
     myPreviousNoteBucketStaffIndex = bucketStaffIndex;
-    insertNoteData(std::move(noteData), myCurrentCursor.staffIndex, myCurrentCursor.voiceIndex,
-                   noteReader.getVoiceLabel());
+    const int voiceBucket = findVoiceBucket(bucketStaffIndex, noteReader.getIsChord(), noteReader.getVoiceLabel());
+    insertNoteData(std::move(noteData), bucketStaffIndex, voiceBucket, noteReader.getVoiceLabel());
+}
+
+// A <backup> starts another voice. Between backups, MusicXML can also change voice from one note to
+// the next with nothing but the <voice> text, the next note starting where the last one ended.
+//
+// This returns the voice a note goes into, as its key in the staff's voices map. It looks at the
+// notes of the same staff since the last <backup> in the measure, or since the start of the measure
+// when there has not been one. Each different <voice> text among those notes gets a voice of its
+// own, and the note goes into the voice for its text. For example, three notes labelled 4, 5 and 4
+// make two voices: the first and third notes are in one, and the middle note is in the other. When
+// those notes name at most one voice (they all have the same text, or none of them has a <voice>),
+// they are all one voice. The header calls each of these voices a group.
+int MeasureReader::findVoiceBucket(int staff, bool isChordContinuation, const std::string &voiceText) const
+{
+    auto &staffGroups = myVoiceGroups[staff];
+
+    if (staffGroups.run != myCurrentCursor.voiceIndex)
+    {
+        staffGroups = StaffVoiceGroups{};
+        staffGroups.run = myCurrentCursor.voiceIndex;
+    }
+
+    auto &groups = staffGroups.groups;
+    const auto findGroup = [&](auto isMatch) { return std::find_if(groups.begin(), groups.end(), isMatch); };
+    auto group = groups.end();
+
+    if (isChordContinuation || voiceText.empty())
+    {
+        // A <chord/> note sounds with the note before it and so is in its voice, whatever its own
+        // <voice> says. A note without a <voice> continues the voice of the note before it.
+        group = findGroup([&](const VoiceGroup &g) { return g.bucket == staffGroups.previousNoteBucket; });
+    }
+    else
+    {
+        group = findGroup([&](const VoiceGroup &g) { return g.name == voiceText; });
+
+        // While the run's notes so far have not named their voice, this note names it. Otherwise
+        // a name the run has not seen yet starts another voice.
+        if (group == groups.end() && !(groups.size() == 1 && groups.front().name.empty()))
+        {
+            groups.push_back(VoiceGroup{voiceText, myNextVoiceBucket});
+            ++myNextVoiceBucket;
+            group = std::prev(groups.end());
+        }
+        else if (group == groups.end())
+        {
+            group = groups.begin();
+        }
+    }
+
+    if (group == groups.end())
+    {
+        // the first note of the run
+        groups.push_back(VoiceGroup{"", myNextVoiceBucket});
+        ++myNextVoiceBucket;
+        group = std::prev(groups.end());
+    }
+
+    // As with VoiceData::label, the first note that names the voice names it for all of them.
+    if (group->name.empty())
+    {
+        group->name = voiceText;
+    }
+
+    staffGroups.previousNoteBucket = group->bucket;
+    return group->bucket;
 }
 
 void MeasureReader::scanForCrossStaffBeamGroups() const
