@@ -48,12 +48,9 @@ class NotationsWriter
     void addGlissandoStop(const api::GlissandoStop &inGlissandoStop, core::Notations &outNotations) const;
     void addWavyLineStopsAndContinues(core::Ornaments &outOrnaments) const;
     void addWavyLineStarts(core::Ornaments &outOrnaments) const;
-
-    // A curve must be a tie or a slur. Any other curve is reported and not written.
     void reportUnwritableCurves() const;
-    // Writes the note's ties or its slurs, whichever inCurveType names: stops, then continues,
-    // then starts, so a curve that ends on this note comes before one that begins on it.
     void addCurves(api::CurveType inCurveType, core::Notations &outNotations) const;
+    void addCurveStop(const api::CurveStop &inCurveStop, core::Notations &outNotations) const;
 };
 } // namespace impl
 } // namespace mx

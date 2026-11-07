@@ -469,15 +469,15 @@ static void spannerResolveOttavaSizes(const std::vector<SpannerOttavaEvent> &inE
 }
 
 // Finds spanners whose start and stop sit on the same note and records the two endpoints as
-// partners. The events arrive in the writer's plain stop-before-start order, which is what makes
-// the decision possible: a stop that closes a spanner opened on an earlier note belongs to that
-// spanner (a chain), and a stop that closes nothing pairs with a same-bucket start on its own
-// note. A leftover stop with no open start and no same-note start is an authoring error and is
-// left unpaired, the same as before this detection existed.
+// partners. The events arrive in the writer's plain stop-before-start order. A stop that closes a
+// spanner opened on an earlier note belongs to that spanner (a chain), and a start that a later
+// stop closes runs on past its note. What is left over is a stop that closes nothing and a start
+// that nothing closes; when the two sit on one note, they are one spanner on that note. Any other
+// leftover is an authoring error and is left unpaired.
 static void spannerDetectSameNoteSpans(const std::vector<SpannerNumberEvent> &inEvents,
                                        std::unordered_map<const void *, const void *> &ioPartners)
 {
-    std::map<std::string, int> openCounts;
+    std::map<std::string, std::vector<const SpannerNumberEvent *>> openStarts;
     std::map<std::string, std::vector<const SpannerNumberEvent *>> unopenedStops;
 
     for (const auto &event : inEvents)
@@ -485,10 +485,10 @@ static void spannerDetectSameNoteSpans(const std::vector<SpannerNumberEvent> &in
         const auto key = spannerPairingKey(event.number);
         if (event.closes)
         {
-            auto &openCount = openCounts[key];
-            if (openCount > 0)
+            auto &starts = openStarts[key];
+            if (!starts.empty())
             {
-                --openCount;
+                starts.pop_back();
             }
             else
             {
@@ -497,20 +497,24 @@ static void spannerDetectSameNoteSpans(const std::vector<SpannerNumberEvent> &in
         }
         else if (event.opens)
         {
-            auto &stops = unopenedStops[key];
-            const auto sameNoteStop =
-                std::find_if(stops.cbegin(), stops.cend(), [&event](const SpannerNumberEvent *stop) {
-                    return stop->noteTag != nullptr && stop->noteTag == event.noteTag;
+            openStarts[key].push_back(&event);
+        }
+    }
+
+    for (const auto &keyAndStops : unopenedStops)
+    {
+        auto &starts = openStarts[keyAndStops.first];
+        for (const SpannerNumberEvent *stop : keyAndStops.second)
+        {
+            const auto sameNoteStart =
+                std::find_if(starts.cbegin(), starts.cend(), [stop](const SpannerNumberEvent *start) {
+                    return stop->noteTag != nullptr && stop->noteTag == start->noteTag;
                 });
-            if (sameNoteStop != stops.cend())
+            if (sameNoteStart != starts.cend())
             {
-                ioPartners[event.object] = (*sameNoteStop)->object;
-                ioPartners[(*sameNoteStop)->object] = event.object;
-                stops.erase(sameNoteStop);
-            }
-            else
-            {
-                ++openCounts[key];
+                ioPartners[stop->object] = (*sameNoteStart)->object;
+                ioPartners[(*sameNoteStart)->object] = stop->object;
+                starts.erase(sameNoteStart);
             }
         }
     }
@@ -662,7 +666,8 @@ void SpannerResolver::resolvePart(const api::PartData &inPart, int partIndex, Di
         {
             spannerReportUnmatched(spannerClass, classAndEvents.second, diagnostics);
         }
-        if (spannerClass == SpannerNumberClass::glissando || spannerClass == SpannerNumberClass::slide ||
+        if (spannerClass == SpannerNumberClass::slur || spannerClass == SpannerNumberClass::tie ||
+            spannerClass == SpannerNumberClass::glissando || spannerClass == SpannerNumberClass::slide ||
             spannerClass == SpannerNumberClass::wavyLine)
         {
             spannerDetectSameNoteSpans(classAndEvents.second, mySameNoteSpanPartners);
