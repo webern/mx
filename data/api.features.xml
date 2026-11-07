@@ -296,9 +296,28 @@
     <feature name="encoding-description" support="full">
       <notes>EncodingData.encodingDescription; EncodingFunctions.cpp.</notes>
     </feature>
-    <feature name="ending" support="full">
+    <feature name="ending" support="partial">
+      <attributes>
+        <attribute name="number" support="yes"/>
+        <attribute name="type" support="yes"/>
+        <attribute name="default-x" support="yes"/>
+        <attribute name="default-y" support="yes"/>
+        <attribute name="relative-x" support="yes"/>
+        <attribute name="relative-y" support="yes"/>
+        <attribute name="end-length" support="yes"/>
+        <attribute name="text-x" support="yes"/>
+        <attribute name="text-y" support="yes"/>
+        <attribute name="color" support="no"/>
+        <attribute name="font-family" support="no"/>
+        <attribute name="font-size" support="no"/>
+        <attribute name="font-style" support="no"/>
+        <attribute name="font-weight" support="no"/>
+        <attribute name="print-object" support="no"/>
+        <attribute name="system" support="no"/>
+      </attributes>
       <notes>BarlineData.ending -&gt; EndingData: type (EndingType via endingMap), the full number
-      list, and the display text.</notes>
+      list, the display text, the bracket position (positionData), end-length and the text-x/text-y
+      label offsets. Font, color, print-object and system are not modeled.</notes>
     </feature>
     <feature name="ensemble" support="full">
       <notes>InstrumentData.soloOrEnsemble=ensemble.</notes>

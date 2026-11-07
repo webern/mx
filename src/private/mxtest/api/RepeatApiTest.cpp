@@ -280,6 +280,218 @@ TEST(endingBlankNumberRoundTrip, Repeat)
 
 T_END;
 
+// An ending placed by hand -- bracket height, hook length and label offset -- comes back exactly as
+// it was set.
+TEST(endingPositionAndEndLengthRoundTrip, Repeat)
+{
+    auto score = makeScoreWithBarlineForRepeat();
+    auto &barline = score.parts.back().measures.back().barlines.back();
+    barline.location = HorizontalAlignment::left;
+    EndingData ending;
+    ending.type = EndingType::start;
+    ending.numbers = {1};
+    ending.positionData.isDefaultYSpecified = true;
+    ending.positionData.defaultY = 40.0;
+    ending.endLength = 20.0;
+    ending.textX = 3.0;
+    ending.textY = -2.0;
+    barline.ending = ending;
+
+    const auto out = roundTrip(score);
+    const auto &ob = out.parts.back().measures.back().barlines.front();
+    REQUIRE(ob.ending.has_value());
+    CHECK(ending == *ob.ending);
+}
+
+T_END;
+
+// Every position attribute, end-length, text-x and text-y on an <ending> reaches EndingData.
+TEST(endingPositionAndEndLengthReadFromXml, Repeat)
+{
+    const auto score = fromXml(endingXmlForRepeat(
+        R"(<ending default-x="5" default-y="40" relative-x="1" relative-y="-1" end-length="20" text-x="3" text-y="-2" number="1" type="start"/>)"));
+    const auto &ob = score.parts.back().measures.back().barlines.front();
+    REQUIRE(ob.ending.has_value());
+    const auto &pos = ob.ending->positionData;
+    CHECK(pos.isDefaultXSpecified);
+    CHECK_DOUBLES_EQUAL(5.0, pos.defaultX, 0.0001);
+    CHECK(pos.isDefaultYSpecified);
+    CHECK_DOUBLES_EQUAL(40.0, pos.defaultY, 0.0001);
+    CHECK(pos.isRelativeXSpecified);
+    CHECK_DOUBLES_EQUAL(1.0, pos.relativeX, 0.0001);
+    CHECK(pos.isRelativeYSpecified);
+    CHECK_DOUBLES_EQUAL(-1.0, pos.relativeY, 0.0001);
+    REQUIRE(ob.ending->endLength.has_value());
+    CHECK_DOUBLES_EQUAL(20.0, *ob.ending->endLength, 0.0001);
+    REQUIRE(ob.ending->textX.has_value());
+    CHECK_DOUBLES_EQUAL(3.0, *ob.ending->textX, 0.0001);
+    REQUIRE(ob.ending->textY.has_value());
+    CHECK_DOUBLES_EQUAL(-2.0, *ob.ending->textY, 0.0001);
+}
+
+T_END;
+
+// The bracket's position, end-length and label offsets are written as attributes of <ending>.
+TEST(endingSerializesPositionAndEndLength, Repeat)
+{
+    auto score = makeScoreWithBarlineForRepeat();
+    auto &barline = score.parts.back().measures.back().barlines.back();
+    barline.location = HorizontalAlignment::left;
+    EndingData ending;
+    ending.type = EndingType::start;
+    ending.numbers = {1};
+    ending.positionData.isDefaultXSpecified = true;
+    ending.positionData.defaultX = 5.0;
+    ending.positionData.isDefaultYSpecified = true;
+    ending.positionData.defaultY = 40.0;
+    ending.positionData.isRelativeXSpecified = true;
+    ending.positionData.relativeX = 1.0;
+    ending.positionData.isRelativeYSpecified = true;
+    ending.positionData.relativeY = -1.0;
+    ending.endLength = 20.0;
+    ending.textX = 3.0;
+    ending.textY = -2.0;
+    barline.ending = ending;
+
+    const auto xml = toXml(score);
+    CHECK(xml.find(R"(default-x="5")") != std::string::npos);
+    CHECK(xml.find(R"(default-y="40")") != std::string::npos);
+    CHECK(xml.find(R"(relative-x="1")") != std::string::npos);
+    CHECK(xml.find(R"(relative-y="-1")") != std::string::npos);
+    CHECK(xml.find(R"(end-length="20")") != std::string::npos);
+    CHECK(xml.find(R"(text-x="3")") != std::string::npos);
+    CHECK(xml.find(R"(text-y="-2")") != std::string::npos);
+}
+
+T_END;
+
+// A value of zero is a real setting, not the same as leaving the field empty: it is written and
+// reads back as zero.
+TEST(endingZeroLayoutValuesAreWritten, Repeat)
+{
+    auto score = makeScoreWithBarlineForRepeat();
+    auto &barline = score.parts.back().measures.back().barlines.back();
+    barline.location = HorizontalAlignment::left;
+    EndingData ending;
+    ending.type = EndingType::start;
+    ending.numbers = {1};
+    ending.positionData.isDefaultYSpecified = true;
+    ending.positionData.defaultY = 0.0;
+    ending.endLength = 0.0;
+    ending.textX = 0.0;
+    ending.textY = 0.0;
+    barline.ending = ending;
+
+    const auto xml = toXml(score);
+    CHECK(xml.find(R"(default-y="0")") != std::string::npos);
+    CHECK(xml.find(R"(end-length="0")") != std::string::npos);
+    CHECK(xml.find(R"(text-x="0")") != std::string::npos);
+    CHECK(xml.find(R"(text-y="0")") != std::string::npos);
+
+    const auto out = roundTrip(score);
+    const auto &ob = out.parts.back().measures.back().barlines.front();
+    REQUIRE(ob.ending.has_value());
+    CHECK(ending == *ob.ending);
+}
+
+T_END;
+
+// A first ending that closes with a jog of its own length reads that length from the stop.
+TEST(endingStopEndLengthReadFromXml, Repeat)
+{
+    const auto score = fromXml(endingXmlForRepeat(R"(<ending end-length="14" number="1" type="stop"/>)"));
+    const auto &ob = score.parts.back().measures.back().barlines.front();
+    REQUIRE(ob.ending.has_value());
+    CHECK(EndingType::stop == ob.ending->type);
+    REQUIRE(ob.ending->endLength.has_value());
+    CHECK_DOUBLES_EQUAL(14.0, *ob.ending->endLength, 0.0001);
+    CHECK(PositionData{} == ob.ending->positionData);
+    CHECK(!ob.ending->textX.has_value());
+    CHECK(!ob.ending->textY.has_value());
+}
+
+T_END;
+
+// The layout fields come back on a stop and on a discontinue ending, not only on a start.
+TEST(endingStopAndDiscontinueLayoutRoundTrip, Repeat)
+{
+    for (const auto type : {EndingType::stop, EndingType::discontinue})
+    {
+        auto score = makeScoreWithBarlineForRepeat();
+        auto &barline = score.parts.back().measures.back().barlines.back();
+        barline.location = HorizontalAlignment::right;
+        EndingData ending;
+        ending.type = type;
+        ending.numbers = {2};
+        ending.positionData.isRelativeXSpecified = true;
+        ending.positionData.relativeX = -4.0;
+        ending.positionData.isDefaultYSpecified = true;
+        ending.positionData.defaultY = 45.0;
+        ending.endLength = 14.0;
+        ending.textX = 6.0;
+        ending.textY = -18.0;
+        barline.ending = ending;
+
+        const auto out = roundTrip(score);
+        const auto &ob = out.parts.back().measures.back().barlines.front();
+        REQUIRE(ob.ending.has_value());
+        CHECK(ending == *ob.ending);
+    }
+}
+
+T_END;
+
+// An ending left to the program's layout reads back with no position, end-length or label offset,
+// and does not write any of those attributes.
+TEST(endingWithoutLayoutOmitsAttributes, Repeat)
+{
+    const auto score = fromXml(endingXmlForRepeat(R"(<ending number="1" type="start"/>)"));
+    const auto &ob = score.parts.back().measures.back().barlines.front();
+    REQUIRE(ob.ending.has_value());
+    CHECK(PositionData{} == ob.ending->positionData);
+    CHECK(!ob.ending->endLength.has_value());
+    CHECK(!ob.ending->textX.has_value());
+    CHECK(!ob.ending->textY.has_value());
+
+    const auto xml = toXml(score);
+    CHECK(xml.find("default-x") == std::string::npos);
+    CHECK(xml.find("default-y") == std::string::npos);
+    CHECK(xml.find("relative-x") == std::string::npos);
+    CHECK(xml.find("relative-y") == std::string::npos);
+    CHECK(xml.find("end-length") == std::string::npos);
+    CHECK(xml.find("text-x") == std::string::npos);
+    CHECK(xml.find("text-y") == std::string::npos);
+}
+
+T_END;
+
+// Two endings that differ only in where the bracket or its label is drawn are not equal.
+TEST(endingEqualityCoversLayoutFields, Repeat)
+{
+    EndingData base;
+    base.type = EndingType::start;
+    base.numbers = {1};
+
+    auto moved = base;
+    moved.positionData.isDefaultYSpecified = true;
+    moved.positionData.defaultY = 40.0;
+    CHECK(base != moved);
+
+    auto longerJog = base;
+    longerJog.endLength = 20.0;
+    CHECK(base != longerJog);
+
+    auto labelRight = base;
+    labelRight.textX = 3.0;
+    CHECK(base != labelRight);
+
+    auto labelUp = base;
+    labelUp.textY = -2.0;
+    CHECK(base != labelUp);
+}
+
+T_END;
+
 // A barline that carries no ending must report none, and must not emit an <ending> element.
 TEST(barlineWithoutEndingIsAbsent, Repeat)
 {

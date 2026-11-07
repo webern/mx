@@ -218,6 +218,35 @@ TEST(creditImageValignBaselineIsDropped, WriteDiagnostics)
 
 T_END
 
+TEST(endingPlacementAndAlignmentAreDropped, WriteDiagnostics)
+{
+    auto score = writeDiagnosticsScore(2);
+    auto &barline = score.parts.front().measures.at(1).barlines.emplace_back();
+    barline.location = HorizontalAlignment::left;
+    EndingData ending;
+    ending.numbers = {2};
+    ending.positionData.isDefaultYSpecified = true;
+    ending.positionData.defaultY = 40.0;
+    ending.positionData.placement = Placement::above;
+    ending.positionData.horizontalAlignment = HorizontalAlignment::center;
+    barline.ending = ending;
+
+    const auto diagnostics = writeDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 1);
+    const auto &diagnostic = diagnostics.all().front();
+    writeDiagnosticsCheck(diagnostic, DiagnosticCode::droppedData,
+                          "an ending's placement and alignment are not written; an ending has neither attribute");
+    CHECK_EQUAL(1, diagnostic.location.measureIndex);
+
+    std::ostringstream xml;
+    REQUIRE(fromScore(score).value().writeToStream(xml).ok());
+    CHECK(xml.str().find(R"(default-y="40")") != std::string::npos);
+    CHECK(xml.str().find("placement=") == std::string::npos);
+    CHECK(xml.str().find("halign=") == std::string::npos);
+}
+
+T_END
+
 TEST(unmatchedSlurIsReportedAtItsNote, WriteDiagnostics)
 {
     auto score = writeDiagnosticsScore(2);
