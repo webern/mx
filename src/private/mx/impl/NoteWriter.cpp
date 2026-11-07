@@ -22,8 +22,10 @@
 #include "mx/core/generated/LyricSyllableGroup.h"
 #include "mx/core/generated/LyricTextGroup.h"
 #include "mx/core/generated/NonNegativeDecimal.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/NormalNoteGroup.h"
 #include "mx/core/generated/Pitch.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Rest.h"
 #include "mx/core/generated/SmuflGlyphName.h"
 #include "mx/core/generated/SmuflLyricsGlyphName.h"
@@ -194,8 +196,8 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
          myNoteData.durationData.timeModificationActualNotes > 1))
     {
         core::TimeModification timeMod;
-        timeMod.setActualNotes(myNoteData.durationData.timeModificationActualNotes);
-        timeMod.setNormalNotes(myNoteData.durationData.timeModificationNormalNotes);
+        timeMod.setActualNotes(core::NonNegativeInteger{myNoteData.durationData.timeModificationActualNotes});
+        timeMod.setNormalNotes(core::NonNegativeInteger{myNoteData.durationData.timeModificationNormalNotes});
 
         // <normal-type> is the author's statement, taken straight from DurationData. When it
         // is unspecified it is omitted, and MusicXML reads the absence as the note's own
@@ -418,7 +420,7 @@ void NoteWriter::setStaffAndVoice() const
     {
         // cross-staff note: the containing staff governs voice membership and stream
         // position, but the displayed staff comes from the override (NoteData.h)
-        myOutNote.setStaff(*myNoteData.crossStaffIndex + 1);
+        myOutNote.setStaff(core::PositiveInteger{*myNoteData.crossStaffIndex + 1});
     }
     else if (myCursor.staffIndex >= 0)
     {
@@ -437,7 +439,7 @@ void NoteWriter::setStaffAndVoice() const
         }
         if (includeStaff)
         {
-            myOutNote.setStaff(myCursor.staffIndex + 1);
+            myOutNote.setStaff(core::PositiveInteger{myCursor.staffIndex + 1});
         }
     }
 

@@ -41,12 +41,12 @@ void Bookmark::setElement(std::optional<NameToken> value)
     m_element = std::move(value);
 }
 
-const std::optional<int> &Bookmark::position() const noexcept
+const std::optional<PositiveInteger> &Bookmark::position() const noexcept
 {
     return m_position;
 }
 
-void Bookmark::setPosition(std::optional<int> value)
+void Bookmark::setPosition(std::optional<PositiveInteger> value)
 {
     m_position = std::move(value);
 }
@@ -77,7 +77,7 @@ Bookmark parseBookmark(mx::xml::Node el, const ParseContext &context)
         }
         else if (aname == "position")
         {
-            out.setPosition(parseIntegerValue(a.value(), context, el, "position"));
+            out.setPosition(parseValue<PositiveInteger>(a.value(), context, el, "position"));
         }
         else
         {
@@ -116,7 +116,7 @@ void serializeBookmark(const Bookmark &v, mx::xml::Node parent, const char *tag)
     }
     if (v.position())
     {
-        setAttribute(el, "position", formatInt(*v.position()));
+        setAttribute(el, "position", v.position()->toString());
     }
     serializeBookmarkContent(v, el);
 }

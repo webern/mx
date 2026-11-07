@@ -117,7 +117,7 @@ void TupletReader::parseTuplet(std::vector<api::TupletStart> &outTupletStarts,
 
         if (actual.tupletNumber().has_value())
         {
-            tupletStart.actualNumber = actual.tupletNumber()->value();
+            tupletStart.actualNumber = actual.tupletNumber()->value().value();
         }
 
         if (actual.tupletType().has_value())
@@ -142,7 +142,7 @@ void TupletReader::parseTuplet(std::vector<api::TupletStart> &outTupletStarts,
 
         if (normal.tupletNumber().has_value())
         {
-            tupletStart.normalNumber = normal.tupletNumber()->value();
+            tupletStart.normalNumber = normal.tupletNumber()->value().value();
         }
 
         if (normal.tupletType().has_value())
@@ -167,7 +167,7 @@ void TupletReader::guessNormalFromNote(api::TupletStart &outTupletStart)
     {
         return;
     }
-    outTupletStart.normalNumber = myNote.timeModification()->normalNotes();
+    outTupletStart.normalNumber = myNote.timeModification()->normalNotes().value();
     guessFigureFromNote(outTupletStart.normalDurationName, outTupletStart.normalDots);
 }
 
@@ -177,7 +177,7 @@ void TupletReader::guessActualFromNote(api::TupletStart &outTupletStart)
     {
         return;
     }
-    outTupletStart.actualNumber = myNote.timeModification()->actualNotes();
+    outTupletStart.actualNumber = myNote.timeModification()->actualNotes().value();
 
     // The schema counts both actual-notes and normal-notes in the normal-type, so the actual
     // notes have the same note value as the normal notes, whatever the note's own written type.
@@ -234,8 +234,8 @@ void TupletReader::checkDurationAgainstGuess() const
     }
 
     const auto &timeMod = *myNote.timeModification();
-    const int actualNotes = timeMod.actualNotes();
-    const int normalNotes = timeMod.normalNotes();
+    const int actualNotes = timeMod.actualNotes().value();
+    const int normalNotes = timeMod.normalNotes().value();
     if (actualNotes <= 0 || normalNotes <= 0)
     {
         return;

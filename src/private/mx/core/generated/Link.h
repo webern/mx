@@ -5,6 +5,7 @@
 #include "mx/core/NameToken.h"
 #include "mx/core/Token.h"
 #include "mx/core/generated/ActuateType.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/ShowType.h"
 #include "mx/core/generated/Tenths.h"
 #include "mx/core/generated/TypeType.h"
@@ -44,8 +45,8 @@ class Link final
     void setXlinkActuate(std::optional<ActuateType> value);
     const std::optional<NameToken> &element() const noexcept;
     void setElement(std::optional<NameToken> value);
-    const std::optional<int> &position() const noexcept;
-    void setPosition(std::optional<int> value);
+    const std::optional<PositiveInteger> &position() const noexcept;
+    void setPosition(std::optional<PositiveInteger> value);
     const std::optional<Tenths> &defaultX() const noexcept;
     void setDefaultX(std::optional<Tenths> value);
     const std::optional<Tenths> &defaultY() const noexcept;
@@ -65,7 +66,7 @@ class Link final
     std::optional<ShowType> m_xlinkShow;
     std::optional<ActuateType> m_xlinkActuate;
     std::optional<NameToken> m_element;
-    std::optional<int> m_position;
+    std::optional<PositiveInteger> m_position;
     std::optional<Tenths> m_defaultX;
     std::optional<Tenths> m_defaultY;
     std::optional<Tenths> m_relativeX;

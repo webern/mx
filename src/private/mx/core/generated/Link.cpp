@@ -91,12 +91,12 @@ void Link::setElement(std::optional<NameToken> value)
     m_element = std::move(value);
 }
 
-const std::optional<int> &Link::position() const noexcept
+const std::optional<PositiveInteger> &Link::position() const noexcept
 {
     return m_position;
 }
 
-void Link::setPosition(std::optional<int> value)
+void Link::setPosition(std::optional<PositiveInteger> value)
 {
     m_position = std::move(value);
 }
@@ -187,7 +187,7 @@ Link parseLink(mx::xml::Node el, const ParseContext &context)
         }
         else if (aname == "position")
         {
-            out.setPosition(parseIntegerValue(a.value(), context, el, "position"));
+            out.setPosition(parseValue<PositiveInteger>(a.value(), context, el, "position"));
         }
         else if (aname == "default-x")
         {
@@ -262,7 +262,7 @@ void serializeLink(const Link &v, mx::xml::Node parent, const char *tag)
     }
     if (v.position())
     {
-        setAttribute(el, "position", formatInt(*v.position()));
+        setAttribute(el, "position", v.position()->toString());
     }
     if (v.defaultX())
     {

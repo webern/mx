@@ -17,6 +17,7 @@
 #include "mx/core/generated/HarmonyChordGroup.h"
 #include "mx/core/generated/HarmonyType.h"
 #include "mx/core/generated/Offset.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/SystemRelation.h"
 #include "mx/core/generated/Tenths.h"
 #include "mx/core/generated/YesNo.h"
@@ -93,8 +94,8 @@ class Harmony final
     void setOffset(std::optional<Offset> value);
     const EditorialGroup &editorial() const noexcept;
     void setEditorial(EditorialGroup value);
-    const std::optional<int> &staff() const noexcept;
-    void setStaff(std::optional<int> value);
+    const std::optional<PositiveInteger> &staff() const noexcept;
+    void setStaff(std::optional<PositiveInteger> value);
     bool operator==(const Harmony &other) const = default;
 
   private:
@@ -118,7 +119,7 @@ class Harmony final
     std::optional<Frame> m_frame;
     std::optional<Offset> m_offset;
     EditorialGroup m_editorial{};
-    std::optional<int> m_staff;
+    std::optional<PositiveInteger> m_staff;
 };
 
 Harmony parseHarmony(mx::xml::Node el, const ParseContext &context);

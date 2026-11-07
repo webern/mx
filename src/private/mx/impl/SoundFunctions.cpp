@@ -7,6 +7,7 @@
 #include "mx/core/generated/Empty.h"
 #include "mx/core/generated/InstrumentChange.h"
 #include "mx/core/generated/NonNegativeDecimal.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Sound.h"
 #include "mx/core/generated/SoundGroup.h"
 #include "mx/core/generated/Swing.h"
@@ -53,8 +54,8 @@ api::SwingData soundFunctionsToApiSwingData(const core::Swing &inSwing)
     {
         out.isStraight = false;
         const auto &group = inSwing.choice().asGroup();
-        out.ratioFirst = group.first();
-        out.ratioSecond = group.second();
+        out.ratioFirst = group.first().value();
+        out.ratioSecond = group.second().value();
 
         if (group.swingType().has_value())
         {
@@ -70,7 +71,8 @@ api::SwingData soundFunctionsToApiSwingData(const core::Swing &inSwing)
     return out;
 }
 
-core::Swing soundFunctionsToCoreSwing(const api::SwingData &inSwingData)
+core::Swing soundFunctionsToCoreSwing(const api::SwingData &inSwingData, const DiagnosticsContext &diagnostics,
+                                      const api::Location &location)
 {
     core::Swing outSwing{};
 
@@ -81,8 +83,10 @@ core::Swing soundFunctionsToCoreSwing(const api::SwingData &inSwingData)
     else
     {
         core::SwingChoiceGroup group{};
-        group.setFirst(inSwingData.ratioFirst);
-        group.setSecond(inSwingData.ratioSecond);
+        group.setFirst(core::PositiveInteger{inSwingData.ratioFirst});
+        group.setSecond(core::PositiveInteger{inSwingData.ratioSecond});
+        reportAdjusted(diagnostics, location, "swing first", inSwingData.ratioFirst, group.first().value());
+        reportAdjusted(diagnostics, location, "swing second", inSwingData.ratioSecond, group.second().value());
 
         if (inSwingData.noteType != api::SwingNoteType::unspecified)
         {
@@ -233,7 +237,7 @@ void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound, co
 
     if (inSoundData.swing.has_value())
     {
-        outSound.setSwing(soundFunctionsToCoreSwing(*inSoundData.swing));
+        outSound.setSwing(soundFunctionsToCoreSwing(*inSoundData.swing, diagnostics, location));
     }
 
     if (inSoundData.instrumentChange.has_value())

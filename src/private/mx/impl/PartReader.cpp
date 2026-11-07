@@ -166,7 +166,7 @@ int PartReader::calculateNumStaves(bool &outIsStavesElementPresent) const
                 if (attributes.staves().has_value())
                 {
                     outIsStavesElementPresent = true;
-                    int temp = *attributes.staves();
+                    int temp = attributes.staves()->value();
                     declaredStaves = std::max(declaredStaves, temp);
                     if (temp > numStaves)
                     {

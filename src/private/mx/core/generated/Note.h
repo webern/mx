@@ -25,6 +25,7 @@
 #include "mx/core/generated/Notehead.h"
 #include "mx/core/generated/NoteheadText.h"
 #include "mx/core/generated/Play.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Stem.h"
 #include "mx/core/generated/Tenths.h"
 #include "mx/core/generated/TimeModification.h"
@@ -136,8 +137,8 @@ class Note final
     void setNotehead(std::optional<Notehead> value);
     const std::optional<NoteheadText> &noteheadText() const noexcept;
     void setNoteheadText(std::optional<NoteheadText> value);
-    const std::optional<int> &staff() const noexcept;
-    void setStaff(std::optional<int> value);
+    const std::optional<PositiveInteger> &staff() const noexcept;
+    void setStaff(std::optional<PositiveInteger> value);
     std::span<const Beam> beam() const noexcept;
     /// Bounded by the schema: at most 8 occurrences. An over-cap
     /// append is rejected (plan §1.2).
@@ -187,7 +188,7 @@ class Note final
     std::optional<Stem> m_stem;
     std::optional<Notehead> m_notehead;
     std::optional<NoteheadText> m_noteheadText;
-    std::optional<int> m_staff;
+    std::optional<PositiveInteger> m_staff;
     std::vector<Beam> m_beam;
     std::vector<Notations> m_notations;
     std::vector<Lyric> m_lyric;

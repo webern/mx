@@ -14,6 +14,7 @@
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/core/generated/Pedal.h"
 #include "mx/core/generated/PedalType.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/DirectionReader.h"
 
@@ -28,7 +29,7 @@ TEST(ottavaStart15ma, DirectionReader)
     core::Direction dir{};
     core::OctaveShift oct{};
     oct.setType(core::UpDownStopContinue::down());
-    oct.setSize(15);
+    oct.setSize(core::PositiveInteger{15});
     core::DirectionType dirType{};
     dirType.setChoice(core::DirectionTypeChoice::octaveShift(oct));
     dir.setDirectionType(core::OneOrMore<core::DirectionType>{dirType});
@@ -49,13 +50,13 @@ TEST(ottavaStart22maAnd22mb, DirectionReader)
 {
     core::OctaveShift up{};
     up.setType(core::UpDownStopContinue::down());
-    up.setSize(22);
+    up.setSize(core::PositiveInteger{22});
     core::DirectionType upType{};
     upType.setChoice(core::DirectionTypeChoice::octaveShift(up));
 
     core::OctaveShift down{};
     down.setType(core::UpDownStopContinue::up());
-    down.setSize(22);
+    down.setSize(core::PositiveInteger{22});
     core::DirectionType downType{};
     downType.setChoice(core::DirectionTypeChoice::octaveShift(down));
 
@@ -83,7 +84,7 @@ TEST(ottavaStart8vaAnd8vb, DirectionReader)
     // add an 8vb start
     core::OctaveShift oct1{};
     oct1.setType(core::UpDownStopContinue::up());
-    oct1.setSize(8);
+    oct1.setSize(core::PositiveInteger{8});
     core::DirectionType dirType1{};
     dirType1.setChoice(core::DirectionTypeChoice::octaveShift(oct1));
 
@@ -132,7 +133,7 @@ TEST(ottavaStop, DirectionReader)
     const int tickTimePosition = 150;
     core::OctaveShift oct{};
     oct.setType(core::UpDownStopContinue::stop());
-    oct.setSize(15);
+    oct.setSize(core::PositiveInteger{15});
     core::DirectionType dirType{};
     dirType.setChoice(core::DirectionTypeChoice::octaveShift(oct));
     core::Direction dir{};

@@ -11,22 +11,22 @@
 namespace mx::core
 {
 
-const int &SwingChoiceGroup::first() const noexcept
+const PositiveInteger &SwingChoiceGroup::first() const noexcept
 {
     return m_first;
 }
 
-void SwingChoiceGroup::setFirst(int value)
+void SwingChoiceGroup::setFirst(PositiveInteger value)
 {
     m_first = std::move(value);
 }
 
-const int &SwingChoiceGroup::second() const noexcept
+const PositiveInteger &SwingChoiceGroup::second() const noexcept
 {
     return m_second;
 }
 
-void SwingChoiceGroup::setSecond(int value)
+void SwingChoiceGroup::setSecond(PositiveInteger value)
 {
     m_second = std::move(value);
 }
@@ -46,7 +46,7 @@ SwingChoiceGroup parseSwingChoiceGroup(mx::xml::Node el, mx::xml::Node &cursor, 
     SwingChoiceGroup out;
     if (cursorIs(cursor, "first"))
     {
-        out.setFirst(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setFirst(parseValue<PositiveInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -55,7 +55,7 @@ SwingChoiceGroup parseSwingChoiceGroup(mx::xml::Node el, mx::xml::Node &cursor, 
     }
     if (cursorIs(cursor, "second"))
     {
-        out.setSecond(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setSecond(parseValue<PositiveInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -72,8 +72,8 @@ SwingChoiceGroup parseSwingChoiceGroup(mx::xml::Node el, mx::xml::Node &cursor, 
 
 void serializeSwingChoiceGroup(const SwingChoiceGroup &v, mx::xml::Node el)
 {
-    writeTextElement(el, "first", formatInt(v.first()));
-    writeTextElement(el, "second", formatInt(v.second()));
+    writeTextElement(el, "first", v.first().toString());
+    writeTextElement(el, "second", v.second().toString());
     if (v.swingType())
     {
         writeTextElement(el, "swing-type", v.swingType()->toString());

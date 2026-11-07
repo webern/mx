@@ -21,12 +21,14 @@
 #include "mx/core/generated/Mode.h"
 #include "mx/core/generated/MultipleRest.h"
 #include "mx/core/generated/MusicDataChoice.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/NonTraditionalKeyGroup.h"
 #include "mx/core/generated/PartClef.h"
 #include "mx/core/generated/PartSymbol.h"
 #include "mx/core/generated/PartTranspose.h"
 #include "mx/core/generated/PartwiseMeasure.h"
 #include "mx/core/generated/PositiveDivisions.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Semitones.h"
 #include "mx/core/generated/StaffDetails.h"
 #include "mx/core/generated/StaffDetailsGroup.h"
@@ -87,7 +89,7 @@ void PropertiesWriter::writeDivisions(int value)
 void PropertiesWriter::writeMultipleRest(int measureCount, api::Bool useSymbols)
 {
     core::MultipleRest multipleRest{};
-    multipleRest.setValue(measureCount);
+    multipleRest.setValue(core::PositiveInteger{measureCount});
     if (useSymbols != api::Bool::unspecified)
     {
         multipleRest.setUseSymbols(useSymbols == api::Bool::yes ? core::YesNo::yes() : core::YesNo::no());
@@ -303,7 +305,7 @@ void PropertiesWriter::writeTime(const api::TimeChoice &value, int staffIndex)
 
 void PropertiesWriter::writeNumStaves(int value)
 {
-    myAttributes.setStaves(value);
+    myAttributes.setStaves(core::NonNegativeInteger{value});
     myHasContent = true;
 }
 
@@ -335,7 +337,7 @@ void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double 
     if (staffLines >= 0)
     {
         core::StaffDetailsGroup sdg{};
-        sdg.setStaffLines(staffLines);
+        sdg.setStaffLines(core::NonNegativeInteger{staffLines});
         staffDetails.setGroup(sdg);
     }
 

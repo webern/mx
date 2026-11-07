@@ -21,12 +21,12 @@ void MeasureRepeat::setType(StartStop value)
     m_type = std::move(value);
 }
 
-const std::optional<int> &MeasureRepeat::slashes() const noexcept
+const std::optional<PositiveInteger> &MeasureRepeat::slashes() const noexcept
 {
     return m_slashes;
 }
 
-void MeasureRepeat::setSlashes(std::optional<int> value)
+void MeasureRepeat::setSlashes(std::optional<PositiveInteger> value)
 {
     m_slashes = std::move(value);
 }
@@ -59,7 +59,7 @@ MeasureRepeat parseMeasureRepeat(mx::xml::Node el, const ParseContext &context)
         }
         else if (aname == "slashes")
         {
-            out.setSlashes(parseIntegerValue(a.value(), context, el, "slashes"));
+            out.setSlashes(parseValue<PositiveInteger>(a.value(), context, el, "slashes"));
         }
         else
         {
@@ -89,7 +89,7 @@ void serializeMeasureRepeat(const MeasureRepeat &v, mx::xml::Node parent, const 
     setAttribute(el, "type", v.type().toString());
     if (v.slashes())
     {
-        setAttribute(el, "slashes", formatInt(*v.slashes()));
+        setAttribute(el, "slashes", v.slashes()->toString());
     }
     serializeMeasureRepeatContent(v, el);
 }

@@ -72,7 +72,7 @@ TEST(ottavaStartStop, DirectionWriter)
     CHECK(api::Bool::yes == roundTrippedStop.writeSize);
     const auto &stopCore = directionTypes.front().choice().asOctaveShift();
     REQUIRE(stopCore.size().has_value());
-    CHECK_EQUAL(8, *stopCore.size());
+    CHECK_EQUAL(8, stopCore.size()->value());
     REQUIRE(roundTripped.directionTypes.back().isOttavaStart());
     CHECK(start == roundTripped.directionTypes.back().ottavaStart());
 }
@@ -103,12 +103,12 @@ TEST(ottava22maAnd22mb, DirectionWriter)
 
     const auto &upCore = directionTypes.front().choice().asOctaveShift();
     REQUIRE(upCore.size().has_value());
-    CHECK_EQUAL(22, *upCore.size());
+    CHECK_EQUAL(22, upCore.size()->value());
     CHECK(upCore.type().tag() == core::UpDownStopContinue::Tag::down);
 
     const auto &downCore = directionTypes.back().choice().asOctaveShift();
     REQUIRE(downCore.size().has_value());
-    CHECK_EQUAL(22, *downCore.size());
+    CHECK_EQUAL(22, downCore.size()->value());
     CHECK(downCore.type().tag() == core::UpDownStopContinue::Tag::up);
 }
 

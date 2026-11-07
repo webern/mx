@@ -21,12 +21,12 @@ void MultipleRest::setUseSymbols(std::optional<YesNo> value)
     m_useSymbols = std::move(value);
 }
 
-const int &MultipleRest::value() const noexcept
+const PositiveInteger &MultipleRest::value() const noexcept
 {
     return m_value;
 }
 
-void MultipleRest::setValue(int value)
+void MultipleRest::setValue(PositiveInteger value)
 {
     m_value = std::move(value);
 }
@@ -56,7 +56,7 @@ MultipleRest parseMultipleRest(mx::xml::Node el, const ParseContext &context)
 
 void parseMultipleRestContent(MultipleRest &out, mx::xml::Node el, const ParseContext &context)
 {
-    out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
+    out.setValue(parseValue<PositiveInteger>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));
@@ -75,7 +75,7 @@ void serializeMultipleRest(const MultipleRest &v, mx::xml::Node parent, const ch
 
 void serializeMultipleRestContent(const MultipleRest &v, mx::xml::Node el)
 {
-    setText(el, formatInt(v.value()));
+    setText(el, v.value().toString());
 }
 
 } // namespace mx::core

@@ -26,6 +26,12 @@ xml = "../../docs/sounds-4.0-ed15c23.xml"
 [target]
 # enum class scopes its constants inside the type, so they stay bare.
 variant-scope = "bare"
+# An element or attribute typed directly as one of these primitives gets a
+# clamping value class (PositiveInteger, NonNegativeInteger) instead of a bare
+# int, so a value below the primitive's minimum cannot be held in mx::core.
+# [types] still spells the primitives as int: that is the type the derived
+# number classes (StaffNumber, MIDI16, ...) wrap.
+promote-primitives = ["positive_integer", "non_negative_integer"]
 
 [vars]
 # Freeform, passed verbatim to this target's templates.

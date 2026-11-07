@@ -11,12 +11,12 @@
 namespace mx::core
 {
 
-const int &StaffDetailsGroup::staffLines() const noexcept
+const NonNegativeInteger &StaffDetailsGroup::staffLines() const noexcept
 {
     return m_staffLines;
 }
 
-void StaffDetailsGroup::setStaffLines(int value)
+void StaffDetailsGroup::setStaffLines(NonNegativeInteger value)
 {
     m_staffLines = std::move(value);
 }
@@ -41,7 +41,7 @@ StaffDetailsGroup parseStaffDetailsGroup(mx::xml::Node el, mx::xml::Node &cursor
     StaffDetailsGroup out;
     if (cursorIs(cursor, "staff-lines"))
     {
-        out.setStaffLines(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setStaffLines(parseValue<NonNegativeInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -58,7 +58,7 @@ StaffDetailsGroup parseStaffDetailsGroup(mx::xml::Node el, mx::xml::Node &cursor
 
 void serializeStaffDetailsGroup(const StaffDetailsGroup &v, mx::xml::Node el)
 {
-    writeTextElement(el, "staff-lines", formatInt(v.staffLines()));
+    writeTextElement(el, "staff-lines", v.staffLines().toString());
     for (const auto &item : v.lineDetail())
     {
         serializeLineDetail(item, el, "line-detail");

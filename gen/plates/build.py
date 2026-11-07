@@ -70,6 +70,24 @@ _PRIM_NAME_TOKEN = {"id", "idref", "idrefs", "nmtoken", "nmtokens"}
 _PRIM_WRAPPER = _PRIM_NAME_TOKEN | {"language"}
 
 
+def _promoted_number_types(primitives, taken) -> dict[str, ir.NumberType]:
+    """The synthesized number type for each primitive listed in [target]
+    promote-primitives, keyed by primitive. It has no facets and is named
+    after the primitive (`positive_integer` -> `positive-integer`), so the
+    primitive's implied bound becomes its clamp. Entries that cannot be
+    promoted are skipped here and reported by _promotion_errors."""
+    out = {}
+    for prim in primitives:
+        wire = prim.replace("_", "-")
+        if prim in _PRIM_NUMERIC and wire not in taken:
+            doc = (
+                f"The schema's built-in {wire} type, for elements and attributes "
+                f"that use it directly rather than through a named type."
+            )
+            out[prim] = ir.NumberType(name=wire, base=prim, doc=doc)
+    return out
+
+
 def wrap_doc(doc: str | None, width: int) -> list[str]:
     """Greedy word-wrap of raw doc text at `width` (the wrapped TEXT width;
     templates add their own comment syntax). The break points reproduce the
@@ -265,6 +283,13 @@ class _Builder:
         self.resolver = Resolver.from_ir(m)
         self.values_by_name: dict[str, ir.ValueType] = {v.name: v for v in m.value_types}
         self.complex_by_name = {c.name: c for c in m.complex_types}
+        # A direct use of a promoted primitive is projected as a reference to
+        # its synthesized number type (see _plate_ref). The IR is untouched.
+        self.promoted = _promoted_number_types(
+            config.target.promote_primitives,
+            set(self.values_by_name) | set(self.complex_by_name),
+        )
+        self.values_by_name.update({nt.name: nt for nt in self.promoted.values()})
         self.groups_by_name = {g.name: g for g in m.groups}
         self._base_wires = {c.base for c in m.complex_types if c.base}
 
@@ -413,7 +438,10 @@ class _Builder:
             source=self.m.source,
             schema_version=version.group(1) if version else "",
             target=self._target_info(),
-            value_types=[self._value_plate(v) for v in self.m.value_types],
+            value_types=[
+                self._value_plate(v)
+                for v in list(self.m.value_types) + list(self.promoted.values())
+            ],
             complex_types=[self._complex_plate(c) for c in self.m.complex_types],
             groups=self._group_plates(),
             roots=[self._plate_ref(ir.Ref(r.type, "complex")) for r in self.m.roots],
@@ -504,9 +532,13 @@ class _Builder:
         raw = self.cfg.naming.field_prefix + name.cased[self.cfg.naming.field_convention]
         return self._sanitize(raw)
 
-    def _plate_ref(self, ref: ir.Ref) -> PlateRef:
+    def _plate_ref(self, ref: ir.Ref, promote: bool = True) -> PlateRef:
         """Resolve a reference with the referenced type's name bundle and kind
-        denormalized onto it, so templates never perform lookups."""
+        denormalized onto it, so templates never perform lookups. A promoted
+        primitive resolves to its synthesized number type unless `promote` is
+        off (a union member, which carries its own implied clamp)."""
+        if promote and ref.category == "primitive" and ref.name in self.promoted:
+            ref = ir.Ref(self.promoted[ref.name].name, "value")
         if ref.category == "primitive":
             return PlateRef(
                 wire=ref.name,
@@ -594,7 +626,7 @@ class _Builder:
                     clamp = clamp_steps(m.ref.name, NumberBounds())
                 members.append(
                     UnionPlateMember(
-                        ref=self._plate_ref(m.ref),
+                        ref=self._plate_ref(m.ref, promote=False),
                         name=member_name,
                         # The member's discriminator constant: scoped, renamed,
                         # and collision-gated exactly like an enum variant.
@@ -960,6 +992,25 @@ class _Builder:
 
     # ----- config-against-IR validation ----------------------------------------- #
 
+    def _promotion_errors(self) -> list[str]:
+        """A promote-primitives entry must name a numeric primitive, and the
+        type it synthesizes must not take a name the schema already uses."""
+        errors = []
+        taken = {v.name for v in self.m.value_types} | set(self.complex_by_name)
+        for prim in self.cfg.target.promote_primitives:
+            wire = prim.replace("_", "-")
+            if prim not in _PRIM_NUMERIC:
+                errors.append(
+                    f"[target] promote-primitives {prim}: not a numeric IR primitive "
+                    f"({', '.join(sorted(_PRIM_NUMERIC))})"
+                )
+            elif wire in taken:
+                errors.append(
+                    f"[target] promote-primitives {prim}: the promoted type name "
+                    f"'{wire}' is already a type in the IR"
+                )
+        return errors
+
     def _validate_config_against_ir(self) -> list[str]:
         """Every rename key must address something in the IR, and every
         [types] key a real primitive (design 6.5): a typo or a key left stale
@@ -973,6 +1024,7 @@ class _Builder:
                     f"[types] {primitive}: not an IR primitive "
                     f"({', '.join(sorted(PRIMITIVES))})"
                 )
+        errors += self._promotion_errors()
 
         # Structural-group and synthesized content-type wires are addressable
         # for renames too (plan §2.9).

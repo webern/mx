@@ -122,6 +122,59 @@ TEST(outOfRangeOctaveIsClamped, WriteDiagnostics)
 
 T_END
 
+TEST(outOfRangeFrameNumbersAreClamped, WriteDiagnostics)
+{
+    auto score = writeDiagnosticsScore(1);
+    auto &direction = score.parts.front().measures.front().staves.front().directions.emplace_back();
+    direction.isStaffValueSpecified = true;
+    auto &chord = direction.chords.emplace_back();
+    chord.hasFrameData = true;
+    chord.frameData.stringCount = 0;
+    chord.frameData.notes.emplace_back().fretNumber = -2;
+
+    const auto diagnostics = writeDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 2);
+    writeDiagnosticsCheck(diagnostics.all()[0], DiagnosticCode::valueAdjusted,
+                          "frame string count 0 is out of range; using 1");
+    CHECK_EQUAL(0, diagnostics.all()[0].location.measureIndex);
+    CHECK_EQUAL(0, diagnostics.all()[0].location.staffIndex);
+    writeDiagnosticsCheck(diagnostics.all()[1], DiagnosticCode::valueAdjusted,
+                          "frame note fret -2 is out of range; using 0");
+}
+
+T_END
+
+TEST(outOfRangeSwingRatioIsClamped, WriteDiagnostics)
+{
+    auto score = writeDiagnosticsScore(1);
+    auto &direction = score.parts.front().measures.front().staves.front().directions.emplace_back();
+    direction.isSoundDataSpecified = true;
+    SwingData swing;
+    swing.isStraight = false;
+    swing.ratioFirst = 2;
+    direction.soundData.swing = swing;
+
+    const auto diagnostics = writeDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 1);
+    writeDiagnosticsCheck(diagnostics.all().front(), DiagnosticCode::valueAdjusted,
+                          "swing second 0 is out of range; using 1");
+}
+
+T_END
+
+TEST(negativeFretMarkIsClamped, WriteDiagnostics)
+{
+    auto score = writeDiagnosticsScore(1);
+    auto &mark = writeDiagnosticsNote(score, 0).noteAttachmentData.marks.emplace_back(MarkType::fret);
+    mark.name = "-3";
+
+    const auto diagnostics = writeDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 1);
+    writeDiagnosticsCheck(diagnostics.all().front(), DiagnosticCode::valueAdjusted, "fret -3 is out of range; using 0");
+}
+
+T_END
+
 TEST(unspecifiedNoteTypeIsDefaulted, WriteDiagnostics)
 {
     auto score = writeDiagnosticsScore(1);

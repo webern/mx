@@ -86,12 +86,12 @@ void Direction::setEditorialVoiceDirection(EditorialVoiceDirectionGroup value)
     m_editorialVoiceDirection = std::move(value);
 }
 
-const std::optional<int> &Direction::staff() const noexcept
+const std::optional<PositiveInteger> &Direction::staff() const noexcept
 {
     return m_staff;
 }
 
-void Direction::setStaff(std::optional<int> value)
+void Direction::setStaff(std::optional<PositiveInteger> value)
 {
     m_staff = std::move(value);
 }
@@ -176,7 +176,7 @@ void parseDirectionContent(Direction &out, mx::xml::Node el, const ParseContext 
     }
     if (cursorIs(cursor, "staff"))
     {
-        out.setStaff(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setStaff(parseValue<PositiveInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "sound"))
@@ -236,7 +236,7 @@ void serializeDirectionContent(const Direction &v, mx::xml::Node el)
     serializeEditorialVoiceDirectionGroup(v.editorialVoiceDirection(), el);
     if (v.staff())
     {
-        writeTextElement(el, "staff", formatInt(*v.staff()));
+        writeTextElement(el, "staff", v.staff()->toString());
     }
     if (v.sound())
     {

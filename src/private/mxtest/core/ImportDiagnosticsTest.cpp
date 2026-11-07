@@ -85,6 +85,42 @@ TEST(MalformedAndOutOfRangeNumbersReportDifferentCodes, ImportDiagnostics)
     CHECK_EQUAL(std::string{"value \"12\" adjusted to \"9\""}, parsed.diagnostics[1].message);
 }
 
+// Elements and attributes the schema types directly as xs:positiveInteger or xs:nonNegativeInteger
+// clamp at import and report the repair like any other number.
+TEST(OutOfRangePrimitiveIntegersAreAdjusted, ImportDiagnostics)
+{
+    const auto parsed = importDiagnosticsParse(importDiagnosticsScore(
+        "", "<attributes><staves>-1</staves><measure-style><multiple-rest>0</multiple-rest></measure-style>"
+            "</attributes>"
+            "<note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration><staff>0</staff></note>"
+            "<barline location=\"right\"><repeat direction=\"backward\" times=\"-2\"/></barline>"));
+    REQUIRE(parsed.ok);
+    REQUIRE(parsed.diagnostics.size() == 4);
+
+    CHECK(DiagnosticCode::valueAdjusted == parsed.diagnostics[0].code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/attributes/staves"}, parsed.diagnostics[0].path);
+    CHECK_EQUAL(std::string{"value \"-1\" adjusted to \"0\""}, parsed.diagnostics[0].message);
+
+    CHECK(DiagnosticCode::valueAdjusted == parsed.diagnostics[1].code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/attributes/measure-style/multiple-rest"},
+                parsed.diagnostics[1].path);
+    CHECK_EQUAL(std::string{"value \"0\" adjusted to \"1\""}, parsed.diagnostics[1].message);
+
+    CHECK(DiagnosticCode::valueAdjusted == parsed.diagnostics[2].code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note/staff"}, parsed.diagnostics[2].path);
+    CHECK_EQUAL(std::string{"value \"0\" adjusted to \"1\""}, parsed.diagnostics[2].message);
+
+    CHECK(DiagnosticCode::valueAdjusted == parsed.diagnostics[3].code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/barline/repeat"}, parsed.diagnostics[3].path);
+    CHECK_EQUAL(std::string{"value \"-2\" in attribute \"times\" adjusted to \"0\""}, parsed.diagnostics[3].message);
+
+    const auto musicData = parsed.document.asScorePartwise().part().front().measure().front().musicData();
+    REQUIRE(musicData.size() == 3);
+    REQUIRE(musicData[1].isNote());
+    REQUIRE(musicData[1].asNote().staff().has_value());
+    CHECK_EQUAL(1, musicData[1].asNote().staff()->value());
+}
+
 TEST(InvalidAttributeValueNamesTheAttribute, ImportDiagnostics)
 {
     const auto parsed = importDiagnosticsParse(

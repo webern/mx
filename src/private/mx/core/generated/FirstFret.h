@@ -3,6 +3,7 @@
 #pragma once
 
 #include "mx/core/generated/LeftRight.h"
+#include "mx/core/generated/PositiveInteger.h"
 
 #include <optional>
 #include <string>
@@ -28,14 +29,14 @@ class FirstFret final
     void setText(std::optional<std::string> value);
     const std::optional<LeftRight> &location() const noexcept;
     void setLocation(std::optional<LeftRight> value);
-    const int &value() const noexcept;
-    void setValue(int value);
+    const PositiveInteger &value() const noexcept;
+    void setValue(PositiveInteger value);
     bool operator==(const FirstFret &other) const = default;
 
   private:
     std::optional<std::string> m_text;
     std::optional<LeftRight> m_location;
-    int m_value{};
+    PositiveInteger m_value{};
 };
 
 FirstFret parseFirstFret(mx::xml::Node el, const ParseContext &context);

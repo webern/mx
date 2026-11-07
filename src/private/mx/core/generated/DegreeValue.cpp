@@ -121,12 +121,12 @@ void DegreeValue::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-const int &DegreeValue::value() const noexcept
+const PositiveInteger &DegreeValue::value() const noexcept
 {
     return m_value;
 }
 
-void DegreeValue::setValue(int value)
+void DegreeValue::setValue(PositiveInteger value)
 {
     m_value = std::move(value);
 }
@@ -196,7 +196,7 @@ DegreeValue parseDegreeValue(mx::xml::Node el, const ParseContext &context)
 
 void parseDegreeValueContent(DegreeValue &out, mx::xml::Node el, const ParseContext &context)
 {
-    out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
+    out.setValue(parseValue<PositiveInteger>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));
@@ -255,7 +255,7 @@ void serializeDegreeValue(const DegreeValue &v, mx::xml::Node parent, const char
 
 void serializeDegreeValueContent(const DegreeValue &v, mx::xml::Node el)
 {
-    setText(el, formatInt(v.value()));
+    setText(el, v.value().toString());
 }
 
 } // namespace mx::core

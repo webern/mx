@@ -31,12 +31,12 @@ void Forward::setEditorialVoice(EditorialVoiceGroup value)
     m_editorialVoice = std::move(value);
 }
 
-const std::optional<int> &Forward::staff() const noexcept
+const std::optional<PositiveInteger> &Forward::staff() const noexcept
 {
     return m_staff;
 }
 
-void Forward::setStaff(std::optional<int> value)
+void Forward::setStaff(std::optional<PositiveInteger> value)
 {
     m_staff = std::move(value);
 }
@@ -75,7 +75,7 @@ void parseForwardContent(Forward &out, mx::xml::Node el, const ParseContext &con
     }
     if (cursorIs(cursor, "staff"))
     {
-        out.setStaff(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setStaff(parseValue<PositiveInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor)
@@ -101,7 +101,7 @@ void serializeForwardContent(const Forward &v, mx::xml::Node el)
     serializeEditorialVoiceGroup(v.editorialVoice(), el);
     if (v.staff())
     {
-        writeTextElement(el, "staff", formatInt(*v.staff()));
+        writeTextElement(el, "staff", v.staff()->toString());
     }
 }
 

@@ -4,6 +4,7 @@
 
 #include "mx/core/NameToken.h"
 #include "mx/core/Token.h"
+#include "mx/core/generated/PositiveInteger.h"
 
 #include <optional>
 #include <string>
@@ -28,15 +29,15 @@ class Bookmark final
     void setName(std::optional<std::string> value);
     const std::optional<NameToken> &element() const noexcept;
     void setElement(std::optional<NameToken> value);
-    const std::optional<int> &position() const noexcept;
-    void setPosition(std::optional<int> value);
+    const std::optional<PositiveInteger> &position() const noexcept;
+    void setPosition(std::optional<PositiveInteger> value);
     bool operator==(const Bookmark &other) const = default;
 
   private:
     Token m_id{};
     std::optional<std::string> m_name;
     std::optional<NameToken> m_element;
-    std::optional<int> m_position;
+    std::optional<PositiveInteger> m_position;
 };
 
 Bookmark parseBookmark(mx::xml::Node el, const ParseContext &context);

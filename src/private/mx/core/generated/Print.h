@@ -8,6 +8,7 @@
 #include "mx/core/generated/MeasureLayout.h"
 #include "mx/core/generated/MeasureNumbering.h"
 #include "mx/core/generated/NameDisplay.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Tenths.h"
 #include "mx/core/generated/YesNo.h"
 
@@ -43,8 +44,8 @@ class Print final
     void setNewSystem(std::optional<YesNo> value);
     const std::optional<YesNo> &newPage() const noexcept;
     void setNewPage(std::optional<YesNo> value);
-    const std::optional<int> &blankPage() const noexcept;
-    void setBlankPage(std::optional<int> value);
+    const std::optional<PositiveInteger> &blankPage() const noexcept;
+    void setBlankPage(std::optional<PositiveInteger> value);
     const std::optional<std::string> &pageNumber() const noexcept;
     void setPageNumber(std::optional<std::string> value);
     const std::optional<Token> &id() const noexcept;
@@ -65,7 +66,7 @@ class Print final
     std::optional<Tenths> m_staffSpacing;
     std::optional<YesNo> m_newSystem;
     std::optional<YesNo> m_newPage;
-    std::optional<int> m_blankPage;
+    std::optional<PositiveInteger> m_blankPage;
     std::optional<std::string> m_pageNumber;
     std::optional<Token> m_id;
     LayoutGroup m_layout{};

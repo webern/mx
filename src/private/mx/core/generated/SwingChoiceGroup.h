@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/SwingTypeValue.h"
 
 #include <optional>
@@ -25,17 +26,17 @@ class ParseContext;
 class SwingChoiceGroup final
 {
   public:
-    const int &first() const noexcept;
-    void setFirst(int value);
-    const int &second() const noexcept;
-    void setSecond(int value);
+    const PositiveInteger &first() const noexcept;
+    void setFirst(PositiveInteger value);
+    const PositiveInteger &second() const noexcept;
+    void setSecond(PositiveInteger value);
     const std::optional<SwingTypeValue> &swingType() const noexcept;
     void setSwingType(std::optional<SwingTypeValue> value);
     bool operator==(const SwingChoiceGroup &other) const = default;
 
   private:
-    int m_first{};
-    int m_second{};
+    PositiveInteger m_first{};
+    PositiveInteger m_second{};
     std::optional<SwingTypeValue> m_swingType;
 };
 

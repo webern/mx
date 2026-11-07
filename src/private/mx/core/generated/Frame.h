@@ -9,6 +9,7 @@
 #include "mx/core/generated/FirstFret.h"
 #include "mx/core/generated/FrameNote.h"
 #include "mx/core/generated/LeftCenterRight.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Tenths.h"
 #include "mx/core/generated/ValignImage.h"
 
@@ -59,10 +60,10 @@ class Frame final
     void setValign(std::optional<ValignImage> value);
     const std::optional<Token> &id() const noexcept;
     void setID(std::optional<Token> value);
-    const int &frameStrings() const noexcept;
-    void setFrameStrings(int value);
-    const int &frameFrets() const noexcept;
-    void setFrameFrets(int value);
+    const PositiveInteger &frameStrings() const noexcept;
+    void setFrameStrings(PositiveInteger value);
+    const PositiveInteger &frameFrets() const noexcept;
+    void setFrameFrets(PositiveInteger value);
     const std::optional<FirstFret> &firstFret() const noexcept;
     void setFirstFret(std::optional<FirstFret> value);
     std::span<const FrameNote> frameNote() const noexcept;
@@ -82,8 +83,8 @@ class Frame final
     std::optional<LeftCenterRight> m_halign;
     std::optional<ValignImage> m_valign;
     std::optional<Token> m_id;
-    int m_frameStrings{};
-    int m_frameFrets{};
+    PositiveInteger m_frameStrings{};
+    PositiveInteger m_frameFrets{};
     std::optional<FirstFret> m_firstFret;
     OneOrMore<FrameNote> m_frameNote;
 };

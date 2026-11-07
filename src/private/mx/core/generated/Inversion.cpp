@@ -111,12 +111,12 @@ void Inversion::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-const int &Inversion::value() const noexcept
+const NonNegativeInteger &Inversion::value() const noexcept
 {
     return m_value;
 }
 
-void Inversion::setValue(int value)
+void Inversion::setValue(NonNegativeInteger value)
 {
     m_value = std::move(value);
 }
@@ -182,7 +182,7 @@ Inversion parseInversion(mx::xml::Node el, const ParseContext &context)
 
 void parseInversionContent(Inversion &out, mx::xml::Node el, const ParseContext &context)
 {
-    out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
+    out.setValue(parseValue<NonNegativeInteger>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));
@@ -237,7 +237,7 @@ void serializeInversion(const Inversion &v, mx::xml::Node parent, const char *ta
 
 void serializeInversionContent(const Inversion &v, mx::xml::Node el)
 {
-    setText(el, formatInt(v.value()));
+    setText(el, v.value().toString());
 }
 
 } // namespace mx::core

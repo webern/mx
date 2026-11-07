@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/YesNo.h"
 
 #include <optional>
@@ -25,13 +26,13 @@ class MultipleRest final
   public:
     const std::optional<YesNo> &useSymbols() const noexcept;
     void setUseSymbols(std::optional<YesNo> value);
-    const int &value() const noexcept;
-    void setValue(int value);
+    const PositiveInteger &value() const noexcept;
+    void setValue(PositiveInteger value);
     bool operator==(const MultipleRest &other) const = default;
 
   private:
     std::optional<YesNo> m_useSymbols;
-    int m_value{};
+    PositiveInteger m_value{};
 };
 
 MultipleRest parseMultipleRest(mx::xml::Node el, const ParseContext &context);

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/TimeModificationGroup.h"
 
 #include <optional>
@@ -29,17 +30,17 @@ class ParseContext;
 class TimeModification
 {
   public:
-    const int &actualNotes() const noexcept;
-    void setActualNotes(int value);
-    const int &normalNotes() const noexcept;
-    void setNormalNotes(int value);
+    const NonNegativeInteger &actualNotes() const noexcept;
+    void setActualNotes(NonNegativeInteger value);
+    const NonNegativeInteger &normalNotes() const noexcept;
+    void setNormalNotes(NonNegativeInteger value);
     const std::optional<TimeModificationGroup> &group() const noexcept;
     void setGroup(std::optional<TimeModificationGroup> value);
     bool operator==(const TimeModification &other) const = default;
 
   private:
-    int m_actualNotes{};
-    int m_normalNotes{};
+    NonNegativeInteger m_actualNotes{};
+    NonNegativeInteger m_normalNotes{};
     std::optional<TimeModificationGroup> m_group;
 };
 

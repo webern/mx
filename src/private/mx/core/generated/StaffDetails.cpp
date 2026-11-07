@@ -86,12 +86,12 @@ void StaffDetails::setStaffTuning(std::vector<StaffTuning> value)
     m_staffTuning = std::move(value);
 }
 
-const std::optional<int> &StaffDetails::capo() const noexcept
+const std::optional<NonNegativeInteger> &StaffDetails::capo() const noexcept
 {
     return m_capo;
 }
 
-void StaffDetails::setCapo(std::optional<int> value)
+void StaffDetails::setCapo(std::optional<NonNegativeInteger> value)
 {
     m_capo = std::move(value);
 }
@@ -160,7 +160,7 @@ void parseStaffDetailsContent(StaffDetails &out, mx::xml::Node el, const ParseCo
     }
     if (cursorIs(cursor, "capo"))
     {
-        out.setCapo(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setCapo(parseValue<NonNegativeInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "staff-size"))
@@ -217,7 +217,7 @@ void serializeStaffDetailsContent(const StaffDetails &v, mx::xml::Node el)
     }
     if (v.capo())
     {
-        writeTextElement(el, "capo", formatInt(*v.capo()));
+        writeTextElement(el, "capo", v.capo()->toString());
     }
     if (v.staffSize())
     {

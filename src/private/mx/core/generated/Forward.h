@@ -4,6 +4,7 @@
 
 #include "mx/core/generated/EditorialVoiceGroup.h"
 #include "mx/core/generated/PositiveDivisions.h"
+#include "mx/core/generated/PositiveInteger.h"
 
 #include <optional>
 #include <span>
@@ -33,14 +34,14 @@ class Forward final
     void setDuration(PositiveDivisions value);
     const EditorialVoiceGroup &editorialVoice() const noexcept;
     void setEditorialVoice(EditorialVoiceGroup value);
-    const std::optional<int> &staff() const noexcept;
-    void setStaff(std::optional<int> value);
+    const std::optional<PositiveInteger> &staff() const noexcept;
+    void setStaff(std::optional<PositiveInteger> value);
     bool operator==(const Forward &other) const = default;
 
   private:
     PositiveDivisions m_duration{};
     EditorialVoiceGroup m_editorialVoice{};
-    std::optional<int> m_staff;
+    std::optional<PositiveInteger> m_staff;
 };
 
 Forward parseForward(mx::xml::Node el, const ParseContext &context);

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/SlashGroup.h"
 #include "mx/core/generated/StartStop.h"
 #include "mx/core/generated/YesNo.h"
@@ -37,8 +38,8 @@ class BeatRepeat final
   public:
     const StartStop &type() const noexcept;
     void setType(StartStop value);
-    const std::optional<int> &slashes() const noexcept;
-    void setSlashes(std::optional<int> value);
+    const std::optional<PositiveInteger> &slashes() const noexcept;
+    void setSlashes(std::optional<PositiveInteger> value);
     const std::optional<YesNo> &useDots() const noexcept;
     void setUseDots(std::optional<YesNo> value);
     const std::optional<SlashGroup> &slash() const noexcept;
@@ -47,7 +48,7 @@ class BeatRepeat final
 
   private:
     StartStop m_type{};
-    std::optional<int> m_slashes;
+    std::optional<PositiveInteger> m_slashes;
     std::optional<YesNo> m_useDots;
     std::optional<SlashGroup> m_slash;
 };

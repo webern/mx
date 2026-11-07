@@ -61,12 +61,12 @@ void Fret::setColor(std::optional<Color> value)
     m_color = std::move(value);
 }
 
-const int &Fret::value() const noexcept
+const NonNegativeInteger &Fret::value() const noexcept
 {
     return m_value;
 }
 
-void Fret::setValue(int value)
+void Fret::setValue(NonNegativeInteger value)
 {
     m_value = std::move(value);
 }
@@ -112,7 +112,7 @@ Fret parseFret(mx::xml::Node el, const ParseContext &context)
 
 void parseFretContent(Fret &out, mx::xml::Node el, const ParseContext &context)
 {
-    out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
+    out.setValue(parseValue<NonNegativeInteger>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));
@@ -147,7 +147,7 @@ void serializeFret(const Fret &v, mx::xml::Node parent, const char *tag)
 
 void serializeFretContent(const Fret &v, mx::xml::Node el)
 {
-    setText(el, formatInt(v.value()));
+    setText(el, v.value().toString());
 }
 
 } // namespace mx::core

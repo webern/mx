@@ -44,7 +44,7 @@ int findStaffCountInOneMeasure(std::span<const core::MusicDataChoice> inMusic)
 
             if (item.staves().has_value())
             {
-                tempStaffCount = *item.staves();
+                tempStaffCount = item.staves()->value();
 
                 if (tempStaffCount > outStaffCount)
                 {
@@ -60,7 +60,7 @@ int findStaffCountInOneMeasure(std::span<const core::MusicDataChoice> inMusic)
             const auto &item = mdc.asNote();
             if (item.staff().has_value())
             {
-                staff = item.staff();
+                staff = item.staff()->value();
             }
         }
 
@@ -69,7 +69,7 @@ int findStaffCountInOneMeasure(std::span<const core::MusicDataChoice> inMusic)
             const auto &item = mdc.asDirection();
             if (item.staff().has_value())
             {
-                staff = item.staff();
+                staff = item.staff()->value();
             }
         }
 
@@ -78,7 +78,7 @@ int findStaffCountInOneMeasure(std::span<const core::MusicDataChoice> inMusic)
             const auto &item = mdc.asForward();
             if (item.staff().has_value())
             {
-                staff = item.staff();
+                staff = item.staff()->value();
             }
         }
 
@@ -87,7 +87,7 @@ int findStaffCountInOneMeasure(std::span<const core::MusicDataChoice> inMusic)
             const auto &item = mdc.asHarmony();
             if (item.staff().has_value())
             {
-                staff = item.staff();
+                staff = item.staff()->value();
             }
         }
 

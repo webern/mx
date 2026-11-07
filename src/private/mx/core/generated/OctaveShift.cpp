@@ -31,12 +31,12 @@ void OctaveShift::setNumber(std::optional<NumberLevel> value)
     m_number = std::move(value);
 }
 
-const std::optional<int> &OctaveShift::size() const noexcept
+const std::optional<PositiveInteger> &OctaveShift::size() const noexcept
 {
     return m_size;
 }
 
-void OctaveShift::setSize(std::optional<int> value)
+void OctaveShift::setSize(std::optional<PositiveInteger> value)
 {
     m_size = std::move(value);
 }
@@ -183,7 +183,7 @@ OctaveShift parseOctaveShift(mx::xml::Node el, const ParseContext &context)
         }
         else if (aname == "size")
         {
-            out.setSize(parseIntegerValue(a.value(), context, el, "size"));
+            out.setSize(parseValue<PositiveInteger>(a.value(), context, el, "size"));
         }
         else if (aname == "dash-length")
         {
@@ -266,7 +266,7 @@ void serializeOctaveShift(const OctaveShift &v, mx::xml::Node parent, const char
     }
     if (v.size())
     {
-        setAttribute(el, "size", formatInt(*v.size()));
+        setAttribute(el, "size", v.size()->toString());
     }
     if (v.dashLength())
     {

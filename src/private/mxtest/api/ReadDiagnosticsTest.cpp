@@ -138,27 +138,48 @@ TEST(nonNumericGroupNumberAndClefNumberAboveStavesRead, ReadDiagnostics)
 
 T_END
 
-TEST(outOfRangeStaffAndClampedBackupHaveScorePositions, ReadDiagnostics)
+TEST(clampedBackupHasScorePosition, ReadDiagnostics)
 {
     const auto read = readDiagnostics(readDiagnosticsScore(
         readDiagnosticsScorePart("P1"),
         readDiagnosticsPart("P1", "<attributes><divisions>1</divisions></attributes><note><pitch><step>C</step>"
-                                  "<octave>4</octave></pitch><duration>1</duration><staff>0</staff></note>"
+                                  "<octave>4</octave></pitch><duration>1</duration></note>"
                                   "<backup><duration>2</duration></backup>" +
                                       readDiagnosticsRest())));
     REQUIRE(read.ok);
-    REQUIRE(read.diagnostics.all().size() == 2);
-    const auto &staff = read.diagnostics.all()[0];
-    readDiagnosticsCheck(staff, DiagnosticCode::valueAdjusted, "note staff number 0 is out of range; using staff 1");
-    CHECK_EQUAL(0, staff.location.partIndex);
-    CHECK_EQUAL(0, staff.location.measureIndex);
-    CHECK_EQUAL(0, staff.location.staffIndex);
-    CHECK_EQUAL(0, staff.location.tickTimePosition);
-    const auto &backup = read.diagnostics.all()[1];
+    REQUIRE(read.diagnostics.all().size() == 1);
+    const auto &backup = read.diagnostics.all()[0];
     readDiagnosticsCheck(backup, DiagnosticCode::valueAdjusted,
                          "backup moves before the start of the measure; using the measure start");
     CHECK_EQUAL(0, backup.location.measureIndex);
     CHECK_EQUAL(0, backup.location.tickTimePosition);
+}
+
+T_END
+
+// mx::core cannot hold a staff number below 1, so the import repairs <staff>0</staff> and reports
+// it with the XML path. Reading the repaired document puts the note on the first staff.
+TEST(staffZeroIsRepairedOnImport, ReadDiagnostics)
+{
+    std::istringstream stream{readDiagnosticsScore(
+        readDiagnosticsScorePart("P1"),
+        readDiagnosticsPart("P1", "<attributes><divisions>1</divisions></attributes><note><pitch><step>C</step>"
+                                  "<octave>4</octave></pitch><duration>1</duration><staff>0</staff></note>"))};
+    Diagnostics diagnostics;
+    const auto document = MusicXml::fromStream(stream, diagnostics);
+    REQUIRE(document.ok());
+    REQUIRE(diagnostics.all().size() == 1);
+    const auto &staff = diagnostics.all().front();
+    readDiagnosticsCheck(staff, DiagnosticCode::valueAdjusted, "value \"0\" adjusted to \"1\"");
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note/staff"}, staff.location.xmlPath);
+
+    const auto score = getScore(document.value(), diagnostics);
+    REQUIRE(score.ok());
+    CHECK(diagnostics.all().size() == 1);
+    const auto &measure = score.value().parts.front().measures.front();
+    REQUIRE(measure.staves.size() == 1);
+    REQUIRE(measure.staves[0].voices.count(0) == 1);
+    CHECK_EQUAL(static_cast<size_t>(1), measure.staves[0].voices.at(0).notes.size());
 }
 
 T_END

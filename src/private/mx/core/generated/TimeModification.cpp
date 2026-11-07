@@ -11,22 +11,22 @@
 namespace mx::core
 {
 
-const int &TimeModification::actualNotes() const noexcept
+const NonNegativeInteger &TimeModification::actualNotes() const noexcept
 {
     return m_actualNotes;
 }
 
-void TimeModification::setActualNotes(int value)
+void TimeModification::setActualNotes(NonNegativeInteger value)
 {
     m_actualNotes = std::move(value);
 }
 
-const int &TimeModification::normalNotes() const noexcept
+const NonNegativeInteger &TimeModification::normalNotes() const noexcept
 {
     return m_normalNotes;
 }
 
-void TimeModification::setNormalNotes(int value)
+void TimeModification::setNormalNotes(NonNegativeInteger value)
 {
     m_normalNotes = std::move(value);
 }
@@ -62,7 +62,7 @@ void parseTimeModificationContent(TimeModification &out, mx::xml::Node el, const
     mx::xml::Node cursor = firstElement(el);
     if (cursorIs(cursor, "actual-notes"))
     {
-        out.setActualNotes(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setActualNotes(parseValue<NonNegativeInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -71,7 +71,7 @@ void parseTimeModificationContent(TimeModification &out, mx::xml::Node el, const
     }
     if (cursorIs(cursor, "normal-notes"))
     {
-        out.setNormalNotes(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setNormalNotes(parseValue<NonNegativeInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -101,8 +101,8 @@ void serializeTimeModification(const TimeModification &v, mx::xml::Node parent, 
 
 void serializeTimeModificationContent(const TimeModification &v, mx::xml::Node el)
 {
-    writeTextElement(el, "actual-notes", formatInt(v.actualNotes()));
-    writeTextElement(el, "normal-notes", formatInt(v.normalNotes()));
+    writeTextElement(el, "actual-notes", v.actualNotes().toString());
+    writeTextElement(el, "normal-notes", v.normalNotes().toString());
     if (v.group())
     {
         serializeTimeModificationGroup(*v.group(), el);

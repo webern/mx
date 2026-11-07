@@ -36,6 +36,7 @@
 #include "mx/core/generated/Mode.h"
 #include "mx/core/generated/MultipleRest.h"
 #include "mx/core/generated/MusicDataChoice.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/NonTraditionalKeyGroup.h"
 #include "mx/core/generated/Note.h"
 #include "mx/core/generated/PartClef.h"
@@ -468,8 +469,9 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
     myCurrentCursor.isBackupInProgress = false;
     impl::NoteReader noteReader{inMxNote};
 
+    // mx::core cannot hold a <staff> below 1 (an import clamps it and reports the repair), so the
+    // only way to get a negative index here is a note without <staff>; it goes on staff 1.
     int noteDataStaffIndex = noteReader.getStaffNumber() - 1;
-    const bool isStaffNumberOutOfRange = noteReader.getIsStaffSpecified() && noteDataStaffIndex < 0;
 
     if (noteDataStaffIndex < 0)
     {
@@ -515,13 +517,6 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
 
     auto location = measureLocation(myCurrentCursor);
     location.staffIndex = bucketStaffIndex;
-
-    if (isStaffNumberOutOfRange)
-    {
-        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, location,
-                             "note staff number " + std::to_string(noteReader.getStaffNumber()) +
-                                 " is out of range; using staff 1");
-    }
 
     reportBeamRepairs(inMxNote, noteReader, location);
     reportRoundedDuration("note", noteReader.getDurationValue(), location);
@@ -724,7 +719,7 @@ void MeasureReader::parseDirection(const core::Direction &inDirection) const
 
     if (isStaffIndexSpecified)
     {
-        staffIndex = static_cast<size_t>(*inDirection.staff() - 1);
+        staffIndex = static_cast<size_t>(inDirection.staff()->value() - 1);
     }
 
     isStaffIndexInsane = staffIndex >= myOutMeasureData.staves.size();
@@ -733,7 +728,7 @@ void MeasureReader::parseDirection(const core::Direction &inDirection) const
     {
         myDiagnostics.report(
             api::Severity::warning, api::DiagnosticCode::valueAdjusted, measureLocation(myCurrentCursor),
-            "direction staff number " + std::to_string(*inDirection.staff()) + " is out of range; using staff 1");
+            "direction staff number " + inDirection.staff()->toString() + " is out of range; using staff 1");
     }
 
     if (!isStaffIndexSpecified || isStaffIndexInsane)
@@ -782,7 +777,7 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
         if (measureStyle.choice().isMultipleRest())
         {
             const auto &mr = measureStyle.choice().asMultipleRest();
-            myOutMeasureData.multiMeasureRest = mr.value();
+            myOutMeasureData.multiMeasureRest = mr.value().value();
             myOutMeasureData.multiMeasureRestUseSymbols = api::Bool::unspecified;
             if (mr.useSymbols().has_value())
             {
@@ -985,7 +980,7 @@ void MeasureReader::parseHarmony(const core::Harmony &inHarmony) const
 
     if (isStaffIndexSpecified)
     {
-        staffIndex = static_cast<size_t>(*inHarmony.staff() - 1);
+        staffIndex = static_cast<size_t>(inHarmony.staff()->value() - 1);
     }
 
     isStaffIndexInsane = staffIndex >= myOutMeasureData.staves.size();
@@ -994,7 +989,7 @@ void MeasureReader::parseHarmony(const core::Harmony &inHarmony) const
     {
         myDiagnostics.report(
             api::Severity::warning, api::DiagnosticCode::valueAdjusted, measureLocation(myCurrentCursor),
-            "harmony staff number " + std::to_string(*inHarmony.staff()) + " is out of range; using staff 1");
+            "harmony staff number " + inHarmony.staff()->toString() + " is out of range; using staff 1");
     }
 
     if (!isStaffIndexSpecified || isStaffIndexInsane)
@@ -1180,7 +1175,7 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
     {
         const auto &mxRepeat = *inMxBarline.repeat();
         repeat = true;
-        repeatTimes = mxRepeat.times().value_or(0);
+        repeatTimes = mxRepeat.times().value_or(core::NonNegativeInteger{0}).value();
         repeatDirection = myConverter.convert(mxRepeat.direction());
 
         if (mxRepeat.afterJump().has_value())
@@ -1250,7 +1245,7 @@ void MeasureReader::importStaffDetails(const core::Attributes &inMxAttributes) c
         auto &staffData = myOutMeasureData.staves.at(static_cast<size_t>(staffIndex));
         if (staffDetails.group().has_value())
         {
-            staffData.staffLines = staffDetails.group()->staffLines();
+            staffData.staffLines = staffDetails.group()->staffLines().value();
         }
         if (!staffDetails.staffTuning().empty())
         {

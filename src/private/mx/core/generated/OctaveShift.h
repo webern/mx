@@ -10,6 +10,7 @@
 #include "mx/core/generated/FontStyle.h"
 #include "mx/core/generated/FontWeight.h"
 #include "mx/core/generated/NumberLevel.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Tenths.h"
 #include "mx/core/generated/UpDownStopContinue.h"
 
@@ -37,8 +38,8 @@ class OctaveShift final
     void setType(UpDownStopContinue value);
     const std::optional<NumberLevel> &number() const noexcept;
     void setNumber(std::optional<NumberLevel> value);
-    const std::optional<int> &size() const noexcept;
-    void setSize(std::optional<int> value);
+    const std::optional<PositiveInteger> &size() const noexcept;
+    void setSize(std::optional<PositiveInteger> value);
     const std::optional<Tenths> &dashLength() const noexcept;
     void setDashLength(std::optional<Tenths> value);
     const std::optional<Tenths> &spaceLength() const noexcept;
@@ -68,7 +69,7 @@ class OctaveShift final
   private:
     UpDownStopContinue m_type{};
     std::optional<NumberLevel> m_number;
-    std::optional<int> m_size;
+    std::optional<PositiveInteger> m_size;
     std::optional<Tenths> m_dashLength;
     std::optional<Tenths> m_spaceLength;
     std::optional<Tenths> m_defaultX;

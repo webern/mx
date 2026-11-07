@@ -216,12 +216,12 @@ void Harmony::setEditorial(EditorialGroup value)
     m_editorial = std::move(value);
 }
 
-const std::optional<int> &Harmony::staff() const noexcept
+const std::optional<PositiveInteger> &Harmony::staff() const noexcept
 {
     return m_staff;
 }
 
-void Harmony::setStaff(std::optional<int> value)
+void Harmony::setStaff(std::optional<PositiveInteger> value)
 {
     m_staff = std::move(value);
 }
@@ -337,7 +337,7 @@ void parseHarmonyContent(Harmony &out, mx::xml::Node el, const ParseContext &con
     }
     if (cursorIs(cursor, "staff"))
     {
-        out.setStaff(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setStaff(parseValue<PositiveInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor)
@@ -440,7 +440,7 @@ void serializeHarmonyContent(const Harmony &v, mx::xml::Node el)
     serializeEditorialGroup(v.editorial(), el);
     if (v.staff())
     {
-        writeTextElement(el, "staff", formatInt(*v.staff()));
+        writeTextElement(el, "staff", v.staff()->toString());
     }
 }
 

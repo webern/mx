@@ -68,7 +68,7 @@ class PartReader
     {
         if (element.staff().has_value())
         {
-            int temp = *element.staff();
+            int temp = element.staff()->value();
             if (temp > outNumStaves)
             {
                 outNumStaves = temp;

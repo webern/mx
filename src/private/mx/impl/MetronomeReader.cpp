@@ -83,8 +83,8 @@ api::MetronomeNoteData readMetronomeNote(const Converter &converter, const core:
     {
         const auto &tuplet = *note.metronomeTuplet();
         api::MetronomeTuplet apiTuplet;
-        apiTuplet.actualNotes = tuplet.actualNotes();
-        apiTuplet.normalNotes = tuplet.normalNotes();
+        apiTuplet.actualNotes = tuplet.actualNotes().value();
+        apiTuplet.normalNotes = tuplet.normalNotes().value();
         if (tuplet.group().has_value())
         {
             apiTuplet.normalType = converter.convert(tuplet.group()->normalType());

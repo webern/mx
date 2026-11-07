@@ -61,12 +61,12 @@ void Attributes::setTime(std::vector<Time> value)
     m_time = std::move(value);
 }
 
-const std::optional<int> &Attributes::staves() const noexcept
+const std::optional<NonNegativeInteger> &Attributes::staves() const noexcept
 {
     return m_staves;
 }
 
-void Attributes::setStaves(std::optional<int> value)
+void Attributes::setStaves(std::optional<NonNegativeInteger> value)
 {
     m_staves = std::move(value);
 }
@@ -81,12 +81,12 @@ void Attributes::setPartSymbol(std::optional<PartSymbol> value)
     m_partSymbol = std::move(value);
 }
 
-const std::optional<int> &Attributes::instruments() const noexcept
+const std::optional<NonNegativeInteger> &Attributes::instruments() const noexcept
 {
     return m_instruments;
 }
 
-void Attributes::setInstruments(std::optional<int> value)
+void Attributes::setInstruments(std::optional<NonNegativeInteger> value)
 {
     m_instruments = std::move(value);
 }
@@ -201,7 +201,7 @@ void parseAttributesContent(Attributes &out, mx::xml::Node el, const ParseContex
     }
     if (cursorIs(cursor, "staves"))
     {
-        out.setStaves(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setStaves(parseValue<NonNegativeInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "part-symbol"))
@@ -211,7 +211,7 @@ void parseAttributesContent(Attributes &out, mx::xml::Node el, const ParseContex
     }
     if (cursorIs(cursor, "instruments"))
     {
-        out.setInstruments(parseIntegerValue(childText(cursor), context, cursor, nullptr));
+        out.setInstruments(parseValue<NonNegativeInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "clef"))
@@ -275,7 +275,7 @@ void serializeAttributesContent(const Attributes &v, mx::xml::Node el)
     }
     if (v.staves())
     {
-        writeTextElement(el, "staves", formatInt(*v.staves()));
+        writeTextElement(el, "staves", v.staves()->toString());
     }
     if (v.partSymbol())
     {
@@ -283,7 +283,7 @@ void serializeAttributesContent(const Attributes &v, mx::xml::Node el)
     }
     if (v.instruments())
     {
-        writeTextElement(el, "instruments", formatInt(*v.instruments()));
+        writeTextElement(el, "instruments", v.instruments()->toString());
     }
     for (const auto &item : v.clef())
     {

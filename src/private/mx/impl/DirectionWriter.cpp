@@ -62,6 +62,7 @@
 #include "mx/core/generated/MetronomeTied.h"
 #include "mx/core/generated/MetronomeTuplet.h"
 #include "mx/core/generated/MusicDataChoice.h"
+#include "mx/core/generated/NonNegativeInteger.h"
 #include "mx/core/generated/Numeral.h"
 #include "mx/core/generated/NumeralKey.h"
 #include "mx/core/generated/NumeralMode.h"
@@ -81,6 +82,7 @@
 #include "mx/core/generated/PercussionChoice.h"
 #include "mx/core/generated/Pitched.h"
 #include "mx/core/generated/PositiveDivisions.h"
+#include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/PrincipalVoice.h"
 #include "mx/core/generated/PrincipalVoiceSymbol.h"
 #include "mx/core/generated/Root.h"
@@ -180,7 +182,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
 
     if (myDirectionData.isStaffValueSpecified || myCursor.staffIndex != 0)
     {
-        direction.setStaff(myCursor.staffIndex + 1);
+        direction.setStaff(core::PositiveInteger{myCursor.staffIndex + 1});
     }
 
     int offset = 0;
@@ -439,7 +441,7 @@ void DirectionWriter::emitOttavaStop(const api::OttavaStop &ottavaStop, const vo
     // size, because importers such as MuseScore expect it there.
     if (ottavaStop.writeSize != api::Bool::no)
     {
-        os.setSize(mySpannerResolver.ottavaStopSize(inIdentity));
+        os.setSize(core::PositiveInteger{mySpannerResolver.ottavaStopSize(inIdentity)});
     }
 
     core::DirectionType dt{};
@@ -490,7 +492,7 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
     const int sizeValue = ottavaTypeSize(ottavaStart.ottavaType);
     if (sizeValue != 8 || ottavaStart.writeDefaultSize)
     {
-        os.setSize(sizeValue);
+        os.setSize(core::PositiveInteger{sizeValue});
     }
 
     core::DirectionType dt{};
@@ -568,7 +570,8 @@ static core::BeatUnitTied makeBeatUnitTied(const Converter &converter, const api
     return tied;
 }
 
-static core::MetronomeNote makeMetronomeNote(const Converter &converter, const api::MetronomeNoteData &note)
+static core::MetronomeNote makeMetronomeNote(const Converter &converter, const api::MetronomeNoteData &note,
+                                             const DiagnosticsContext &diagnostics, const api::Location &location)
 {
     core::MetronomeNote out{};
     out.setMetronomeType(converter.convert(note.metronomeType));
@@ -596,8 +599,12 @@ static core::MetronomeNote makeMetronomeNote(const Converter &converter, const a
     {
         const auto &tuplet = *note.tuplet;
         core::MetronomeTuplet coreTuplet{};
-        coreTuplet.setActualNotes(tuplet.actualNotes);
-        coreTuplet.setNormalNotes(tuplet.normalNotes);
+        coreTuplet.setActualNotes(core::NonNegativeInteger{tuplet.actualNotes});
+        coreTuplet.setNormalNotes(core::NonNegativeInteger{tuplet.normalNotes});
+        reportAdjusted(diagnostics, location, "metronome tuplet actual-notes", tuplet.actualNotes,
+                       coreTuplet.actualNotes().value());
+        reportAdjusted(diagnostics, location, "metronome tuplet normal-notes", tuplet.normalNotes,
+                       coreTuplet.normalNotes().value());
         if (tuplet.normalType != api::DurationName::unspecified)
         {
             core::TimeModificationGroup group{};
@@ -634,12 +641,14 @@ static core::MetronomeNote makeMetronomeNote(const Converter &converter, const a
 }
 
 static core::OneOrMore<core::MetronomeNote> makeMetronomeNotes(const Converter &converter,
-                                                               const std::vector<api::MetronomeNoteData> &notes)
+                                                               const std::vector<api::MetronomeNoteData> &notes,
+                                                               const DiagnosticsContext &diagnostics,
+                                                               const api::Location &location)
 {
-    core::OneOrMore<core::MetronomeNote> out{makeMetronomeNote(converter, notes.front())};
+    core::OneOrMore<core::MetronomeNote> out{makeMetronomeNote(converter, notes.front(), diagnostics, location)};
     for (std::size_t i = 1; i < notes.size(); ++i)
     {
-        out.add(makeMetronomeNote(converter, notes.at(i)));
+        out.add(makeMetronomeNote(converter, notes.at(i), diagnostics, location));
     }
     return out;
 }
@@ -708,12 +717,14 @@ void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &di
         }
         core::MetronomeChoiceGroup2 group2{};
         group2.setMetronomeArrows(noteRelation.arrows);
-        group2.setMetronomeNote(makeMetronomeNotes(myConverter, noteRelation.notes));
+        group2.setMetronomeNote(
+            makeMetronomeNotes(myConverter, noteRelation.notes, myDiagnostics, cursorLocation(myCursor)));
         if (noteRelation.relation.has_value() && !noteRelation.relation->notes.empty())
         {
             core::MetronomeChoiceGroup2Group relationGroup{};
             relationGroup.setMetronomeRelation(noteRelation.relation->symbol);
-            relationGroup.setMetronomeNote(makeMetronomeNotes(myConverter, noteRelation.relation->notes));
+            relationGroup.setMetronomeNote(
+                makeMetronomeNotes(myConverter, noteRelation.relation->notes, myDiagnostics, cursorLocation(myCursor)));
             group2.setGroup(relationGroup);
         }
         metronome.setChoice(core::MetronomeChoice::group2(group2));
@@ -1430,7 +1441,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
 
     if (myDirectionData.isStaffValueSpecified)
     {
-        harmony.setStaff(myCursor.staffIndex + 1);
+        harmony.setStaff(core::PositiveInteger{myCursor.staffIndex + 1});
     }
 
     harmony.setSystem(myConverter.convertDirectionSystemRelation(myDirectionData.systemRelation));
@@ -1570,7 +1581,9 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
         if (chordIter->hasInversion)
         {
             core::Inversion inversion{};
-            inversion.setValue(chordIter->inversion);
+            inversion.setValue(core::NonNegativeInteger{chordIter->inversion});
+            reportAdjusted(myDiagnostics, cursorLocation(myCursor), "harmony inversion", chordIter->inversion,
+                           inversion.value().value());
             grp.setInversion(inversion);
         }
 
@@ -1625,34 +1638,34 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             switch (extension.extensionNumber)
             {
             case api::ExtensionNumber::first:
-                degreeValue.setValue(1);
+                degreeValue.setValue(core::PositiveInteger{1});
                 break;
             case api::ExtensionNumber::second:
-                degreeValue.setValue(2);
+                degreeValue.setValue(core::PositiveInteger{2});
                 break;
             case api::ExtensionNumber::third:
-                degreeValue.setValue(3);
+                degreeValue.setValue(core::PositiveInteger{3});
                 break;
             case api::ExtensionNumber::fourth:
-                degreeValue.setValue(4);
+                degreeValue.setValue(core::PositiveInteger{4});
                 break;
             case api::ExtensionNumber::fifth:
-                degreeValue.setValue(5);
+                degreeValue.setValue(core::PositiveInteger{5});
                 break;
             case api::ExtensionNumber::sixth:
-                degreeValue.setValue(6);
+                degreeValue.setValue(core::PositiveInteger{6});
                 break;
             case api::ExtensionNumber::seventh:
-                degreeValue.setValue(7);
+                degreeValue.setValue(core::PositiveInteger{7});
                 break;
             case api::ExtensionNumber::ninth:
-                degreeValue.setValue(9);
+                degreeValue.setValue(core::PositiveInteger{9});
                 break;
             case api::ExtensionNumber::eleventh:
-                degreeValue.setValue(11);
+                degreeValue.setValue(core::PositiveInteger{11});
                 break;
             case api::ExtensionNumber::thirteenth:
-                degreeValue.setValue(13);
+                degreeValue.setValue(core::PositiveInteger{13});
                 break;
             default:
                 break;
@@ -1700,8 +1713,12 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
         if (chordIter->hasFrameData)
         {
             core::Frame frame{};
-            frame.setFrameStrings(chordIter->frameData.stringCount);
-            frame.setFrameFrets(chordIter->frameData.fretCount);
+            frame.setFrameStrings(core::PositiveInteger{chordIter->frameData.stringCount});
+            frame.setFrameFrets(core::PositiveInteger{chordIter->frameData.fretCount});
+            reportAdjusted(myDiagnostics, cursorLocation(myCursor), "frame string count",
+                           chordIter->frameData.stringCount, frame.frameStrings().value());
+            reportAdjusted(myDiagnostics, cursorLocation(myCursor), "frame fret count", chordIter->frameData.fretCount,
+                           frame.frameFrets().value());
             if (chordIter->frameData.unplayed.has_value())
             {
                 frame.setUnplayed(chordIter->frameData.unplayed);
@@ -1710,7 +1727,9 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             if (chordIter->frameData.isFirstFretSpecified)
             {
                 core::FirstFret firstFret{};
-                firstFret.setValue(chordIter->frameData.firstFret);
+                firstFret.setValue(core::PositiveInteger{chordIter->frameData.firstFret});
+                reportAdjusted(myDiagnostics, cursorLocation(myCursor), "frame first fret",
+                               chordIter->frameData.firstFret, firstFret.value().value());
                 if (chordIter->frameData.firstFretText.has_value())
                 {
                     firstFret.setText(chordIter->frameData.firstFretText);
@@ -1730,7 +1749,9 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
                 frameNote.setString(strObj);
 
                 core::Fret fret{};
-                fret.setValue(noteData.fretNumber);
+                fret.setValue(core::NonNegativeInteger{noteData.fretNumber});
+                reportAdjusted(myDiagnostics, cursorLocation(myCursor), "frame note fret", noteData.fretNumber,
+                               fret.value().value());
                 frameNote.setFret(fret);
 
                 if (noteData.isFingeringSpecified)
