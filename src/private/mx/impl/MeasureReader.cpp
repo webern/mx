@@ -163,9 +163,11 @@ int MeasureReader::figuredBassStaffIndex(const MeasureCursor &cursor, const api:
 }
 
 MeasureReader::MeasureReader(const core::PartwiseMeasure &inPartwiseMeasureRef, const MeasureCursor &cursor,
-                             const MeasureCursor &previousMeasureCursor, DiagnosticsContext diagnostics)
-    : myMutex{}, myPartwiseMeasure{inPartwiseMeasureRef}, myConverter{}, myDiagnostics{diagnostics}, myOutMeasureData{},
-      myCurrentCursor{cursor}, myPreviousMeasureCursor{previousMeasureCursor}, myHistory{}, myCrossStaffHomes{},
+                             const MeasureCursor &previousMeasureCursor, DiagnosticsContext diagnostics,
+                             const WedgeNiente *inWedgeNiente)
+    : myMutex{}, myPartwiseMeasure{inPartwiseMeasureRef}, myConverter{}, myDiagnostics{diagnostics},
+      myWedgeNiente{inWedgeNiente}, myOutMeasureData{}, myCurrentCursor{cursor},
+      myPreviousMeasureCursor{previousMeasureCursor}, myHistory{}, myCrossStaffHomes{},
       myPreviousNoteBucketStaffIndex{-1}
 {
     HistoryRecord initialCursorRecord;
@@ -714,7 +716,7 @@ void MeasureReader::parseForward(const core::Forward &inMxForward) const
 
 void MeasureReader::parseDirection(const core::Direction &inDirection) const
 {
-    DirectionReader reader{inDirection, myCurrentCursor, myDiagnostics};
+    DirectionReader reader{inDirection, myCurrentCursor, myDiagnostics, myWedgeNiente};
     auto directionData = reader.getDirectionData();
 
     // make an adjustment if the directionData refers to a non-existent staff

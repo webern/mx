@@ -17,18 +17,45 @@
 #include "mx/impl/PositionFunctions.h"
 
 #include <mutex>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace mx
 {
+namespace core
+{
+class PartwisePart;
+class Wedge;
+} // namespace core
+
 namespace impl
 {
+// MusicXML writes a diminuendo's niente on the stop that closes it, which comes later in the
+// part than the start that api::WedgeStart::niente lives on. This is what a scan of the whole
+// part learns about that pairing before the part's directions are read.
+struct WedgeNiente
+{
+    // The niente stated by the stop of each diminuendo whose stop states one.
+    std::unordered_map<const core::Wedge *, api::Bool> diminuendoNiente;
+
+    // Every stop that closes a diminuendo. niente on any other stop is not at the hairpin's point.
+    std::unordered_set<const core::Wedge *> diminuendoStops;
+};
+
 class DirectionReader
 {
   public:
-    DirectionReader(const core::Direction &inDirection, MeasureCursor inCursor, DiagnosticsContext diagnostics = {});
+    // inWedgeNiente is the scan of the part this direction belongs to (see scanWedgeNiente). When
+    // it is null, a diminuendo's niente is not read.
+    DirectionReader(const core::Direction &inDirection, MeasureCursor inCursor, DiagnosticsContext diagnostics = {},
+                    const WedgeNiente *inWedgeNiente = nullptr);
     DirectionReader(const core::Harmony &inHarmony, MeasureCursor inCursor, DiagnosticsContext diagnostics = {});
     api::DirectionData getDirectionData();
+
+    // Pairs the part's wedge stops with the starts they close, in one pass in document order and
+    // by the rule in SpannerPairing.h, and records what each diminuendo's stop says about niente.
+    static WedgeNiente scanWedgeNiente(const core::PartwisePart &inPart);
 
   private:
     const core::Direction *const myDirection;
@@ -36,6 +63,7 @@ class DirectionReader
     const MeasureCursor myCursor;
     const Converter myConverter;
     DiagnosticsContext myDiagnostics;
+    const WedgeNiente *const myWedgeNiente;
     api::DirectionData myOutDirectionData;
 
   private:
@@ -55,6 +83,7 @@ class DirectionReader
     void parseWordsRun(const core::DirectionType &directionType);
     void parseCoda(const core::DirectionType &directionType);
     void parseWedge(const core::DirectionType &directionType);
+    api::Bool parseWedgeStartNiente(const core::Wedge &wedge) const;
     void parseDynamics(const core::DirectionType &directionType);
     void parseDashes(const core::DirectionType &directionType);
     void parseBracket(const core::DirectionType &directionType);

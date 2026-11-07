@@ -16,8 +16,9 @@ namespace impl
 {
 // Resolves the writer-side facts that a spanner endpoint cannot know on its
 // own, in one pass over a part before the part is written: the MusicXML
-// 'number' attribute for every spanner start/continue/stop, and the size an
-// octave-shift stop inherits from the start it closes.
+// 'number' attribute for every spanner start/continue/stop, and the facts a
+// stop inherits from the start it closes (an octave-shift's size, a
+// diminuendo's niente).
 //
 // == Numbers ==
 //
@@ -93,14 +94,24 @@ namespace impl
 // carry distinct numbers or identities never cross, and pairing spans
 // measures. A stop with no open start is left unpaired and falls back to
 // MusicXML's default size of 8.
+//
+// == Wedge stop niente ==
+//
+// Whether a hairpin's point is drawn as a circle is stated by
+// api::WedgeStart::niente alone. MusicXML puts it on the start of a crescendo
+// but on the stop of a diminuendo, so the walk pairs each wedge stop with the
+// start it closes, by the same rule as octave-shifts (see SpannerPairing.h),
+// and records a diminuendo start's niente for its stop.
 class SpannerResolver
 {
   public:
     SpannerResolver() = default;
 
     // Walks inPart in serialization order, assigning a number to every
-    // identity spanner event and a size to every ottava stop. Reports an
-    // unmatched ottava stop through diagnostics. May be called once per part
+    // identity spanner event, a size to every ottava stop, and a niente to
+    // every wedge stop that closes a diminuendo. Reports unmatched spanner
+    // endpoints, and a diminuendo niente with no stop to carry it, through
+    // diagnostics. May be called once per part
     // of a score; results accumulate (object addresses are unique across parts).
     void resolvePart(const api::PartData &inPart, int partIndex, DiagnosticsContext diagnostics = {});
 
@@ -119,6 +130,12 @@ class SpannerResolver
     // gets MusicXML's default size of 8.
     int ottavaStopSize(const void *inObject) const;
 
+    // The niente the writer should emit for the given wedge stop: the value of
+    // the diminuendo start it closes. inObject must be the address of the same
+    // object resolvePart visited. A stop that closes a crescendo, closes
+    // nothing, or was written outside a resolved part gets unspecified.
+    api::Bool wedgeStopNiente(const void *inObject) const;
+
     // The other end of a spanner that starts and stops on the same note, or
     // nullptr when the spanner extends beyond its note. inObject must be the
     // address of the same start/stop object that resolvePart visited. Tracked
@@ -129,6 +146,7 @@ class SpannerResolver
   private:
     std::unordered_map<const void *, int> myResolved;
     std::unordered_map<const void *, int> myOttavaStopSizes;
+    std::unordered_map<const void *, api::Bool> myWedgeStopNiente;
     std::unordered_map<const void *, const void *> mySameNoteSpanPartners;
 };
 } // namespace impl

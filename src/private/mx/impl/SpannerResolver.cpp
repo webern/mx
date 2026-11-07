@@ -5,6 +5,7 @@
 #include "mx/impl/SpannerResolver.h"
 #include "mx/api/GlissandoData.h"
 #include "mx/impl/OttavaFunctions.h"
+#include "mx/impl/SpannerPairing.h"
 #include "mx/impl/WriteRefusal.h"
 #include "mx/utility/Throw.h"
 
@@ -84,24 +85,18 @@ struct SpannerOttavaEvent
     api::Location location;
 };
 
-// The bucket an endpoint pairs within, used for ottava sizes and for same-note span detection:
-// identity endpoints pair by id, explicit endpoints by level, and unspecified endpoints with
-// each other. The prefix keeps the three kinds from colliding (an identity of "3" is not the
-// explicit level 3).
-static std::string spannerPairingKey(const api::SpannerNumber &inNumber)
+// One wedge start or stop, in serialized order. Starts carry the hairpin's direction and niente,
+// which MusicXML writes on the stop when the hairpin is a diminuendo; stops carry the address the
+// writer will present when it asks for that niente.
+struct SpannerWedgeEvent
 {
-    switch (inNumber.kind())
-    {
-    case api::SpannerNumber::Kind::explicitLevel:
-        return "e" + std::to_string(inNumber.level());
-
-    case api::SpannerNumber::Kind::identity:
-        return "i" + inNumber.identity();
-
-    default:
-        return "u";
-    }
-}
+    const void *object;
+    api::SpannerNumber number;
+    bool isStart;
+    api::WedgeType wedgeType;
+    api::Bool niente;
+    api::Location location;
+};
 
 // Collects spanner events in the exact order MeasureWriter serializes them.
 // The position counter is global; only events within the same class are ever
@@ -202,13 +197,21 @@ class SpannerEventCollector
         {
             switch (choice.kind())
             {
-            case api::DirectionChoice::Kind::wedgeStart:
-                add(SpannerNumberClass::wedge, &choice, choice.wedgeStart().number, true, false);
+            case api::DirectionChoice::Kind::wedgeStart: {
+                const auto wedgeStart = choice.wedgeStart();
+                add(SpannerNumberClass::wedge, &choice, wedgeStart.number, true, false);
+                myWedgeEvents.push_back(SpannerWedgeEvent{&choice, wedgeStart.number, true, wedgeStart.wedgeType,
+                                                          wedgeStart.niente, myLocation});
                 break;
+            }
 
-            case api::DirectionChoice::Kind::wedgeStop:
-                add(SpannerNumberClass::wedge, &choice, choice.wedgeStop().number, false, true);
+            case api::DirectionChoice::Kind::wedgeStop: {
+                const auto wedgeStop = choice.wedgeStop();
+                add(SpannerNumberClass::wedge, &choice, wedgeStop.number, false, true);
+                myWedgeEvents.push_back(SpannerWedgeEvent{&choice, wedgeStop.number, false, api::WedgeType::unspecified,
+                                                          api::Bool::unspecified, myLocation});
                 break;
+            }
 
             case api::DirectionChoice::Kind::ottavaStart: {
                 const auto ottavaStart = choice.ottavaStart();
@@ -272,6 +275,11 @@ class SpannerEventCollector
         return myOttavaEvents;
     }
 
+    const std::vector<SpannerWedgeEvent> &wedgeEvents() const
+    {
+        return myWedgeEvents;
+    }
+
   private:
     void add(SpannerNumberClass inClass, const void *inObject, const api::SpannerNumber &inNumber, bool inOpens,
              bool inCloses)
@@ -307,6 +315,7 @@ class SpannerEventCollector
     api::Location myLocation;
     std::map<SpannerNumberClass, std::vector<SpannerNumberEvent>> myEvents;
     std::vector<SpannerOttavaEvent> myOttavaEvents;
+    std::vector<SpannerWedgeEvent> myWedgeEvents;
 };
 
 // Assigns numbers within one spanner class. Explicit levels reserve their
@@ -439,32 +448,64 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
     }
 }
 
-// Pairs each ottava stop with the start it closes and records that start's size. Within one
-// pairing bucket a stop closes the most recently opened start still open, so a stop that opens
-// and closes inside another ottava of the same bucket does not steal the outer line's start. A
-// stop with nothing open is left out of ioResolved and falls back to size 8 at write time.
+// Pairs each ottava stop with the start it closes and records that start's size. A stop with
+// nothing open is left out of ioResolved and falls back to size 8 at write time.
 static void spannerResolveOttavaSizes(const std::vector<SpannerOttavaEvent> &inEvents,
                                       std::unordered_map<const void *, int> &ioResolved,
                                       const DiagnosticsContext &diagnostics)
 {
-    std::map<std::string, std::vector<api::OttavaType>> openStarts;
+    SpannerPairing<api::OttavaType> pairing;
 
     for (const auto &event : inEvents)
     {
-        auto &stack = openStarts[spannerPairingKey(event.number)];
         if (event.isStart)
         {
-            stack.push_back(event.ottavaType);
+            pairing.open(event.number, event.ottavaType);
             continue;
         }
-        if (stack.empty())
+        const auto ottavaType = pairing.close(event.number);
+        if (!ottavaType.has_value())
         {
             diagnostics.report(api::Severity::warning, api::DiagnosticCode::unmatchedSpanner, event.location,
                                "octave-shift stop has no matching start; using size 8");
             continue;
         }
-        ioResolved[event.object] = ottavaTypeSize(stack.back());
-        stack.pop_back();
+        ioResolved[event.object] = ottavaTypeSize(*ottavaType);
+    }
+}
+
+// Pairs each wedge stop with the start it closes and, when that start is a diminuendo with a
+// niente value, records the value for the stop: MusicXML writes a diminuendo's niente on its
+// stop. A diminuendo with niente and no stop has nowhere to write it, which is reported.
+static void spannerResolveWedgeNiente(const std::vector<SpannerWedgeEvent> &inEvents,
+                                      std::unordered_map<const void *, api::Bool> &ioResolved,
+                                      const DiagnosticsContext &diagnostics)
+{
+    SpannerPairing<const SpannerWedgeEvent *> pairing;
+
+    for (const auto &event : inEvents)
+    {
+        if (event.isStart)
+        {
+            pairing.open(event.number, &event);
+            continue;
+        }
+        const auto start = pairing.close(event.number);
+        if (start.has_value() && (*start)->wedgeType == api::WedgeType::diminuendo &&
+            (*start)->niente != api::Bool::unspecified)
+        {
+            ioResolved[event.object] = (*start)->niente;
+        }
+    }
+
+    for (const auto *start : pairing.unclosed())
+    {
+        if (start->wedgeType == api::WedgeType::diminuendo && start->niente != api::Bool::unspecified)
+        {
+            diagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, start->location,
+                               "a diminuendo's niente is written on its stop, and this diminuendo has no stop; "
+                               "niente is not written");
+        }
     }
 }
 
@@ -679,6 +720,7 @@ void SpannerResolver::resolvePart(const api::PartData &inPart, int partIndex, Di
     }
 
     spannerResolveOttavaSizes(collector.ottavaEvents(), myOttavaStopSizes, diagnostics);
+    spannerResolveWedgeNiente(collector.wedgeEvents(), myWedgeStopNiente, diagnostics);
 }
 
 std::optional<int> SpannerResolver::emittedNumber(const api::SpannerNumber &inNumber, const void *inObject) const
@@ -709,6 +751,16 @@ int SpannerResolver::ottavaStopSize(const void *inObject) const
     if (iter == myOttavaStopSizes.cend())
     {
         return ottavaTypeSize(api::OttavaType::unspecified);
+    }
+    return iter->second;
+}
+
+api::Bool SpannerResolver::wedgeStopNiente(const void *inObject) const
+{
+    const auto iter = myWedgeStopNiente.find(inObject);
+    if (iter == myWedgeStopNiente.cend())
+    {
+        return api::Bool::unspecified;
     }
     return iter->second;
 }

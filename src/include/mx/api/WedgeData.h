@@ -36,12 +36,22 @@ struct WedgeStart
     bool isColorSpecified;
     ColorData colorData;
 
+    // Whether a small circle is drawn at the point of the hairpin (niente): a crescendo that grows
+    // out of nothing, or a diminuendo that fades away to nothing. Set it here on the start for
+    // either direction; yes draws the circle, and no or unspecified leave a plain point. MusicXML
+    // states it at the point, on the start of a crescendo and on the stop of a diminuendo, and mx
+    // writes it there for you. So a diminuendo's circle is written only when the diminuendo has a
+    // WedgeStop that ends it; without one the circle is left out and a diagnostic says so. A
+    // hairpin whose wedgeType is unspecified is written as a crescendo, with the circle on its
+    // start.
+    Bool niente;
+
     // The <wedge> element's id attribute (see Id.h).
     std::optional<Id> id;
 
     WedgeStart()
         : number{}, wedgeType{WedgeType::unspecified}, isSpreadSpecified{false}, spread{0.0}, lineData{},
-          positionData{}, isColorSpecified{false}, colorData{}, id{}
+          positionData{}, isColorSpecified{false}, colorData{}, niente{Bool::unspecified}, id{}
     {
     }
 };
@@ -70,6 +80,7 @@ MXAPI_EQUALS_MEMBER(lineData)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(isColorSpecified)
 MXAPI_EQUALS_MEMBER(colorData)
+MXAPI_EQUALS_MEMBER(niente)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(WedgeStart);

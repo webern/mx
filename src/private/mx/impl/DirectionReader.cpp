@@ -42,6 +42,7 @@
 #include "mx/core/generated/Membrane.h"
 #include "mx/core/generated/Metal.h"
 #include "mx/core/generated/Metronome.h"
+#include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/Numeral.h"
 #include "mx/core/generated/NumeralKey.h"
 #include "mx/core/generated/NumeralMode.h"
@@ -53,6 +54,8 @@
 #include "mx/core/generated/OnOff.h"
 #include "mx/core/generated/OtherDirection.h"
 #include "mx/core/generated/OtherText.h"
+#include "mx/core/generated/PartwiseMeasure.h"
+#include "mx/core/generated/PartwisePart.h"
 #include "mx/core/generated/Pedal.h"
 #include "mx/core/generated/PedalTuning.h"
 #include "mx/core/generated/PedalType.h"
@@ -90,6 +93,7 @@
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
+#include "mx/impl/SpannerPairing.h"
 #include "mx/impl/TuningFunctions.h"
 #include "mx/utility/Round.h"
 #include "mx/utility/StringToInt.h"
@@ -100,16 +104,68 @@ namespace mx
 namespace impl
 {
 DirectionReader::DirectionReader(const core::Direction &inDirection, MeasureCursor inCursor,
-                                 DiagnosticsContext diagnostics)
+                                 DiagnosticsContext diagnostics, const WedgeNiente *inWedgeNiente)
     : myDirection{&inDirection}, myHarmony{nullptr}, myCursor{inCursor}, myConverter{}, myDiagnostics{diagnostics},
-      myOutDirectionData{}
+      myWedgeNiente{inWedgeNiente}, myOutDirectionData{}
 {
 }
 
 DirectionReader::DirectionReader(const core::Harmony &inHarmony, MeasureCursor inCursor, DiagnosticsContext diagnostics)
     : myDirection{nullptr}, myHarmony{&inHarmony}, myCursor{inCursor}, myConverter{}, myDiagnostics{diagnostics},
-      myOutDirectionData{}
+      myWedgeNiente{nullptr}, myOutDirectionData{}
 {
+}
+
+WedgeNiente DirectionReader::scanWedgeNiente(const core::PartwisePart &inPart)
+{
+    // Every wedge that is not a stop opens. A continue segment is read as a WedgeStart, which is
+    // written as a crescendo start, so it opens here too and a stop pairs with the same start on
+    // read as on write.
+    struct OpenWedge
+    {
+        const core::Wedge *wedge;
+        bool isDiminuendo;
+    };
+
+    const Converter converter{};
+    WedgeNiente result;
+    SpannerPairing<OpenWedge> pairing;
+    for (const auto &measure : inPart.measure())
+    {
+        for (const auto &musicData : measure.musicData())
+        {
+            if (musicData.kind() != core::MusicDataChoice::Kind::direction)
+            {
+                continue;
+            }
+            for (const auto &directionType : musicData.asDirection().directionType())
+            {
+                if (directionType.choice().kind() != core::DirectionTypeChoice::Kind::wedge)
+                {
+                    continue;
+                }
+                const auto &wedge = directionType.choice().asWedge();
+                const auto number =
+                    wedge.number().has_value() ? api::SpannerNumber(wedge.number()->value()) : api::SpannerNumber{};
+                const auto tag = wedge.type().tag();
+                if (tag != core::WedgeType::Tag::stop)
+                {
+                    pairing.open(number, OpenWedge{&wedge, tag == core::WedgeType::Tag::diminuendo});
+                    continue;
+                }
+                const auto start = pairing.close(number);
+                if (start.has_value() && start->isDiminuendo)
+                {
+                    result.diminuendoStops.insert(&wedge);
+                    if (wedge.niente().has_value())
+                    {
+                        result.diminuendoNiente[start->wedge] = converter.convert(*wedge.niente());
+                    }
+                }
+            }
+        }
+    }
+    return result;
 }
 
 void DirectionReader::report(api::Severity severity, api::DiagnosticCode code, std::string message) const
@@ -546,6 +602,13 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         }
         stop.positionData = positionData;
         stop.id = getId(wedge);
+        const bool closesDiminuendo = myWedgeNiente && myWedgeNiente->diminuendoStops.count(&wedge) > 0;
+        if (wedge.niente().has_value() && !closesDiminuendo)
+        {
+            report(api::Severity::error, api::DiagnosticCode::droppedData,
+                   "wedge niente is only read on the start of a crescendo or the stop of a diminuendo; "
+                   "niente on a stop that does not close a diminuendo is not read");
+        }
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(stop)});
         return;
     }
@@ -566,9 +629,36 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         start.lineData = lineData;
         start.isColorSpecified = isColorSpecified;
         start.colorData = colorData;
+        start.niente = parseWedgeStartNiente(wedge);
         start.id = getId(wedge);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(start)});
     }
+}
+
+api::Bool DirectionReader::parseWedgeStartNiente(const core::Wedge &wedge) const
+{
+    const auto tag = wedge.type().tag();
+    if (tag == core::WedgeType::Tag::crescendo)
+    {
+        return wedge.niente().has_value() ? myConverter.convert(*wedge.niente()) : api::Bool::unspecified;
+    }
+
+    if (wedge.niente().has_value())
+    {
+        report(api::Severity::error, api::DiagnosticCode::droppedData,
+               tag == core::WedgeType::Tag::diminuendo
+                   ? "wedge niente is only read on the start of a crescendo or the stop of a diminuendo; niente on "
+                     "the start of a diminuendo is not read"
+                   : "wedge niente is only read on the start of a crescendo or the stop of a diminuendo; niente on "
+                     "a continue segment is not read");
+    }
+
+    if (tag != core::WedgeType::Tag::diminuendo || !myWedgeNiente)
+    {
+        return api::Bool::unspecified;
+    }
+    const auto iter = myWedgeNiente->diminuendoNiente.find(&wedge);
+    return iter == myWedgeNiente->diminuendoNiente.cend() ? api::Bool::unspecified : iter->second;
 }
 
 void DirectionReader::parseDynamics(const core::DirectionType &directionType)

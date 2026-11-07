@@ -22,6 +22,7 @@
 #include "mx/core/generated/ScorePartMIDIGroup.h"
 #include "mx/core/generated/ScorePartwise.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/DirectionReader.h"
 #include "mx/impl/MeasureReader.h"
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/PositionFunctions.h"
@@ -105,9 +106,12 @@ api::PartData PartReader::getPartData()
 
     myPreviousCursor = myCurrentCursor;
 
+    // a diminuendo's niente is stated on its stop, later in the part, so the wedges are paired first
+    const auto wedgeNiente = DirectionReader::scanWedgeNiente(myPartwisePart);
+
     for (const auto &mxMeasure : myPartwisePart.measure())
     {
-        MeasureReader reader{mxMeasure, myCurrentCursor, myPreviousCursor, myDiagnostics};
+        MeasureReader reader{mxMeasure, myCurrentCursor, myPreviousCursor, myDiagnostics, &wedgeNiente};
         // the reader returns the measure data and any data that needs to be written at
         // the part-level (e.g. transposition). currently this is done as a pair.
         auto measureDataPair = reader.getMeasureData();

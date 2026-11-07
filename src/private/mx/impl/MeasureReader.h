@@ -39,12 +39,15 @@ class ForPart;
 namespace impl
 {
 class NoteReader;
+struct WedgeNiente;
 
 class MeasureReader
 {
   public:
+    // inWedgeNiente is the part's wedge scan (see DirectionReader::scanWedgeNiente), or null.
     MeasureReader(const core::PartwiseMeasure &inPartwiseMeasureRef, const MeasureCursor &cursor,
-                  const MeasureCursor &previousMeasureCursor, DiagnosticsContext diagnostics = {});
+                  const MeasureCursor &previousMeasureCursor, DiagnosticsContext diagnostics = {},
+                  const WedgeNiente *inWedgeNiente = nullptr);
 
     std::pair<api::MeasureData, std::optional<api::TransposeData>> getMeasureData() const;
     impl::MeasureCursor getCursor() const;
@@ -54,6 +57,7 @@ class MeasureReader
     const core::PartwiseMeasure &myPartwiseMeasure;
     const Converter myConverter;
     DiagnosticsContext myDiagnostics;
+    const WedgeNiente *const myWedgeNiente;
 
     mutable api::MeasureData myOutMeasureData;
     mutable MeasureCursor myCurrentCursor;

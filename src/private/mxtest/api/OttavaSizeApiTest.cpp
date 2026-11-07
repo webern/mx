@@ -241,6 +241,72 @@ TEST(OttavaStopSizeSequentialUnnumbered, OttavaSize)
 
 T_END;
 
+// An unnumbered ottava nested inside another unnumbered ottava: the first stop ends the inner line,
+// so the outer line keeps its own size for its stop.
+TEST(OttavaStopSizeNestedUnnumbered, OttavaSize)
+{
+    auto score = ottavaSizeMakeScore(4);
+
+    OttavaStart outer;
+    outer.ottavaType = OttavaType::o15ma;
+    ottavaSizeAddDirection(score, 0, DirectionChoice{outer});
+
+    OttavaStart inner;
+    inner.ottavaType = OttavaType::o8vb;
+    ottavaSizeAddDirection(score, 1, DirectionChoice{inner});
+    ottavaSizeAddDirection(score, 2, DirectionChoice{OttavaStop{}});
+    ottavaSizeAddDirection(score, 3, DirectionChoice{OttavaStop{}});
+
+    const auto shifts = ottavaSizeWrittenShifts(mxtest::toXml(score));
+    REQUIRE(shifts.size() == 4);
+    CHECK_EQUAL(std::string{"8"}, shifts.at(2).size);
+    CHECK_EQUAL(std::string{"15"}, shifts.at(3).size);
+}
+
+T_END;
+
+// An ottava without a number and one numbered 1 are separate lines, here on different staves of a
+// part. The stop numbered 1 ends the line numbered 1 even though the unnumbered line opened later.
+TEST(OttavaStopSizeUnnumberedAndNumberOneAreSeparateAcrossStaves, OttavaSize)
+{
+    auto score = ottavaSizeMakeScore(2);
+    for (auto &measure : score.parts.front().measures)
+    {
+        measure.staves.push_back(measure.staves.front());
+    }
+    const auto add = [&score](int inMeasureIndex, int inStaffIndex, const DirectionChoice &inChoice) {
+        DirectionData direction;
+        direction.directionTypes.emplace_back(inChoice);
+        score.parts.front()
+            .measures.at(static_cast<size_t>(inMeasureIndex))
+            .staves.at(static_cast<size_t>(inStaffIndex))
+            .directions.emplace_back(direction);
+    };
+
+    OttavaStart numbered;
+    numbered.ottavaType = OttavaType::o8va;
+    numbered.spannerStart.number = SpannerNumber(1);
+    add(0, 0, DirectionChoice{numbered});
+
+    OttavaStart unnumbered;
+    unnumbered.ottavaType = OttavaType::o15mb;
+    add(0, 1, DirectionChoice{unnumbered});
+
+    OttavaStop numberedStop;
+    numberedStop.spannerStop.number = SpannerNumber(1);
+    add(1, 0, DirectionChoice{numberedStop});
+    add(1, 1, DirectionChoice{OttavaStop{}});
+
+    const auto shifts = ottavaSizeWrittenShifts(mxtest::toXml(score));
+    REQUIRE(shifts.size() == 4);
+    CHECK_EQUAL(std::string{"stop"}, shifts.at(2).type);
+    CHECK_EQUAL(std::string{"8"}, shifts.at(2).size);
+    CHECK_EQUAL(std::string{"stop"}, shifts.at(3).type);
+    CHECK_EQUAL(std::string{"15"}, shifts.at(3).size);
+}
+
+T_END;
+
 // A stop with no start is an authoring error, not a crash: it writes MusicXML's default size of 8
 // and the document still reads back.
 TEST(OttavaStopSizeDanglingStopFallsBackToEight, OttavaSize)
