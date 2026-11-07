@@ -373,4 +373,210 @@ TEST(CaesuraVariants, MarkRoundTrip)
 
 T_END;
 
+// Returns the diagnostics carrying exactly the given message.
+inline std::vector<Diagnostic> markRoundTripDiagnosticsWithMessage(const Diagnostics &diagnostics,
+                                                                   const std::string &message)
+{
+    std::vector<Diagnostic> out;
+    for (const auto &diagnostic : diagnostics.all())
+    {
+        if (diagnostic.message == message)
+        {
+            out.push_back(diagnostic);
+        }
+    }
+    return out;
+}
+
+// Writes a one-note score holding the given mark and returns the XML, collecting the diagnostics
+// the write reported.
+inline std::string markRoundTripWriteWithDiagnostics(const MarkData &inMarkData, Diagnostics &outDiagnostics)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &note = score.parts.back().measures.emplace_back().staves.emplace_back().voices[0].notes.emplace_back();
+    note.noteAttachmentData.marks.push_back(inMarkData);
+    auto document = fromScore(score, outDiagnostics);
+    if (!document.ok())
+        return {};
+    std::stringstream ss;
+    std::move(document).value().writeToStream(ss);
+    return ss.str();
+}
+
+TEST(OrnamentAccidentals, MarkRoundTrip)
+{
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+    sharp.positionData.placement = Placement::above;
+    sharp.positionData.isDefaultYSpecified = true;
+    sharp.positionData.defaultY = 12.5;
+
+    MarkData trill{Placement::unspecified, MarkType::trillMark};
+    trill.choice = OrnamentMarkData{{sharp}};
+    const auto trillMarks = roundTripMarkData(trill);
+    REQUIRE(trillMarks.size() == 1);
+    CHECK(trillMarks.front().markType == MarkType::trillMark);
+    REQUIRE(trillMarks.front().choice.isOrnament());
+    CHECK(trill.choice == trillMarks.front().choice);
+
+    OrnamentAccidental natural;
+    natural.accidental = Accidental::natural;
+    natural.positionData.placement = Placement::below;
+    OrnamentAccidental flat;
+    flat.accidental = Accidental::flat;
+
+    MarkData mordent{Placement::above, MarkType::mordent};
+    mordent.choice = OrnamentMarkData{{natural, flat}};
+    const auto mordentMarks = roundTripMarkData(mordent);
+    REQUIRE(mordentMarks.size() == 1);
+    CHECK(mordentMarks.front().markType == MarkType::mordent);
+    CHECK(Placement::above == mordentMarks.front().positionData.placement);
+    CHECK(mordent.choice == mordentMarks.front().choice);
+}
+
+T_END;
+
+// An accidental left at none is not drawn, so it is not written, and the write reports the loss.
+// The ornament's other accidentals are still written.
+TEST(OrnamentAccidentalOfNoneIsDropped, MarkRoundTrip)
+{
+    OrnamentAccidental none;
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+
+    MarkData trill{Placement::unspecified, MarkType::trillMark};
+    trill.choice = OrnamentMarkData{{none, sharp}};
+
+    Diagnostics diagnostics;
+    const auto xml = markRoundTripWriteWithDiagnostics(trill, diagnostics);
+    CHECK(xml.find(">sharp</accidental-mark>") != std::string::npos);
+    const auto dropped =
+        markRoundTripDiagnosticsWithMessage(diagnostics, "an ornament accidental of none is not written");
+    REQUIRE(dropped.size() == 1);
+    CHECK(Severity::error == dropped.front().severity);
+    CHECK(DiagnosticCode::droppedData == dropped.front().code);
+
+    const auto marks = roundTripMarkData(trill);
+    REQUIRE(marks.size() == 1);
+    CHECK(MarkDataChoice{OrnamentMarkData{{sharp}}} == marks.front().choice);
+}
+
+T_END;
+
+// Ornament accidentals on a mark that is not written in <ornaments> have nowhere to go.
+TEST(OrnamentAccidentalsOnANonOrnamentAreDropped, MarkRoundTrip)
+{
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+    MarkData accent{Placement::unspecified, MarkType::accent};
+    accent.choice = OrnamentMarkData{{sharp}};
+
+    Diagnostics diagnostics;
+    const auto xml = markRoundTripWriteWithDiagnostics(accent, diagnostics);
+    CHECK(xml.find("<accent") != std::string::npos);
+    CHECK(xml.find("<accidental-mark") == std::string::npos);
+    const auto dropped = markRoundTripDiagnosticsWithMessage(
+        diagnostics, "ornament accidentals on a mark that cannot hold them are not written");
+    REQUIRE(dropped.size() == 1);
+    CHECK(Severity::error == dropped.front().severity);
+    CHECK(DiagnosticCode::droppedData == dropped.front().code);
+}
+
+T_END;
+
+// A tremolo or an other-ornament cannot hold ornament accidentals, so they are not written after
+// it; otherwise they would read back as standalone accidental marks.
+TEST(OrnamentAccidentalsOnATremoloOrOtherOrnamentAreDropped, MarkRoundTrip)
+{
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+
+    for (const auto markType : {MarkType::tremoloSingleThree, MarkType::otherOrnament})
+    {
+        MarkData mark{Placement::unspecified, markType};
+        mark.choice = OrnamentMarkData{{sharp}};
+
+        Diagnostics diagnostics;
+        const auto xml = markRoundTripWriteWithDiagnostics(mark, diagnostics);
+        CHECK(xml.find("<ornaments>") != std::string::npos);
+        CHECK(xml.find("<accidental-mark") == std::string::npos);
+        const auto dropped = markRoundTripDiagnosticsWithMessage(
+            diagnostics, "ornament accidentals on a mark that cannot hold them are not written");
+        REQUIRE(dropped.size() == 1);
+        CHECK(Severity::error == dropped.front().severity);
+        CHECK(DiagnosticCode::droppedData == dropped.front().code);
+    }
+}
+
+T_END;
+
+// Every ornament that can hold accidentals writes them back and reads them again.
+TEST(EveryOrnamentKeepsItsAccidentals, MarkRoundTrip)
+{
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+    sharp.positionData.placement = Placement::above;
+
+    for (const auto markType :
+         {MarkType::trillMark, MarkType::turn, MarkType::delayedTurn, MarkType::invertedTurn,
+          MarkType::delayedInvertedTurn, MarkType::verticalTurn, MarkType::invertedVerticalTurn, MarkType::shake,
+          MarkType::mordent, MarkType::invertedMordent, MarkType::schleifer, MarkType::haydn})
+    {
+        MarkData mark{Placement::unspecified, markType};
+        mark.choice = OrnamentMarkData{{sharp}};
+        const auto marks = roundTripMarkData(mark);
+        REQUIRE(marks.size() == 1);
+        CHECK(markType == marks.front().markType);
+        CHECK(mark.choice == marks.front().choice);
+    }
+}
+
+T_END;
+
+// An ornament without accidentals needs no payload, so it is none however it was built.
+TEST(EmptyOrnamentCollapses, MarkRoundTrip)
+{
+    const MarkDataChoice empty{OrnamentMarkData{}};
+    CHECK(empty.isNone());
+    CHECK(!empty.isOrnament());
+    CHECK(MarkDataChoice::Kind::none == empty.kind());
+    CHECK(empty == MarkDataChoice{});
+
+    MarkData trill{Placement::unspecified, MarkType::trillMark};
+    trill.choice = OrnamentMarkData{};
+    const auto marks = roundTripMarkData(trill);
+    REQUIRE(marks.size() == 1);
+    CHECK(marks.front().choice.isNone());
+}
+
+T_END;
+
+// Asking for the wrong kind returns a default value, and every field of the payload takes part in
+// equality.
+TEST(OrnamentChoiceAccessorsAndEquality, MarkRoundTrip)
+{
+    OrnamentAccidental sharp;
+    sharp.accidental = Accidental::sharp;
+    const MarkDataChoice ornament{OrnamentMarkData{{sharp}}};
+    CHECK(MarkDataChoice::Kind::ornament == ornament.kind());
+    CHECK(ornament.harmonic() == HarmonicMarkData{});
+    CHECK(MarkDataChoice{}.ornament().accidentals.empty());
+    CHECK(MarkDataChoice{HarmonicMarkData{}}.ornament().accidentals.empty());
+
+    OrnamentAccidental flat = sharp;
+    flat.accidental = Accidental::flat;
+    CHECK(sharp != flat);
+
+    OrnamentAccidental below = sharp;
+    below.positionData.placement = Placement::below;
+    CHECK(sharp != below);
+
+    CHECK(OrnamentMarkData{{sharp}} != OrnamentMarkData{{sharp, sharp}});
+    CHECK(ornament != MarkDataChoice{OrnamentMarkData{{flat}}});
+    CHECK(ornament != MarkDataChoice{OrnamentMarkData{{below}}});
+}
+
+T_END;
+
 #endif

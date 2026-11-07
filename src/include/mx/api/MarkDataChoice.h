@@ -7,10 +7,13 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/DynamicsData.h"
 #include "mx/api/Id.h"
+#include "mx/api/PitchData.h"
+#include "mx/api/PositionData.h"
 
 #include <optional>
 #include <string>
 #include <variant>
+#include <vector>
 
 namespace mx
 {
@@ -195,6 +198,44 @@ MXAPI_EQUALS_MEMBER(pitch)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(HarmonicMarkData);
 
+// An accidental printed with an ornament: the sharp over a trill that raises its upper note, or the
+// accidentals above and below a turn that alter its upper and lower notes.
+struct OrnamentAccidental
+{
+    // The accidental to show. An entry left at none is not written.
+    Accidental accidental = Accidental::none;
+
+    // Where the accidental sits, measured from the ornament rather than from the note. Placement
+    // above puts the accidental over the ornament, below puts it under. The horizontal and vertical
+    // alignment fields are not used.
+    PositionData positionData;
+};
+
+MXAPI_EQUALS_BEGIN(OrnamentAccidental)
+MXAPI_EQUALS_MEMBER(accidental)
+MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(OrnamentAccidental);
+
+// Payload for an ornament that has accidentals. A trill whose upper note is sharpened is one
+// MarkType::trillMark mark holding an OrnamentAccidental with Accidental::sharp.
+//
+// These marks can hold accidentals: a trill, a turn of any kind, a shake, a mordent, an inverted
+// mordent, a schleifer and a haydn. A tremolo or an other-ornament cannot, because its choice
+// already carries TremoloMarkData or OtherMarkData; neither can a wavy line, which is not a mark.
+// An accidental written with one of those, or one that stands above or below the note on its own,
+// is a MarkType::accidentalMark* mark of its own. On any other mark this payload is not written.
+struct OrnamentMarkData
+{
+    // The ornament's accidentals, usually one. A turn may have one above it and one below it.
+    std::vector<OrnamentAccidental> accidentals;
+};
+
+MXAPI_EQUALS_BEGIN(OrnamentMarkData)
+MXAPI_EQUALS_MEMBER(accidentals)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(OrnamentMarkData);
+
 // A variant class that carries data for MarkType values whose payload does not fit MarkData's
 // common fields.
 //
@@ -222,7 +263,8 @@ class MarkDataChoice
         dynamic,
         compoundDynamics,
         otherNotation,
-        harmonic
+        harmonic,
+        ornament
     };
 
     MarkDataChoice();
@@ -246,6 +288,10 @@ class MarkDataChoice
 
     MarkDataChoice(HarmonicMarkData value);
 
+    // Builds an ornament payload, unless it has no accidentals, in which case the result is none:
+    // an ornament without accidentals needs no payload.
+    MarkDataChoice(OrnamentMarkData value);
+
     Kind kind() const;
     bool isNone() const;
     bool isTremolo() const;
@@ -256,6 +302,7 @@ class MarkDataChoice
     bool isCompoundDynamics() const;
     bool isOtherNotation() const;
     bool isHarmonic() const;
+    bool isOrnament() const;
 
     // Returns a copy of the internally held TremoloMarkData.
     //
@@ -293,11 +340,17 @@ class MarkDataChoice
     // HarmonicMarkData is returned.
     const HarmonicMarkData harmonic() const;
 
+    // Returns a copy of the internally held OrnamentMarkData.
+    //
+    // Check isOrnament() first. If this is not an ornament payload, a default constructed
+    // OrnamentMarkData, with no accidentals, is returned.
+    const OrnamentMarkData ornament() const;
+
     bool operator==(const MarkDataChoice &other) const;
 
   private:
     std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData, OtherMarkData,
-                 StandardDynamic, CompoundDynamicsData, OtherNotationMarkData, HarmonicMarkData>
+                 StandardDynamic, CompoundDynamicsData, OtherNotationMarkData, HarmonicMarkData, OrnamentMarkData>
         myValue;
 };
 

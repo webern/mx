@@ -81,7 +81,9 @@ enum class MarkType
     otherOrnament,      ///< MusicXML's 'other-ornament' value
     unknownOrnament,    ///< Error state
 
-    // accidental marks
+    // accidental marks: an accidental shown above or below the note on its own. An accidental that
+    // belongs to an ornament, like the sharp over a trill, is held by that ornament instead
+    // (OrnamentMarkData in MarkDataChoice.h).
     accidentalMarkSharp,
     accidentalMarkNatural,
     accidentalMarkFlat,

@@ -2097,12 +2097,10 @@ TEST(accidentalMarkSurvivesWriteAndRead, NoteData)
 
 T_END;
 
-// issue #443: a source may hang an accidental mark on the ornament it decorates. The mark is
-// kept and written at the notations level, which is the other place MusicXML allows, because the
-// api does not record which of the two places a mark came from.
-TEST(accidentalMarkOnAnOrnamentIsWrittenAtTheNotationsLevel, NoteData)
+// Builds a one-note score whose note carries the given <notations> content.
+inline std::string noteDataTestOneNoteXml(const std::string &notations)
 {
-    const std::string xml = R"(<score-partwise version="3.0">
+    return R"(<score-partwise version="3.0">
   <part-list>
     <score-part id="P1">
       <part-name>MusicXML Part</part-name>
@@ -2119,41 +2117,261 @@ TEST(accidentalMarkOnAnOrnamentIsWrittenAtTheNotationsLevel, NoteData)
         <voice>1</voice>
         <type>quarter</type>
         <notations>
-          <ornaments>
-            <trill-mark/>
-            <accidental-mark placement="above">sharp</accidental-mark>
-          </ornaments>
+)" + notations +
+           R"(
         </notations>
       </note>
     </measure>
   </part>
 </score-partwise>
 )";
+}
+
+inline const std::vector<MarkData> &noteDataTestFirstNoteMarks(const ScoreData &score)
+{
+    return score.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks;
+}
+
+// issue #443: an accidental-mark inside <ornaments> belongs to the ornament before it, so the sharp
+// over a trill is read as part of the trill and written back inside <ornaments> after it.
+TEST(accidentalMarkOnAnOrnamentBelongsToTheOrnament, NoteData)
+{
+    const auto xml = noteDataTestOneNoteXml(R"(          <ornaments>
+            <trill-mark/>
+            <accidental-mark placement="above">sharp</accidental-mark>
+          </ornaments>)");
 
     const auto score = fromXml(xml);
-    const auto &marks = score.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks;
-    REQUIRE(2 == marks.size());
+    const auto &marks = noteDataTestFirstNoteMarks(score);
+    REQUIRE(1 == marks.size());
     CHECK(MarkType::trillMark == marks.at(0).markType);
-    CHECK(MarkType::accidentalMarkSharp == marks.at(1).markType);
+    REQUIRE(marks.at(0).choice.isOrnament());
+    CHECK(MarkDataChoice::Kind::ornament == marks.at(0).choice.kind());
+    const auto accidentals = marks.at(0).choice.ornament().accidentals;
+    REQUIRE(1 == accidentals.size());
+    CHECK(Accidental::sharp == accidentals.at(0).accidental);
+    CHECK(Placement::above == accidentals.at(0).positionData.placement);
 
     const auto written = toXml(score);
-    CHECK(written.find("<accidental-mark") != std::string::npos);
-    CHECK(written.find("<trill-mark") != std::string::npos);
+    const auto ornamentsPos = written.find("<ornaments>");
+    const auto trillPos = written.find("<trill-mark");
+    const auto accidentalPos = written.find("<accidental-mark");
+    const auto ornamentsEndPos = written.find("</ornaments>");
+    REQUIRE(ornamentsPos != std::string::npos);
+    REQUIRE(trillPos != std::string::npos);
+    REQUIRE(accidentalPos != std::string::npos);
+    REQUIRE(ornamentsEndPos != std::string::npos);
+    CHECK(ornamentsPos < trillPos);
+    CHECK(trillPos < accidentalPos);
+    CHECK(accidentalPos < ornamentsEndPos);
 
-    // both marks are still there after the source's ornament attachment is normalized away
     const auto reread = fromXml(written);
-    const auto &rereadMarks =
-        reread.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks;
-    REQUIRE(2 == rereadMarks.size());
-    bool foundTrill = false;
-    bool foundSharp = false;
-    for (const auto &mark : rereadMarks)
+    CHECK(marks == noteDataTestFirstNoteMarks(reread));
+}
+
+T_END;
+
+// A turn may carry one accidental above it and another below it; both stay with the turn, in
+// order.
+TEST(turnKeepsItsAccidentalsInOrder, NoteData)
+{
+    const auto xml = noteDataTestOneNoteXml(R"(          <ornaments>
+            <turn/>
+            <accidental-mark placement="above">sharp</accidental-mark>
+            <accidental-mark placement="below">three-quarters-flat</accidental-mark>
+          </ornaments>)");
+
+    const auto score = fromXml(xml);
+    const auto &marks = noteDataTestFirstNoteMarks(score);
+    REQUIRE(1 == marks.size());
+    CHECK(MarkType::turn == marks.at(0).markType);
+    const auto accidentals = marks.at(0).choice.ornament().accidentals;
+    REQUIRE(2 == accidentals.size());
+    CHECK(Accidental::sharp == accidentals.at(0).accidental);
+    CHECK(Placement::above == accidentals.at(0).positionData.placement);
+    CHECK(Accidental::threeQuartersFlat == accidentals.at(1).accidental);
+    CHECK(Placement::below == accidentals.at(1).positionData.placement);
+
+    const auto written = toXml(score);
+    const auto sharpPos = written.find(">sharp<");
+    const auto flatPos = written.find(">three-quarters-flat<");
+    REQUIRE(sharpPos != std::string::npos);
+    REQUIRE(flatPos != std::string::npos);
+    CHECK(written.find("<turn") < sharpPos);
+    CHECK(sharpPos < flatPos);
+    CHECK(flatPos < written.find("</ornaments>"));
+    CHECK(marks == noteDataTestFirstNoteMarks(fromXml(written)));
+}
+
+T_END;
+
+// Each ornament keeps its own accidentals when one <ornaments> element holds several ornaments.
+TEST(eachOrnamentKeepsItsOwnAccidentals, NoteData)
+{
+    const auto xml = noteDataTestOneNoteXml(R"(          <ornaments>
+            <trill-mark/>
+            <accidental-mark>flat</accidental-mark>
+            <mordent/>
+            <accidental-mark>natural</accidental-mark>
+          </ornaments>)");
+
+    const auto score = fromXml(xml);
+    const auto &marks = noteDataTestFirstNoteMarks(score);
+    REQUIRE(2 == marks.size());
+    CHECK(MarkType::trillMark == marks.at(0).markType);
+    REQUIRE(1 == marks.at(0).choice.ornament().accidentals.size());
+    CHECK(Accidental::flat == marks.at(0).choice.ornament().accidentals.at(0).accidental);
+    CHECK(MarkType::mordent == marks.at(1).markType);
+    REQUIRE(1 == marks.at(1).choice.ornament().accidentals.size());
+    CHECK(Accidental::natural == marks.at(1).choice.ornament().accidentals.at(0).accidental);
+    CHECK(marks == noteDataTestFirstNoteMarks(fromXml(toXml(score))));
+}
+
+T_END;
+
+// Reads the XML and returns the score, collecting the diagnostics the read reported.
+inline ScoreData noteDataTestReadWithDiagnostics(const std::string &xml, Diagnostics &outDiagnostics)
+{
+    std::istringstream iss{xml};
+    auto document = MusicXml::fromStream(iss);
+    if (!document.ok())
+        return {};
+    auto scoreResult = getScore(document.value(), outDiagnostics);
+    if (!scoreResult.ok())
+        return {};
+    return scoreResult.value();
+}
+
+// Returns the diagnostics carrying exactly the given message.
+inline std::vector<Diagnostic> noteDataTestDiagnosticsWithMessage(const Diagnostics &diagnostics,
+                                                                  const std::string &message)
+{
+    std::vector<Diagnostic> out;
+    for (const auto &diagnostic : diagnostics.all())
     {
-        foundTrill = foundTrill || (mark.markType == MarkType::trillMark);
-        foundSharp = foundSharp || (mark.markType == MarkType::accidentalMarkSharp);
+        if (diagnostic.message == message)
+        {
+            out.push_back(diagnostic);
+        }
     }
-    CHECK(foundTrill);
-    CHECK(foundSharp);
+    return out;
+}
+
+// A tremolo cannot hold accidentals, so an accidental after one is read as a standalone accidental
+// mark, after the ornament marks, and the read says so.
+TEST(accidentalMarkAfterTremoloIsStandalone, NoteData)
+{
+    const auto xml = noteDataTestOneNoteXml(R"(          <ornaments>
+            <tremolo type="single">3</tremolo>
+            <accidental-mark placement="below">flat</accidental-mark>
+            <trill-mark/>
+          </ornaments>)");
+
+    Diagnostics diagnostics;
+    const auto score = noteDataTestReadWithDiagnostics(xml, diagnostics);
+    const auto &marks = noteDataTestFirstNoteMarks(score);
+    REQUIRE(3 == marks.size());
+    CHECK(MarkType::tremoloSingleThree == marks.at(0).markType);
+    CHECK(MarkType::trillMark == marks.at(1).markType);
+    CHECK(marks.at(1).choice.isNone());
+    CHECK(MarkType::accidentalMarkFlat == marks.at(2).markType);
+    CHECK(Placement::below == marks.at(2).positionData.placement);
+
+    const auto fallbacks = noteDataTestDiagnosticsWithMessage(
+        diagnostics, "an accidental-mark after a tremolo is read as a standalone accidental mark");
+    REQUIRE(1 == fallbacks.size());
+    CHECK(Severity::warning == fallbacks.front().severity);
+    CHECK(DiagnosticCode::valueAdjusted == fallbacks.front().code);
+}
+
+T_END;
+
+// An other-ornament and a wavy line cannot hold accidentals either; theirs are read as standalone
+// accidental marks too, one diagnostic each.
+TEST(accidentalMarkAfterOtherOrnamentOrWavyLineIsStandalone, NoteData)
+{
+    const auto xml = noteDataTestOneNoteXml(R"(          <ornaments>
+            <other-ornament>x</other-ornament>
+            <accidental-mark>sharp</accidental-mark>
+            <wavy-line type="start"/>
+            <accidental-mark>natural</accidental-mark>
+          </ornaments>)");
+
+    Diagnostics diagnostics;
+    const auto score = noteDataTestReadWithDiagnostics(xml, diagnostics);
+    const auto &note = score.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0);
+    const auto &marks = note.noteAttachmentData.marks;
+    REQUIRE(3 == marks.size());
+    CHECK(MarkType::otherOrnament == marks.at(0).markType);
+    CHECK(MarkType::accidentalMarkSharp == marks.at(1).markType);
+    CHECK(MarkType::accidentalMarkNatural == marks.at(2).markType);
+    CHECK(1 == note.noteAttachmentData.wavyLineStarts.size());
+
+    CHECK(1 == noteDataTestDiagnosticsWithMessage(
+                   diagnostics, "an accidental-mark after an other-ornament is read as a standalone accidental mark")
+                   .size());
+    CHECK(1 == noteDataTestDiagnosticsWithMessage(
+                   diagnostics, "an accidental-mark after a wavy-line is read as a standalone accidental mark")
+                   .size());
+}
+
+T_END;
+
+// The api has no accidental for MusicXML's "other" value, so an ornament's "other" accidental is
+// left out, the read says so, and the ornament's other accidentals are kept.
+TEST(otherAccidentalOnAnOrnamentIsDropped, NoteData)
+{
+    const auto xml = noteDataTestOneNoteXml(R"(          <ornaments>
+            <turn/>
+            <accidental-mark>other</accidental-mark>
+            <accidental-mark>flat</accidental-mark>
+          </ornaments>)");
+
+    Diagnostics diagnostics;
+    const auto score = noteDataTestReadWithDiagnostics(xml, diagnostics);
+    const auto &marks = noteDataTestFirstNoteMarks(score);
+    REQUIRE(1 == marks.size());
+    CHECK(MarkType::turn == marks.at(0).markType);
+    const auto accidentals = marks.at(0).choice.ornament().accidentals;
+    REQUIRE(1 == accidentals.size());
+    CHECK(Accidental::flat == accidentals.at(0).accidental);
+
+    const auto dropped = noteDataTestDiagnosticsWithMessage(
+        diagnostics, "an ornament's accidental-mark \"other\" is not supported and is not read");
+    REQUIRE(1 == dropped.size());
+    CHECK(Severity::error == dropped.front().severity);
+    CHECK(DiagnosticCode::droppedData == dropped.front().code);
+}
+
+T_END;
+
+// A note may have both an accidental of its own in <notations> and an ornament with an accidental;
+// each keeps its place on write.
+TEST(standaloneAndOrnamentAccidentalsOnOneNote, NoteData)
+{
+    const auto xml = noteDataTestOneNoteXml(R"(          <accidental-mark placement="below">flat</accidental-mark>
+          <ornaments>
+            <trill-mark/>
+            <accidental-mark placement="above">sharp</accidental-mark>
+          </ornaments>)");
+
+    const auto score = fromXml(xml);
+    const auto &marks = noteDataTestFirstNoteMarks(score);
+    REQUIRE(2 == marks.size());
+    CHECK(MarkType::accidentalMarkFlat == marks.at(0).markType);
+    CHECK(MarkType::trillMark == marks.at(1).markType);
+    REQUIRE(1 == marks.at(1).choice.ornament().accidentals.size());
+
+    const auto written = toXml(score);
+    const auto flatPos = written.find(">flat<");
+    const auto ornamentsPos = written.find("<ornaments>");
+    const auto sharpPos = written.find(">sharp<");
+    REQUIRE(flatPos != std::string::npos);
+    REQUIRE(ornamentsPos != std::string::npos);
+    REQUIRE(sharpPos != std::string::npos);
+    CHECK(flatPos < ornamentsPos);
+    CHECK(ornamentsPos < sharpPos);
+    CHECK(marks == noteDataTestFirstNoteMarks(fromXml(written)));
 }
 
 T_END;
