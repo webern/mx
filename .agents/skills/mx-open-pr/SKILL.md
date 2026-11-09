@@ -5,6 +5,7 @@ description: >
 argument-hint: "<prompt>"
 disable-model-invocation: false
 user-invocable: true
+llm-edit: false
 ---
 # /mx-open-pr
 
@@ -14,8 +15,8 @@ it was previously documented by an api-feature-audit).
 
 Use `gh` for GitHub interactions.
 
-Search the open issues for one that this PR would close or that it is related to. Make a list of issues
-that it closes and issues that is related to. It might also be related to other PRs.
+Search the open issues for one that this PR would close or that it is related to. Make a list of
+issues that it closes and issues that is related to. It might also be related to other PRs.
 
 When writing the PR, the title should be lowercase and start with one keyword, e.g.
 - build: add cache to make fmt for ci
@@ -36,8 +37,8 @@ issues closed and issues/PRs related (if any).
 
 No self-attribution in the PR body; add the `ai` label instead.
 
-Do not use excessive bold and italics in the PR body. Go easy on the keywords since they will add
-a lot of backtick formatting as well.
+Do not use excessive bold and italics in the PR body. Go easy on the keywords since they will add a
+lot of backtick formatting as well.
 
 Template/sample:
 

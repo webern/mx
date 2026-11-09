@@ -40,7 +40,7 @@ XSD  ->  XSD model  ->  IR  ->  Plates  ->  press  ->  output files
 
 2. **Lower** (`gen/ir/`): resolves that into the intermediate representation (IR): a flat,
    fully-named, dependency-ordered model in code-generation terms. A pure function of the XSD
-   (see Design principles). No configurable knobs.
+   (see Design principles). No configurable parameters.
 
 3. **Project** (`gen/plates/`): binds the IR to one target. Every per-target decision --
    identifier casings, renames, primitive type mappings, emit strategies, file layout -- is made

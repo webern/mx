@@ -136,7 +136,7 @@ Do not let an edge case complicate the mainline type -- and do not drop it. Cano
 `<tied type="let-ring">` is its own optional `TieLetRing` struct, not a third tie boolean
 (`NoteData.h`). Test: does the 95% use read as one obvious field, while the 5% is still expressible?
 
-### 7. Fidelity knobs must default to "automatic" and be ignorable
+### 7. Fidelity fields must default to "automatic" and be ignorable
 
 When byte-level round-trip needs a source quirk recorded, add a field whose default applies the
 sensible rule; only the reader sets it. Canonical: `ClefData::writeStaffNumber`,

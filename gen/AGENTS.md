@@ -46,7 +46,7 @@ If a template needs new dispatch, add a discriminant flag or context field in
 specific data (namespace, package, fn_prefix) belongs under `[vars]` in `config.toml` and passes
 through as `{{target.vars.namespace}}`.
 
-**2. The IR is a pure function of the XSD.** No configurable knobs may enter `gen/ir/`. The
+**2. The IR is a pure function of the XSD.** No configurable parameters may enter `gen/ir/`. The
 `sounds.xml` fold is the one documented exception (opt-in input selection; runs before IR is handed
 to Plates).
 

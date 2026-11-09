@@ -5,7 +5,7 @@ Two layers:
   1. Spec conformance: every case of the five vendored core modules of the
      official Mustache spec suite (gen/tests/mustache_spec/). The suite is
      run with the spec's own semantics (lenient misses, HTML escaping) via
-     the engine's test-affordance knobs, so the resolution, section,
+     the engine's test-affordance parameters, so the resolution, section,
      standalone-whitespace, set-delimiter, and partial-indentation machinery
      is pinned to the spec with zero skips.
   2. The three documented deviations, under production defaults: missing
