@@ -247,8 +247,8 @@ _MISS = object()
 class Press:
     """Renders Mustache templates. `partials` maps a partial name to its
     template text (a dict, or a callable for file-backed loading). The
-    `strict` and `escape` knobs exist for the spec conformance suite; the
-    production pipeline uses the defaults (strict, verbatim)."""
+    `strict` and `escape` parameters exist for the spec conformance suite;
+    the production pipeline uses the defaults (strict, verbatim)."""
 
     def __init__(
         self,

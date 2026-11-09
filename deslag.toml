@@ -2,7 +2,18 @@ schema_version = 2
 deslag_version = "0.0.6"
 
 [md]
-globs = ["/AGENTS.md", "/docs/**/*.md"]
+# .claude/skills is a symlink to .agents/skills, so only the .agents path is listed.
+globs = ["/AGENTS.md", "/docs/**/*.md", "/.agents/skills/**/*.md"]
+
+# The skills whose frontmatter says `llm-edit: false`. The owner does not want prose edits made
+# automatically, so deslag does not check them. Each is listed by path; add a skill here only when
+# its frontmatter carries the marker.
+exclude = [
+  "/.agents/skills/mx-api-doctrine/SKILL.md",
+  "/.agents/skills/mx-comments/SKILL.md",
+  "/.agents/skills/mx-open-issue/SKILL.md",
+  "/.agents/skills/mx-open-pr/SKILL.md",
+]
 
 # The byte budget.
 [md.lints.max_size_bytes]
@@ -42,6 +53,8 @@ load-bearing = 'say it in plain English, such as "important", "fundamental" or "
 "lands on" = 'say what happens, such as "is included in" or "is released by"'
 "it lands" = 'say what happens, such as "it is merged" or "it ships"'
 byte-identical = 'say "identical", or name the check that shows it'
+knob = "use the correct term for what it is instead, such as argument, parameter, attribute, field or constant"
+knobs = "use the correct term for what they are instead, such as arguments, parameters, attributes, fields or constants"
 
 # The longest a paragraph or list item may be.
 [md.lints.density]
@@ -107,6 +120,8 @@ load-bearing = 'say it in plain English, such as "important", "fundamental" or "
 "lands on" = 'say what happens, such as "is included in" or "is released by"'
 "it lands" = 'say what happens, such as "it is merged" or "it ships"'
 byte-identical = 'say "identical", or name the check that shows it'
+knob = "use the correct term for what it is instead, such as argument, parameter, attribute, field or constant"
+knobs = "use the correct term for what they are instead, such as arguments, parameters, attributes, fields or constants"
 
 [cpp.lints.density]
 max_item_chars = 350

@@ -6,6 +6,7 @@ description: >
 argument-hint: "<prompt>"
 disable-model-invocation: false
 user-invocable: true
+llm-edit: false
 ---
 # /mx-comments
 

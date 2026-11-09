@@ -14,40 +14,39 @@ user-invocable: true
 # Explain the `mx::api` round-trip
 
 `mx::api` is a deliberate subset of MusicXML, and the comparison is strict full-DOM, so most corpus
-files diverge somewhere. This skill turns the measured divergences into a plain-English answer to two
-questions: what is broken, and what should we fix next to land the most files into the round-trip
-corpus with the fewest software changes.
+files diverge somewhere. This skill turns the measured divergences into a plain-English answer to
+two questions: what is broken, and what should we fix next to land the most files into the
+round-trip corpus with the fewest software changes.
 
 It is the read-out layer on top of the failure classifier (issue #211/#212): the classifier produces
 a machine-readable `build/api/classified.json`; this skill interprets it for a human.
 
 ## What the classifier reports (and what it does not)
 
-Classification is purely **measured** from each expected/actual pair. It does **not** consult
-`data/api.features.xml` or any record of what `mx::api` was believed to "support" — whether a drop is
+Classification is purely measured from each expected/actual pair. It does not consult
+`data/api.features.xml` or any record of what `mx::api` was believed to "support". Whether a drop is
 intended is a present-day human decision (#214), not something the tool asserts. So do not describe
 any drop as "by-design" on the classifier's authority; report what was dropped and let the human
 decide.
 
-Each difference is a **signature**, and a file's **distance** to passing is its count of unique
-signatures:
+Each difference is a signature, and a file's distance to passing is its count of unique signatures:
 
-| signature | meaning |
-|-----------|---------|
-| `drop:<tag>` | a tag in expected, missing from actual |
-| `add:<tag>` | a spurious tag only in actual (a bug) |
-| `value:<tag>` | a paired element whose text value differs |
-| `value:<tag>@<attr>` | a paired element whose attribute value differs |
-| `attr:<tag>@<attr>` | an attribute present on only one side |
-| `reorder:<parent>` | a parent with matching children in a different order |
+| signature            | meaning                                              |
+|----------------------|------------------------------------------------------|
+| `drop:<tag>`         | a tag in expected, missing from actual               |
+| `add:<tag>`          | a spurious tag only in actual (a bug)                |
+| `value:<tag>`        | a paired element whose text value differs            |
+| `value:<tag>@<attr>` | a paired element whose attribute value differs       |
+| `attr:<tag>@<attr>`  | an attribute present on only one side                |
+| `reorder:<parent>`   | a parent with matching children in a different order |
 
 Per-file `status` is `PASS` / `FAIL` / `CRASH`. A `FAIL` with no `reorder:` signature is a
-**candidate**: the first-pass worklist targets these, since reorders are expected `mx::api` behavior
-to be absorbed in test normalization later (#214).
+candidate: the first-pass worklist targets these, since reorders are expected `mx::api` behavior to
+be absorbed in test normalization later (#214).
 
 ## Procedure
 
-### Step 1 — produce the data
+### Step 1: produce the data
 
 If `build/api/roundtrip-dump/` is empty or stale (api/impl changed since it was written), run:
 
@@ -61,10 +60,10 @@ Then always run:
 make api-roundtrip-classify
 ```
 
-Read the stdout summary it prints -- status counts, the distance histogram, the ranked worklist,
-and the greedy batch plan. That worklist *is* the headline answer to "what should we fix next."
+Read the stdout summary it prints -- status counts, the distance histogram, the ranked worklist, and
+the greedy batch plan. That worklist is the headline answer to "what should we fix next."
 
-### Step 2 — mine `build/api/classified.json`
+### Step 2: mine `build/api/classified.json`
 
 These read-only analyses expand on the stdout summary. Adjust the path if `--out` was overridden.
 
@@ -72,7 +71,7 @@ The worklist (already in the stdout summary) ranks signatures by candidate files
 (`sole_blocker` = files this fix flips green on its own; `files_blocked` = candidate files that
 include it).
 
-Instant wins — candidate files one fix away from passing (distance 1):
+Instant wins: candidate files one fix away from passing (distance 1):
 
 ```
 python3 - <<'PY'
@@ -86,7 +85,8 @@ PY
 Small fix-sets -- the greedy set-cover batch plan is already computed in `d["batch_plan"]` (rows
 have `fix`/`added_files`/`cumulative_files`; also printed in the stdout summary).
 
-Crash cluster (highest severity — no output at all) — group by kind to find the common root:
+Crash cluster (highest severity: the run does not produce output). Group by kind to find the common
+root:
 
 ```
 python3 - <<'PY'
@@ -100,7 +100,7 @@ for kind, f in crashes[:20]:
 PY
 ```
 
-Reorder-blocked files (deferred to #214) — how many, and at which parents:
+Reorder-blocked files (deferred to #214): how many, and at which parents:
 
 ```
 python3 - <<'PY'
@@ -116,27 +116,28 @@ PY
 
 To drill into one file, look at its record (`signatures`, `sample_paths`, `distance`) and diff the
 pair directly:
-`diff build/api/roundtrip-dump/<flat>.expected.xml build/api/roundtrip-dump/<flat>.actual.xml`
-where `<flat>` is the corpus path with `/` replaced by `__`.
+`diff build/api/roundtrip-dump/<flat>.expected.xml build/api/roundtrip-dump/<flat>.actual.xml` where
+`<flat>` is the corpus path with `/` replaced by `__`.
 
-### Step 3 — write the explanation
+### Step 3: write the explanation
 
 Synthesize the findings into plain language, ordered by what grows the corpus fastest. Use this
 structure (fill the numbers and signatures from Step 2; do not invent them):
 
-1. Frame it: strict full-DOM, so a file passes only when *every* signature is resolved. The goal is
-   to land files with the fewest software changes.
-2. Crashes (`status="CRASH"`). Highest severity: no output at all. Name the cluster (the crash kind
-   usually points at one feature). These are bugs.
-3. Instant wins: the distance-1 candidates and the top `sole_blocker` signatures — one fix each flips
+1. Frame it: strict full-DOM, so a file passes only when all of its signatures are resolved. The
+   goal is to land files with the fewest software changes.
+2. Crashes (`status="CRASH"`). Highest severity: the run does not produce output. Name the cluster
+   (the crash kind usually points at one feature). These are bugs.
+3. Instant wins: the distance-1 candidates and the top `sole_blocker` signatures. One fix each flips
    a file green now. This is the front of the worklist.
-4. Small fix-sets: the distance-2/3 candidates and the union of signatures that would unblock a batch
-   — "add these N features → these M files pass."
+4. Small fix-sets: the distance-2/3 candidates and the union of signatures that would unblock a
+   batch, stated as "add these N features and these M files pass."
 5. Reorder-blocked: count them, name the top `reorder:` parents, and note they are deferred to test
    normalization (#214), not part of the first-pass worklist.
-6. High-frequency drops that are *not* sole blockers: large `files_blocked` with low `sole_blocker`
-   means the fix helps many files but flips none alone — flag as enabling, lower immediate yield.
+6. High-frequency drops that are not sole blockers: large `files_blocked` with low `sole_blocker`
+   means the fix helps many files but does not flip any file alone. Flag it as enabling, with a
+   lower immediate yield.
 
 Be honest about caveats: the comparison is strict full-DOM, and if the pinned baseline
-(`roundtrip-baseline.txt`) is ungrown, almost the whole corpus shows as failing — these are the raw
+(`roundtrip-baseline.txt`) is ungrown, almost the whole corpus shows as failing. These are the raw
 landscape, not a regression.
