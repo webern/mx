@@ -26,7 +26,7 @@ class ParseContext;
 /// tuplets and other notations that use more detailed information need both the time-modification
 /// and tuplet elements to be represented accurately.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class TimeModification
 {
   public:

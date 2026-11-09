@@ -38,10 +38,10 @@ enum class LyricExtendType
     stop
 };
 
-// One additional syllabic/text run appended to a <lyric>, joined to the run before it by
-// <elision>. A syllable is occasionally written as more than one run - for example a source
-// that embeds a non-breaking space or an undertie (‿) inside otherwise ordinary lyric text.
-// The common case of a lyric with a single run needs none of this; see LyricData::continuations.
+// One additional syllabic/text run appended to a <lyric>, joined to the run before it by <elision>.
+// A syllable is occasionally written as more than one run - for example a source that embeds a
+// non-breaking space or an undertie (‿) inside otherwise ordinary lyric text. The common case of a
+// lyric with a single run does not need any of this; see LyricData::continuations.
 class LyricTextSegment
 {
   public:

@@ -65,8 +65,8 @@ class PageTextData
     // attributes on `<credit-words>`.
     HorizontalAlignment justify = HorizontalAlignment::unspecified;
 
-    // A shape drawn around the text. Enclosure::unspecified draws no enclosure; Enclosure::none
-    // states explicitly that there is none.
+    // A shape drawn around the text. Enclosure::unspecified does not draw an enclosure;
+    // Enclosure::none states explicitly that there is no enclosure.
     Enclosure enclosure = Enclosure::unspecified;
 
     // The stretches of text that follow `text` in the same credit, in order. Empty for a credit

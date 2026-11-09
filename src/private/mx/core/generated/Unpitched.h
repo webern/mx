@@ -24,7 +24,7 @@ class ParseContext;
 /// the note is placed on the middle line of the staff. This is generally used with a one-line staff.
 /// Notes in percussion clef should always use an unpitched element rather than a pitch element.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Unpitched final
 {
   public:

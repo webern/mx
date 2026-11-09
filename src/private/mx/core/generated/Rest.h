@@ -24,7 +24,7 @@ class ParseContext;
 /// placement on the staff can be specified using display-step and display-octave elements. If the
 /// measure attribute is set to yes, this indicates this is a complete measure rest.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Rest final
 {
   public:

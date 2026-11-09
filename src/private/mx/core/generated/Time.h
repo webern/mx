@@ -42,7 +42,7 @@ class ParseContext;
 /// not present. The optional number attribute refers to staff numbers within the part. If absent,
 /// the time signature applies to all staves in the part.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Time final
 {
   public:

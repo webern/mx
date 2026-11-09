@@ -69,7 +69,7 @@ class ParseContext;
 /// this note is sounded pizzicato, vs. the pizzicato element which changes overall playback between
 /// pizzicato and arco.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Note final
 {
   public:
@@ -141,7 +141,7 @@ class Note final
     void setStaff(std::optional<PositiveInteger> value);
     std::span<const Beam> beam() const noexcept;
     /// Bounded by the schema: at most 8 occurrences. An over-cap
-    /// append is rejected (plan §1.2).
+    /// append is rejected.
     [[nodiscard]] Result<void> addBeam(Beam value);
     void clearBeam() noexcept;
     std::span<const Notations> notations() const noexcept;

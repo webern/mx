@@ -16,7 +16,7 @@ namespace mx::core
 /// without leading zeros, or a string of zero or more spaces. It is used for the number attribute of
 /// the ending element. The zero or more spaces version is used when software knows that an ending is
 /// present, but cannot determine the type of the ending.
-/// Structural representation (plan §2.2): the ending numbers as a list of
+/// Structural representation: the ending numbers as a list of
 /// positive integers, possibly empty (the schema's blank-ending case, used
 /// when the number is not printed). Construction clamps each value to >= 1.
 /// A value parsed from the wire keeps its exact spelling (blank endings may

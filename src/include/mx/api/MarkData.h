@@ -171,16 +171,14 @@ enum class MarkType
     fermataHalfCurve,    // <fermata>half-curve</fermata> (MusicXML 4.0)
     fermataCurlew,       // <fermata>curlew</fermata> (MusicXML 4.0)
 
-    // sadly, in MusicXML we do not have an 'above' 'below' attribute for the fermata.
-    // instead it has an attribute 'type' that is either 'upright' or 'inverted'.
-    // it appears that implementations interpret 'upright' to mean the 'normal' or
-    // correct orientation and 'inverted' to mean that the fermata should be 'flipped'
-    // from its correct orientation.  in other words the implementation has to figure
-    // out if the fermata is above or below the note on its own (using its own
-    // algorithm combined with any default-y and relative-y values).  this mess is
-    // going to be beyond the scope of the MusicXML Class Library at this time.  You
-    // cause the fermata 'type' attribute to be set using the enum values below, but
-    // it's not possible for this library to calculate the correct fermata glyph.
+    // MusicXML does not have an 'above' or 'below' attribute for the fermata. Instead it has a
+    // 'type' attribute that is either 'upright' or 'inverted'. Implementations appear to read
+    // 'upright' as the normal orientation and 'inverted' as flipped from it, so each program
+    // works out whether the fermata is above or below the note (using its own algorithm along
+    // with any default-y and relative-y values).
+    //
+    // The enum values below set the fermata 'type' attribute, but this library does not work out
+    // which fermata glyph is correct.
     fermataUpright,        // <fermata type="upright"/>
     fermataNormalUpright,  // <fermata type="upright">normal</fermata>
     fermataAngledUpright,  // <fermata type="upright">angled</fermata>

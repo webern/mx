@@ -22,7 +22,7 @@ class ParseContext;
 
 /// The staff-tuning type specifies the open, non-capo tuning of the lines on a tablature staff.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class StaffTuning final
 {
   public:

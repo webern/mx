@@ -24,7 +24,7 @@ class ParseContext;
 /// The non-traditional-key group represents a single alteration within a non-traditional key
 /// signature. A sequence of these groups makes up a non-traditional key signature
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class NonTraditionalKeyGroup final
 {
   public:

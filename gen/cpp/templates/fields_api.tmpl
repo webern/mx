@@ -17,7 +17,7 @@
     std::span<const {{type_ref.ident}}> {{ident}}() const noexcept;
 {{#max}}
     /// Bounded by the schema: at most {{max}} occurrences. An over-cap
-    /// append is rejected (plan §1.2).
+    /// append is rejected.
     [[nodiscard]] Result<void> add{{name.pascal}}({{type_ref.ident}} value);
     void clear{{name.pascal}}() noexcept;
 {{/max}}

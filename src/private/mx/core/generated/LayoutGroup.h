@@ -24,7 +24,7 @@ class ParseContext;
 /// The layout group specifies the sequence of page, system, and staff layout elements that is common
 /// to both the defaults and print elements.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class LayoutGroup final
 {
   public:

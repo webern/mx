@@ -28,7 +28,7 @@ class ParseContext;
 
 /// The harmon-mute type represents the symbols used for harmon mutes in brass notation.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class HarmonMute final
 {
   public:

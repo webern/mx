@@ -27,7 +27,7 @@ enum class StringMuteType
 // A string mute change, MusicXML's <string-mute> element: the "mute on" or "mute off" symbol
 // telling string players to apply or remove their mutes. positionData captures default/relative
 // x-y plus the horizontal and vertical alignment; its placement member is unused here because
-// <string-mute> has no placement attribute (placement lives on the parent <direction>).
+// <string-mute> does not have a placement attribute (placement lives on the parent <direction>).
 class StringMuteData
 {
   public:

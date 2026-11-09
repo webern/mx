@@ -33,7 +33,7 @@ class ParseContext;
 /// instruments. Initial midi-instrument assignments may be made here as well. The score-instrument
 /// elements are used when there are multiple instruments per track.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class ScorePart final
 {
   public:

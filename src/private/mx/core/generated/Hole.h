@@ -29,7 +29,7 @@ class ParseContext;
 /// The hole type represents the symbols used for woodwind and brass fingerings as well as other
 /// notations.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Hole final
 {
   public:

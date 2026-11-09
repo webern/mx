@@ -18,8 +18,8 @@ namespace api
 
 // The mx::api error vocabulary. mx::api owns its own codes: the core-boundary
 // failures are mirrored (public headers never
-// include private mx::core headers), and the api adds the codes core has no
-// business knowing. No exceptions escape the MusicXml boundary.
+// include private mx::core headers), and the api adds the codes that are not
+// core's business. No exceptions escape the MusicXml boundary.
 enum class ResultCode
 {
     ioError,        // file open/read/write failure          (api-level)

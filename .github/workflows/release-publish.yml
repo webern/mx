@@ -1,13 +1,13 @@
-# Phase 2 of the release system (docs/ai/design/release-process.md §5): a v* tag
+# Phase 2 of the release system: a v* tag
 # push re-verifies commit B's provenance record against primary sources and
 # publishes the already-built artifacts. Publishing never rebuilds anything: the
 # bytes attached to the Release are the bytes release-build validated, fetched
 # from that run by the run ID pinned inside B. Any check failing means no
-# release, loudly (design §11) -- recovery is always: delete the tag, fix the
+# release, loudly -- recovery is always: delete the tag, fix the
 # cause, re-push.
 #
 # GitHub runs this file as it exists at the tagged commit, so only commits whose
-# trees already carry release-publish.yml are releasable (design §4).
+# trees already carry release-publish.yml are releasable.
 name: release-publish
 
 on:
@@ -37,7 +37,7 @@ jobs:
         run: |
           set -euo pipefail
           fail() {
-            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing (docs/ai/design/release-process.md, section 11)."
+            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing."
             exit 1
           }
           B=$(git rev-parse "refs/tags/$TAG^{commit}")
@@ -109,7 +109,7 @@ jobs:
         run: |
           set -euo pipefail
           fail() {
-            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing (docs/ai/design/release-process.md, section 11)."
+            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing."
             exit 1
           }
           # The API path scopes the lookup to this repository, so a run ID from
@@ -127,7 +127,7 @@ jobs:
         run: |
           set -euo pipefail
           fail() {
-            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing (docs/ai/design/release-process.md, section 11)."
+            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing."
             exit 1
           }
           : > assets.txt
@@ -172,7 +172,7 @@ jobs:
         run: |
           set -euo pipefail
           fail() {
-            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing (docs/ai/design/release-process.md, section 11)."
+            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing."
             exit 1
           }
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then

@@ -21,7 +21,7 @@ class ParseContext;
 /// The strong-accent type indicates a vertical accent mark. The type attribute indicates if the
 /// point of the accent is down or up.
 /// The schema's complexContent extension: non-polymorphic public
-/// inheritance, no virtual anything (plan §2.3).
+/// inheritance, no virtual anything.
 class StrongAccent : public EmptyPlacement
 {
   public:

@@ -1,4 +1,4 @@
-# The Swift release target (docs/ai/design/release-process.md §8-9): builds the
+# The Swift release target builds the
 # Mx XCFramework from commit A and emits the two artifacts the release system
 # consumes -- the publishable archive and the metadata the prep job commits as B.
 # Called only from release-build.yml (workflow_call); never triggered directly.
@@ -122,7 +122,7 @@ jobs:
           set -euxo pipefail
           # For a zip, swift package compute-checksum IS the file's SHA-256;
           # assert that equivalence here so release-publish can re-verify with
-          # plain sha256sum (design §5, check 6).
+          # plain sha256sum.
           CHECKSUM=$(swift package compute-checksum "out/dist/$ARCHIVE")
           SHA256=$(shasum -a 256 "out/dist/$ARCHIVE" | cut -d' ' -f1)
           if [ "$CHECKSUM" != "$SHA256" ]; then
@@ -158,7 +158,7 @@ jobs:
           cp out/metadata/tree/Package.swift "$RUNNER_TEMP/manifest-check/"
           (cd "$RUNNER_TEMP/manifest-check" && swift package dump-package > /dev/null)
 
-          # The target's contract fragment (design §9): identity, artifact,
+          # The target's contract fragment: identity, artifact,
           # checksum, platforms, and the paths this target may occupy in B. A
           # copy ships in both artifacts.
           jq -n \
@@ -179,7 +179,7 @@ jobs:
             > out/metadata/fragment.json
           cp out/metadata/fragment.json out/dist/fragment.json
 
-      # The publishable artifact (design §6): archive + .sha256 + fragment.
+      # The publishable artifact: archive + .sha256 + fragment.
       # retention-days is the documented 90-day contract: the tag must be pushed
       # while this artifact still exists.
       - name: Upload release artifact
@@ -190,7 +190,7 @@ jobs:
           retention-days: 90
           if-no-files-found: error
 
-      # The prep-job channel (design §9, outputs b and c): the exact tree files
+      # The prep-job channel: the exact tree files
       # for commit B plus the contract fragment.
       - name: Upload metadata artifact
         uses: actions/upload-artifact@v4

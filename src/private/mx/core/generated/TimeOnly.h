@@ -16,7 +16,7 @@ namespace mx::core
 /// only applies particular times through a repeated section. The value is a comma-separated list of
 /// positive integers arranged in ascending order, indicating which times through the repeated
 /// section that the element applies.
-/// Structural representation (plan §2.2): a never-empty list of positive
+/// Structural representation: a never-empty list of positive
 /// integers (the time-through-repeat indices), serialized comma-separated.
 /// Construction clamps each value to >= 1; an empty list becomes [1].
 class TimeOnly final

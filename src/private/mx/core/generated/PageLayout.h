@@ -31,7 +31,7 @@ class ParseContext;
 /// page-layout element in a print element, the values determined by the defaults element are used
 /// there as well.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class PageLayout final
 {
   public:
@@ -39,7 +39,7 @@ class PageLayout final
     void setGroup(std::optional<PageLayoutGroup> value);
     std::span<const PageMargins> pageMargins() const noexcept;
     /// Bounded by the schema: at most 2 occurrences. An over-cap
-    /// append is rejected (plan §1.2).
+    /// append is rejected.
     [[nodiscard]] Result<void> addPageMargins(PageMargins value);
     void clearPageMargins() noexcept;
     bool operator==(const PageLayout &other) const = default;

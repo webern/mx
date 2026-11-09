@@ -304,7 +304,7 @@ class _Builder:
         self.type_map = dict(config.types)
         self.variant_scope = config.target.variant_scope
 
-        # The grammar-preserving content projection (plan §2.9): normalize
+        # The grammar-preserving content projection: normalize
         # each content tree once (the discovery and the build must see the
         # SAME particle objects), walk it to find every structural group the
         # schema actually references and every anonymous choice/sequence
@@ -344,7 +344,7 @@ class _Builder:
                 config.target.symbol_prefix + name.cased[naming.type_convention]
             )
 
-    # ----- content discovery (plan §2.9) -------------------------------------- #
+    # ----- content discovery -------------------------------------------------- #
     #
     # One deterministic preorder walk over every composite's normalized
     # content, recursing through structural group references (each group
@@ -713,7 +713,7 @@ class _Builder:
         plate.structural_deps = _dep_refs(srefs)
         return plate
 
-    # ----- group, choice, and synthesized content plates (plan §2.9) --------- #
+    # ----- group, choice, and synthesized content plates --------------------- #
 
     def _group_plates(self) -> list:
         out: list = []
@@ -1027,7 +1027,7 @@ class _Builder:
         errors += self._promotion_errors()
 
         # Structural-group and synthesized content-type wires are addressable
-        # for renames too (plan §2.9).
+        # for renames too.
         type_wires = set(self.values_by_name) | set(self.complex_by_name)
         type_wires |= {self.group_wire[g] for g in self.struct_groups}
         type_wires |= set(self.synth_content)

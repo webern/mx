@@ -24,7 +24,7 @@ class ParseContext;
 /// departure attributes are used for compound ornaments, indicating how the beginning and ending of
 /// the ornament look relative to the main part of the mordent.
 /// The schema's complexContent extension: non-polymorphic public
-/// inheritance, no virtual anything (plan §2.3).
+/// inheritance, no virtual anything.
 class Mordent : public EmptyTrillSound
 {
   public:

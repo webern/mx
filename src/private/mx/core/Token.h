@@ -18,7 +18,7 @@ namespace mx::core
 /// (first character a letter or '_', the rest letters/digits/'.'/'-'/'_';
 /// no ':', no whitespace). Construction and mutation repair to the nearest
 /// valid NCName, so a lexically invalid identity token cannot exist through
-/// the public API (plan §2.2). Document-wide ID uniqueness is a cross-object
+/// the public API. Document-wide ID uniqueness is a cross-object
 /// property the type cannot enforce alone; the natural zero is "X".
 class Token final
 {

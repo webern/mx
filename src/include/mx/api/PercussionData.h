@@ -465,19 +465,19 @@ class PercussionDataChoice
 
 MXAPI_NOT_EQUALS_AND_VECTORS(PercussionDataChoice);
 
-// A percussion pictogram, MusicXML's <percussion> element: a symbol for an unpitched instrument
-// or the implement striking it, used in percussion parts and legends. Several PercussionData in
-// one direction read as a group (for example a membrane pictogram followed by a beater).
-// positionData captures default/relative x-y plus the horizontal and vertical alignment; its
-// placement member is unused here because <percussion> has no placement attribute (placement
-// lives on the parent <direction>).
+// A percussion pictogram, MusicXML's <percussion> element: a symbol for an unpitched instrument or
+// the implement striking it, used in percussion parts and legends. Several PercussionData in one
+// direction read as a group (for example a membrane pictogram followed by a beater). positionData
+// captures default/relative x-y plus the horizontal and vertical alignment; its placement member is
+// unused here because <percussion> does not have a placement attribute (placement lives on the
+// parent <direction>).
 class PercussionData
 {
   public:
     PercussionDataChoice choice;
 
-    // A shape drawn around the pictogram. Enclosure::unspecified draws no enclosure;
-    // Enclosure::none states explicitly that there is none.
+    // A shape drawn around the pictogram. Enclosure::unspecified does not draw an enclosure;
+    // Enclosure::none states explicitly that there is no enclosure.
     Enclosure enclosure;
 
     PositionData positionData;

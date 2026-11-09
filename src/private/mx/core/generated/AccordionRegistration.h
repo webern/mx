@@ -36,7 +36,7 @@ class ParseContext;
 /// presence of one or more dots in the registration diagram. An accordion-registration element needs
 /// to have at least one of the child elements present.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class AccordionRegistration final
 {
   public:

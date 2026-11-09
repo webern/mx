@@ -32,7 +32,7 @@ class ParseContext;
 /// The function element, which represents Roman numerals with roman numeral text, has been
 /// deprecated as of MusicXML 4.0.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class HarmonyChordGroup final
 {
   public:

@@ -19,7 +19,7 @@ namespace api
 {
 // A harp damping mark, MusicXML's <damp> element: the player silences one or more ringing
 // strings with the hand. positionData captures default/relative x-y plus the horizontal and
-// vertical alignment; its placement member is unused here because <damp> has no placement
+// vertical alignment; its placement member is unused here because <damp> does not have a placement
 // attribute (placement lives on the parent <direction>).
 class DampData
 {

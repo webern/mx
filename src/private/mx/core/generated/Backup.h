@@ -26,7 +26,7 @@ class ParseContext;
 /// be positive, and should not cross measure boundaries or mid-measure changes in the divisions
 /// value.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Backup final
 {
   public:

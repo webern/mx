@@ -25,7 +25,7 @@ class ParseContext;
 /// extensions and restrictions might be different for directions than for the note and forward
 /// elements.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class EditorialVoiceDirectionGroup final
 {
   public:

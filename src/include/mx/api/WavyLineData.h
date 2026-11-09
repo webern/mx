@@ -34,7 +34,7 @@ enum class WavyLineTrillStep
     unison
 };
 
-// The interval of a trill's closing turn, or that it has none.
+// The interval of a trill's closing turn, or that the trill does not have one.
 enum class WavyLineTwoNoteTurn
 {
     unspecified,

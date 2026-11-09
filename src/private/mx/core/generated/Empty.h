@@ -15,7 +15,7 @@ class ParseContext;
 /// The empty type represents an empty element with no attributes.
 /// Presence-only marker: the element's only information is whether it
 /// appears. Optional occurrences project to bool fields; choice
-/// alternatives hold this marker (plan §2.3).
+/// alternatives hold this marker.
 class Empty
 {
   public:

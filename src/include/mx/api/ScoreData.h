@@ -115,9 +115,9 @@ class ScoreData
     // entry with no role does the same for composer when no one is credited as composer.
     std::vector<CreatorData> additionalCreators;
 
-    // The score's rights statement, usually its copyright notice. When a score has several, this
-    // is the first one, whatever it covers. Leave it empty when the score has none. MusicXML calls
-    // this <rights>.
+    // The score's rights statement, usually its copyright notice. When a score has several, this is
+    // the first one, whatever it covers. Leave it empty when the score does not have one. MusicXML
+    // calls this <rights>.
     std::string copyright;
 
     // What kind of statement `copyright` is, or what it covers: "copyright" (the default), or for
@@ -155,7 +155,7 @@ class ScoreData
     /// reports any other transposition as a diagnostic, without changing it.
     ///
     /// A score that has any ForPartData is always written as a concert score, so you only need to
-    /// set this for a concert score that has no transposing instruments.
+    /// set this for a concert score without transposing instruments.
     bool concertScore;
 
     std::vector<PartData> parts;
@@ -164,8 +164,8 @@ class ScoreData
     /// The score's time resolution: how many `tickTimePosition`/duration ticks make up one
     /// quarter note. Corresponds to the `<divisions>` MusicXML element. Choose a value with
     /// enough factors for the durations you need (the default accommodates tuplets through
-    /// septuplets). Zero means the score has no time resolution at all — no durations exist
-    /// anywhere — and no `<divisions>` is written.
+    /// septuplets). Zero means the score does not have a time resolution: no durations exist
+    /// anywhere, and no `<divisions>` is written.
     int ticksPerQuarter;
 
     /// Specifies page breaks, system breaks, and changes to system and page layout. Global/default page and

@@ -9,7 +9,7 @@ namespace mx::core
 
 std::string repairedMeasureText(std::string v)
 {
-    // Deterministic repair to the schema's minLength (plan §2.2.2): pad
+    // Deterministic repair to the schema's minLength: pad
     // with '-' so a too-short value is unrepresentable.
     while (v.size() < 1)
     {

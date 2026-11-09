@@ -45,7 +45,7 @@ class ParseContext;
 /// ignored when the dynamics are associated with a direction. In that case the direction element's
 /// placement attribute is used instead.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Dynamics final
 {
   public:

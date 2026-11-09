@@ -10,7 +10,7 @@ import PackageDescription
 // machine-generated binary-default manifest (an XCFramework binaryTarget)
 // interpolated from .github/release/Package.swift.template by the
 // release-build workflow. That manifest exists only at tagged release commits,
-// never at a tip of main. See docs/ai/design/release-process.md.
+// never at a tip of main.
 //
 // KEEP IN SYNC: the target below must stay byte-for-byte identical to
 // mxSourceTarget in .github/release/Package.swift.template, so a release built

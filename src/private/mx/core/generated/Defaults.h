@@ -30,7 +30,7 @@ class ParseContext;
 /// Except for the concert-score element, if any defaults are missing, the choice of what to use is
 /// determined by the application.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Defaults final
 {
   public:

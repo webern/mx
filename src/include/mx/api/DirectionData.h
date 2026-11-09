@@ -35,7 +35,8 @@ struct DirectionData
     // draws it only on the top part of the system, alsoTop on both this part and the top part, and
     // none states explicitly that it belongs to this part alone. One value covers the direction
     // types and the chords held here; both elements are written with it. SystemRelation::onlyBottom
-    // and ::alsoBottom exist only for measure numbering; either one here writes no attribute.
+    // and ::alsoBottom exist only for measure numbering; either one here does not write the
+    // attribute.
     SystemRelation systemRelation;
 
     // Whether this direction lines up with the measure's time signature rather than with the
@@ -47,12 +48,15 @@ struct DirectionData
     // alone.
     Bool directive;
 
-    // The source's <offset>, in divisions, or absent when it had none. An <offset> nudges only
-    // where the direction is *drawn*, shifting it away from the note it is anchored to; it does not
-    // move that anchor. tickTimePosition holds the anchor -- the musical location the direction
-    // belongs to -- so the drawn position is tickTimePosition + offset. This is a round-trip
-    // fidelity knob: leave it absent when authoring and set tickTimePosition to where the direction
-    // belongs; the reader fills it in only to preserve an <offset> already present in the source.
+    // The source's <offset>, in divisions, or absent when the source did not have one. An <offset>
+    // nudges only where the direction is *drawn*, shifting it away from the note it is anchored to;
+    // it does not move that anchor. tickTimePosition holds the anchor -- the musical location the
+    // direction belongs to -- so the drawn position is tickTimePosition + offset.
+    //
+    // This field exists for round-trip fidelity: leave it absent when authoring and set
+    // tickTimePosition to where the direction belongs. The reader fills it in only to keep an
+    // <offset> already present in the source.
+    //
     // MusicXML Documentation: An offset is represented in terms of divisions, and indicates where
     // the direction will appear relative to the current musical location. This affects the visual
     // appearance of the direction. If an element within a direction includes a default-x

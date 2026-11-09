@@ -25,7 +25,7 @@ class ParseContext;
 /// interactions that are specific to a note. If multiple child elements of the same type are
 /// present, they should have distinct player and/or time-only attributes.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Listen final
 {
   public:

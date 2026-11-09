@@ -28,7 +28,7 @@ class ParseContext;
 /// notations to represent details of performance technique, such as fingerings, without having them
 /// appear in the score.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Notations final
 {
   public:

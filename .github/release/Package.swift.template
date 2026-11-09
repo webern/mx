@@ -1,7 +1,7 @@
 // swift-tools-version: 5.9
 
 // TEMPLATE for the machine-generated release manifest -- the Package.swift that
-// exists only at a tagged release commit ("B" in docs/ai/design/release-process.md).
+// exists only at a tagged release commit, called "commit B".
 // The _release-target-swift workflow interpolates the three MX_RELEASE
 // placeholders (version, url, checksum) and the release-build prep job commits
 // the result as B; commit R then restores the source manifest, so every tip of

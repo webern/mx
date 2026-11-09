@@ -22,7 +22,7 @@ class ParseContext;
 /// Works are optionally identified by number and title. The work type also may indicate a link to
 /// the opus document that composes multiple scores into a collection.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Work final
 {
   public:

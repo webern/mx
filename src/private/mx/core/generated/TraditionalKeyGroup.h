@@ -23,7 +23,7 @@ class ParseContext;
 
 /// The traditional-key group represents a traditional key signature using the cycle of fifths.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class TraditionalKeyGroup final
 {
   public:

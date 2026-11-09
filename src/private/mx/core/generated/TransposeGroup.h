@@ -23,7 +23,7 @@ class ParseContext;
 /// The transpose group represents what must be added to a written pitch to get a correct sounding
 /// pitch.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class TransposeGroup final
 {
   public:

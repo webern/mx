@@ -28,7 +28,7 @@ class ParseContext;
 /// brackets. Parts are ordered from top to bottom in a score based on the order in which they appear
 /// in the part-list.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class PartList final
 {
   public:

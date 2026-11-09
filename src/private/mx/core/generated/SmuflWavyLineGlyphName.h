@@ -14,7 +14,7 @@ namespace mx::core
 /// (SMuFL) wavy line character. The value is a SMuFL canonical glyph name that either starts with
 /// wiggle, or begins with guitar and ends with VibratoStroke. This includes all the glyphs in the
 /// Multi-segment lines range, excluding the beam glyphs.
-/// Structural representation (plan §2.2) of the two branches the pattern
+/// Structural representation of the two branches the pattern
 /// allows: wiggle<suffix> (suffix non-empty), or guitar<middle>VibratoStroke
 /// (middle possibly empty). The literals are structural; only the variable
 /// part is stored, so a pattern-invalid name cannot exist.

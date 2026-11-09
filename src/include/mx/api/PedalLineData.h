@@ -56,11 +56,11 @@ struct PedalLineData
     PositionData positionData;
 
     // Which line this event belongs to when two pedal lines are held down at once; MusicXML calls
-    // it the number. It can be left unspecified, and usually should be: a lone line, and any run
-    // of lines that do not overlap, needs no number. A number is only needed to tell two lines
+    // it the number. It can be left unspecified, and usually should be: a lone line, and any run of
+    // lines that do not overlap, does not need a number. A number is only needed to tell two lines
     // apart when they overlap -- when a line opens before the one before it has closed, as a
-    // sostenuto line under a damper line does -- because otherwise a lift cannot be matched to
-    // the right downstroke. In non-ambiguous cases, leaving this unset is fine.
+    // sostenuto line under a damper line does -- because otherwise a lift cannot be matched to the
+    // right downstroke. In non-ambiguous cases, leaving this unset is fine.
     SpannerNumber number;
 
     // The <pedal> element's id attribute (see Id.h).

@@ -27,7 +27,7 @@ class ParseContext;
 /// defaults for layout and fonts, credits that appear on the first or following pages, and the part
 /// list.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class ScoreHeaderGroup final
 {
   public:

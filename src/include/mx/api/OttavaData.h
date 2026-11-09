@@ -34,7 +34,7 @@ class OttavaStart
     // Most users can ignore this; leave it false. It only controls whether an 8va/8vb line writes
     // the redundant size="8" attribute. The size (8, 15, or 22) follows from ottavaType, and 8 is
     // MusicXML's default, so a 15ma/15mb or 22ma/22mb line always writes its size while an 8va/8vb
-    // line omits it. When true, that redundant size="8" is written too; the flag has no effect on
+    // line omits it. When true, that redundant size="8" is written too; the flag does not affect
     // the larger lines, whose size is always written. It exists for round-trip fidelity - reading a
     // file sets it when the source spelled the attribute out.
     bool writeDefaultSize;
@@ -51,7 +51,7 @@ class OttavaStop
 
     // Most users can ignore this; leave it unspecified. It only controls whether the stop end of an
     // octave-shift line repeats the line's size (8, 15, or 22). The size is not required on the
-    // stop and carries no new information. Omitting it is legal, but but some importers (MuseScore)
+    // stop and does not add information. Omitting it is legal, but some importers (MuseScore)
     // expect it. Therefore `mx::api` defaults to automatically writing the redundant stop size.
     //
     // For the sake of file round-trip fidelity, this will be set to 'no' if a the file being read

@@ -50,7 +50,7 @@ void setText(xml::Node el, std::string_view text);
 std::string nodePath(xml::Node node);
 
 // Error throwers for the generated parsers (internal throw, converted to
-// Result at the document boundary -- plan §2.5).
+// Result at the document boundary).
 
 [[noreturn]] void throwUnknownElement(xml::Node el);
 

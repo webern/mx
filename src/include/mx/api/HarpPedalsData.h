@@ -49,7 +49,7 @@ MXAPI_NOT_EQUALS_AND_VECTORS(HarpPedalTuning);
 // harp's seven pedals. A complete diagram lists all seven in the standard order of the harp's
 // pedal mechanism (D, C, B on the left foot; E, F, G, A on the right); pedalTunings preserves
 // the order given. positionData captures default/relative x-y plus the horizontal and vertical
-// alignment; its placement member is unused here because <harp-pedals> has no placement
+// alignment; its placement member is unused here because <harp-pedals> does not have a placement
 // attribute (placement lives on the parent <direction>).
 class HarpPedalsData
 {

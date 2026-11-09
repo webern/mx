@@ -42,8 +42,8 @@ struct GlissandoStart
     LineData lineData;   // line-type, dash-length, space-length
 
     // Playback timing (MusicXML's trill-sound attributes). These exist on <slide> only -- a
-    // glissando has no accelerate/beats/first-beat/last-beat -- and are left at their defaults
-    // when glissandoType is glissando.
+    // glissando does not have accelerate/beats/first-beat/last-beat -- and are left at their
+    // defaults when glissandoType is glissando.
     Bool accelerate;
     std::optional<double> beats;
     std::optional<double> firstBeat;

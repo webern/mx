@@ -106,20 +106,19 @@ if [ -x "$QUALITY_VENV/bin/python" ]; then
 else
     row 'gen-quality, gen-lint' 'MISSING venv; run make quality-venv'
 fi
-row 'fmt, fmt-check' "$(need "$CLANG_FORMAT")"
+row fmt "$(need "$CLANG_FORMAT")"
 row 'build-go, test-go' "$(need go)"
 c_status=$(need "$CMAKE" "$CC_TOOL")
 if ! libxml2_found; then
     if [ "$c_status" = 'ok' ]; then c_status='MISSING libxml2'; else c_status="$c_status libxml2"; fi
 fi
 row 'build-c, test-c' "$c_status"
-if [ -x "$DESLAG" ]; then
-    row 'deslag (not used by targets yet)' 'ok'
-elif has cargo; then
-    row 'deslag (not used by targets yet)' 'MISSING; run make deslag'
-else
-    row 'deslag (not used by targets yet)' 'MISSING; make deslag needs cargo'
+fmt_check_status=$(need "$CLANG_FORMAT")
+if [ ! -x "$DESLAG" ]; then
+    if has cargo; then deslag_status='MISSING deslag; run make deslag'; else deslag_status='MISSING deslag; make deslag needs cargo'; fi
+    if [ "$fmt_check_status" = 'ok' ]; then fmt_check_status=$deslag_status; else fmt_check_status="$fmt_check_status, $deslag_status"; fi
 fi
+row fmt-check "$fmt_check_status"
 if has ccache; then
     row 'ccache (optional)' 'found; native builds use it'
 else

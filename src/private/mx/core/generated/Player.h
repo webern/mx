@@ -24,7 +24,7 @@ class ParseContext;
 /// player may play multiple instruments, while a single instrument may include multiple players in
 /// divisi sections.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Player final
 {
   public:

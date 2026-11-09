@@ -59,7 +59,7 @@ class TupletStart
     // a triplet or the 4 in 5:4 for quintuplet
     Bool showNormalNumber;
 
-    // Whether the note value of the tuplet's own notes is shown beside the bracket, for example the
+    // Whether the note value of the tuplet's notes is shown beside the bracket, for example the
     // eighth note in "3 eighths". This is optional. Left unspecified, the file does not say, and a
     // reader leaves the note values off, which is what MusicXML asks for. Set it to yes to show
     // them or to no to keep them off.
@@ -81,7 +81,7 @@ class TupletStart
     //
     // Unspecified spells out a figure when it says something the notes do not already say. Nested
     // tuplets are where that happens. When one tuplet is written inside another, each note counts
-    // against both tuplets at once, so the note by itself cannot tell you the inner tuplet's own
+    // against both tuplets at once, so the note by itself cannot tell you the inner tuplet's
     // ratio, and the tuplet has to state it. A tuplet standing on its own agrees with its notes and
     // is left plain. Setting yes spells the figure out anyway, and no leaves it out.
     //

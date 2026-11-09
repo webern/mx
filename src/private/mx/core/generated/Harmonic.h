@@ -35,7 +35,7 @@ class ParseContext;
 /// harmonic element refer to the use of the circular harmonic symbol, typically but not always used
 /// with natural harmonics.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Harmonic final
 {
   public:

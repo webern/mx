@@ -39,7 +39,7 @@ class ParseContext;
 /// order. The optional duration element is used to indicate changes of figures under a note. Figures
 /// are ordered from top to bottom. The value of parentheses is "no" if not present.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class FiguredBass final
 {
   public:

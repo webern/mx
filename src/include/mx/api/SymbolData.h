@@ -32,8 +32,8 @@ class SymbolData
     FontData fontData;
     std::optional<ColorData> color;
 
-    // A shape drawn around the symbol. Enclosure::unspecified draws no enclosure; Enclosure::none
-    // states explicitly that there is none.
+    // A shape drawn around the symbol. Enclosure::unspecified does not draw an enclosure;
+    // Enclosure::none states explicitly that there is no enclosure.
     Enclosure enclosure;
 
     // The `justify` attribute of `<symbol>`. `unspecified` means the attribute is absent. Distinct

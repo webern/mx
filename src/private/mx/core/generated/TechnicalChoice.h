@@ -37,7 +37,7 @@ class ParseContext;
 /// A schema choice (synthesized from an anonymous particle
 /// of the schema): exactly one alternative by construction.
 /// Alternatives are positional; dispatch is by Kind/index, never by type
-/// (alternative types may repeat -- plan §2.3).
+/// (alternative types may repeat).
 class TechnicalChoice final
 {
   public:

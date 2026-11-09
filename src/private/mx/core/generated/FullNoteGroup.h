@@ -25,7 +25,7 @@ class ParseContext;
 /// have duration encoded). Unpitched elements are used for unpitched percussion, speaking voice, and
 /// other musical elements lacking determinate pitch.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class FullNoteGroup final
 {
   public:

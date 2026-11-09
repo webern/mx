@@ -13,7 +13,7 @@ namespace mx::core
 /// The smufl-accidental-glyph-name type is used to reference a specific Standard Music Font Layout
 /// (SMuFL) accidental character. The value is a SMuFL canonical glyph name that starts with one of
 /// the strings used at the start of glyph names for SMuFL accidentals.
-/// Structural representation (plan §2.2): the glyph-name prefix is
+/// Structural representation: the glyph-name prefix is
 /// structural and emitted by the serializer; only the suffix is stored.
 /// Construction repairs the suffix to name characters
 /// (and to non-empty, the placeholder being "X"), so a

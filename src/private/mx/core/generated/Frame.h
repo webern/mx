@@ -34,7 +34,7 @@ class ParseContext;
 /// element. Typical values are x and the empty string. If the attribute is not present, the display
 /// of the unplayed string is application-defined.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Frame final
 {
   public:

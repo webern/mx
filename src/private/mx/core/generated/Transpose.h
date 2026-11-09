@@ -27,7 +27,7 @@ class ParseContext;
 /// If absent, the transposition applies to all staves in the part. Per-staff transposition is most
 /// often used in parts that represent multiple instruments.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Transpose final
 {
   public:

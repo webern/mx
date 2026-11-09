@@ -47,7 +47,7 @@ class ParseContext;
 /// same way as in the sound element. They are used for playback when barline elements contain segno
 /// or coda child elements.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Barline final
 {
   public:
@@ -73,7 +73,7 @@ class Barline final
     void setCoda(std::optional<Coda> value);
     std::span<const Fermata> fermata() const noexcept;
     /// Bounded by the schema: at most 2 occurrences. An over-cap
-    /// append is rejected (plan §1.2).
+    /// append is rejected.
     [[nodiscard]] Result<void> addFermata(Fermata value);
     void clearFermata() noexcept;
     const std::optional<Ending> &ending() const noexcept;

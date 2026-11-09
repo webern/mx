@@ -26,7 +26,7 @@ class ParseContext;
 /// tuplet. If any of these elements are absent, their values are based on the time-modification
 /// element.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class TupletPortion final
 {
   public:

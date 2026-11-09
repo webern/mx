@@ -35,7 +35,7 @@ class ParseContext;
 /// and 223. Some values are added to these based on how usage has evolved in the 30 years since
 /// Stone's book was published.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Percussion final
 {
   public:

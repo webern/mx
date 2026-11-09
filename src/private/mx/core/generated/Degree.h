@@ -29,7 +29,7 @@ class ParseContext;
 /// harmony of kind "other" can be spelled explicitly by using a series of degree elements together
 /// with a root.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Degree final
 {
   public:

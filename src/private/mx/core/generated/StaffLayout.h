@@ -27,7 +27,7 @@ class ParseContext;
 /// parts. When used in the print element, the values apply to the current system only. This value is
 /// ignored for the first staff in a system.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class StaffLayout final
 {
   public:

@@ -13,7 +13,7 @@ namespace mx::core
 {
 
 /// A lossless decimal: a numeric face for arithmetic and clamping, and a
-/// text face for round-trip fidelity (plan §2.6). A Decimal parsed from text
+/// text face for round-trip fidelity. A Decimal parsed from text
 /// remembers the exact input spelling and serializes it back verbatim; a
 /// Decimal constructed or mutated numerically serializes the shortest
 /// fixed-notation string that round-trips the value, capped at 8 fractional
@@ -51,7 +51,7 @@ class Decimal
     /// spelling as the text face.
     static bool tryParse(std::string_view text, Decimal &out);
 
-    /// Lenient parse: garbage yields 0 (import leniency, plan §2.4).
+    /// Lenient parse: garbage yields 0 (import leniency).
     static Decimal parse(std::string_view text);
 
     bool operator==(const Decimal &other) const noexcept

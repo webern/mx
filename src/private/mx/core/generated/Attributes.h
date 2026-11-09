@@ -33,7 +33,7 @@ class ParseContext;
 /// This includes key and time signatures, clefs, transpositions, and staving. When attributes are
 /// changed mid-measure, it affects the music in score order, not in MusicXML document order.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Attributes final
 {
   public:

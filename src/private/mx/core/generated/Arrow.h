@@ -33,7 +33,7 @@ class ParseContext;
 /// glyphs that have an arrow appearance such as arrowBlackUp, guitarStrumUp, or handbellsSwingUp.
 /// The specified glyph should match the descriptive representation.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Arrow final
 {
   public:

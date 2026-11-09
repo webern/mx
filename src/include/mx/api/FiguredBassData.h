@@ -50,7 +50,7 @@ class FigureData
     std::string prefix;
     std::string figureNumber;
     std::string suffix;
-    // The figure's continuation line. Absent when the figure has none.
+    // The figure's continuation line. Absent when the figure does not have one.
     std::optional<FigureExtend> extend;
 
     FigureData() : prefix{}, figureNumber{}, suffix{}, extend{}
@@ -68,7 +68,7 @@ MXAPI_NOT_EQUALS_AND_VECTORS(FigureData);
 
 // The MusicXML <figured-bass> element: an ordered list of figures plus optional parentheses and an
 // optional duration. Figured bass takes its position from the first regular note that follows it in
-// score order, so it carries no explicit tick position of its own here; it is attached to the
+// score order, so it does not carry a tick position of its own here; it is attached to the
 // DirectionData whose tickTimePosition locates it.
 class FiguredBassData
 {

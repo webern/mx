@@ -24,7 +24,7 @@ class ParseContext;
 /// define what the beat is for the display of repetition marks. If not present, the beat is based on
 /// the current time signature.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class SlashGroup final
 {
   public:

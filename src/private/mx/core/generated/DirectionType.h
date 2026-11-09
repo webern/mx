@@ -25,7 +25,7 @@ class ParseContext;
 /// element may also be used in the notations element. Attribute groups related to print suggestions
 /// apply to the individual direction-type, not to the overall direction.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class DirectionType final
 {
   public:

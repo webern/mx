@@ -27,7 +27,7 @@ class ParseContext;
 /// signatures, such as the 6/8 in 3/4 (6/8). A separate symbol attribute value is available compared
 /// to the time element's symbol attribute, which applies to the first of the dual time signatures.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Interchangeable final
 {
   public:

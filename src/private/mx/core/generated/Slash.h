@@ -27,7 +27,7 @@ class ParseContext;
 /// The use-dots attribute works as for the beat-repeat element, and only has effect if use-stems is
 /// no.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Slash final
 {
   public:

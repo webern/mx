@@ -3,7 +3,7 @@
 // Distributed under the MIT License
 
 // Hand-written runtime for the generated mx::core model. Never contains
-// generated content (regen-safe split, see docs/ai/design/mx-core-plan.md §2.6).
+// generated content (a regen-safe split).
 
 #pragma once
 

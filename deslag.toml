@@ -1,0 +1,128 @@
+schema_version = 2
+deslag_version = "0.0.6"
+
+[md]
+globs = ["/AGENTS.md", "/docs/**/*.md"]
+
+# The byte budget.
+[md.lints.max_size_bytes]
+value = 16000
+
+# The limit on bold, italics and ALL CAPS.
+[md.lints.max_emphasis]
+free_spans = 2
+max_percent = 1
+
+# The characters the file must not hold, such as the em dash.
+[md.lints.banned_chars]
+
+[md.lints.banned_chars.groups]
+arrows = true
+bidi = true
+box_drawing = true
+bullets = true
+checks = true
+dashes = true
+ellipsis = true
+emoji = true
+invisible = true
+math = true
+quotes = true
+section = true
+spaces = true
+
+# The phrases the file must not hold, which the config lists.
+[md.lints.banned_phrases]
+
+[md.lints.banned_phrases.ban]
+"deliberately not" = "say what it does; what it does not do rarely needs saying"
+"not silently" = "say what it does instead, such as the error it reports"
+"never silently" = "say what it does instead, such as the error it reports"
+load-bearing = 'say it in plain English, such as "important", "fundamental" or "structural"'
+"lands on" = 'say what happens, such as "is included in" or "is released by"'
+"it lands" = 'say what happens, such as "it is merged" or "it ships"'
+byte-identical = 'say "identical", or name the check that shows it'
+
+# The longest a paragraph or list item may be.
+[md.lints.density]
+max_item_chars = 350
+max_paragraph_chars = 700
+
+# That a sentence negates its verb, not its object.
+[md.lints.verbs_no_nouns]
+
+# That a negation drops `at all`.
+[md.lints.not_at_all]
+
+# That a sentence names what its verb did not find, not `nothing` or `none`.
+[md.lints.verbs_nothing]
+
+# That a possessive noun is not padded with `own`.
+[md.lints.possessive_own]
+
+[[md.overrides]]
+globs = ["/AGENTS.md"]
+
+# The index of the repo that the file must hold.
+[md.overrides.lints.repo_layout]
+heading = "Repository layout"
+max_entries = 30
+max_width = 100
+min_entries = 5
+
+# mx::api headers and sources. Generated code (src/private/mx/core/generated) is
+# never onboarded.
+[cpp]
+globs = ["/src/include/mx/api/**/*.h", "/src/private/mx/api/**/*.h", "/src/private/mx/api/**/*.cpp"]
+exclude = ["/src/private/mx/core/generated/**/*.h", "/src/private/mx/core/generated/**/*.cpp"]
+
+[cpp.lints.max_emphasis]
+free_spans = 2
+max_percent = 1
+
+[cpp.lints.banned_chars]
+
+[cpp.lints.banned_chars.groups]
+arrows = true
+bidi = true
+box_drawing = true
+bullets = true
+checks = true
+dashes = true
+ellipsis = true
+emoji = true
+invisible = true
+math = true
+quotes = true
+section = true
+spaces = true
+
+[cpp.lints.banned_phrases]
+
+[cpp.lints.banned_phrases.ban]
+"deliberately not" = "say what it does; what it does not do rarely needs saying"
+"not silently" = "say what it does instead, such as the error it reports"
+"never silently" = "say what it does instead, such as the error it reports"
+load-bearing = 'say it in plain English, such as "important", "fundamental" or "structural"'
+"lands on" = 'say what happens, such as "is included in" or "is released by"'
+"it lands" = 'say what happens, such as "it is merged" or "it ships"'
+byte-identical = 'say "identical", or name the check that shows it'
+
+[cpp.lints.density]
+max_item_chars = 350
+max_paragraph_chars = 700
+
+[cpp.lints.verbs_no_nouns]
+
+[cpp.lints.not_at_all]
+
+[cpp.lints.verbs_nothing]
+
+[cpp.lints.possessive_own]
+
+
+# The table of common transpositions reads best as one block, which is longer than a paragraph may
+# be.
+[[cpp.overrides]]
+globs = ["/src/include/mx/api/TransposeData.h"]
+lints.density.max_paragraph_chars = 850

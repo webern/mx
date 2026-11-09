@@ -25,7 +25,7 @@ class ParseContext;
 /// similar to the step and alter elements, but renamed to distinguish the different musical
 /// meanings.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Root final
 {
   public:

@@ -22,7 +22,7 @@ class ParseContext;
 
 /// A shared content group (synthesized from an anonymous
 /// particle of the schema): transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class MetronomeChoiceGroupChoiceGroup final
 {
   public:

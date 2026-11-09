@@ -72,7 +72,7 @@ LyricLanguage parseLyricLanguage(mx::xml::Node el, const ParseContext &context)
     }
     if (!seen_xmlLang)
     {
-        // Configured import repair (plan §2.4): inject the default.
+        // Configured import repair: inject the default.
         out.setXMLLang(Language::parse("und"));
         reportAttributeDefaulted(context, el, "xml:lang", "und");
     }

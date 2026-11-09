@@ -24,7 +24,7 @@ class ParseContext;
 /// number values. The type attribute is not needed when used as part of a print element. If omitted
 /// when the page-margins type is used in the defaults element, "both" is the default value.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class PageMargins final
 {
   public:

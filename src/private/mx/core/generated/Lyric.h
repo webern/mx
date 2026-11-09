@@ -40,7 +40,7 @@ class ParseContext;
 /// later verses are printed in a block of text rather than with each note. The time-only attribute
 /// precisely specifies which lyrics are to be sung which time through a repeated section.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Lyric final
 {
   public:

@@ -21,7 +21,7 @@ class ParseContext;
 
 /// The left-right-margins group specifies horizontal margins in tenths.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class LeftRightMarginsGroup final
 {
   public:

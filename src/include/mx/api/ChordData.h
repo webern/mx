@@ -248,7 +248,7 @@ class ChordData
     int rootAlter;
     // How the root is spelled in place of its letter name, such as "Do" for C in solfege or "H" for
     // B in German. Leave absent to print the letter. An empty string is different from absent: it
-    // prints nothing for the root, and the rest of the chord symbol still prints. Spell only the
+    // prints an empty root, and the rest of the chord symbol still prints. Spell only the
     // step, because rootAlter is still printed beside the text: B-flat in solfege is "Si" with a
     // rootAlter of -1, not "Sib". Used only when harmonyChordSource == root.
     std::optional<std::string> rootText;
@@ -289,10 +289,10 @@ class ChordData
     Bool parenthesesDegrees;
     Step bass;
     int bassAlter;
-    // How the bass note after the slash is spelled in place of its letter name, such as "Sol" for the
-    // G of C/G. Leave absent to print the letter. An empty string is different from absent: it
-    // prints nothing for the bass note. Spell only the step, because bassAlter is still printed
-    // beside the text. Used only when bass is set.
+    // How the bass note after the slash is spelled in place of its letter name, such as "Sol" for
+    // the G of C/G. Leave absent to print the letter. An empty string is different from absent: it
+    // prints an empty bass note. Spell only the step, because bassAlter is still printed beside the
+    // text. Used only when bass is set.
     std::optional<std::string> bassText;
     // The MusicXML <inversion> (0 = root position, 1 = first inversion, ...). Present only when
     // hasInversion is true.

@@ -67,7 +67,7 @@ class EncodingData
     // the bad output back to the exact mx build that produced it. That stamp is
     // deliberately intrusive -- it injects a node the source never had into every
     // file mx writes -- so this flag exists to turn it off when byte-faithful output
-    // is needed (e.g. reproducing a defect without mx's own marker in the diff).
+    // is needed (e.g. reproducing a defect without mx's marker in the diff).
     //
     // Defaults true, including for files parsed without the stamp. When false,
     // writeToFile/writeToStream omit mx's node; the user's own <software> entries are

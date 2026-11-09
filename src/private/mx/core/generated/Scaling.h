@@ -26,7 +26,7 @@ class ParseContext;
 /// height of 7 mm, millimeters would be set to 7 while tenths is set to 40. The ability to set a
 /// formula rather than a single scaling factor helps avoid roundoff errors.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Scaling final
 {
   public:

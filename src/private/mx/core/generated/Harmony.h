@@ -49,7 +49,7 @@ class ParseContext;
 /// arrangement are separated by horizontal lines. Harmony-chords with diagonal or horizontal
 /// arrangement are separated by diagonal lines or slashes.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Harmony final
 {
   public:

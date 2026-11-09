@@ -17,7 +17,7 @@ namespace mx::core
 /// serif, sans-serif, handwritten, cursive, fantasy, and monospace. The music, engraved, and
 /// handwritten values refer to music fonts; the rest refer to text fonts. The fantasy style refers
 /// to decorative text such as found in older German-style printing.
-/// Structural representation (plan §2.2): a never-empty list of non-empty,
+/// Structural representation: a never-empty list of non-empty,
 /// comma-free items. Construction repairs deterministically (commas inside
 /// an item become spaces, blank items drop, an empty list becomes ["-"]).
 /// A value parsed from the wire keeps its exact spelling (the separator may

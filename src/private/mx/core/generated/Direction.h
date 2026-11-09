@@ -39,7 +39,7 @@ class ParseContext;
 /// follow one another in sequence visually. For a series of direction-type children, non-positional
 /// formatting attributes are carried over from the previous element by default.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Direction final
 {
   public:

@@ -19,7 +19,7 @@ namespace api
 // it is A minor, with dorian it is D dorian. The mode does not change the accidentals that are
 // drawn; fifths alone determines those.
 //
-// `none` is the mode of music that has no tonal center. It is how a keyless staff is written:
+// `none` is the mode of music without a tonal center. It is how a keyless staff is written:
 // zero fifths with <mode>none</mode>. It is a mode value like any other, and it says nothing about
 // how the signature is drawn.
 //
@@ -107,7 +107,7 @@ struct KeyData
     CancelLocation cancelLocation;
 
     // The mode of the key signature (major, minor, dorian, none, and so on). It is optional: the
-    // default, KeyMode::unspecified, states no mode and writes no <mode> element. KeyMode::none
+    // default, KeyMode::unspecified, does not state a mode or write a <mode> element. KeyMode::none
     // is a stated mode, and it writes <mode>none</mode>.
     KeyMode mode;
 

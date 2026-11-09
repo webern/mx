@@ -24,7 +24,7 @@ class ParseContext;
 /// Pitch is represented as a combination of the step of the diatonic scale, the chromatic
 /// alteration, and the octave.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Pitch final
 {
   public:
