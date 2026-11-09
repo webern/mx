@@ -30,7 +30,7 @@ class ParseContext;
 /// score-instrument element can also distinguish multiple instruments of the same type that are on
 /// the same part, such as Clarinet 1 and Clarinet 2 instruments within a Clarinets 1 and 2 part.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class ScoreInstrument final
 {
   public:

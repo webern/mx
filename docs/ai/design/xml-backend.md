@@ -7,7 +7,7 @@ Tracking issue: webern/mx#478.
 `mx::core` is generated code that reads and writes an XML DOM. Until 0.6 that DOM was pugixml's,
 called directly: every generated parser took a `pugi::xml_node`, every serializer appended to one,
 and `mx::core::parse` took a `pugi::xml_document`. That was the right call when the typed model was
-designed (see `mx-core-plan.md` §2.1: the earlier `ezxml` virtual-interface wrapper allocated a
+designed (the earlier `ezxml` virtual-interface wrapper allocated a
 `shared_ptr` and copied a `std::string` per node access, and retiring it made the core fast). It
 left two problems for people who build mx into something larger.
 
@@ -15,14 +15,14 @@ left two problems for people who build mx into something larger.
    `pugi::` symbol, one from their copy and one from mx's vendored copy. Whether the linker
    complained or silently picked one depended on versions and build flags.
 2. **Consumers who want another XML library.** Some projects standardize on libxml2, tinyxml2 or a
-   platform parser, and do not want a second XML library in the binary at all.
+   platform parser, and do not want a second XML library in the binary.
 
 ## Step one: the rename (PR #479)
 
 The vendored pugixml moved to `src/private/mxpugi/` and was compiled under the `mxpugi` namespace
 (`scripts/vendor_pugixml.py` does the renaming; `make vendor-pugixml VERSION=x.y` refreshes it).
 That ended the collisions: mx does not define a `pugi::` symbol, and `make symbol-check` fails CI
-if one ever appears. It did nothing for problem 2, and it left `mxpugi::` spelled across the generated
+if one ever appears. It did not solve problem 2, and it left `mxpugi::` spelled across the generated
 code, the runtime, `mx::api` and the tests.
 
 ## Step two: the seam (this document)
@@ -31,7 +31,7 @@ Everything on mx's side of the XML library now goes through three value types in
 `src/private/mx/xml/Xml.h`:
 
 - `mx::xml::Node` and `mx::xml::Attribute` are trivially copyable handles into a tree. Copying one
-  copies the reference, the way copying a pointer does. Each wraps the backend's own handle type
+  copies the reference, the way copying a pointer does. Each wraps the backend's handle type
   (`Backend::NodeHandle`, `Backend::AttributeHandle`) and every member is an inline, non-virtual
   one-line forwarder to a static function of `mx::xml::Backend`.
 - `mx::xml::Document` owns a `Backend::DocumentHandle`. It loads from a file, a string or a stream,
@@ -61,7 +61,7 @@ a message that names the requirement.
 
 The surface is exactly what `mx::core`, `mx::api` and the tests use. Strings come back as
 `const char *` owned by the tree, as pugixml returns them, so a name or value lookup never
-allocates. Strings go in as `std::string_view`. The seam does not expose the backend's own
+allocates. Strings go in as `std::string_view`. The seam does not expose the backend's
 handle, so nothing on the mx side can come to depend on one backend by accident. When a member of
 the seam loses its last caller, it goes, and so does its line in the concept: a smaller contract is
 less for a backend author to write.
@@ -114,7 +114,9 @@ canonicalizers, `IdSchemaDriftTest` reading the XSD). When a test needs to hand 
 `mx::core` or read what it wrote, it crosses the seam as text: save the mxpugi document to a string,
 load the string into an `mx::xml::Document`, call the core, serialize into an `mx::xml::Document`,
 save that to a string, load it back into mxpugi. The corert harness does exactly this
-(`CoreRoundtripImpl.cpp`, steps 3 and 4). A test that only needs the core's view of a document uses
+(`CoreRoundtripImpl.cpp`, steps 3 and 4).
+
+A test that only needs the core's view of a document uses
 `mx::xml::Document` directly. Test code uses one or the other and never casts between them, which is
 what a consumer who brings a different XML library would have to do.
 
@@ -124,28 +126,45 @@ The choice is the CMake cache variable `MX_XML_BACKEND`, with three values
 (`set_property(CACHE ... STRINGS)` lists them; anything else is a configure error). CMake prints
 the chosen value as `mx: MX_XML_BACKEND=...`.
 
-- `vendored` (the default, always; never chosen by detecting another pugixml target): the pugixml
-  adapter against mx's private `mxpugi` copy. `mx_core` links `mxpugi` and does not get an extra
-  definition, so this mode is byte-for-byte the build mx had before the option existed. No
-  `pugi::` symbol; nothing to install.
-- `pugixml`: the pugixml adapter against the consumer's own pugixml. `MX_PUGIXML_TARGET` (cache
-  string, default `pugixml`, which is the target upstream pugixml's CMake defines as an interface
-  over `pugixml-static`) names the CMake target; it has to exist when `add_subdirectory(mx)` runs,
-  and the configure fails with a `FATAL_ERROR` telling the consumer to create it (FetchContent,
-  `find_package`, or `add_subdirectory` on a checkout) otherwise. `mx_core` links that target
-  `PUBLIC` and gets the `PUBLIC` compile definitions `MX_XML_PUGI_NAMESPACE=pugi` and
-  `MX_XML_PUGI_HEADER="pugixml.hpp"`. `mxpugi` is not linked into `mx_core` or `mx`.
-- `custom`: the consumer provides `MX_XML_BACKEND_HEADER` (the include path of a header that
-  defines `struct mx::xml::Backend` satisfying `XmlBackend`, written the way it would appear
-  between the quotes of an `#include`) and `MX_XML_BACKEND_TARGET` (a CMake target, INTERFACE or
-  library, carrying the header's include directory, any sources, and the link to the XML library;
-  it exists before `add_subdirectory(mx)`, so a source on it that includes `mx/xml/Concept.h` has
-  to carry mx's `src/private` include path itself).
-  Both are required; the configure fails naming them otherwise. `mx_core` links the target
-  `PUBLIC`, gets the `PUBLIC` compile definition `MX_XML_BACKEND_HEADER="..."`, and does not
-  compile `src/private/mx/xml/pugixml/Backend.cpp` (it includes pugixml). The `static_assert` in
-  `Xml.h` is the check that the struct satisfies the concept. This mode is a documented contract:
-  there is no CI job and no example backend beyond the pugixml one.
+### `vendored`
+
+The default, always; it is never chosen by detecting another pugixml target. The pugixml adapter
+runs against mx's private `mxpugi` copy. `mx_core` links `mxpugi` and does not get an extra
+definition, so this mode is byte-for-byte the build mx had before the option existed. No `pugi::`
+symbol; nothing to install.
+
+### `pugixml`
+
+The pugixml adapter runs against the consumer's pugixml, not the vendored mxpugi.
+`MX_PUGIXML_TARGET` (cache string, default `pugixml`, which is the target upstream pugixml's CMake
+defines as an interface over `pugixml-static`) names the CMake target.
+
+The target has to exist when `add_subdirectory(mx)` runs. Otherwise the configure fails with a
+`FATAL_ERROR` telling the consumer to create it (FetchContent, `find_package`, or
+`add_subdirectory` on a checkout).
+
+`mx_core` links that target `PUBLIC` and gets the `PUBLIC` compile definitions
+`MX_XML_PUGI_NAMESPACE=pugi` and `MX_XML_PUGI_HEADER="pugixml.hpp"`. `mxpugi` is not linked into
+`mx_core` or `mx`.
+
+### `custom`
+
+The consumer provides two settings, and the configure fails naming them if either is missing:
+
+- `MX_XML_BACKEND_HEADER`: the include path of a header that defines `struct mx::xml::Backend`
+  satisfying `XmlBackend`, written the way it would appear between the quotes of an `#include`.
+- `MX_XML_BACKEND_TARGET`: a CMake target, INTERFACE or library, carrying the header's include
+  directory, any sources, and the link to the XML library. It exists before
+  `add_subdirectory(mx)`, so a source on it that includes `mx/xml/Concept.h` has to carry mx's
+  `src/private` include path itself.
+
+`mx_core` links the target `PUBLIC`, gets the `PUBLIC` compile definition
+`MX_XML_BACKEND_HEADER="..."`, and does not compile `src/private/mx/xml/pugixml/Backend.cpp` (it
+includes pugixml). The `static_assert` in `Xml.h` is the check that the struct satisfies the
+concept. This mode is a documented contract: there is no CI job and no example backend beyond the
+pugixml one.
+
+### All modes
 
 The link and the definitions are `PUBLIC` on `mx_core` because `Xml.h` is included by the core's
 headers: the `mx` library, the tests and the consumer all have to see the same backend.
@@ -162,10 +181,13 @@ default `MX_API=ON` build of everything still does, because `mxtest` links it).
 The `pugixml` mode has a gate. `cmake/backend-pugixml/CMakeLists.txt` is a consumer project that
 fetches pugixml 1.16 with FetchContent, sets `MX_XML_BACKEND=pugixml`, `MX_CORE_DEV=ON` and
 `MX_API=OFF` (the backend lives in `mx_core`; the core suites are what runs), and
-adds the repository root as a subdirectory. `make backend-pugixml-test` configures it into
+adds the repository root as a subdirectory.
+
+`make backend-pugixml-test` configures it into
 `build/backend-pugixml`, builds it, runs the corert and core unit binaries, and then checks with
 `nm -g | c++filt` that `libmx_core.a` in that tree references `pugi::` and does not hold an
 `mxpugi::` symbol, which is the proof that the mode took. The CI job `backend: pugixml` runs that target.
+
 `make symbol-check` is the gate for the vendored build only; in the pugixml mode `mx_core`
 references `pugi::` on purpose.
 

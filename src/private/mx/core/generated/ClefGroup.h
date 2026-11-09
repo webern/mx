@@ -22,7 +22,7 @@ class ParseContext;
 
 /// Clefs are represented by a combination of sign, line, and clef-octave-change elements.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class ClefGroup final
 {
   public:

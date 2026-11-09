@@ -13,7 +13,7 @@ namespace mx::core
 /// The smufl-pictogram-glyph-name type is used to reference a specific Standard Music Font Layout
 /// (SMuFL) percussion pictogram character. The value is a SMuFL canonical glyph name that starts
 /// with pict.
-/// Structural representation (plan §2.2): the glyph-name prefix is
+/// Structural representation: the glyph-name prefix is
 /// structural and emitted by the serializer; only the suffix is stored.
 /// Construction repairs the suffix to name characters
 /// (and to non-empty, the placeholder being "X"), so a

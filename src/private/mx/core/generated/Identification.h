@@ -25,7 +25,7 @@ class ParseContext;
 /// a score-wide, movement-wide, or part-wide level. The creator, rights, source, and relation
 /// elements are based on Dublin Core.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Identification final
 {
   public:

@@ -24,7 +24,7 @@ class ParseContext;
 
 /// A shared content group (synthesized from an anonymous
 /// particle of the schema): transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class NormalNoteGroup final
 {
   public:
@@ -34,7 +34,7 @@ class NormalNoteGroup final
     void setDuration(PositiveDivisions value);
     std::span<const Tie> tie() const noexcept;
     /// Bounded by the schema: at most 2 occurrences. An over-cap
-    /// append is rejected (plan §1.2).
+    /// append is rejected.
     [[nodiscard]] Result<void> addTie(Tie value);
     void clearTie() noexcept;
     bool operator==(const NormalNoteGroup &other) const = default;

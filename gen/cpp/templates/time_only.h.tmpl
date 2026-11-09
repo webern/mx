@@ -15,7 +15,7 @@ namespace {{vars.namespace}}
 {{#doc_lines}}
 /// {{value}}
 {{/doc_lines}}
-/// Structural representation (plan §2.2): a never-empty list of positive
+/// Structural representation: a never-empty list of positive
 /// integers (the time-through-repeat indices), serialized comma-separated.
 /// Construction clamps each value to >= 1; an empty list becomes [1].
 class {{ident}} final

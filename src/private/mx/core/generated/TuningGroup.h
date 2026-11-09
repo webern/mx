@@ -24,7 +24,7 @@ class ParseContext;
 /// The tuning group contains the sequence of elements common to the staff-tuning and accord
 /// elements.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class TuningGroup final
 {
   public:

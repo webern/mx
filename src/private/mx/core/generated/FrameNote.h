@@ -25,7 +25,7 @@ class ParseContext;
 /// The frame-note type represents each note included in the frame. An open string will have a fret
 /// value of 0, while a muted string will not be associated with a frame-note element.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class FrameNote final
 {
   public:

@@ -33,7 +33,7 @@ _STRATEGIES = frozenset(
     }
 )
 
-# The grammar-preserving projection's shared content types (plan §2.9).
+# The grammar-preserving projection's shared content types.
 # Rendered only when the manifest engages them, so a target consuming the
 # flat member view (and its committed output) is untouched by their
 # existence.

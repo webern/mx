@@ -16,7 +16,7 @@ namespace mx::core
 // based) the generated value types call. Parsing is lexically strict: the
 // whole input must be consumed (leading/trailing XML whitespace tolerated,
 // nothing else). The lenient flavors return 0 on garbage — the import
-// leniency policy (plan §2.4); range clamping happens in the caller.
+// leniency policy; range clamping happens in the caller.
 
 /// What a lenient value parse did with its input. Import diagnostics are
 /// built from this; the parsed value is the same whatever the outcome says.

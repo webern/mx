@@ -34,7 +34,7 @@ class ParseContext;
 /// than the nominal value associated with the specified type. If a swung note has attack and release
 /// attributes, those values modify the swung playback.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Swing final
 {
   public:

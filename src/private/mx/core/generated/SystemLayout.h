@@ -39,7 +39,7 @@ class ParseContext;
 /// element are used there as well. This type of system-layout element need only be read from or
 /// written to the first visible part in the score.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class SystemLayout final
 {
   public:

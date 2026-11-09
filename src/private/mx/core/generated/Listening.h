@@ -32,7 +32,7 @@ class ParseContext;
 /// for the change in state. It should not be used to compensate for latency issues in particular
 /// hardware configurations.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Listening final
 {
   public:

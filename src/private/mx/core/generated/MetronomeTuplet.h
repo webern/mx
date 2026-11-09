@@ -23,7 +23,7 @@ class ParseContext;
 /// The metronome-tuplet type uses the same element structure as the time-modification element along
 /// with some attributes from the tuplet element.
 /// The schema's complexContent extension: non-polymorphic public
-/// inheritance, no virtual anything (plan §2.3).
+/// inheritance, no virtual anything.
 class MetronomeTuplet : public TimeModification
 {
   public:

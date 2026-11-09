@@ -22,7 +22,7 @@ class ParseContext;
 /// System margins are relative to the page margins. Positive values indent and negative values
 /// reduce the margin size.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class SystemMargins final
 {
   public:

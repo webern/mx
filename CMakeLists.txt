@@ -6,7 +6,7 @@ project(mx CXX)
 # + the mx::xml seam over the XML library (src/private/mx/xml, backed by mx's
 # private copy of pugixml, mxpugi, unless MX_XML_BACKEND says otherwise), plus
 # the corert/unit test binaries.
-# See AGENTS.md, docs/ai/design/mx-core-plan.md and docs/ai/design/xml-backend.md.
+# See AGENTS.md and docs/ai/design/xml-backend.md.
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -108,7 +108,7 @@ set(PRIVATE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/private")
 set(PUBLIC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/include")
 
 # mxpugi: the XML library behind mx::core's XML seam in the default
-# (vendored) mode (plan §2.1 chose pugixml). It is pugixml, vendored at
+# (vendored) mode (mx::core uses pugixml directly). It is pugixml, vendored at
 # src/private/mxpugi by scripts/vendor_pugixml.py with its namespace renamed
 # from `pugi` to `mxpugi` (stock pugiconfig). The private copy exists so that
 # mx does not define any `pugi::` symbol: a consumer that links its own

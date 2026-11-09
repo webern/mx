@@ -59,7 +59,7 @@ struct MetronomeBeam
 // A tuplet drawn on a note figure inside a metric-relationship metronome mark: the
 // time-modification ratio -- actualNotes in the time of normalNotes, where a normal note is a
 // normalType note carrying normalDots dots -- plus how the bracket and numbers are shown.
-// normalType unspecified means the ratio uses the figure's own note type.
+// normalType unspecified means the ratio uses the figure's note type.
 struct MetronomeTuplet
 {
     int actualNotes;

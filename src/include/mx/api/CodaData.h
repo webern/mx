@@ -19,8 +19,8 @@ namespace api
 {
 // The MusicXML <coda> element carries the empty-print-object-style-align attribute group plus the
 // smufl glyph-name and optional-unique-id. positionData captures default/relative x-y plus the
-// horizontal and vertical alignment; its placement member is unused here because <coda> has no
-// placement attribute (placement lives on the parent <direction>).
+// horizontal and vertical alignment; its placement member is unused here because <coda> does not
+// have a placement attribute (placement lives on the parent <direction>).
 class CodaData
 {
   public:

@@ -1,4 +1,4 @@
-# Phase 1 of the release system (docs/ai/design/release-process.md): build a
+# Phase 1 of the release system: build a
 # chosen commit A for every release target, then open the release PR whose first
 # commit, B, is the tag target. Nothing here publishes; phase 2 is
 # release-publish.yml, triggered by the tag push after the PR merges.
@@ -50,7 +50,7 @@ jobs:
           [[ "$VERSION" =~ $SEMVER ]] \
             || { echo "::error::version must be MAJOR.MINOR.PATCH, optionally followed by a pre-release suffix such as -rc1, with no leading v, got '$VERSION'"; exit 1; }
 
-  # The target fan-out (design §9): one reusable workflow per release target.
+  # The target fan-out: one reusable workflow per release target.
   # Adding a target = add a job like this one, and extend the hardcoded path
   # ceiling in release-publish.yml with its declared metadata paths.
   swift:
@@ -95,7 +95,7 @@ jobs:
           shopt -s nullglob
 
           if ! git merge-base --is-ancestor "$SHA" origin/main; then
-            echo "::warning::$SHA is not an ancestor of main yet; release-publish will refuse the tag until it is (design §5, check 3)."
+            echo "::warning::$SHA is not an ancestor of main yet; release-publish will refuse the tag until it is."
           fi
 
           FRAGMENTS=("$RUNNER_TEMP"/release-metadata/*/fragment.json)
@@ -115,7 +115,7 @@ jobs:
             if [ -d "$d/tree" ]; then cp -R "$d/tree/." .; fi
           done
 
-          # release-manifest.json (design §5): version, base SHA A, this run's
+          # release-manifest.json: version, base SHA A, this run's
           # ID (the run pins itself into B -- dispatch inputs are not queryable
           # later), every target's fragment, and the union of paths B may touch.
           jq -s \
@@ -170,8 +170,7 @@ jobs:
           set -euo pipefail
           cat > "$RUNNER_TEMP/body.md" <<'BODY'
           Machine-generated release PR for **v__VERSION__**, base commit A = `__A__`,
-          opened by [release-build run __RUN_ID__](__RUN_URL__). Process:
-          `docs/ai/design/release-process.md`.
+          opened by [release-build run __RUN_ID__](__RUN_URL__).
 
           Two machine-written commits:
 

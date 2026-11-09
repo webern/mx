@@ -260,7 +260,7 @@ class Member:
     fixed: str | None = None
     default_variant: str | None = None
     # The configured import repair for a required attribute MISSING from a
-    # document ([import] attribute-defaults, plan §2.4): the parser injects
+    # document ([import] attribute-defaults): the parser injects
     # this wire literal; without one, missing is a parse error.
     import_default: str | None = None
     doc: str | None = None
@@ -293,7 +293,7 @@ class ComplexPlate:
     strategy: str  # value-class | composite-class | flag | attrs-class | inherit | flatten
     members: list[Member] = field(default_factory=list)
     content: ir.Particle | None = None
-    # The grammar-preserving field projection of `content` (plan §2.9):
+    # The grammar-preserving field projection of `content`:
     # ordered fields a structural target renders instead of the flat
     # `members` element view. Empty for content-free shapes.
     fields: list[ContentField] = field(default_factory=list)
@@ -334,7 +334,7 @@ class ComplexPlate:
 
 
 # --------------------------------------------------------------------------- #
-# Content fields (the grammar-preserving projection, plan §2.9)
+# Content fields (the grammar-preserving projection)
 # --------------------------------------------------------------------------- #
 
 
@@ -378,7 +378,7 @@ class Alternative:
     is nullable (the choice can be satisfied empty, e.g. key's
     non-traditional-key*). Alternatives are positional: a target whose sum
     type allows duplicate member types must dispatch by index, never by
-    type (plan §2.3)."""
+    type."""
 
     name: Name
     ident: str
@@ -472,8 +472,8 @@ class Plates:
     schema_version: str = ""  # the MusicXML version in the source stem ("3.1")
     value_types: list[ValuePlate] = field(default_factory=list)
     complex_types: list[ComplexPlate] = field(default_factory=list)
-    # The shared content types of the grammar-preserving projection (plan
-    # §2.9): structural named schema groups plus the synthesized types
+    # The shared content types of the grammar-preserving projection:
+    # structural named schema groups plus the synthesized types
     # hoisted out of anonymous nested choices/sequences. A target consuming
     # only the flat member view never renders these.
     groups: list[GroupLikePlate] = field(default_factory=list)

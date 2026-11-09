@@ -25,7 +25,7 @@ class ParseContext;
 /// printed at the start of each system. Enclosure for the display-text element is none by default.
 /// Language for the display-text element is Italian ("it") by default.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class NameDisplay final
 {
   public:

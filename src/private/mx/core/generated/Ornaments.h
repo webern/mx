@@ -25,7 +25,7 @@ class ParseContext;
 /// element's content is represented the same as an accidental element, but with a different name to
 /// reflect the different musical meaning.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Ornaments final
 {
   public:

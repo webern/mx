@@ -23,24 +23,24 @@ struct MidiData
     std::string virtualLibrary;
     std::string virtualName;
 
-    // The name of the playback device or sound bank for this instrument — for example the name of a
+    // The name of the playback device or sound bank for this instrument, for example the name of a
     // MIDI output device, or a sound or bank label. This is often left empty.
     std::string device;
 
     // An optional port (or cable) number, from 1 to 16, that says which output the device uses. It
-    // has no value when the file doesn't specify one, and most files leave it unset — you only need
+    // is empty when the file doesn't specify one, and most files leave it unset; you only need
     // it when you are aiming at a particular MIDI port. You don't have to attach the device to this
     // part's instrument yourself; the library keeps them together automatically when the music is
     // written out.
     std::optional<int> devicePort;
 
     // Most users can ignore this; leave it unspecified. It only controls whether the saved file
-    // spells out the little link that ties this part's playback device to its instrument. unspecified
-    // (the default) does the sensible thing on its own: it leaves that link out, because each part
-    // here has a single instrument and so the link isn't needed. yes/no force it to be written or left
-    // out. You never have to set this when you are creating music — when the library reads a file that
-    // did spell the link out, it sets this for you, so that saving the file brings it back the same way
-    // it came in.
+    // spells out the little link that ties this part's playback device to its instrument.
+    // unspecified (the default) does the sensible thing on its own: it leaves that link out,
+    // because each part here has a single instrument and so the link isn't needed. yes/no force it
+    // to be written or left out. You never have to set this when you are creating music. When the
+    // library reads a file that did spell the link out, it sets this for you, so that saving the
+    // file brings it back the same way it came in.
     Bool writeDeviceId;
 
     std::string name;
@@ -85,13 +85,13 @@ struct MidiData
 // MusicXML itself allows a single part to carry more than one instrument. The most common case is
 // a drum kit or percussion part, where the bass drum, snare, ride cymbal, and so on are each
 // treated as a separate instrument. You also see it when a part layers or doubles two sounds that
-// play together — two sampled instruments sounding at once, or a single "Clarinet 1 & 2" line that
+// play together: two sampled instruments sounding at once, or a single "Clarinet 1 & 2" line that
 // really holds two separate instruments.
 //
 // For now this library brings in only the first instrument of such a part. Any additional
 // instruments in the file are not available here and are not written back out. We're sorry for the
 // limitation: we looked for a way to offer several instruments per part without making the ordinary
-// single-instrument case — which covers the vast majority of music — harder to understand and use,
+// single-instrument case (which covers the vast majority of music) harder to understand and use,
 // and we didn't find one we were happy with, so it stays one instrument per part for the time
 // being.
 //

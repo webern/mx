@@ -61,7 +61,7 @@ class TimeChoice
     Bool display{Bool::unspecified};
 
     // The <time> element's id attribute (see Id.h). Only the measure that states the time
-    // signature carries it; a measure that inherits the signature (isImplicit) has no id.
+    // signature carries it; a measure that inherits the signature (isImplicit) does not have one.
     std::optional<Id> id;
 
     // Defaults to a simple, implicit 4/4.

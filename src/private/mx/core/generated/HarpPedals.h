@@ -35,7 +35,7 @@ class ParseContext;
 /// pedal-tuning elements should follow standard harp pedal order, with pedal-step values of D, C, B,
 /// E, F, G, and A.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class HarpPedals final
 {
   public:

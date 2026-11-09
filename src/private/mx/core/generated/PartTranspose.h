@@ -22,7 +22,7 @@ class ParseContext;
 /// The child elements of the part-transpose type have the same meaning as for the transpose type.
 /// However that meaning applies to a transposed part created from the existing score file.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class PartTranspose final
 {
   public:

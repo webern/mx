@@ -45,7 +45,7 @@ doctype-timewise = 'score-timewise PUBLIC \"-//Recordare//DTD MusicXML 4.0 Timew
 
 [naming]
 extends = "../naming.base.toml"  # schema-forced renames shared by all targets
-# Modern accessor style (plan §2.6): camelCase accessors `step()` /
+# Modern accessor style: camelCase accessors `step()` /
 # `setStep(...)`; the templates spell private members `m_{{ident}}`.
 field-convention   = "camel"
 # Variant identifiers are the named-factory spellings on the enum wrapper
@@ -64,7 +64,7 @@ string               = "std::string"
 token                = "std::string"
 date                 = "std::string"
 # The NCName-derived identity primitives get hand-written repairing wrappers
-# (valid-by-construction, plan §2.2): a lexically invalid id/idref/nmtoken
+# (valid-by-construction): a lexically invalid id/idref/nmtoken
 # cannot exist through the public API. Token enforces NCName (xs:ID/IDREF);
 # NameToken enforces the wider xs:NMTOKEN (leading digits allowed).
 nmtoken              = "NameToken"
@@ -103,7 +103,7 @@ words = [
     "small",
 ]
 
-# Semantic names for the synthesized content types the §2.9 projection
+# Semantic names for the synthesized content types the grammar-preserving projection
 # hoists out of anonymous nested particles (mechanical wires like
 # `note-choice-group-2` stay addressable; these give the high-traffic note
 # and lyric structures their domain names).
@@ -119,7 +119,7 @@ words = [
 "lyric-choice-group-group-group" = "elision-syllabic-group"
 
 [import]
-# Import-policy repairs (plan §2.4): a required attribute missing from a
+# Import-policy repairs: a required attribute missing from a
 # document gets the configured default injected by the parser; missing with
 # no entry is a parse error. xml:lang on lyric-language defaults to BCP 47
 # "und" (undetermined).
@@ -129,7 +129,7 @@ words = [
 # ---- the render manifest: which templates produce which files ----------- #
 # One template per shape (value shapes here; the complex/group/choice shapes
 # land with the W2 templates). Bespoke rows give individual value types the
-# structural representations of mx-core-plan.md §2.2.
+# structural representations they need.
 
 [render]
 dir = "templates"
@@ -178,7 +178,7 @@ strategies = ["tagged-variant"]
 template   = "union.cpp.tmpl"
 output     = "{pascal}.cpp"
 
-# ---- bespoke structural value types (plan §2.2) -------------------------- #
+# ---- bespoke structural value types -------------------------------------- #
 
 [[render.type]]
 types    = ["color"]
@@ -349,8 +349,8 @@ strategies = ["choice-class"]
 template   = "choice.cpp.tmpl"
 output     = "{pascal}.cpp"
 
-# Measure music-data is the known large-alternative repeated choice (plan
-# §2.3): its alternatives are boxed so a by-value variant does not size
+# Measure music-data is the known large-alternative repeated choice: its
+# alternatives are boxed so a by-value variant does not size
 # every slot at the largest alternative. Which types box is this manifest
 # data, not template hardcode.
 [[render.type]]

@@ -43,7 +43,7 @@ void runOne(const std::string &relPath)
     }
 }
 
-// Dynamic Catch2 registration (design §3 Catch2 Dynamic Registration).
+// Dynamic Catch2 registration.
 //
 // `Catch::StringRef` does not own its storage; `TestCaseInfo` stores the test
 // name as a `StringRef` (see `TestCaseInfo::TestCaseInfo` in catch.cpp).

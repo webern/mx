@@ -13,7 +13,7 @@ namespace mx::core
 {
 
 /// The error vocabulary of the two error boundaries (parse and bounded
-/// append). No other API in mx::core produces an error (plan §1.2).
+/// append). No other API in mx::core produces an error.
 enum class ErrorCode
 {
     unknownElement,
@@ -35,7 +35,7 @@ struct Error
 
 /// Internal: generated per-type parse functions throw this; the document
 /// level `parse` catches and converts to Result so the public boundary stays
-/// exception-free (plan §2.5). Not part of the public contract.
+/// exception-free. Not part of the public contract.
 class ParseError : public std::exception
 {
   public:

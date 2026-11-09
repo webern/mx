@@ -15,13 +15,13 @@ namespace mx
 {
 namespace api
 {
-// A graphic placed in the music, MusicXML's <image> direction: source locates the graphic file
-// (a URL or file reference) and type gives its MIME type, e.g. "image/png". height and width,
-// in tenths, scale the image; give one alone to scale proportionally. positionData captures
+// A graphic placed in the music, MusicXML's <image> direction: source locates the graphic file (a
+// URL or file reference) and type gives its MIME type, e.g. "image/png". height and width, in
+// tenths, scale the image; give one alone to scale proportionally. positionData captures
 // default/relative x-y plus the horizontal and vertical alignment of the image relative to its
-// position point; an image's vertical alignment has no baseline variant, so a baseline value
-// here is not written. positionData's placement member is unused because <image> has no
-// placement attribute (placement lives on the parent <direction>).
+// position point; an image's vertical alignment does not have a baseline variant, so a baseline
+// value here is not written. positionData's placement member is unused because <image> does not
+// have a placement attribute (placement lives on the parent <direction>).
 class ImageData
 {
   public:

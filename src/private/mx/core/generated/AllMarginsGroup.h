@@ -22,7 +22,7 @@ class ParseContext;
 
 /// The all-margins group specifies both horizontal and vertical margins in tenths.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class AllMarginsGroup final
 {
   public:

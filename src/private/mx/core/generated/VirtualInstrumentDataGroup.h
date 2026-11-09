@@ -24,7 +24,7 @@ class ParseContext;
 /// Virtual instrument data can be part of either the score-instrument element at the start of a
 /// part, or an instrument-change element within a part.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class VirtualInstrumentDataGroup final
 {
   public:

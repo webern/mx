@@ -39,7 +39,7 @@ class Tenths final
     std::string toString() const;
 
     /// Strict lexical parse, then range-clamp (the import leniency policy
-    /// for numbers, plan §2.4).
+    /// for numbers).
     static bool tryParse(std::string_view text, Tenths &out);
 
     /// Lenient: non-numeric text yields the clamped zero.

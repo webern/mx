@@ -26,7 +26,7 @@ class ParseContext;
 /// is used, the display-step and display-octave elements are interpreted as if in treble clef, with
 /// a G in octave 4 on line 2.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class DisplayStepOctaveGroup final
 {
   public:

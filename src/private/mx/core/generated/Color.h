@@ -18,7 +18,7 @@ namespace mx::core
 /// assumed to be FF. For instance, the RGB value "#800080" represents purple. An ARGB value of
 /// "#40800080" would be a transparent purple. As in SVG 1.1, colors are defined in terms of the sRGB
 /// color space (IEC 61966).
-/// Structural representation (plan §2.2): numeric RGB components plus an
+/// Structural representation: numeric RGB components plus an
 /// optional alpha; serialization formats #RRGGBB / #AARRGGBB. A malformed
 /// hex string cannot exist.
 class Color final

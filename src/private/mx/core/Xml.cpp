@@ -58,7 +58,7 @@ bool isNamespaceDecl(std::string_view attribute_name)
 // illegal (&#01;), producing a non-well-formed document. Every generated
 // write funnels through the helpers below, so dropping the illegal
 // characters here makes them unrepresentable through any string-typed
-// setter (the §2.2.2 deterministic-repair policy applied at the
+// setter (the deterministic-repair policy applied at the
 // serialization door).
 bool xmlIsIllegalChar(char c) noexcept
 {

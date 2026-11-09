@@ -29,8 +29,8 @@ class WordsData
     bool isColorSpecified;
     ColorData colorData;
 
-    // A shape drawn around the text. Enclosure::unspecified draws no enclosure; Enclosure::none
-    // states explicitly that there is none.
+    // A shape drawn around the text. Enclosure::unspecified does not draw an enclosure;
+    // Enclosure::none states explicitly that there is no enclosure.
     Enclosure enclosure;
 
     // The `justify` attribute of `<words>`: how the text lines up within itself when it spans

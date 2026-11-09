@@ -17,11 +17,11 @@ namespace mx
 {
 namespace api
 {
-// The eyeglasses symbol, MusicXML's <eyeglasses> element: a cue common in commercial music
-// telling the player to watch the conductor (or another player) closely at this spot.
-// positionData captures default/relative x-y plus the horizontal and vertical alignment; its
-// placement member is unused here because <eyeglasses> has no placement attribute (placement
-// lives on the parent <direction>).
+// The eyeglasses symbol, MusicXML's <eyeglasses> element: a cue common in commercial music telling
+// the player to watch the conductor (or another player) closely at this spot. positionData captures
+// default/relative x-y plus the horizontal and vertical alignment; its placement member is unused
+// here because <eyeglasses> does not have a placement attribute (placement lives on the parent
+// <direction>).
 class EyeglassesData
 {
   public:

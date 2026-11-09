@@ -27,7 +27,7 @@ class ParseContext;
 /// symbols. As with root, it is divided into step and alter elements, similar to pitches. The
 /// arrangement attribute specifies where the bass is displayed relative to what precedes it.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Bass final
 {
   public:

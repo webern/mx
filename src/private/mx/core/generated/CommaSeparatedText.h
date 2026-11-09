@@ -14,7 +14,7 @@ namespace mx::core
 
 /// The comma-separated-text type is used to specify a comma-separated list of text elements, as is
 /// used by the font-family attribute.
-/// Structural representation (plan §2.2): a never-empty list of non-empty,
+/// Structural representation: a never-empty list of non-empty,
 /// comma-free items. Construction repairs deterministically (commas inside
 /// an item become spaces, blank items drop, an empty list becomes ["-"]).
 /// A value parsed from the wire keeps its exact spelling (the separator may

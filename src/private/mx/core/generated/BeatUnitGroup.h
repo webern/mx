@@ -23,7 +23,7 @@ class ParseContext;
 /// The beat-unit group combines elements used repeatedly in the metronome element to specify a note
 /// within a metronome mark.
 /// A shared content group: transparent on the wire, its
-/// fields serialize directly into the referencing element (plan §2.3).
+/// fields serialize directly into the referencing element.
 class BeatUnitGroup final
 {
   public:

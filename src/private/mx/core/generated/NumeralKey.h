@@ -26,7 +26,7 @@ class ParseContext;
 /// element. The numeral-mode element specifies the mode similar to the mode element, but with a
 /// restricted set of values
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class NumeralKey final
 {
   public:

@@ -23,7 +23,7 @@ class ParseContext;
 /// note. The first-beat and last-beat attributes of the parent bend element are relative to the
 /// original note position, not this offset value.
 /// The schema's complexContent extension: non-polymorphic public
-/// inheritance, no virtual anything (plan §2.3).
+/// inheritance, no virtual anything.
 class Release : public Empty
 {
   public:

@@ -26,9 +26,10 @@ enum class TimeSignatureSymbol
 };
 
 // One beats/beat-type pair. The strings are free-form by design: they may hold compound values
-// ("3+2"), decimals ("1 + 2.5"), or compound denominators ("8 + 16"). This is the shared leaf reused
-// by the simple TimeSignatureData and by the composite/interchangeable meters in the complex arena;
-// it carries no symbol, which is what lets it be shared across arenas whose symbol vocabularies differ.
+// ("3+2"), decimals ("1 + 2.5"), or compound denominators ("8 + 16"). This is the shared leaf
+// reused by the simple TimeSignatureData and by the composite/interchangeable meters in the complex
+// arena; it does not carry a symbol, which is what lets it be shared across arenas whose symbol
+// vocabularies differ.
 struct TimeFraction
 {
     // the top number of the time signature, e.g. "5" in "5/4" or "3+2" in "(3+2)/8"

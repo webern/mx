@@ -141,11 +141,11 @@ class NoteData
     // <grace>'s slash attribute. Only meaningful when isGrace is true.
     Bool graceSlash;
 
-    // A grace note has no written duration, so a player takes its time from a neighboring note or
-    // adds time of its own. The next three fields say how much. Leave them empty to let the player
-    // decide. They can be set alone or together, along with graceSlash, and like graceSlash they are
-    // ignored when isGrace is false. A steal time outside 0 to 100 is written as the nearer of 0 and
-    // 100, and a steal time that is not a number is not written.
+    // A grace note does not have a written duration, so a player takes its time from a neighboring
+    // note or adds time of its own. The next three fields say how much. Leave them empty to let the
+    // player decide. They can be set alone or together, along with graceSlash, and like graceSlash
+    // they are ignored when isGrace is false. A steal time outside 0 to 100 is written as the
+    // nearer of 0 and 100, and a steal time that is not a number is not written.
 
     // How much of the previous note's time this grace note takes, as a percentage from 0 to 100.
     // The previous note is cut short by that share and the grace note sounds in its place.
@@ -171,11 +171,11 @@ class NoteData
 
     // The <notehead> element's smufl attribute: the canonical SMuFL glyph name to draw for this
     // notehead, for example "noteheadSlashHorizontalEnds". It names a glyph directly, so a
-    // notation program can draw a notehead that MusicXML has no value for -- pair it with
+    // notation program can draw a notehead that MusicXML does not have a value for -- pair it with
     // Notehead::other -- or narrow one that MusicXML names only broadly, such as
     // Notehead::cluster. Note-name noteheads (the SMuFL ranges U+E150-U+E1AF and U+EEE0-U+EEFF)
     // are not written this way; MusicXML spells those out in <notehead-text>. An empty string
-    // names no glyph and is written the same as leaving this empty.
+    // does not name a glyph and is written the same as leaving this empty.
     std::optional<std::string> noteheadSmufl;
 
     // The <notehead> element's parentheses attribute: whether the notehead is drawn inside

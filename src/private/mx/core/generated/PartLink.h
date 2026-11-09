@@ -27,7 +27,7 @@ class ParseContext;
 /// contain parts data. In the case of a single compressed MusicXML file, the link href values are
 /// paths that are relative to the root folder of the zip file.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class PartLink final
 {
   public:

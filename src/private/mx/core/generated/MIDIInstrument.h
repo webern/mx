@@ -29,7 +29,7 @@ class ParseContext;
 /// a part of either the score-instrument element at the start of a part, or the sound element within
 /// a part. The id attribute refers to the score-instrument affected by the change.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class MIDIInstrument final
 {
   public:

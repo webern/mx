@@ -100,13 +100,13 @@ class Document final
     std::vector<RootNamespace> m_rootNamespaces;
 };
 
-/// The parse error boundary (plan §2.5): strict on names and structure,
+/// The parse error boundary: strict on names and structure,
 /// lenient on values; a root declaring a version newer than
 /// SupportedMusicXMLVersion is rejected with unsupportedVersion.
 Result<Document> parse(const mx::xml::Document &doc, const ParseContext &context);
 
 // TODO: document the unique ID exception
-/// Total for every Document (§1.1 guarantees validity): writes the XML
+/// Total for every Document (a Document is valid by construction): writes the XML
 /// declaration, the matching DOCTYPE, the preserved root namespace
 /// declarations, and the typed tree.
 void serialize(const Document &d, mx::xml::Document &out);

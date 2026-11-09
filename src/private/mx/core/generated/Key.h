@@ -35,7 +35,7 @@ class ParseContext;
 /// applies to all staves in the part. Key signatures appear at the start of each system unless the
 /// print-object attribute has been set to "no".
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Key final
 {
   public:

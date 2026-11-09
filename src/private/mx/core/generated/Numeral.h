@@ -24,7 +24,7 @@ class ParseContext;
 /// The numeral type represents the Roman numeral or Nashville number part of a harmony. It requires
 /// that the key be specified in the encoding, either with a key or numeral-key element.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Numeral final
 {
   public:

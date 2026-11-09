@@ -17,8 +17,8 @@ namespace mx::core
 {
 
 /// A small expected-like result (C++20 has no std::expected). Errors appear
-/// in exactly two places — rejected parse and bounded-cardinality append
-/// (plan §1.2) — and both speak this type.
+/// in exactly two places — rejected parse and bounded-cardinality append —
+/// and both speak this type.
 template <typename T> class Result
 {
   public:

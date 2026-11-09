@@ -25,7 +25,7 @@ class ParseContext;
 /// Scordatura string tunings are represented by a series of accord elements, similar to the
 /// staff-tuning elements. Strings are numbered from high to low.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Scordatura final
 {
   public:

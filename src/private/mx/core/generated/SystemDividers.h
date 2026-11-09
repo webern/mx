@@ -27,7 +27,7 @@ class ParseContext;
 /// margin, respectively. When used in the print element, the system-dividers element affects the
 /// dividers that would appear between the current system and the previous system.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class SystemDividers final
 {
   public:

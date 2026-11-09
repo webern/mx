@@ -55,7 +55,8 @@ GEN_PY            := $(shell find gen -name '*.py' ! -name quality.py | sort)
 GEN_QUALITY_FLOOR ?= 84.5
 GEN_LINT_FLOOR    ?= 9.29
 
-# deslag, a Rust CLI. No target uses it yet. The version is pinned once, in the
+# deslag, a Rust CLI that lints prose (deslag.toml picks the files). fmt-check
+# runs it. The version is pinned once, in the
 # Dockerfile. The mx-sdk image installs it and sets DESLAG to it. Natively,
 # `make deslag` installs it under build/ with a cargo home of its own, so it
 # does not use or change the deslag or the cargo home in your home directory.
@@ -178,9 +179,9 @@ help:
 	@echo ''
 	@echo '  Housekeeping:'
 	@echo '  make doctor         Report which targets this machine can run, with Docker or natively.'
-	@echo '  make deslag         Native only: install deslag $(DESLAG_VERSION) at $(DESLAG_HOME) (needs cargo). No target uses it yet.'
+	@echo '  make deslag         Native only: install deslag $(DESLAG_VERSION) at $(DESLAG_HOME) (needs cargo). fmt-check runs it.'
 	@echo '  make fmt            Format C++ under src/ with clang-format.'
-	@echo '  make fmt-check      clang-format gate (checks formatting; builds nothing).'
+	@echo '  make fmt-check      clang-format and deslag gate (checks formatting and prose; builds nothing).'
 	@echo '  make sdk            Build the mx-sdk Docker toolchain image.'
 	@echo '  make vendor-pugixml VERSION=x.y  Refresh src/private/mxpugi from a pugixml release (runs on the host).'
 	@echo '  make clean          Remove the build/ tree and gen build artifacts.'
@@ -538,6 +539,8 @@ fmt:
 
 fmt-check:
 	@$(FIND_CPP) | xargs -r $(CLANG_FORMAT) --dry-run --Werror
+	@test -x '$(DESLAG)' || { echo "No deslag at $(DESLAG). Run: make deslag"; exit 1; }
+	@'$(DESLAG)' check
 	@echo "fmt-check passed."
 
 gen: gen-cpp gen-go gen-c gen-schema

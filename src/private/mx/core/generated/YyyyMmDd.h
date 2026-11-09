@@ -12,7 +12,7 @@ namespace mx::core
 
 /// Calendar dates are represented yyyy-mm-dd format, following ISO 8601. This is a W3C XML Schema
 /// date type, but without the optional timezone data.
-/// Structural representation (plan §2.2): year/month/day integers clamped
+/// Structural representation: year/month/day integers clamped
 /// to valid calendar ranges (leap years honored), serialized YYYY-MM-DD. An
 /// impossible date cannot exist.
 class YyyyMmDd final

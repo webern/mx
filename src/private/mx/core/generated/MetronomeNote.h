@@ -25,7 +25,7 @@ class ParseContext;
 
 /// The metronome-note type defines the appearance of a note within a metric relationship mark.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class MetronomeNote final
 {
   public:

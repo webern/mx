@@ -305,7 +305,7 @@ TEST(SaveProcessingInstructions, ChordDataSaveTest)
     staff = &measure->staves.back();
     direction = &staff->directions.back();
     chord = &direction->chords.back();
-    // §11 adjudication #7: ChordData::miscData was stored via XML ProcessingInstructions
+    // ChordData::miscData was stored via XML ProcessingInstructions
     // in the old core; the new generated core is strictly typed from the MusicXML XSD and
     // does not support ProcessingInstructions. miscData does not survive serialization.
     REQUIRE(0 == chord->miscData.size());

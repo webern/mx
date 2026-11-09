@@ -29,7 +29,7 @@ class ParseContext;
 /// uncompressed MusicXML file. The optional number attribute refers to staff numbers, from top to
 /// bottom on the system. If absent, the child elements apply to all staves in the created part.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class ForPart final
 {
   public:

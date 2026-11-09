@@ -28,7 +28,7 @@ class ParseContext;
 /// standard distances between notation elements, plus an extension element for other aspects of
 /// appearance.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Appearance final
 {
   public:

@@ -25,7 +25,7 @@ class ParseContext;
 /// presence of a TAB or jianpu clefs is sufficient to indicate that numbers are used. The
 /// display-text and accidental-text elements allow display of fully formatted text and accidentals.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class NoteheadText final
 {
   public:

@@ -32,15 +32,15 @@ struct TremoloMarkData
     //
     // A one-note tremolo states its slash count in the MarkType itself
     // (MarkType::tremoloSingleOne through MarkType::tremoloSingleFive), and an unmeasured tremolo
-    // has no slash count, so neither uses this field.
+    // does not have a slash count, so neither uses this field.
     std::optional<int> tremoloMarks;
 
     // The canonical SMuFL glyph name to draw for an unmeasured tremolo (MarkType::tremoloUnmeasured),
     // from SMuFL's Tremolos range -- for example "pendereckiTremolo" or "unmeasuredTremolo". Leave
     // it absent to accept SMuFL's "buzzRoll", the glyph MusicXML assumes when no name is given.
     //
-    // MusicXML allows this on a one-note or two-note tremolo too, but defines no meaning for it
-    // there, and most applications ignore it.
+    // MusicXML allows this on a one-note or two-note tremolo too, but does not define a meaning
+    // for it there, and most applications ignore it.
     std::optional<std::string> smufl;
 };
 
@@ -343,7 +343,7 @@ class MarkDataChoice
 
     // Builds a compound dynamic, unless the value is a single standard symbol, in which case the
     // result is a Kind::dynamic choice (auto-collapse). A lone other-dynamics symbol does not
-    // collapse -- it has no dedicated MusicXML element, so it stays a compound of one.
+    // collapse -- it does not have a dedicated MusicXML element, so it stays a compound of one.
     MarkDataChoice(CompoundDynamicsData value);
 
     MarkDataChoice(OtherNotationMarkData value);

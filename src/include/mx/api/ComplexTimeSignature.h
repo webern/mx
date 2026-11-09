@@ -17,7 +17,7 @@ namespace mx
 namespace api
 {
 
-// The full MusicXML time-symbol vocabulary. Used for a complex meter's own symbol and for an
+// The full MusicXML time-symbol vocabulary. Used for a complex meter's symbol and for an
 // interchangeable pair's symbol. Unlike the narrow TimeSignatureSymbol (common/cut only), this
 // includes the unusual display modes that force a signature into the complex arena.
 enum class ComplexTimeSymbol
@@ -30,8 +30,8 @@ enum class ComplexTimeSymbol
     dottedNote    // the beat-type drawn as a dotted downstem note glyph
 };
 
-// The line drawn between beats and beat-type (MusicXML time-separator). 'unspecified' writes no
-// attribute (the spec default is "none").
+// The line drawn between beats and beat-type (MusicXML time-separator). 'unspecified' does not
+// write the attribute (the spec default is "none").
 enum class TimeSeparator
 {
     unspecified,
@@ -129,7 +129,7 @@ class ComplexTimeSignature
 
     // Construct a senza-misura time signature.
     //
-    // glyph is free text; MusicXML defines no valid/invalid values beyond xs:string (e.g. "X").
+    // glyph is free text; MusicXML does not limit its values beyond xs:string (e.g. "X").
     ComplexTimeSignature(std::string glyph);
 
     Kind kind() const;

@@ -21,7 +21,7 @@ class ParseContext;
 /// The heel and toe elements are used with organ pedals. The substitution value is "no" if the
 /// attribute is not present.
 /// The schema's complexContent extension: non-polymorphic public
-/// inheritance, no virtual anything (plan §2.3).
+/// inheritance, no virtual anything.
 class HeelToe : public EmptyPlacement
 {
   public:

@@ -14,8 +14,8 @@ namespace mx::core
 {
 
 /// A never-empty collection: the representation of a minOccurs >= 1
-/// repeated member, so "zero of a required repeat" is unrepresentable
-/// (plan §2.3). The natural zero is one default-constructed item;
+/// repeated member, so "zero of a required repeat" is unrepresentable.
+/// The natural zero is one default-constructed item;
 /// replacing the items with an empty list repairs back to that.
 template <typename T> class OneOrMore
 {

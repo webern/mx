@@ -41,7 +41,7 @@ namespace api
 // of one name, so Id cannot check it. An id you invent must not collide with one already in the
 // score.
 //
-// To write no id attribute at all, leave the std::optional that holds the Id empty.
+// To leave out the id attribute, leave the std::optional that holds the Id empty.
 //
 // Copy, assign, compare, sort, and hash an Id the way you would any other value. Two Ids are equal
 // when their text is equal, and std::hash is specialized for Id, so an Id works as a key in both

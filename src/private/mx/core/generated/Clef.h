@@ -42,7 +42,7 @@ class ParseContext;
 /// at the start of each system unless the print-object attribute has been set to "no" or the
 /// additional attribute has been set to "yes".
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Clef final
 {
   public:

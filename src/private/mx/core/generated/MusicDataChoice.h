@@ -35,7 +35,7 @@ class ParseContext;
 /// measure, depending on whether the partwise or timewise hierarchy is used.
 /// A repeated heterogeneous choice with large alternatives: each is boxed
 /// so a by-value variant does not size every slot at the largest
-/// alternative (plan §2.3). The API stays value-like; copies clone.
+/// alternative. The API stays value-like; copies clone.
 class MusicDataChoice final
 {
   public:

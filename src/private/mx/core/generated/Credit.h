@@ -40,7 +40,7 @@ class ParseContext;
 /// credit, so multiple elements may be used. Standard values include page number, title, subtitle,
 /// composer, arranger, lyricist, rights, and part name.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Credit final
 {
   public:

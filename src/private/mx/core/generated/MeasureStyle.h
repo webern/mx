@@ -35,7 +35,7 @@ class ParseContext;
 /// stopping the use of the style. The optional number attribute specifies the staff number from top
 /// to bottom on the system, as with clef.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class MeasureStyle final
 {
   public:

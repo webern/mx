@@ -40,7 +40,7 @@ class ParseContext;
 /// cases where the metronome element represents a relationship or range that is not displayed in the
 /// music notation.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Metronome final
 {
   public:

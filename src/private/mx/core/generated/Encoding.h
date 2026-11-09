@@ -24,7 +24,7 @@ class ParseContext;
 /// arrangement, but other types may be used. The type attribute is only needed when there are
 /// multiple encoder elements.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Encoding final
 {
   public:

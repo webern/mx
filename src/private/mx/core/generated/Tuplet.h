@@ -42,7 +42,7 @@ class ParseContext;
 /// show-type attribute is used to display either the actual type, both the actual and normal types,
 /// or neither. It is none by default.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Tuplet final
 {
   public:

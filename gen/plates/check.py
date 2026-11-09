@@ -182,7 +182,7 @@ def _check_members(plates: Plates, errors: list[str]) -> None:
 
 
 def _check_fields(plates: Plates, errors: list[str]) -> None:
-    """The grammar-preserving projection's identifier scopes (plan §2.9): a
+    """The grammar-preserving projection's identifier scopes: a
     structural target's class holds the attribute members AND the content
     fields, so the two lists must be mutually unique; a choice type's
     alternative accessors share one scope likewise."""

@@ -50,8 +50,8 @@ enum class StandardDynamic
 // The letters of the symbol, e.g. "ff" -- also the name of the MusicXML element that carries it.
 std::string toString(StandardDynamic value);
 
-// A component of a dynamic mark that has no dedicated MusicXML dynamic element. text is the
-// visible fallback; smufl, when present, names the exact glyph to draw.
+// A component of a dynamic mark that does not have a dedicated MusicXML dynamic element. text is
+// the visible fallback; smufl, when present, names the exact glyph to draw.
 struct OtherDynamicsData
 {
     std::string text;
@@ -97,8 +97,8 @@ class DynamicsComponent
 
 MXAPI_NOT_EQUALS_AND_VECTORS(DynamicsComponent);
 
-// The component's letters: the symbol for a standard component, the fallback text for one that has
-// no dedicated MusicXML element.
+// The component's letters: the symbol for a standard component, the fallback text for one that does
+// not have a dedicated MusicXML element.
 std::string toString(const DynamicsComponent &value);
 
 // A dynamic mark assembled from multiple symbols in order, such as ff followed by z for ffz.

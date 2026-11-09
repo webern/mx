@@ -17,7 +17,7 @@ namespace mx
 {
 namespace api
 {
-// A direction that has no dedicated MusicXML element, carried by the <other-direction>
+// A direction that does not have a dedicated MusicXML element, carried by the <other-direction>
 // catch-all. The text is the direction's content; when the direction is best shown as a
 // standard SMuFL glyph, smufl names that glyph (a canonical SMuFL glyph name) and the text
 // serves as a fallback description. Set printObject to no for a direction that affects

@@ -30,7 +30,7 @@ class ParseContext;
 /// of analyses. Future versions of the MusicXML format may add elements that can represent more
 /// standardized categories of analysis data, allowing for easier data sharing.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Grouping final
 {
   public:

@@ -27,7 +27,7 @@ enum class Severity
 enum class DiagnosticCode
 {
     valueAdjusted,         // a value was changed to one that MusicXML can represent
-    unmatchedSpanner,      // a spanner endpoint had no matching endpoint
+    unmatchedSpanner,      // a spanner endpoint did not have a matching endpoint
     invalidValue,          // a value could not be read, so a default was used
     missingValueDefaulted, // a required value was missing, so a default was used
     droppedData,           // data could not be read or written, so it was left out

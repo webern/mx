@@ -34,7 +34,7 @@ class ParseContext;
 /// element only apply to the current page, system, or staff. Music that follows continues to take
 /// the default values from the layout determined by the defaults element.
 /// Content fields mirror the schema grammar in declaration order; the
-/// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
+/// serializer walks them, so a wrong order is unrepresentable.
 class Print final
 {
   public:

@@ -12,7 +12,7 @@ namespace mx::core
 
 /// The smufl-coda-glyph-name type is used to reference a specific Standard Music Font Layout (SMuFL)
 /// coda character. The value is a SMuFL canonical glyph name that starts with coda.
-/// Structural representation (plan §2.2): the glyph-name prefix is
+/// Structural representation: the glyph-name prefix is
 /// structural and emitted by the serializer; only the suffix is stored.
 /// Construction repairs the suffix to name characters, so a
 /// pattern-invalid name cannot exist.

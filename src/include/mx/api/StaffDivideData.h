@@ -25,11 +25,11 @@ enum class StaffDivideType
     upDown
 };
 
-// A staff-divide arrow, MusicXML's <staff-divide> element (MusicXML 3.1): the arrow symbol used
-// in condensed conductor scores where one staff carries two players, showing whether the music
+// A staff-divide arrow, MusicXML's <staff-divide> element (MusicXML 3.1): the arrow symbol used in
+// condensed conductor scores where one staff carries two players, showing whether the music
 // continues on the staff below (down), above (up), or both (up-down). positionData captures
-// default/relative x-y plus the horizontal and vertical alignment; its placement member is
-// unused here because <staff-divide> has no placement attribute (placement lives on the parent
+// default/relative x-y plus the horizontal and vertical alignment; its placement member is unused
+// here because <staff-divide> does not have a placement attribute (placement lives on the parent
 // <direction>).
 class StaffDivideData
 {
