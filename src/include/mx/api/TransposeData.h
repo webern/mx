@@ -34,6 +34,7 @@ namespace api
 /// to be B, and B is one letter lower than C.
 ///
 /// Here is a table of some common transpositions and their TransposeData equivalents.
+/// |---------------------|--------------------|----------|---------|
 /// | Name                | Interval           | Chromatic| Diatonic|
 /// |---------------------|--------------------|----------|---------|
 /// | Glockenspiel        | Up two Octaves     | 24       | 14      |
@@ -42,6 +43,7 @@ namespace api
 /// | French Horn in F    | Down a Fifth       | -7       | -4      |
 /// | Alto Saxophone in Eb| Down a Major Sixth | -9       | -5      |
 /// | Bass Clarinet in Bb | Down a Major Ninth | -14      | -8      |
+/// |---------------------|--------------------|----------|---------|
 ///
 /// Note that MusicXML encodes this slightly differently. In MusicXML required (but not
 /// enforced) that chromatic should be >= -11 and <= 11, and that diatonic should be

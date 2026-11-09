@@ -350,8 +350,8 @@ class MarkDataChoice
 
     MarkDataChoice(HarmonicMarkData value);
 
-    // Builds an ornament payload, unless it has no accidentals, in which case the result is none:
-    // an ornament without accidentals needs no payload.
+    // Builds an ornament payload, unless it does not have accidentals, in which case the result is
+    // none: an ornament without accidentals does not need a payload.
     MarkDataChoice(OrnamentMarkData value);
 
     // Builds an accidental mark payload, unless every field is left at its default, in which case

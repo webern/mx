@@ -89,7 +89,8 @@ enum class SystemRelation
 
 // The shape drawn around a piece of text or a symbol -- MusicXML's enclosure attribute, carried by
 // RehearsalData, WordsData, SymbolData, PercussionData and PageTextData. unspecified means the
-// attribute is absent, so no enclosure is drawn; none states explicitly that there is no enclosure.
+// attribute is absent, which implicitly means there is no enclosure; none states explicitly that
+// there is no enclosure.
 // A bracket is a rectangle with the bottom line missing, as is common in jazz notation, and an
 // invertedBracket is one with the top line missing.
 enum class Enclosure

@@ -38,8 +38,8 @@ spaces = true
 "deliberately not" = "say what it does; what it does not do rarely needs saying"
 "not silently" = "say what it does instead, such as the error it reports"
 "never silently" = "say what it does instead, such as the error it reports"
-load-bearing = "say what depends on it"
-"lands on" = 'say what happens, such as "is merged into" or "reaches"'
+load-bearing = 'say it in plain English, such as "important", "fundamental" or "structural"'
+"lands on" = 'say what happens, such as "is included in" or "is released by"'
 "it lands" = 'say what happens, such as "it is merged" or "it ships"'
 byte-identical = 'say "identical", or name the check that shows it'
 
@@ -103,8 +103,8 @@ spaces = true
 "deliberately not" = "say what it does; what it does not do rarely needs saying"
 "not silently" = "say what it does instead, such as the error it reports"
 "never silently" = "say what it does instead, such as the error it reports"
-load-bearing = "say what depends on it"
-"lands on" = 'say what happens, such as "is merged into" or "reaches"'
+load-bearing = 'say it in plain English, such as "important", "fundamental" or "structural"'
+"lands on" = 'say what happens, such as "is included in" or "is released by"'
 "it lands" = 'say what happens, such as "it is merged" or "it ships"'
 byte-identical = 'say "identical", or name the check that shows it'
 
@@ -120,3 +120,9 @@ max_paragraph_chars = 700
 
 [cpp.lints.possessive_own]
 
+
+# The table of common transpositions reads best as one block, which is longer than a paragraph may
+# be.
+[[cpp.overrides]]
+globs = ["/src/include/mx/api/TransposeData.h"]
+lints.density.max_paragraph_chars = 850
