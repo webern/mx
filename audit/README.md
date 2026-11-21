@@ -17,10 +17,6 @@ A *feature* is an element plus the set of attribute names that appear on it.
    `data/synthetic/` files (which are built to cover the spec symbol by symbol,
    so they approximate "what is in the specification").
 
-The same `<feature-audit>` document shape is what the `mx-api-feature-audit` skill
-emits for `mx::api` (as `data/api.features.xml`), so the three views -- spec
-(synthetic), corpus (wild), and api -- are directly comparable.
-
 ## Usage
 
 ```
@@ -56,8 +52,8 @@ from an alignment walk over the surviving structure. Each difference becomes a
 signatures. It writes `build/api/classified.json` and prints a worklist ranking
 each signature by how many candidate files it is the sole blocker of.
 
-Classification is purely **measured**: it does not consult `data/api.features.xml`
-or any record of what `mx::api` was believed to "support" -- whether a drop is
+Classification is purely **measured**: it does not consult any record of what
+`mx::api` was believed to "support" -- whether a drop is
 intended is a present-day human call (#214), not something the classifier
 asserts. `--data` is accepted for compatibility but unused. The two steps are
 kept separate: dumping is slow (runs the C++ pipeline over the whole corpus),

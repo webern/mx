@@ -15,8 +15,7 @@ corpus uses, to compare against `mx::api` support:
 
 Both are checked in and both have a `.xml` extension but are NOT MusicXML scores, so every
 corpus-walking test suite skips them (the `corert` C++/Go/C round-trip discoverers and the api
-corpus walker; see `audit/README.md`). The `mx-api-feature-audit` skill consumes them and writes
-its own `api.features.xml` (also skipped).
+corpus walker; see `audit/README.md`).
 
 ## `.invalid` marker convention
 

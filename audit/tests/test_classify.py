@@ -4,7 +4,7 @@ Builds synthetic dump directories that mirror the #210 dump format and asserts
 the measured-divergence model: the signature set per file, the distance metric
 (unique signatures; a tag dropped many times still counts once), the reorder
 exclusion from candidates, and the sole-blocker worklist ranking. The classifier
-consults no support index -- nothing here writes ``api.features.xml``.
+consults no support index.
 
 Run with: python3 -m unittest audit.tests.test_classify
 """
