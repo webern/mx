@@ -168,6 +168,10 @@ void DirectionReader::parseOffset()
             const auto rawVal = myDirection->offset()->value().value().value();
             myOutDirectionData.offset = static_cast<int>(std::ceil(rawVal - 0.5));
             reportRounded("offset", rawVal, *myOutDirectionData.offset);
+            if (myDirection->offset()->sound().has_value())
+            {
+                myOutDirectionData.offsetSound = myConverter.convert(*myDirection->offset()->sound());
+            }
         }
     }
     else if (myHarmony)
@@ -177,6 +181,10 @@ void DirectionReader::parseOffset()
             const auto rawVal = myHarmony->offset()->value().value().value();
             myOutDirectionData.offset = static_cast<int>(std::ceil(rawVal - 0.5));
             reportRounded("offset", rawVal, *myOutDirectionData.offset);
+            if (myHarmony->offset()->sound().has_value())
+            {
+                myOutDirectionData.offsetSound = myConverter.convert(*myHarmony->offset()->sound());
+            }
         }
     }
 }

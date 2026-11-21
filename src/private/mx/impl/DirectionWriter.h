@@ -33,7 +33,7 @@ class DirectionWriter
 
   private:
     void addDirectionType(core::DirectionType directionType, core::Direction &ioDirection);
-    std::vector<core::MusicDataChoice> createHarmonyElements(int inOffset);
+    std::vector<core::MusicDataChoice> createHarmonyElements(int inOffset, std::optional<core::YesNo> inOffsetSound);
     std::vector<core::MusicDataChoice> createFiguredBassElements();
     void addMusicDataChoices(const std::vector<core::MusicDataChoice> &inMdcs,
                              std::vector<core::MusicDataChoice> &ioOutputSet);

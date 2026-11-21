@@ -723,4 +723,65 @@ TEST(MiddleBarlineBeforeOffsetDirectionKeepsTick, DirectionData)
 
 T_END;
 
+// An offset that sounds moves the direction in time, one that does not only moves where it is drawn.
+// Both are written with their sound attribute and read back the same, as is one that says neither.
+TEST(OffsetSoundRoundTrips, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    for (int tick = 0; tick < 40; tick += 10)
+    {
+        staff.voices[0].notes.push_back(directionDataTestNote(tick, 10, DurationName::quarter));
+    }
+    staff.directions.push_back(directionDataTestOffsetForte(0, 10));
+    staff.directions.back().offsetSound = Bool::yes;
+    staff.directions.push_back(directionDataTestOffsetForte(10, 10));
+    staff.directions.back().offsetSound = Bool::no;
+    staff.directions.push_back(directionDataTestOffsetForte(20, 10));
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<offset sound=\"yes\">10</offset>") != std::string::npos);
+    CHECK(xml.find("<offset sound=\"no\">10</offset>") != std::string::npos);
+    CHECK(xml.find("<offset>10</offset>") != std::string::npos);
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 3);
+    CHECK(rdirections.at(0).offsetSound == Bool::yes);
+    CHECK(rdirections.at(1).offsetSound == Bool::no);
+    CHECK(rdirections.at(2).offsetSound == Bool::unspecified);
+    CHECK(rscore.parts.front().measures == score.parts.front().measures);
+}
+
+T_END;
+
+// A chord symbol's offset keeps its sound attribute too.
+TEST(HarmonyOffsetSoundReads, DirectionData)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <harmony><root><root-step>C</root-step></root><kind>major</kind><offset sound="yes">1</offset></harmony>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    const auto score = mxtest::fromXml(xml);
+    const auto &directions = score.parts.front().measures.front().staves.front().directions;
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().offset.has_value());
+    CHECK(directions.front().offsetSound == Bool::yes);
+    CHECK(mxtest::toXml(score).find("<offset sound=\"yes\">") != std::string::npos);
+}
+
+T_END;
+
 #endif

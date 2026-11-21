@@ -186,19 +186,23 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     }
 
     int offset = 0;
+    std::optional<core::YesNo> offsetSound{};
 
     if (myDirectionData.offset.has_value())
     {
-        // The source carried an explicit <offset>: a drawn-position nudge measured from the
-        // direction's anchor (tickTimePosition). Re-emit it verbatim, with no sound attribute -- an
-        // <offset> moves only where the direction is drawn, so playback stays at the anchor.
-        // MeasureWriter moves the cursor to the anchor before this whenever it can do so without
-        // splitting a voice.
+        // An explicit <offset>, measured from the direction's anchor (tickTimePosition), with the
+        // sound attribute offsetSound asks for. MeasureWriter moves the cursor to the anchor
+        // before this whenever it can do so without splitting a voice.
         offset = *myDirectionData.offset;
+        if (myDirectionData.offsetSound != api::Bool::unspecified)
+        {
+            offsetSound = myConverter.convert(myDirectionData.offsetSound);
+        }
         if (offset != 0)
         {
             core::Offset coreOffset{};
             coreOffset.setValue(core::Divisions{core::Decimal{static_cast<double>(offset)}});
+            coreOffset.setSound(offsetSound);
             direction.setOffset(coreOffset);
         }
     }
@@ -258,7 +262,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         output.push_back(core::MusicDataChoice::sound(std::move(sound)));
     }
 
-    auto harmonyMdcs = createHarmonyElements(offset);
+    auto harmonyMdcs = createHarmonyElements(offset, offsetSound);
     addMusicDataChoices(harmonyMdcs, output);
 
     auto figuredBassMdcs = createFiguredBassElements();
@@ -1424,7 +1428,8 @@ void DirectionWriter::addDirectionType(core::DirectionType directionType, core::
     }
 }
 
-std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int inOffset)
+std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int inOffset,
+                                                                          std::optional<core::YesNo> inOffsetSound)
 {
     if (myDirectionData.chords.empty())
     {
@@ -1438,6 +1443,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
     {
         core::Offset coreOffset{};
         coreOffset.setValue(core::Divisions{core::Decimal{static_cast<double>(inOffset)}});
+        coreOffset.setSound(inOffsetSound);
         harmony.setOffset(coreOffset);
     }
 
