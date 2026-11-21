@@ -210,11 +210,13 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     {
         // No modeled offset, but the direction is anchored off the cursor tick: synthesize an
         // <offset> so the serialized location matches tickTimePosition, and carry playback with it
-        // (sound="yes") since here the offset stands in for the note-stream position itself.
+        // (sound="yes") since here the offset stands in for the note-stream position itself. A
+        // <harmony> written with this direction gets the same offset, so it carries sound="yes" too.
         offset = myDirectionData.tickTimePosition - myCursor.tickTimePosition;
+        offsetSound = core::YesNo::yes();
         core::Offset coreOffset{};
         coreOffset.setValue(core::Divisions{core::Decimal{static_cast<double>(offset)}});
-        coreOffset.setSound(core::YesNo::yes());
+        coreOffset.setSound(offsetSound);
         direction.setOffset(coreOffset);
     }
 

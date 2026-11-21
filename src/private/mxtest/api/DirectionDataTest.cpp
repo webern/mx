@@ -784,4 +784,37 @@ TEST(HarmonyOffsetSoundReads, DirectionData)
 
 T_END;
 
+// A chord symbol in the middle of a note, which the writer cannot back up to, is written with an
+// offset it makes up. That offset stands in for the chord symbol's time, so it sounds and the chord
+// symbol reads back at the same tick.
+TEST(MidNoteHarmonyOffsetSounds, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    staff.voices[0].notes.push_back(directionDataTestNote(0, 40, DurationName::whole));
+    DirectionData direction{};
+    direction.tickTimePosition = 20;
+    auto &chord = direction.chords.emplace_back();
+    chord.root = Step::g;
+    chord.chordKind = ChordKind::major;
+    staff.directions.push_back(direction);
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<offset>") == std::string::npos);
+    CHECK(xml.find("<offset sound=\"yes\">") != std::string::npos);
+
+    const auto rscore = mxtest::roundTrip(score);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 1);
+    REQUIRE(rdirections.front().offset.has_value());
+    CHECK(rdirections.front().offsetSound == Bool::yes);
+    CHECK_EQUAL(20, rdirections.front().tickTimePosition + *rdirections.front().offset);
+    CHECK_EQUAL(1, rdirections.front().chords.size());
+}
+
+T_END;
+
 #endif
