@@ -164,6 +164,10 @@ api::NoteData NoteFunctions::parseNote() const
     parseNotations();
     myOutNoteData.positionData = impl::getPositionData(myNote);
     myOutNoteData.printData = impl::getPrintData(myNote);
+    if (myNote.printLeger().has_value())
+    {
+        myOutNoteData.printLeger = converter.convert(*myNote.printLeger());
+    }
 
     if (reader.getIsStemSpecified())
     {

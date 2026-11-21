@@ -15,7 +15,8 @@ NoteData::NoteData()
       notehead{Notehead::normal}, noteheadFilled{Bool::unspecified}, noteheadSmufl{},
       noteheadParentheses{Bool::unspecified}, noteheadColor{}, pitchData{}, velocityStart{}, velocityStop{},
       userRequestedVoiceNumber{VALUE_UNSPECIFIED}, writeStaffNumber{Bool::unspecified}, stem{Stem::unspecified},
-      tickTimePosition{0}, durationData{}, beams{}, positionData{}, printData{}, noteAttachmentData{}, lyrics{}
+      tickTimePosition{0}, durationData{}, beams{}, positionData{}, printData{}, printLeger{Bool::unspecified},
+      noteAttachmentData{}, lyrics{}
 {
 }
 } // namespace api
