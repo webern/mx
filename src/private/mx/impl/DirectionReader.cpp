@@ -1309,6 +1309,16 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         chord.bass = myConverter.convert(bass.bassStep().value());
         chord.bassText = bass.bassStep().text();
 
+        if (bass.bassSeparator().has_value())
+        {
+            chord.bassSeparator = bass.bassSeparator()->value();
+        }
+
+        if (bass.arrangement().has_value())
+        {
+            chord.bassArrangement = myConverter.convert(*bass.arrangement());
+        }
+
         if (bass.bassAlter().has_value())
         {
             const double rawAlter = bass.bassAlter()->value().value().value();
