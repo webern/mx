@@ -161,8 +161,9 @@ NoteReader::NoteReader(const core::Note &mxNote)
       myTimeModificationNormalTypeDots(0), myIsTimeModificationNormalTypeSpecified(false), myHasAccidental(false),
       myAccidental(core::AccidentalValue::natural()), myIsAccidentalParenthetical(false),
       myIsAccidentalCautionary{false}, myIsAccidentalEditorial{false}, myIsAccidentalBracketed{false},
-      myIsStemSpecified{false}, myStem{}, myIsGraceSlashSpecified{false}, myGraceSlash{}, myGraceStealTimePrevious{},
-      myGraceStealTimeFollowing{}, myGraceMakeTime{}, myIsTieStart{false}, myIsTieStop{false}, myHasLyric{false}
+      myAccidentalSmufl{}, myIsStemSpecified{false}, myStem{}, myIsGraceSlashSpecified{false}, myGraceSlash{},
+      myGraceStealTimePrevious{}, myGraceStealTimeFollowing{}, myGraceMakeTime{}, myIsTieStart{false},
+      myIsTieStop{false}, myHasLyric{false}
 {
     setNormalGraceCueItems();
     setRestPitchUnpitchedItems();
@@ -481,6 +482,11 @@ void NoteReader::setAccidental()
         if (accidental.bracket().has_value() && *accidental.bracket() == core::YesNo::yes())
         {
             myIsAccidentalBracketed = true;
+        }
+
+        if (accidental.smufl().has_value())
+        {
+            myAccidentalSmufl = accidental.smufl()->toString();
         }
     }
 }

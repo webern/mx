@@ -29,6 +29,7 @@
 #include "mx/core/generated/Pitch.h"
 #include "mx/core/generated/PositiveInteger.h"
 #include "mx/core/generated/Rest.h"
+#include "mx/core/generated/SmuflAccidentalGlyphName.h"
 #include "mx/core/generated/SmuflGlyphName.h"
 #include "mx/core/generated/SmuflLyricsGlyphName.h"
 #include "mx/core/generated/Syllabic.h"
@@ -171,6 +172,23 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
         if (myNoteData.pitchData.isAccidentalBracketed)
         {
             accidental.setBracket(core::YesNo::yes());
+        }
+        // An empty glyph name names no glyph, so it is treated the same as no smufl at all.
+        if (myNoteData.accidentalSmufl.has_value() && !myNoteData.accidentalSmufl->empty())
+        {
+            // The strict parse: the lenient one would repair a wrong name into some other glyph.
+            core::SmuflAccidentalGlyphName glyph;
+            if (core::SmuflAccidentalGlyphName::tryParse(*myNoteData.accidentalSmufl, glyph))
+            {
+                accidental.setSmufl(glyph);
+            }
+            else
+            {
+                myScoreWriter.getDiagnostics().report(api::Severity::error, api::DiagnosticCode::droppedData,
+                                                      cursorLocation(myCursor),
+                                                      "accidental smufl \"" + *myNoteData.accidentalSmufl +
+                                                          "\" is not a SMuFL accidental glyph name and is not written");
+            }
         }
         myOutNote.setAccidental(std::move(accidental));
     }

@@ -896,4 +896,48 @@ TEST(KeyDataEquality_change_printObject, KeyData)
     CHECK(!(key1 == key2));
 }
 
+// A key signature's accidentals do not take other. One set to other is not written and the write
+// says so; one read from a file is read as none.
+TEST(NonTraditionalOtherAccidental, KeyData)
+{
+    KeyData key;
+    key.staffIndex = -1;
+    key.nonTraditional.push_back(KeyComponent{Step::c, 1, 0.0, Accidental::other});
+    key.nonTraditional.push_back(KeyComponent{Step::d, 0, -50.0, Accidental::quarterFlat});
+    const auto score = putKeyInScore(key);
+
+    Diagnostics diagnostics;
+    const auto document = fromScore(score, diagnostics);
+    REQUIRE(document.ok());
+    std::ostringstream xml;
+    REQUIRE(document.value().writeToStream(xml).ok());
+    CHECK(xml.str().find("<key-accidental>quarter-flat</key-accidental>") != std::string::npos);
+    CHECK(xml.str().find("other") == std::string::npos);
+    int droppedCount = 0;
+    for (const auto &diagnostic : diagnostics.all())
+    {
+        if (diagnostic.message == "a key-accidental of other is not supported and is not written")
+        {
+            CHECK(Severity::error == diagnostic.severity);
+            CHECK(DiagnosticCode::droppedData == diagnostic.code);
+            ++droppedCount;
+        }
+    }
+    CHECK_EQUAL(1, droppedCount);
+
+    std::string withOther = xml.str();
+    const std::string keyStep = "<key-step>C</key-step>";
+    const auto keyStepPos = withOther.find(keyStep);
+    REQUIRE(keyStepPos != std::string::npos);
+    const auto keyAlterEnd = withOther.find("</key-alter>", keyStepPos);
+    REQUIRE(keyAlterEnd != std::string::npos);
+    withOther.insert(keyAlterEnd + std::string{"</key-alter>"}.size(),
+                     R"(<key-accidental smufl="accidentalSharpOneArrowUp">other</key-accidental>)");
+    const auto readKeys = mxtest::fromXml(withOther).parts.at(0).measures.at(0).keys;
+    REQUIRE(1 == readKeys.size());
+    REQUIRE(2 == readKeys.at(0).nonTraditional.size());
+    CHECK(Accidental::none == readKeys.at(0).nonTraditional.at(0).accidental);
+    CHECK(Accidental::quarterFlat == readKeys.at(0).nonTraditional.at(1).accidental);
+}
+
 #endif

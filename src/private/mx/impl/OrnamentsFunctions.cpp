@@ -140,7 +140,7 @@ api::OrnamentMarkData OrnamentsFunctions::parseOwnedAccidentals(const core::Orna
     {
         AccidentalMarkFunctions funcs{am, myCursor};
         auto accidental = funcs.parseOrnamentAccidental();
-        if (accidental.accidental == api::Accidental::none)
+        if (accidental.accidental == api::Accidental::none || accidental.accidental == api::Accidental::other)
         {
             auto location = measureLocation(myCursor);
             location.staffIndex = myCursor.staffIndex;

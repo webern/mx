@@ -2372,8 +2372,8 @@ TEST(accidentalMarkAfterOtherOrnamentOrWavyLineIsStandalone, NoteData)
 
 T_END;
 
-// The api has no accidental for MusicXML's "other" value, so an ornament's "other" accidental is
-// left out, the read says so, and the ornament's other accidentals are kept.
+// An ornament's accidentals do not take MusicXML's "other" value, so an ornament's "other"
+// accidental is left out, the read says so, and the ornament's other accidentals are kept.
 TEST(otherAccidentalOnAnOrnamentIsDropped, NoteData)
 {
     const auto xml = noteDataTestOneNoteXml(R"(          <ornaments>
@@ -2559,6 +2559,160 @@ TEST(printLegerUnspecifiedWritesNothing, NoteData)
     REQUIRE(outNotes.size() == 2);
     CHECK(outNotes.at(0).printLeger == Bool::unspecified);
     CHECK(outNotes.at(1).printLeger == Bool::unspecified);
+}
+
+T_END;
+
+// An accidental that MusicXML does not have a value for is written as other with its SMuFL glyph
+// name, and both are read back.
+TEST(accidentalOtherWithSmuflRoundTrips, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    note.pitchData.alter = -1;
+    note.pitchData.accidental = Accidental::other;
+    note.accidentalSmufl = "accidentalFlatThreeArrowsUp";
+
+    const std::string xml = mxtest::toXml(score);
+    CHECK(xml.find(R"(<accidental smufl="accidentalFlatThreeArrowsUp">other</accidental>)") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outNote = firstNoteheadNote(outScore);
+    CHECK(Accidental::other == outNote.pitchData.accidental);
+    REQUIRE(outNote.accidentalSmufl.has_value());
+    CHECK_EQUAL("accidentalFlatThreeArrowsUp", *outNote.accidentalSmufl);
+    CHECK(outScore.parts.front().measures == score.parts.front().measures);
+}
+
+T_END;
+
+// The glyph name is read for other and for an accidental that MusicXML names, and stays empty
+// when the file does not give one.
+TEST(accidentalSmuflReadsFromXml, NoteData)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note><pitch><step>B</step><alter>-1</alter><octave>4</octave></pitch><duration>1</duration><type>quarter</type><accidental smufl="accidentalFlatThreeArrowsUp">other</accidental></note>
+      <note><pitch><step>C</step><alter>1</alter><octave>5</octave></pitch><duration>1</duration><type>quarter</type><accidental smufl="accidentalSharpOneArrowUp">sharp</accidental></note>
+      <note><pitch><step>D</step><alter>-1</alter><octave>5</octave></pitch><duration>2</duration><type>half</type><accidental>flat</accidental></note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    const auto score = mxtest::fromXml(xml);
+    const auto &notes = score.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes;
+    REQUIRE(notes.size() == 3);
+    CHECK(Accidental::other == notes.at(0).pitchData.accidental);
+    REQUIRE(notes.at(0).accidentalSmufl.has_value());
+    CHECK_EQUAL("accidentalFlatThreeArrowsUp", *notes.at(0).accidentalSmufl);
+    CHECK(Accidental::sharp == notes.at(1).pitchData.accidental);
+    REQUIRE(notes.at(1).accidentalSmufl.has_value());
+    CHECK_EQUAL("accidentalSharpOneArrowUp", *notes.at(1).accidentalSmufl);
+    CHECK(Accidental::flat == notes.at(2).pitchData.accidental);
+    CHECK(!notes.at(2).accidentalSmufl.has_value());
+}
+
+T_END;
+
+// other without a glyph name is still written and read back, as Notehead::other is.
+TEST(accidentalOtherWithoutSmuflIsWritten, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    note.pitchData.accidental = Accidental::other;
+
+    const std::string xml = mxtest::toXml(score);
+    CHECK(xml.find("<accidental>other</accidental>") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outNote = firstNoteheadNote(outScore);
+    CHECK(Accidental::other == outNote.pitchData.accidental);
+    CHECK(!outNote.accidentalSmufl.has_value());
+}
+
+T_END;
+
+// An absent or empty glyph name does not write a smufl attribute, and a glyph name on a note
+// without an accidental does not write an accidental.
+TEST(accidentalSmuflAbsentOrEmptyWritesNothing, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    note.pitchData.accidental = Accidental::sharp;
+    std::string xml = mxtest::toXml(score);
+    CHECK(xml.find("<accidental>sharp</accidental>") != std::string::npos);
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK(!firstNoteheadNote(outScore).accidentalSmufl.has_value());
+
+    note.accidentalSmufl = "";
+    xml = mxtest::toXml(score);
+    CHECK(xml.find("<accidental>sharp</accidental>") != std::string::npos);
+
+    note.pitchData.accidental = Accidental::none;
+    note.accidentalSmufl = "accidentalSharp";
+    xml = mxtest::toXml(score);
+    CHECK(xml.find("<accidental") == std::string::npos);
+}
+
+T_END;
+
+// A name that is not a SMuFL accidental glyph is not written, and the write reports it. The
+// accidental itself is still written.
+TEST(accidentalSmuflNotAnAccidental, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    note.pitchData.accidental = Accidental::other;
+    note.accidentalSmufl = "noteheadBlack";
+
+    Diagnostics diagnostics;
+    const auto document = fromScore(score, diagnostics);
+    REQUIRE(document.ok());
+    std::ostringstream xml;
+    REQUIRE(document.value().writeToStream(xml).ok());
+    CHECK(xml.str().find("<accidental>other</accidental>") != std::string::npos);
+
+    const auto dropped = noteDataTestDiagnosticsWithMessage(
+        diagnostics, "accidental smufl \"noteheadBlack\" is not a SMuFL accidental glyph name and is not written");
+    REQUIRE(1 == dropped.size());
+    CHECK(Severity::error == dropped.front().severity);
+    CHECK(DiagnosticCode::droppedData == dropped.front().code);
+}
+
+T_END;
+
+// An ornament's accidentals do not take other, so one set to other is not written and the write
+// says so. The ornament's other accidentals are written.
+TEST(otherAccidentalOnAnOrnamentIsNotWritten, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    OrnamentAccidental other;
+    other.accidental = Accidental::other;
+    OrnamentAccidental flat;
+    flat.accidental = Accidental::flat;
+    MarkData turn{Placement::unspecified, MarkType::turn};
+    turn.choice = OrnamentMarkData{{other, flat}};
+    note.noteAttachmentData.marks.push_back(turn);
+
+    Diagnostics diagnostics;
+    const auto document = fromScore(score, diagnostics);
+    REQUIRE(document.ok());
+    std::ostringstream xml;
+    REQUIRE(document.value().writeToStream(xml).ok());
+    CHECK(xml.str().find("<accidental-mark>flat</accidental-mark>") != std::string::npos);
+    CHECK(xml.str().find("other") == std::string::npos);
+
+    const auto dropped = noteDataTestDiagnosticsWithMessage(
+        diagnostics, "an ornament accidental of other is not supported and is not written");
+    REQUIRE(1 == dropped.size());
+    CHECK(Severity::error == dropped.front().severity);
+    CHECK(DiagnosticCode::droppedData == dropped.front().code);
 }
 
 T_END;
