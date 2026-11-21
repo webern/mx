@@ -49,7 +49,7 @@ struct BeatsPerMinute
 
     // The font of the number to the right of the equals sign. It overrides TempoData::fontData for
     // the number alone, so the note picture can be drawn in a music font while the number is set
-    // in a text font. Leave it at its defaults to draw the number in the mark's own font.
+    // in a text font. Leave it at its defaults to draw the number in TempoData::fontData.
     // underline, overline and lineThrough are not used.
     FontData fontData;
 
