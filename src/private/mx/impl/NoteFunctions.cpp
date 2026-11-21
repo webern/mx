@@ -80,6 +80,7 @@ api::NoteData NoteFunctions::parseNote() const
         myOutNoteData.pitchData.isAccidentalCautionary = reader.getIsAccidentalCautionary();
         myOutNoteData.pitchData.isAccidentalEditorial = reader.getIsAccidentalEditorial();
         myOutNoteData.pitchData.isAccidentalBracketed = reader.getIsAccidentalBracketed();
+        myOutNoteData.accidentalSmufl = reader.getAccidentalSmufl();
     }
 
     myOutNoteData.pitchData.octave = reader.getOctave();

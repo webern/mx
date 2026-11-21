@@ -67,7 +67,11 @@ enum class Accidental
     flat3,
     flat4,
     sori,
-    koron
+    koron,
+
+    // An accidental that MusicXML does not have a value for. On a note, name the glyph to draw in
+    // NoteData::accidentalSmufl.
+    other
 };
 
 struct PitchData

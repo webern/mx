@@ -1210,6 +1210,14 @@ void NotationsWriter::addOrnamentAccidentals(const api::MarkData &mark, core::Or
             continue;
         }
 
+        if (accidental.accidental == api::Accidental::other)
+        {
+            myScoreWriter.getDiagnostics().report(
+                api::Severity::error, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
+                "an ornament accidental of other is not supported and is not written");
+            continue;
+        }
+
         core::AccidentalMark accidentalMark;
         accidentalMark.setValue(myConverter.convert(accidental.accidental));
         setAccidentalMarkAttributes(accidental, accidental.positionData, accidental.printData, accidentalMark);

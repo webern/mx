@@ -13,10 +13,10 @@ NoteData::NoteData()
       isTieStart{false}, isTieStop{false}, tieLetRing{}, isGrace{false}, graceSlash{Bool::unspecified},
       graceStealTimePrevious{}, graceStealTimeFollowing{}, graceMakeTimeTicks{}, isCue{false},
       notehead{Notehead::normal}, noteheadFilled{Bool::unspecified}, noteheadSmufl{},
-      noteheadParentheses{Bool::unspecified}, noteheadColor{}, pitchData{}, velocityStart{}, velocityStop{},
-      userRequestedVoiceNumber{VALUE_UNSPECIFIED}, writeStaffNumber{Bool::unspecified}, stem{Stem::unspecified},
-      tickTimePosition{0}, durationData{}, beams{}, positionData{}, printData{}, printLeger{Bool::unspecified},
-      noteAttachmentData{}, lyrics{}
+      noteheadParentheses{Bool::unspecified}, noteheadColor{}, pitchData{}, accidentalSmufl{}, velocityStart{},
+      velocityStop{}, userRequestedVoiceNumber{VALUE_UNSPECIFIED}, writeStaffNumber{Bool::unspecified},
+      stem{Stem::unspecified}, tickTimePosition{0}, durationData{}, beams{}, positionData{}, printData{},
+      printLeger{Bool::unspecified}, noteAttachmentData{}, lyrics{}
 {
 }
 } // namespace api

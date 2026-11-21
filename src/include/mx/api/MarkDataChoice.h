@@ -239,7 +239,7 @@ MXAPI_NOT_EQUALS_AND_VECTORS(AccidentalMarkData);
 // accidentals above and below a turn that alter its upper and lower notes.
 struct OrnamentAccidental
 {
-    // The accidental to show. An entry left at none is not written.
+    // The accidental to show. An entry left at none, or set to other, is not written.
     Accidental accidental = Accidental::none;
 
     // Where the accidental sits, measured from the ornament rather than from the note. Placement

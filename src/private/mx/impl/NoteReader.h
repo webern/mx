@@ -238,6 +238,11 @@ class NoteReader
         return myIsAccidentalBracketed;
     }
 
+    inline const std::optional<std::string> &getAccidentalSmufl() const
+    {
+        return myAccidentalSmufl;
+    }
+
     inline bool getIsStemSpecified() const
     {
         return myIsStemSpecified;
@@ -331,6 +336,7 @@ class NoteReader
     bool myIsAccidentalCautionary;
     bool myIsAccidentalEditorial;
     bool myIsAccidentalBracketed;
+    std::optional<std::string> myAccidentalSmufl;
     bool myIsStemSpecified;
     core::StemValue myStem;
     bool myIsGraceSlashSpecified;

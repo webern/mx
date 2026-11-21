@@ -137,7 +137,12 @@ void PropertiesWriter::writeNonTraditionalKey(const api::KeyData &inKeyData, cor
     for (const auto &keyComponent : inKeyData.nonTraditional)
     {
         core::NonTraditionalKeyGroup nt{};
-        if (keyComponent.accidental != api::Accidental::none)
+        if (keyComponent.accidental == api::Accidental::other)
+        {
+            myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, myLocation,
+                                 "a key-accidental of other is not supported and is not written");
+        }
+        else if (keyComponent.accidental != api::Accidental::none)
         {
             core::KeyAccidental ka{};
             ka.setValue(converter.convert(keyComponent.accidental));

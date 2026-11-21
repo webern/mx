@@ -873,7 +873,9 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
             {
                 api::KeyComponent keyComponent{};
 
-                if (nonTraditionalKeyPart.keyAccidental().has_value())
+                // A key-accidental of other is not supported and is read as none.
+                if (nonTraditionalKeyPart.keyAccidental().has_value() &&
+                    nonTraditionalKeyPart.keyAccidental()->value() != core::AccidentalValue::other())
                 {
                     keyComponent.accidental = myConverter.convert(nonTraditionalKeyPart.keyAccidental()->value());
                 }

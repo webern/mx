@@ -120,6 +120,7 @@ const Converter::EnumMap<core::AccidentalValue, api::Accidental> Converter::acci
     {core::AccidentalValue::flat4(), api::Accidental::flat4},
     {core::AccidentalValue::sori(), api::Accidental::sori},
     {core::AccidentalValue::koron(), api::Accidental::koron},
+    {core::AccidentalValue::other(), api::Accidental::other},
 };
 
 const Converter::EnumMap<core::ClefSign, api::ClefSymbol> Converter::clefMap = {

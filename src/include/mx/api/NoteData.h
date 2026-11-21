@@ -190,6 +190,16 @@ class NoteData
 
     PitchData pitchData; // step, alter, octave, accidental, etc
 
+    // The <accidental> element's smufl attribute: the canonical SMuFL glyph name to draw for this
+    // note's accidental, for example "accidentalFlatThreeArrowsUp". It names a glyph directly, so a
+    // notation program can draw an accidental that MusicXML does not have a value for -- pair it
+    // with Accidental::other -- or say exactly which glyph to use for one that MusicXML does name.
+    // The name must be a SMuFL accidental glyph, one starting with acc, medRenFla, medRenNatura,
+    // medRenShar or kievanAccidental; any other name is not written and the write reports an error
+    // diagnostic. It is ignored when pitchData.accidental is none. An empty string does not name a
+    // glyph and is written the same as leaving this empty.
+    std::optional<std::string> accidentalSmufl;
+
     // How hard this note is struck on playback, as a percentage of the default forte level: 100
     // is that default and 50 is half as hard. This is MusicXML's dynamics attribute on <note>,
     // and MIDI's Note On velocity. It describes one performance of this note. The dynamic
@@ -283,6 +293,7 @@ MXAPI_EQUALS_MEMBER(noteheadSmufl)
 MXAPI_EQUALS_MEMBER(noteheadParentheses)
 MXAPI_EQUALS_MEMBER(noteheadColor)
 MXAPI_EQUALS_MEMBER(pitchData)
+MXAPI_EQUALS_MEMBER(accidentalSmufl)
 MXAPI_EQUALS_MEMBER(velocityStart)
 MXAPI_EQUALS_MEMBER(velocityStop)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)

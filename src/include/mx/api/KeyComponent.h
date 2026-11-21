@@ -25,7 +25,7 @@ struct KeyComponent
     // then the note is altered by 1.251 semitones in total.
     double cents;
 
-    // The accidental to display for this note name.
+    // The accidental to display for this note name. other is not written.
     Accidental accidental;
 
     KeyComponent() : step{}, alter{}, cents{}, accidental{}
