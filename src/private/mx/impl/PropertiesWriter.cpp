@@ -16,6 +16,7 @@
 #include "mx/core/generated/Key.h"
 #include "mx/core/generated/KeyAccidental.h"
 #include "mx/core/generated/KeyChoice.h"
+#include "mx/core/generated/LineDetail.h"
 #include "mx/core/generated/MeasureStyle.h"
 #include "mx/core/generated/MeasureStyleChoice.h"
 #include "mx/core/generated/Mode.h"
@@ -35,6 +36,7 @@
 #include "mx/core/generated/StaffLinePosition.h"
 #include "mx/core/generated/StaffNumber.h"
 #include "mx/core/generated/StaffTuning.h"
+#include "mx/core/generated/Tenths.h"
 #include "mx/core/generated/Time.h"
 #include "mx/core/generated/TimeChoice.h"
 #include "mx/core/generated/TimeChoiceGroup.h"
@@ -47,6 +49,7 @@
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/IdFunctions.h"
+#include "mx/impl/PrintFunctions.h"
 #include "mx/impl/TuningFunctions.h"
 
 namespace mx
@@ -321,11 +324,12 @@ void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double 
 
 void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling)
 {
-    writeStaffDetails(staffIndex, staffLines, staffSize, staffScaling, {});
+    writeStaffDetails(staffIndex, staffLines, staffSize, staffScaling, {}, {});
 }
 
 void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling,
-                                         std::span<const api::StaffTuningData> staffTunings)
+                                         std::span<const api::StaffTuningData> staffTunings,
+                                         std::span<const api::LineDetailData> lineDetails)
 {
     core::StaffDetails staffDetails{};
 
@@ -338,6 +342,31 @@ void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double 
     {
         core::StaffDetailsGroup sdg{};
         sdg.setStaffLines(core::NonNegativeInteger{staffLines});
+        Converter lineDetailConverter;
+        for (const auto &lineDetailData : lineDetails)
+        {
+            core::LineDetail lineDetail{};
+            const core::StaffLine line{lineDetailData.line};
+            reportAdjusted(myDiagnostics, myLocation, "line-detail line", lineDetailData.line, line.value());
+            lineDetail.setLine(line);
+            if (lineDetailData.width.has_value())
+            {
+                lineDetail.setWidth(core::Tenths{core::Decimal{*lineDetailData.width}});
+            }
+            if (lineDetailData.color.has_value())
+            {
+                lineDetail.setColor(createCoreColor(*lineDetailData.color));
+            }
+            if (lineDetailData.lineType != api::LineType::unspecified)
+            {
+                lineDetail.setLineType(lineDetailConverter.convert(lineDetailData.lineType));
+            }
+            if (lineDetailData.printObject != api::Bool::unspecified)
+            {
+                lineDetail.setPrintObject(lineDetailConverter.convert(lineDetailData.printObject));
+            }
+            sdg.addLineDetail(std::move(lineDetail));
+        }
         staffDetails.setGroup(sdg);
     }
 

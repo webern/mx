@@ -7,6 +7,7 @@
 #include "mx/api/ClefData.h"
 #include "mx/api/ForPartData.h"
 #include "mx/api/KeyData.h"
+#include "mx/api/LineDetailData.h"
 #include "mx/api/PartSymbolData.h"
 #include "mx/api/StaffTuningData.h"
 #include "mx/api/TimeChoice.h"
@@ -64,7 +65,8 @@ class PropertiesWriter
     void writeStaffDetails(int staffIndex, int staffLines, double staffSize);
     void writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling);
     void writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling,
-                           std::span<const api::StaffTuningData> staffTunings);
+                           std::span<const api::StaffTuningData> staffTunings,
+                           std::span<const api::LineDetailData> lineDetails);
     void writeClef(int staffIndex, const api::ClefData &inClefData);
     void writePartSymbol(const api::PartSymbolData &inPartSymbolData);
     void writeTranspose(int staffIndex, const api::TransposeData &inTransposeData);
