@@ -1139,6 +1139,11 @@ void MeasureWriter::writeBarline(const api::BarlineData &barline)
             ending.setTextY(core::Tenths{core::Decimal{*endingData.textY}});
         }
 
+        if (endingData.printObject != api::Bool::unspecified)
+        {
+            ending.setPrintObject(myConverter.convert(endingData.printObject));
+        }
+
         barlineElement.setEnding(ending);
     }
 
