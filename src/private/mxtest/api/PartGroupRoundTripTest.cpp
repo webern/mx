@@ -97,4 +97,14 @@ TEST(partGroupRoundTrip, noFabricatedBarline)
     CHECK(GroupBarline::unspecified == out.partGroups.at(0).groupBarline);
 }
 
+// Two groups that differ only in their number are different groups.
+TEST(partGroupRoundTrip, numberEquality)
+{
+    PartGroupData a;
+    a.number = 1;
+    PartGroupData b;
+    b.number = 2;
+    CHECK(a != b);
+}
+
 #endif

@@ -85,6 +85,7 @@ MXAPI_EQUALS_MEMBER(abbreviation)
 MXAPI_EQUALS_MEMBER(displayAbbreviation)
 MXAPI_EQUALS_MEMBER(bracketType)
 MXAPI_EQUALS_MEMBER(groupBarline)
+MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PartGroupData);
 } // namespace api
