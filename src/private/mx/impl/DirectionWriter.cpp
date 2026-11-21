@@ -679,6 +679,7 @@ void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &di
         }
         core::PerMinute pm{};
         pm.setValue(bpm.beatsPerMinute);
+        setAttributesFromFontData(bpm.fontData, pm);
 
         core::MetronomeChoiceGroup mcg{};
         mcg.setBeatUnit(makeBeatUnitGroup(myConverter, bpm.durationName, bpm.dots));

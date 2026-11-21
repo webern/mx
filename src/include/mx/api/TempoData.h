@@ -47,8 +47,15 @@ struct BeatsPerMinute
     std::vector<BeatUnit> tiedBeatUnits;
     std::string beatsPerMinute;
 
+    // The font of the number to the right of the equals sign. It overrides TempoData::fontData for
+    // the number alone, so the note picture can be drawn in a music font while the number is set
+    // in a text font. Leave it at its defaults to draw the number in the mark's own font.
+    // underline, overline and lineThrough are not used.
+    FontData fontData;
+
     BeatsPerMinute()
-        : durationName{DurationName::unspecified}, dots{VALUE_UNSPECIFIED}, tiedBeatUnits{}, beatsPerMinute{}
+        : durationName{DurationName::unspecified}, dots{VALUE_UNSPECIFIED}, tiedBeatUnits{}, beatsPerMinute{},
+          fontData{}
     {
     }
 };
@@ -150,6 +157,7 @@ MXAPI_EQUALS_MEMBER(durationName)
 MXAPI_EQUALS_MEMBER(dots)
 MXAPI_EQUALS_MEMBER(tiedBeatUnits)
 MXAPI_EQUALS_MEMBER(beatsPerMinute)
+MXAPI_EQUALS_MEMBER(fontData)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(BeatsPerMinute);
 
