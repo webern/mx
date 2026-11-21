@@ -2480,4 +2480,87 @@ TEST(standaloneAccidentalMarkKeepsHowItIsDrawn, NoteData)
 
 T_END;
 
+// A one-measure score with two quarter notes, for the print-leger tests.
+ScoreData noteDataTestPrintLegerScore()
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &staff = score.parts.back().measures.emplace_back().staves.emplace_back();
+    auto &voice = staff.voices[0];
+    for (int tick = 0; tick < 8; tick += 4)
+    {
+        auto &note = voice.notes.emplace_back();
+        note.pitchData.step = Step::c;
+        note.pitchData.octave = 6;
+        note.durationData.durationName = DurationName::quarter;
+        note.durationData.durationTimeTicks = 4;
+        note.tickTimePosition = tick;
+    }
+    return score;
+}
+
+// Leger lines forced off and forced on are both written and read back.
+TEST(printLegerRoundTrips, NoteData)
+{
+    auto score = noteDataTestPrintLegerScore();
+    auto &notes = score.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes;
+    notes.at(0).printLeger = Bool::no;
+    notes.at(1).printLeger = Bool::yes;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("print-leger=\"no\"") != std::string::npos);
+    CHECK(xml.find("print-leger=\"yes\"") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outNotes = out.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes;
+    REQUIRE(outNotes.size() == 2);
+    CHECK(outNotes.at(0).printLeger == Bool::no);
+    CHECK(outNotes.at(1).printLeger == Bool::yes);
+    CHECK(out.parts.at(0).measures == score.parts.at(0).measures);
+}
+
+T_END;
+
+TEST(printLegerReadsFromXml, NoteData)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note print-leger="no"><pitch><step>C</step><octave>6</octave></pitch><duration>1</duration><type>quarter</type></note>
+      <note print-leger="yes"><pitch><step>D</step><octave>6</octave></pitch><duration>1</duration><type>quarter</type></note>
+      <note><pitch><step>E</step><octave>6</octave></pitch><duration>2</duration><type>half</type></note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    const auto score = mxtest::fromXml(xml);
+    const auto &notes = score.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes;
+    REQUIRE(notes.size() == 3);
+    CHECK(notes.at(0).printLeger == Bool::no);
+    CHECK(notes.at(1).printLeger == Bool::yes);
+    CHECK(notes.at(2).printLeger == Bool::unspecified);
+}
+
+T_END;
+
+// A note that leaves printLeger unspecified does not write the attribute.
+TEST(printLegerUnspecifiedWritesNothing, NoteData)
+{
+    const auto score = noteDataTestPrintLegerScore();
+    CHECK(mxtest::toXml(score).find("print-leger") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outNotes = out.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes;
+    REQUIRE(outNotes.size() == 2);
+    CHECK(outNotes.at(0).printLeger == Bool::unspecified);
+    CHECK(outNotes.at(1).printLeger == Bool::unspecified);
+}
+
+T_END;
+
 #endif

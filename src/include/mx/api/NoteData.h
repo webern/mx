@@ -240,6 +240,12 @@ class NoteData
     PositionData positionData;
     PrintData printData;
 
+    // Whether leger lines are drawn for a note above or below the staff. no hides them, for
+    // example to show a note's pitch without its leger lines, or when another staff already
+    // shows them. yes draws them even where a program might leave them out. Leave it unspecified
+    // for MusicXML's default, which is to draw them. This is the print-leger attribute of <note>.
+    Bool printLeger;
+
     NoteAttachmentData noteAttachmentData;
     std::vector<LyricData> lyrics;
 
@@ -289,6 +295,7 @@ MXAPI_EQUALS_MEMBER(durationData)
 MXAPI_EQUALS_MEMBER(beams)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(printData)
+MXAPI_EQUALS_MEMBER(printLeger)
 MXAPI_EQUALS_MEMBER(noteAttachmentData)
 MXAPI_EQUALS_MEMBER(lyrics)
 MXAPI_EQUALS_MEMBER(miscData)

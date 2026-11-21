@@ -119,6 +119,11 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
         myOutNote.setPrintObject(myConverter.convert(myNoteData.printData.printObject));
     }
 
+    if (myNoteData.printLeger != api::Bool::unspecified)
+    {
+        myOutNote.setPrintLeger(myConverter.convert(myNoteData.printLeger));
+    }
+
     if (myNoteData.velocityStart.has_value())
     {
         myOutNote.setDynamics(core::NonNegativeDecimal{core::Decimal{*myNoteData.velocityStart}});
