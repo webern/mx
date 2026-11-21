@@ -9,9 +9,7 @@ llm-edit: false
 ---
 # /mx-open-issue
 
-Use `<prompt>` to understand what the issue is about. Check to see if there is documentation on the
-issue available in `docs/ai/api-feature-audit.md` (which might be the case if it was previously
-documented by an api-feature-audit).
+Use `<prompt>` to understand what the issue is about.
 
 Use `gh` for GitHub interactions.
 

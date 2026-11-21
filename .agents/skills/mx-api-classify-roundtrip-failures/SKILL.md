@@ -23,9 +23,8 @@ a machine-readable `build/api/classified.json`; this skill interprets it for a h
 
 ## What the classifier reports (and what it does not)
 
-Classification is purely measured from each expected/actual pair. It does not consult
-`data/api.features.xml` or any record of what `mx::api` was believed to "support". Whether a drop is
-intended is a present-day human decision (#214), not something the tool asserts. So do not describe
+Classification is purely measured from each expected/actual pair. It does not consult any record of
+what `mx::api` was believed to "support". Whether a drop is intended is a present-day human decision (#214), not something the tool asserts. So do not describe
 any drop as "by-design" on the classifier's authority; report what was dropped and let the human
 decide.
 

@@ -7,10 +7,9 @@ set of divergences that keep the file from round-tripping, and writes a
 machine-readable JSON report (consumed by Phase 3 ranking, #212) with a
 human-readable worklist on stdout.
 
-What this is *not*: it does not consult ``data/api.features.xml`` or any other
-record of what someone believed ``mx::api`` "supports". Whether a drop was
-intended is a present-day human decision (issue #214), not a property the
-classifier asserts. The classifier reports only what the round-trip actually did
+What this is *not*: it does not consult any record of what someone believed
+``mx::api`` "supports". Whether a drop was intended is a present-day human
+decision (issue #214), not a property the classifier asserts. The classifier reports only what the round-trip actually did
 to each file, so the worklist is grounded in measured behavior.
 
 ## How a file is diffed

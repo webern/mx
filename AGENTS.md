@@ -51,8 +51,7 @@ mx/
 ## Feature audit (`audit/`)
 
 `make audit` inventories corpus feature usage (`*.features.xml` sidecars + `data/corpus.xml`,
-checked in; the test suites skip them). See `audit/README.md`; the `mx-api-feature-audit` skill
-consumes the output.
+checked in; the test suites skip them). See `audit/README.md`.
 
 ## Build system
 

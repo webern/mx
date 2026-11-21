@@ -1,12 +1,10 @@
 """MusicXML feature-audit tooling.
 
-This package compares three views of the MusicXML feature surface:
+This package compares two views of the MusicXML feature surface:
 
-  1. the test corpus under ``data/`` (what real and synthetic files actually use),
+  1. the test corpus under ``data/`` (what real and synthetic files actually use), and
   2. the MusicXML specification (approximated by the synthetic corpus, which is
-     built to exercise every element/attribute/enum symbol of 3.0/3.1/4.0), and
-  3. the ``mx::api`` public layer (audited separately by the ``mx-api-feature-audit``
-     skill, which reads source and emits ``data/api.features.xml``).
+     built to exercise every element/attribute/enum symbol of 3.0/3.1/4.0).
 
 A "feature" is an element together with the set of attribute names that appear
 on it. The tool emits one ``*.features.xml`` sibling per corpus file and a single

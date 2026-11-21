@@ -9,9 +9,7 @@ llm-edit: false
 ---
 # /mx-open-pr
 
-Use `<prompt>` and your context to understand what the PR is about. Check to see if there is
-documentation on the issue available in `docs/ai/api-feature-audit.md` (which might be the case if
-it was previously documented by an api-feature-audit).
+Use `<prompt>` and your context to understand what the PR is about.
 
 Use `gh` for GitHub interactions.
 
