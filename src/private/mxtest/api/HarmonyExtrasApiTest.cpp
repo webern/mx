@@ -659,4 +659,167 @@ TEST(harmonyRootAndBassTextEquality, HarmonyExtrasApi)
 
 T_END;
 
+// C on G, written with the word "on" between the chord and its bass, and the bass printed below
+// the chord.
+TEST(harmonyBassSeparatorAndArrangementRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.bass = Step::g;
+    chord.bassAlter = -1;
+    chord.bassSeparator = "on";
+    chord.bassArrangement = BassArrangement::vertical;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<bass arrangement=\"vertical\">") != std::string::npos);
+    const auto separatorPos = xml.find("<bass-separator>on</bass-separator>");
+    const auto stepPos = xml.find("<bass-step>G</bass-step>");
+    const auto alterPos = xml.find("<bass-alter>");
+    CHECK(separatorPos != std::string::npos);
+    CHECK(stepPos != std::string::npos);
+    CHECK(alterPos != std::string::npos);
+    CHECK(separatorPos < stepPos);
+    CHECK(stepPos < alterPos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    CHECK(Step::g == outChord.bass);
+    CHECK(-1 == outChord.bassAlter);
+    CHECK(outChord.bassSeparator == std::optional<std::string>{"on"});
+    CHECK(BassArrangement::vertical == outChord.bassArrangement);
+}
+
+T_END;
+
+TEST(harmonyBassArrangementEveryValueRoundTrip, HarmonyExtrasApi)
+{
+    const std::vector<std::pair<BassArrangement, std::string>> cases = {
+        {BassArrangement::vertical, "vertical"},
+        {BassArrangement::horizontal, "horizontal"},
+        {BassArrangement::diagonal, "diagonal"},
+    };
+
+    for (const auto &[arrangement, wire] : cases)
+    {
+        auto score = makeScoreWithChord();
+        auto &chord = chordOf(score);
+        chord.root = Step::c;
+        chord.chordKind = ChordKind::major;
+        chord.bass = Step::e;
+        chord.bassArrangement = arrangement;
+
+        const auto xml = mxtest::toXml(score);
+        CHECK(xml.find("<bass arrangement=\"" + wire + "\">") != std::string::npos);
+
+        const auto out = mxtest::roundTrip(score);
+        CHECK(arrangement == firstChord(out).bassArrangement);
+    }
+}
+
+T_END;
+
+TEST(harmonyBassSeparatorAndArrangementFromXml, HarmonyExtrasApi)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>P1</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+      </attributes>
+      <harmony>
+        <root>
+          <root-step>C</root-step>
+        </root>
+        <kind>major</kind>
+        <bass arrangement="diagonal">
+          <bass-separator>over</bass-separator>
+          <bass-step>B</bass-step>
+          <bass-alter>-1</bass-alter>
+        </bass>
+      </harmony>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = mxtest::fromXml(xml);
+    const auto &chord = firstChord(score);
+    CHECK(Step::b == chord.bass);
+    CHECK(-1 == chord.bassAlter);
+    CHECK(chord.bassSeparator == std::optional<std::string>{"over"});
+    CHECK(BassArrangement::diagonal == chord.bassArrangement);
+}
+
+T_END;
+
+TEST(harmonyBassSeparatorAndArrangementAbsentIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.bass = Step::g;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<bass>") != std::string::npos);
+    CHECK(xml.find("arrangement") == std::string::npos);
+    CHECK(xml.find("<bass-separator") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    CHECK(!outChord.bassSeparator.has_value());
+    CHECK(BassArrangement::unspecified == outChord.bassArrangement);
+}
+
+T_END;
+
+// The separator and the arrangement belong to a bass note, so without one there is nothing to write.
+TEST(harmonyBassSeparatorAndArrangementWithoutBassIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.bassSeparator = "on";
+    chord.bassArrangement = BassArrangement::horizontal;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<bass") == std::string::npos);
+    CHECK(xml.find("arrangement") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    CHECK(!outChord.bassSeparator.has_value());
+    CHECK(BassArrangement::unspecified == outChord.bassArrangement);
+}
+
+T_END;
+
+TEST(harmonyBassSeparatorAndArrangementEquality, HarmonyExtrasApi)
+{
+    const ChordData base;
+
+    ChordData withSeparator;
+    withSeparator.bassSeparator = "on";
+    CHECK(base != withSeparator);
+
+    ChordData withEmptySeparator;
+    withEmptySeparator.bassSeparator = "";
+    CHECK(base != withEmptySeparator);
+
+    ChordData withArrangement;
+    withArrangement.bassArrangement = BassArrangement::diagonal;
+    CHECK(base != withArrangement);
+}
+
+T_END;
+
 #endif

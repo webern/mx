@@ -1386,6 +1386,12 @@ const Converter::EnumMap<core::LeftRight, api::FirstFretLocation> Converter::fir
     {core::LeftRight::right(), api::FirstFretLocation::right},
 };
 
+const Converter::EnumMap<core::HarmonyArrangement, api::BassArrangement> Converter::bassArrangementMap = {
+    {core::HarmonyArrangement::vertical(), api::BassArrangement::vertical},
+    {core::HarmonyArrangement::horizontal(), api::BassArrangement::horizontal},
+    {core::HarmonyArrangement::diagonal(), api::BassArrangement::diagonal},
+};
+
 // The standard <mode> vocabulary. api::KeyMode::unspecified and api::KeyMode::unsupported are absent
 // because they have no wire spelling.
 const Converter::EnumMap<core::Mode, api::KeyMode> Converter::keyModeMap = {
@@ -2038,6 +2044,16 @@ core::LeftRight Converter::convert(api::FirstFretLocation value) const
 api::FirstFretLocation Converter::convert(core::LeftRight value) const
 {
     return findApiItem(firstFretLocationMap, api::FirstFretLocation::unspecified, value);
+}
+
+core::HarmonyArrangement Converter::convert(api::BassArrangement value) const
+{
+    return findCoreItem(bassArrangementMap, core::HarmonyArrangement::horizontal(), value);
+}
+
+api::BassArrangement Converter::convert(core::HarmonyArrangement value) const
+{
+    return findApiItem(bassArrangementMap, api::BassArrangement::unspecified, value);
 }
 
 core::Mode Converter::convert(api::KeyMode value) const

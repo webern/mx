@@ -1580,6 +1580,18 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             bassStep.setText(chordIter->bassText);
             bass.setBassStep(bassStep);
 
+            if (chordIter->bassSeparator.has_value())
+            {
+                core::StyleText bassSeparator{};
+                bassSeparator.setValue(*chordIter->bassSeparator);
+                bass.setBassSeparator(bassSeparator);
+            }
+
+            if (chordIter->bassArrangement != api::BassArrangement::unspecified)
+            {
+                bass.setArrangement(myConverter.convert(chordIter->bassArrangement));
+            }
+
             if (chordIter->bassAlter != 0)
             {
                 core::HarmonyAlter bassAlter{};

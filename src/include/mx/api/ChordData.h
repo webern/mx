@@ -233,6 +233,17 @@ enum class NumeralMode
     harmonicMinor
 };
 
+// Where the bass note of a slash chord is printed relative to the chord symbol before it. vertical
+// puts the bass below the chord, as in a fraction. horizontal puts it to the right, as in C/G.
+// diagonal puts it below and to the right. unspecified leaves the choice to the notation software.
+enum class BassArrangement
+{
+    unspecified,
+    vertical,
+    horizontal,
+    diagonal
+};
+
 class ChordData
 {
   public:
@@ -294,6 +305,11 @@ class ChordData
     // prints an empty bass note. Spell only the step, because bassAlter is still printed beside the
     // text. Used only when bass is set.
     std::optional<std::string> bassText;
+    // Text printed between the chord symbol and its bass note in place of the usual slash or line,
+    // such as "on" for "C on G". Leave absent to print the slash. Used only when bass is set.
+    std::optional<std::string> bassSeparator;
+    // Where the bass note is printed relative to the chord symbol. Used only when bass is set.
+    BassArrangement bassArrangement;
     // The MusicXML <inversion> (0 = root position, 1 = first inversion, ...). Present only when
     // hasInversion is true.
     int inversion;
@@ -330,6 +346,8 @@ MXAPI_EQUALS_MEMBER(parenthesesDegrees)
 MXAPI_EQUALS_MEMBER(bass)
 MXAPI_EQUALS_MEMBER(bassAlter)
 MXAPI_EQUALS_MEMBER(bassText)
+MXAPI_EQUALS_MEMBER(bassSeparator)
+MXAPI_EQUALS_MEMBER(bassArrangement)
 MXAPI_EQUALS_MEMBER(inversion)
 MXAPI_EQUALS_MEMBER(hasInversion)
 MXAPI_EQUALS_MEMBER(extensions)

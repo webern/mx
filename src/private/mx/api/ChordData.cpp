@@ -35,8 +35,9 @@ ChordData::ChordData()
       numeralRoot{0}, numeralRootText{}, numeralAlter{0}, hasNumeralAlter{false}, hasNumeralKey{false},
       numeralKeyFifths{0}, numeralMode{NumeralMode::unspecified}, chordKind{ChordKind::unspecified}, text{},
       useSymbols{Bool::unspecified}, stackDegrees{Bool::unspecified}, parenthesesDegrees{Bool::unspecified},
-      bass{Step::unspecified}, bassAlter{0}, bassText{}, inversion{0}, hasInversion{false}, extensions{}, miscData{},
-      hasFrameData{false}, frameData{}, printFrame{Bool::unspecified}, positionData{}
+      bass{Step::unspecified}, bassAlter{0}, bassText{}, bassSeparator{}, bassArrangement{BassArrangement::unspecified},
+      inversion{0}, hasInversion{false}, extensions{}, miscData{}, hasFrameData{false}, frameData{},
+      printFrame{Bool::unspecified}, positionData{}
 {
 }
 
