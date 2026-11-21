@@ -274,6 +274,29 @@ TEST(endingPlacementAndAlignmentAreDropped, WriteDiagnostics)
 
 T_END
 
+TEST(lineDetailsWithoutStaffLinesAreDropped, WriteDiagnostics)
+{
+    auto score = writeDiagnosticsScore(2);
+    auto &staff = score.parts.front().measures.at(1).staves.front();
+    LineDetailData lineDetail;
+    lineDetail.line = 3;
+    lineDetail.printObject = Bool::no;
+    staff.lineDetails = {lineDetail};
+
+    const auto diagnostics = writeDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 1);
+    const auto &diagnostic = diagnostics.all().front();
+    writeDiagnosticsCheck(diagnostic, DiagnosticCode::droppedData,
+                          "staff line details are not written because the staff does not have a line count");
+    CHECK_EQUAL(1, diagnostic.location.measureIndex);
+
+    std::ostringstream xml;
+    REQUIRE(fromScore(score).value().writeToStream(xml).ok());
+    CHECK(xml.str().find("<line-detail") == std::string::npos);
+}
+
+T_END
+
 TEST(unmatchedSlurIsReportedAtItsNote, WriteDiagnostics)
 {
     auto score = writeDiagnosticsScore(2);

@@ -373,6 +373,7 @@ synthetic/instrument-abbreviation.3.0.xml
 synthetic/instrument-name.3.0.xml
 synthetic/instrument-sound-enum.3.0.xml
 synthetic/interchangeable.3.0.xml
+synthetic/line-detail.4.0.xml
 synthetic/lyric-font.3.0.xml
 synthetic/miscellaneous-field.3.0.xml
 synthetic/movement-number.3.0.xml

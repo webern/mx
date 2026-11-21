@@ -8,6 +8,7 @@
 #include "mx/api/ClefData.h"
 #include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
+#include "mx/api/LineDetailData.h"
 #include "mx/api/StaffTuningData.h"
 #include "mx/api/VoiceData.h"
 
@@ -21,6 +22,12 @@ class StaffData
 {
   public:
     int staffLines = VALUE_UNSPECIFIED;
+
+    // How individual staff lines are drawn, one entry for each line that differs from the rest, in
+    // the order they are written. MusicXML only allows these alongside a line count, so set
+    // staffLines on the same measure; without it the entries are not written. Like staffLines, set
+    // it on the measure where the change takes effect and leave it empty on the measures after it.
+    std::vector<LineDetailData> lineDetails;
 
     // What each string of a tablature staff is tuned to, one entry per string, written in this order.
     // Like staffLines, set it on the measure where the tuning takes effect (usually the first) and
@@ -71,6 +78,7 @@ inline bool voicesAreEqual(const std::map<int, VoiceData> &l, const std::map<int
 
 MXAPI_EQUALS_BEGIN(StaffData)
 MXAPI_EQUALS_MEMBER(staffLines)
+MXAPI_EQUALS_MEMBER(lineDetails)
 MXAPI_EQUALS_MEMBER(staffTunings)
 MXAPI_DOUBLES_EQUALS_MEMBER(staffSize)
 MXAPI_DOUBLES_EQUALS_MEMBER(staffScaling)

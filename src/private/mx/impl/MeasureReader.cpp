@@ -1345,6 +1345,32 @@ void MeasureReader::importStaffDetails(const core::Attributes &inMxAttributes) c
         if (staffDetails.group().has_value())
         {
             staffData.staffLines = staffDetails.group()->staffLines().value();
+            if (!staffDetails.group()->lineDetail().empty())
+            {
+                staffData.lineDetails.clear();
+                for (const auto &lineDetail : staffDetails.group()->lineDetail())
+                {
+                    api::LineDetailData outLineDetail;
+                    outLineDetail.line = lineDetail.line().value();
+                    if (lineDetail.width().has_value())
+                    {
+                        outLineDetail.width = static_cast<double>(lineDetail.width()->value().value());
+                    }
+                    if (lineDetail.color().has_value())
+                    {
+                        outLineDetail.color = impl::getColor(lineDetail);
+                    }
+                    if (lineDetail.lineType().has_value())
+                    {
+                        outLineDetail.lineType = myConverter.convert(*lineDetail.lineType());
+                    }
+                    if (lineDetail.printObject().has_value())
+                    {
+                        outLineDetail.printObject = myConverter.convert(*lineDetail.printObject());
+                    }
+                    staffData.lineDetails.emplace_back(outLineDetail);
+                }
+            }
         }
         if (!staffDetails.staffTuning().empty())
         {

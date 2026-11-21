@@ -212,6 +212,15 @@ void MeasureWriter::writeMeasureGlobals()
 
     for (const auto &staff : myMeasureData.staves)
     {
+        // MusicXML only allows <line-detail> after <staff-lines>, so line details without a line
+        // count cannot be written.
+        if (staff.staffLines < 0 && !staff.lineDetails.empty())
+        {
+            myScoreWriter.getDiagnostics().report(
+                api::Severity::error, api::DiagnosticCode::droppedData, measureOnlyLocation(myHistory.getCursor()),
+                "staff line details are not written because the staff does not have a line count");
+        }
+
         if (staff.staffLines >= 0 || staff.staffSize >= 0.0 || !staff.staffTunings.empty())
         {
             int desiredStaffIndex = api::INDEX_UNSPECIFIED;
@@ -220,7 +229,7 @@ void MeasureWriter::writeMeasureGlobals()
                 desiredStaffIndex = localStaffCounter;
             }
             myPropertiesWriter->writeStaffDetails(desiredStaffIndex, staff.staffLines, staff.staffSize,
-                                                  staff.staffScaling, staff.staffTunings);
+                                                  staff.staffScaling, staff.staffTunings, staff.lineDetails);
         }
 
         auto clefIter = staff.clefs.cbegin();
