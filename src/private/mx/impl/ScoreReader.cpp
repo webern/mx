@@ -35,6 +35,8 @@
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
+#include "mx/impl/PositionFunctions.h"
+#include "mx/impl/PrintFunctions.h"
 #include "mx/impl/TimeReader.h"
 #include "mx/utility/StringToInt.h"
 #include "mx/utility/Throw.h"
@@ -378,6 +380,12 @@ void ScoreReader::startPartGroup(int partIndex, const core::PartGroup &inPartGro
     {
         Converter c;
         grpData.bracketType = c.convert(inPartGroup.groupSymbol()->value());
+        grpData.bracketPositionData = impl::getPositionData(*inPartGroup.groupSymbol());
+
+        if (inPartGroup.groupSymbol()->color().has_value())
+        {
+            grpData.bracketColor = impl::getColor(*inPartGroup.groupSymbol());
+        }
     }
 
     if (inPartGroup.groupBarline().has_value())
