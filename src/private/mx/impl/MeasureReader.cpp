@@ -64,6 +64,7 @@
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/NoteReader.h"
 #include "mx/impl/PositionFunctions.h"
+#include "mx/impl/PrintFunctions.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/TimeReader.h"
 #include "mx/impl/TuningFunctions.h"
@@ -1108,6 +1109,8 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
     }
 
     figuredBass.id = getId(inMxFiguredBass);
+    figuredBass.positionData = impl::getPositionData(inMxFiguredBass);
+    figuredBass.printData = impl::getPrintData(inMxFiguredBass);
 
     auto direction = api::DirectionData{};
     direction.tickTimePosition = myCurrentCursor.tickTimePosition;

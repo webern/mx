@@ -1893,6 +1893,8 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
         }
 
         setId(figuredBassData.id, figuredBass, myDiagnostics, cursorLocation(myCursor));
+        setAttributesFromPositionData(figuredBassData.positionData, figuredBass);
+        setAttributesFromPrintData(figuredBassData.printData, figuredBass);
 
         if (figuredBassData.parentheses != api::Bool::unspecified)
         {
