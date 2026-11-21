@@ -218,6 +218,33 @@ TEST(creditImageValignBaselineIsDropped, WriteDiagnostics)
 
 T_END
 
+TEST(partGroupSymbolPlacementAndAlignmentAreDropped, WriteDiagnostics)
+{
+    auto score = writeDiagnosticsScore(1);
+    auto &group = score.partGroups.emplace_back();
+    group.firstPartIndex = 0;
+    group.lastPartIndex = 0;
+    group.bracketType = BracketType::bracket;
+    group.bracketPositionData.isDefaultXSpecified = true;
+    group.bracketPositionData.defaultX = -10.0;
+    group.bracketPositionData.placement = Placement::above;
+    group.bracketPositionData.verticalAlignment = VerticalAlignment::top;
+
+    const auto diagnostics = writeDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 1);
+    writeDiagnosticsCheck(
+        diagnostics.all().front(), DiagnosticCode::droppedData,
+        "a part group symbol's placement and alignment are not written; a group symbol has neither attribute");
+
+    std::ostringstream xml;
+    REQUIRE(fromScore(score).value().writeToStream(xml).ok());
+    CHECK(xml.str().find(R"(default-x="-10")") != std::string::npos);
+    CHECK(xml.str().find("placement=") == std::string::npos);
+    CHECK(xml.str().find("valign=") == std::string::npos);
+}
+
+T_END
+
 TEST(endingPlacementAndAlignmentAreDropped, WriteDiagnostics)
 {
     auto score = writeDiagnosticsScore(2);

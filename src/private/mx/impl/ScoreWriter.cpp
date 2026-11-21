@@ -32,6 +32,8 @@
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
 #include "mx/impl/PartWriter.h"
+#include "mx/impl/PositionFunctions.h"
+#include "mx/impl/PrintFunctions.h"
 #include "mx/impl/TimeReader.h"
 
 namespace mx
@@ -463,6 +465,24 @@ core::PartGroup ScoreWriter::makePartGroupStart(const api::PartGroupData &apiGrp
         const auto symbolValue = converter.convert(apiGrp.bracketType);
         core::GroupSymbol groupSymbol{};
         groupSymbol.setValue(symbolValue);
+
+        // <group-symbol> has the position attributes but not placement, halign or valign, so
+        // setAttributesFromPositionData skips those members. Say so rather than drop them quietly.
+        setAttributesFromPositionData(apiGrp.bracketPositionData, groupSymbol);
+        if (apiGrp.bracketPositionData.placement != api::Placement::unspecified ||
+            apiGrp.bracketPositionData.horizontalAlignment != api::HorizontalAlignment::unspecified ||
+            apiGrp.bracketPositionData.verticalAlignment != api::VerticalAlignment::unspecified)
+        {
+            myDiagnostics.report(
+                api::Severity::error, api::DiagnosticCode::droppedData, api::Location{},
+                "a part group symbol's placement and alignment are not written; a group symbol has neither attribute");
+        }
+
+        if (apiGrp.bracketColor.has_value())
+        {
+            setAttributesFromColorData(*apiGrp.bracketColor, groupSymbol);
+        }
+
         mxGrp.setGroupSymbol(groupSymbol);
     }
 
