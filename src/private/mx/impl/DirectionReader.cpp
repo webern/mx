@@ -539,6 +539,8 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
     auto lineData = getLineData(wedge);
     const bool isColorSpecified = wedge.color().has_value();
     const auto colorData = isColorSpecified ? getColor(wedge) : api::ColorData{};
+    const auto nienteCircle =
+        wedge.niente().has_value() ? myConverter.convert(*wedge.niente()) : api::Bool::unspecified;
 
     if (wedge.type().tag() == core::WedgeType::Tag::stop)
     {
@@ -553,6 +555,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
             stop.spread = spread;
         }
         stop.positionData = positionData;
+        stop.nienteCircle = nienteCircle;
         stop.id = getId(wedge);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(stop)});
         return;
@@ -574,6 +577,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         start.lineData = lineData;
         start.isColorSpecified = isColorSpecified;
         start.colorData = colorData;
+        start.nienteCircle = nienteCircle;
         start.id = getId(wedge);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(start)});
     }
