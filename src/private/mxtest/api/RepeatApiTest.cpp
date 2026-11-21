@@ -492,6 +492,98 @@ TEST(endingEqualityCoversLayoutFields, Repeat)
 
 T_END;
 
+// A hidden ending and a shown ending both come back as they were set, on every ending type.
+TEST(endingPrintObjectRoundTrip, Repeat)
+{
+    for (const auto type : {EndingType::start, EndingType::stop, EndingType::discontinue})
+    {
+        for (const auto printObject : {Bool::yes, Bool::no})
+        {
+            auto score = makeScoreWithBarlineForRepeat();
+            auto &barline = score.parts.back().measures.back().barlines.back();
+            barline.location = type == EndingType::start ? HorizontalAlignment::left : HorizontalAlignment::right;
+            EndingData ending;
+            ending.type = type;
+            ending.numbers = {1};
+            ending.printObject = printObject;
+            barline.ending = ending;
+
+            const auto out = roundTrip(score);
+            const auto &ob = out.parts.back().measures.back().barlines.front();
+            REQUIRE(ob.ending.has_value());
+            CHECK(ending == *ob.ending);
+        }
+    }
+}
+
+T_END;
+
+// print-object on an <ending> reaches EndingData as yes or no.
+TEST(endingPrintObjectReadFromXml, Repeat)
+{
+    const auto hidden = fromXml(endingXmlForRepeat(R"(<ending number="1" print-object="no" type="start"/>)"));
+    const auto &hb = hidden.parts.back().measures.back().barlines.front();
+    REQUIRE(hb.ending.has_value());
+    CHECK(Bool::no == hb.ending->printObject);
+
+    const auto shown = fromXml(endingXmlForRepeat(R"(<ending number="1" print-object="yes" type="start"/>)"));
+    const auto &sb = shown.parts.back().measures.back().barlines.front();
+    REQUIRE(sb.ending.has_value());
+    CHECK(Bool::yes == sb.ending->printObject);
+}
+
+T_END;
+
+// A hidden ending is written with print-object="no".
+TEST(endingSerializesPrintObject, Repeat)
+{
+    auto score = makeScoreWithBarlineForRepeat();
+    auto &barline = score.parts.back().measures.back().barlines.back();
+    barline.location = HorizontalAlignment::left;
+    EndingData ending;
+    ending.type = EndingType::start;
+    ending.numbers = {1};
+    ending.printObject = Bool::no;
+    barline.ending = ending;
+
+    const auto xml = toXml(score);
+    CHECK(xml.find(R"(print-object="no")") != std::string::npos);
+}
+
+T_END;
+
+// An ending without print-object reads back unspecified and does not write the attribute.
+TEST(endingWithoutPrintObjectOmitsAttribute, Repeat)
+{
+    const auto score = fromXml(endingXmlForRepeat(R"(<ending number="1" type="start"/>)"));
+    const auto &ob = score.parts.back().measures.back().barlines.front();
+    REQUIRE(ob.ending.has_value());
+    CHECK(Bool::unspecified == ob.ending->printObject);
+
+    const auto xml = toXml(score);
+    CHECK(xml.find("print-object") == std::string::npos);
+}
+
+T_END;
+
+// Two endings that differ only in whether the bracket is printed are not equal.
+TEST(endingEqualityCoversPrintObject, Repeat)
+{
+    EndingData base;
+    base.type = EndingType::start;
+    base.numbers = {1};
+
+    auto hidden = base;
+    hidden.printObject = Bool::no;
+    CHECK(base != hidden);
+
+    auto shown = base;
+    shown.printObject = Bool::yes;
+    CHECK(base != shown);
+}
+
+T_END;
+
 // A barline that carries no ending must report none, and must not emit an <ending> element.
 TEST(barlineWithoutEndingIsAbsent, Repeat)
 {

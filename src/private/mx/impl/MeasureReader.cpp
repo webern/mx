@@ -1257,6 +1257,11 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
             endingData.textY = static_cast<double>(mxEnding.textY()->value().value());
         }
 
+        if (mxEnding.printObject().has_value())
+        {
+            endingData.printObject = myConverter.convert(*mxEnding.printObject());
+        }
+
         barline.ending = std::move(endingData);
     }
 

@@ -81,7 +81,15 @@ class EndingData
     std::optional<double> textX;
     std::optional<double> textY;
 
-    EndingData() : type{EndingType::start}, numbers{}, text{}, positionData{}, endLength{}, textX{}, textY{}
+    // Whether the bracket is drawn. `no` hides it: the ending still marks which passes play these
+    // measures, but notation software does not print the bracket or its label. `yes` states that it
+    // is printed. `unspecified` (the default) does not write print-object, which leaves the bracket
+    // printed.
+    Bool printObject;
+
+    EndingData()
+        : type{EndingType::start}, numbers{}, text{}, positionData{}, endLength{}, textX{}, textY{},
+          printObject{Bool::unspecified}
     {
     }
 };
@@ -94,6 +102,7 @@ MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(endLength)
 MXAPI_EQUALS_MEMBER(textX)
 MXAPI_EQUALS_MEMBER(textY)
+MXAPI_EQUALS_MEMBER(printObject)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(EndingData);
 
