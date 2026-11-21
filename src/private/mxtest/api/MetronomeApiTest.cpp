@@ -8,6 +8,7 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
 #include "mxtest/api/RoundTrip.h"
+#include "mxtest/api/TestHelpers.h"
 
 #include <sstream>
 #include <string>
@@ -281,6 +282,136 @@ TEST(roundTripMetronomeAttributes, MetronomeApi)
     {
         CHECK(std::string{"tempo1"} == *out.id);
     }
+}
+
+T_END;
+
+// A score with one quarter-note metronome mark at 120, whose number is set in the given font.
+ScoreData metronomeApiTestPerMinuteScore(const FontData &perMinuteFont)
+{
+    BeatsPerMinute bpm;
+    bpm.durationName = DurationName::quarter;
+    bpm.beatsPerMinute = "120";
+    bpm.fontData = perMinuteFont;
+    TempoData tempo;
+    tempo.choice = TempoChoice{bpm};
+
+    ScoreData score;
+    score.ticksPerQuarter = 100;
+    auto &staff = score.parts.emplace_back().measures.emplace_back().staves.emplace_back();
+    staff.directions.emplace_back().directionTypes.emplace_back(DirectionChoice{tempo});
+    return score;
+}
+
+// The tempo of the first direction in the score.
+TempoData metronomeApiTestFirstTempo(const ScoreData &score)
+{
+    const auto &directions = score.parts.at(0).measures.at(0).staves.at(0).directions;
+    if (directions.empty() || directions.front().directionTypes.empty() ||
+        !directions.front().directionTypes.front().isTempo())
+    {
+        return TempoData{};
+    }
+    return directions.front().directionTypes.front().tempo();
+}
+
+// The number of a metronome mark can be set in a font of its own, apart from the mark's font.
+TEST(perMinuteFontRoundTrips, MetronomeApi)
+{
+    FontData font;
+    font.fontFamily = {"Times New Roman"};
+    font.style = FontStyle::italic;
+    font.weight = FontWeight::bold;
+    font.sizeType = FontSizeType::point;
+    font.sizePoint = 14.0;
+    const auto score = metronomeApiTestPerMinuteScore(font);
+
+    const auto xml = mxtest::toXml(score);
+    const auto perMinutePos = xml.find("<per-minute ");
+    REQUIRE(perMinutePos != std::string::npos);
+    const auto perMinuteTag = xml.substr(perMinutePos, xml.find('>', perMinutePos) - perMinutePos);
+    CHECK(perMinuteTag.find("font-family=\"Times New Roman\"") != std::string::npos);
+    CHECK(perMinuteTag.find("font-style=\"italic\"") != std::string::npos);
+    CHECK(perMinuteTag.find("font-weight=\"bold\"") != std::string::npos);
+    CHECK(perMinuteTag.find("font-size=\"14\"") != std::string::npos);
+    CHECK(xml.find("<metronome>") != std::string::npos);
+
+    const auto tempo = metronomeApiTestFirstTempo(mxtest::roundTrip(score));
+    REQUIRE(tempo.choice.isBeatsPerMinute());
+    CHECK(font == tempo.choice.beatsPerMinute().fontData);
+    CHECK(FontData{} == tempo.fontData);
+}
+
+T_END;
+
+// The number's font is read apart from the mark's own font, including a CSS font size.
+TEST(perMinuteFontReadsFromXml, MetronomeApi)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>x</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <direction>
+        <direction-type>
+          <metronome font-family="Bravura Text" font-style="italic">
+            <beat-unit>quarter</beat-unit>
+            <per-minute font-family="Arial" font-size="large" font-style="normal" font-weight="bold">132</per-minute>
+          </metronome>
+        </direction-type>
+      </direction>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    const auto tempo = metronomeApiTestFirstTempo(mxtest::fromXml(xml));
+    REQUIRE(tempo.choice.isBeatsPerMinute());
+    const auto bpm = tempo.choice.beatsPerMinute();
+    CHECK(std::string{"132"} == bpm.beatsPerMinute);
+    REQUIRE(1 == bpm.fontData.fontFamily.size());
+    CHECK(std::string{"Arial"} == bpm.fontData.fontFamily.front());
+    CHECK(FontSizeType::css == bpm.fontData.sizeType);
+    CHECK(CssSize::large == bpm.fontData.sizeCss);
+    CHECK(FontStyle::normal == bpm.fontData.style);
+    CHECK(FontWeight::bold == bpm.fontData.weight);
+    REQUIRE(1 == tempo.fontData.fontFamily.size());
+    CHECK(std::string{"Bravura Text"} == tempo.fontData.fontFamily.front());
+    CHECK(FontStyle::italic == tempo.fontData.style);
+}
+
+T_END;
+
+// A number without a font of its own is written without font attributes and reads back with
+// the font left at its defaults.
+TEST(perMinuteWithoutFontWritesNothing, MetronomeApi)
+{
+    const auto score = metronomeApiTestPerMinuteScore(FontData{});
+    CHECK(mxtest::toXml(score).find("<per-minute>120</per-minute>") != std::string::npos);
+
+    const auto tempo = metronomeApiTestFirstTempo(mxtest::roundTrip(score));
+    REQUIRE(tempo.choice.isBeatsPerMinute());
+    CHECK(FontData{} == tempo.choice.beatsPerMinute().fontData);
+}
+
+T_END;
+
+// Two marks that differ only in the number's font are not equal, here and where a metric
+// modulation holds a BeatsPerMinute.
+TEST(perMinuteFontEquality, MetronomeApi)
+{
+    BeatsPerMinute plain;
+    plain.durationName = DurationName::quarter;
+    plain.beatsPerMinute = "120";
+    BeatsPerMinute bold = plain;
+    bold.fontData.weight = FontWeight::bold;
+    CHECK(plain != bold);
+    CHECK(!(TempoChoice{plain} == TempoChoice{bold}));
+
+    MetricModulation left;
+    left.playbackBeatsPerMinute = plain;
+    MetricModulation right;
+    right.playbackBeatsPerMinute = bold;
+    CHECK(left != right);
 }
 
 T_END;

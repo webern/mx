@@ -231,6 +231,7 @@ void MetronomeReader::parseBeatsPerMinute() const
     readBeatUnitWithTies(converter, beatUnitPer, bpm.durationName, bpm.dots, bpm.tiedBeatUnits);
     // per-minute is xs:string in MusicXML ("120", "ca. 76", a range, ...); keep it verbatim.
     bpm.beatsPerMinute = beatUnitPer.choice().asPerMinute().value();
+    bpm.fontData = getFontData(beatUnitPer.choice().asPerMinute());
 
     myOutTempoData.choice = api::TempoChoice{std::move(bpm)};
 }
