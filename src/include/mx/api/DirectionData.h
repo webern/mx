@@ -63,6 +63,13 @@ struct DirectionData
     // attribute, the offset value will be ignored when determining the appearance of that element.
     std::optional<int> offset;
 
+    // Whether the offset moves the direction in time as well as on the page. yes: the direction
+    // takes effect at tickTimePosition + offset, so a dynamic marked this way changes the volume
+    // there and belongs to the note found there. no: the offset is visual only; the direction still
+    // takes effect at tickTimePosition. unspecified means no, MusicXML's default. Ignored when
+    // offset is absent.
+    Bool offsetSound;
+
     // a voice value of VALUE_UNSPECIFIED means unspecified
     int voice;
 
@@ -100,8 +107,9 @@ struct DirectionData
 
     DirectionData()
         : tickTimePosition{0}, placement{Placement::unspecified}, systemRelation{SystemRelation::unspecified},
-          directive{Bool::unspecified}, offset{}, voice{VALUE_UNSPECIFIED}, isStaffValueSpecified{true},
-          isSoundDataSpecified{false}, soundData{}, directionTypes{}, chords{}, figuredBasses{}, id{}
+          directive{Bool::unspecified}, offset{}, offsetSound{Bool::unspecified}, voice{VALUE_UNSPECIFIED},
+          isStaffValueSpecified{true}, isSoundDataSpecified{false}, soundData{}, directionTypes{}, chords{},
+          figuredBasses{}, id{}
     {
     }
 };
@@ -118,6 +126,7 @@ MXAPI_EQUALS_MEMBER(placement)
 MXAPI_EQUALS_MEMBER(systemRelation)
 MXAPI_EQUALS_MEMBER(directive)
 MXAPI_EQUALS_MEMBER(offset)
+MXAPI_EQUALS_MEMBER(offsetSound)
 MXAPI_EQUALS_MEMBER(voice)
 MXAPI_EQUALS_MEMBER(isStaffValueSpecified)
 MXAPI_EQUALS_MEMBER(isSoundDataSpecified)
