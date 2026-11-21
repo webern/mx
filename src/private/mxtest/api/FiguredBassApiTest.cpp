@@ -283,4 +283,204 @@ TEST(figuredBassExtendEquality, FiguredBassApi)
 
 T_END;
 
+// Wrap a <figured-bass> start tag, with whatever attributes the caller gives it, in the smallest
+// score that can carry one: a single figure followed by the bass note it belongs to.
+static std::string figuredBassXmlForPosition(const std::string &inAttributes)
+{
+    return R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>P1</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+      </attributes>
+      <figured-bass)" +
+           inAttributes + R"(>
+        <figure>
+          <figure-number>6</figure-number>
+        </figure>
+      </figured-bass>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>3</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>)";
+}
+
+static FiguredBassData makeFiguredBassWithPositionAndPrint()
+{
+    FiguredBassData fb{};
+    FigureData f0{};
+    f0.figureNumber = "6";
+    fb.figures.push_back(f0);
+    fb.positionData.isDefaultXSpecified = true;
+    fb.positionData.defaultX = 12.0;
+    fb.positionData.isDefaultYSpecified = true;
+    fb.positionData.defaultY = -80.0;
+    fb.positionData.isRelativeXSpecified = true;
+    fb.positionData.relativeX = 2.0;
+    fb.positionData.isRelativeYSpecified = true;
+    fb.positionData.relativeY = -3.0;
+    fb.positionData.horizontalAlignment = HorizontalAlignment::center;
+    fb.positionData.verticalAlignment = VerticalAlignment::top;
+    fb.positionData.placement = Placement::below;
+    fb.printData.printObject = Bool::no;
+    fb.printData.fontData.fontFamily = {"Times"};
+    fb.printData.fontData.style = FontStyle::italic;
+    fb.printData.fontData.weight = FontWeight::bold;
+    fb.printData.fontData.sizeType = FontSizeType::point;
+    fb.printData.fontData.sizePoint = 11.0;
+    fb.printData.isColorSpecified = true;
+    fb.printData.color.red = 255;
+    fb.printData.color.green = 0;
+    fb.printData.color.blue = 0;
+    return fb;
+}
+
+// Figures moved, aligned, restyled and hidden by hand come back exactly as they were set.
+TEST(figuredBassPositionAndPrintRoundTrip, FiguredBassApi)
+{
+    const auto fb = makeFiguredBassWithPositionAndPrint();
+    const auto out = mxtest::roundTrip(makeScoreWithFiguredBass(fb));
+
+    const auto *outFb = firstFiguredBass(out);
+    REQUIRE(outFb != nullptr);
+    CHECK(fb.positionData == outFb->positionData);
+    CHECK(fb.printData == outFb->printData);
+    CHECK(fb == *outFb);
+}
+
+T_END;
+
+// Figures placed above the staff come back above it.
+TEST(figuredBassPlacementAboveRoundTrip, FiguredBassApi)
+{
+    FiguredBassData fb{};
+    FigureData f0{};
+    f0.figureNumber = "6";
+    fb.figures.push_back(f0);
+    fb.positionData.placement = Placement::above;
+
+    const auto out = mxtest::roundTrip(makeScoreWithFiguredBass(fb));
+
+    const auto *outFb = firstFiguredBass(out);
+    REQUIRE(outFb != nullptr);
+    CHECK(Placement::above == outFb->positionData.placement);
+}
+
+T_END;
+
+// Every position, font, color and print-object attribute on <figured-bass> reaches FiguredBassData.
+TEST(figuredBassPositionAndPrintReadFromXml, FiguredBassApi)
+{
+    const auto score = fromXml(figuredBassXmlForPosition(
+        R"( default-x="12" default-y="-80" relative-x="2" relative-y="-3" font-family="Times" font-style="italic" font-size="11" font-weight="bold" color="#FF0000" halign="center" valign="top" placement="below" print-object="no")"));
+
+    const auto *fb = firstFiguredBass(score);
+    REQUIRE(fb != nullptr);
+    const auto &pos = fb->positionData;
+    CHECK(pos.isDefaultXSpecified);
+    CHECK_DOUBLES_EQUAL(12.0, pos.defaultX, 0.0001);
+    CHECK(pos.isDefaultYSpecified);
+    CHECK_DOUBLES_EQUAL(-80.0, pos.defaultY, 0.0001);
+    CHECK(pos.isRelativeXSpecified);
+    CHECK_DOUBLES_EQUAL(2.0, pos.relativeX, 0.0001);
+    CHECK(pos.isRelativeYSpecified);
+    CHECK_DOUBLES_EQUAL(-3.0, pos.relativeY, 0.0001);
+    CHECK(HorizontalAlignment::center == pos.horizontalAlignment);
+    CHECK(VerticalAlignment::top == pos.verticalAlignment);
+    CHECK(Placement::below == pos.placement);
+
+    const auto &print = fb->printData;
+    CHECK(Bool::no == print.printObject);
+    REQUIRE(print.fontData.fontFamily.size() == 1);
+    CHECK_EQUAL("Times", print.fontData.fontFamily.front());
+    CHECK(FontStyle::italic == print.fontData.style);
+    CHECK(FontWeight::bold == print.fontData.weight);
+    CHECK(FontSizeType::point == print.fontData.sizeType);
+    CHECK_DOUBLES_EQUAL(11.0, print.fontData.sizePoint, 0.0001);
+    CHECK(print.isColorSpecified);
+    CHECK_EQUAL(255, static_cast<int>(print.color.red));
+    CHECK_EQUAL(0, static_cast<int>(print.color.green));
+    CHECK_EQUAL(0, static_cast<int>(print.color.blue));
+}
+
+T_END;
+
+// The position, font, color and print-object are written as attributes of <figured-bass>.
+TEST(figuredBassSerializesPositionAndPrint, FiguredBassApi)
+{
+    const auto xml = mxtest::toXml(makeScoreWithFiguredBass(makeFiguredBassWithPositionAndPrint()));
+
+    mxpugi::xml_document doc;
+    REQUIRE(doc.load_string(xml.c_str()));
+    const auto figuredBass = doc.select_node("//figured-bass").node();
+    REQUIRE(!figuredBass.empty());
+    CHECK_EQUAL("12", std::string{figuredBass.attribute("default-x").value()});
+    CHECK_EQUAL("-80", std::string{figuredBass.attribute("default-y").value()});
+    CHECK_EQUAL("2", std::string{figuredBass.attribute("relative-x").value()});
+    CHECK_EQUAL("-3", std::string{figuredBass.attribute("relative-y").value()});
+    CHECK_EQUAL("center", std::string{figuredBass.attribute("halign").value()});
+    CHECK_EQUAL("top", std::string{figuredBass.attribute("valign").value()});
+    CHECK_EQUAL("below", std::string{figuredBass.attribute("placement").value()});
+    CHECK_EQUAL("no", std::string{figuredBass.attribute("print-object").value()});
+    CHECK_EQUAL("Times", std::string{figuredBass.attribute("font-family").value()});
+    CHECK_EQUAL("italic", std::string{figuredBass.attribute("font-style").value()});
+    CHECK_EQUAL("bold", std::string{figuredBass.attribute("font-weight").value()});
+    CHECK_EQUAL("11", std::string{figuredBass.attribute("font-size").value()});
+    CHECK(!figuredBass.attribute("color").empty());
+}
+
+T_END;
+
+// Figures left to the program's layout read back with default position and print data, and do not
+// write any of those attributes.
+TEST(figuredBassWithoutPositionAndPrintOmitsAttributes, FiguredBassApi)
+{
+    const auto score = fromXml(figuredBassXmlForPosition(""));
+    const auto *fb = firstFiguredBass(score);
+    REQUIRE(fb != nullptr);
+    CHECK(PositionData{} == fb->positionData);
+    CHECK(PrintData{} == fb->printData);
+
+    const auto xml = mxtest::toXml(score);
+    mxpugi::xml_document doc;
+    REQUIRE(doc.load_string(xml.c_str()));
+    const auto figuredBass = doc.select_node("//figured-bass").node();
+    REQUIRE(!figuredBass.empty());
+    CHECK(figuredBass.first_attribute().empty());
+}
+
+T_END;
+
+// Two figured-bass groups that differ only in where or how they are drawn are not equal.
+TEST(figuredBassEqualityCoversPositionAndPrint, FiguredBassApi)
+{
+    FiguredBassData base{};
+    FigureData f0{};
+    f0.figureNumber = "6";
+    base.figures.push_back(f0);
+
+    auto moved = base;
+    moved.positionData.placement = Placement::above;
+    CHECK(base != moved);
+
+    auto hidden = base;
+    hidden.printData.printObject = Bool::no;
+    CHECK(base != hidden);
+}
+
+T_END;
+
 #endif
