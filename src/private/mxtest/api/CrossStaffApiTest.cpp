@@ -358,8 +358,8 @@ T_END;
 namespace crossStaffApiTest
 {
 // Voice 1 beams four eighths that cross down to staff 2 for the third one, and leaves the second
-// eighth as a rest. Voice 2 plays in that rest. There is no <backup>: the <voice> text alone tells
-// the two voices apart.
+// eighth as a rest. Voice 2 plays in that rest, on the staff {otherVoiceStaff} names. There is no
+// <backup>: the <voice> text alone tells the two voices apart.
 constexpr const char *const kOtherVoiceInBeamGroupXml = R"(      <note>
         <pitch>
           <step>C</step>
@@ -379,7 +379,7 @@ constexpr const char *const kOtherVoiceInBeamGroupXml = R"(      <note>
         <duration>1</duration>
         <voice>2</voice>
         <type>eighth</type>
-        <staff>1</staff>
+        <staff>{otherVoiceStaff}</staff>
       </note>
       <note>
         <pitch>
@@ -405,19 +405,31 @@ constexpr const char *const kOtherVoiceInBeamGroupXml = R"(      <note>
       </note>
 )";
 
+// The score of kOtherVoiceInBeamGroupXml with voice 2 on staff inOtherVoiceStaff (1 or 2).
+inline std::string makeOtherVoiceInBeamGroupXml(int inOtherVoiceStaff)
+{
+    std::string body = kOtherVoiceInBeamGroupXml;
+    const std::string placeholder = "{otherVoiceStaff}";
+    body.replace(body.find(placeholder), placeholder.size(), std::to_string(inOtherVoiceStaff));
+    return std::string{xmlHeader} + body + xmlFooter;
+}
+
 // Checks that the voice 1 beam group of kOtherVoiceInBeamGroupXml stays together on staff 1, with
-// its third note marked as drawn on staff 2, and that voice 2 is a voice of its own on staff 1.
-inline void checkOtherVoiceInBeamGroup(const ScoreData &inScore)
+// its third note marked as drawn on staff 2, and that voice 2 is a voice of its own on staff
+// inOtherVoiceStaff.
+inline void checkOtherVoiceInBeamGroup(const ScoreData &inScore, int inOtherVoiceStaff)
 {
     REQUIRE(inScore.parts.size() == 1);
     const auto &measure = inScore.parts.at(0).measures.at(0);
     REQUIRE(measure.staves.size() == 2);
-    CHECK(measure.staves.at(1).voices.empty());
 
-    const auto &voices = measure.staves.at(0).voices;
-    REQUIRE(voices.size() == 2);
-    const auto &groupNotes = voices.begin()->second.notes;
-    const auto &otherNotes = std::next(voices.begin())->second.notes;
+    const auto &groupVoices = measure.staves.at(0).voices;
+    const auto &otherVoices = measure.staves.at(inOtherVoiceStaff - 1).voices;
+    const bool isSameStaff = inOtherVoiceStaff == 1;
+    REQUIRE(groupVoices.size() == (isSameStaff ? 2 : 1));
+    REQUIRE(measure.staves.at(1).voices.size() == (isSameStaff ? 0 : 1));
+    const auto &groupNotes = groupVoices.begin()->second.notes;
+    const auto &otherNotes = std::prev(otherVoices.end())->second.notes;
 
     REQUIRE(groupNotes.size() == 3);
     CHECK(groupNotes.at(0).pitchData.step == Step::c);
@@ -446,11 +458,62 @@ inline void checkOtherVoiceInBeamGroup(const ScoreData &inScore)
 TEST(readCrossStaffBeamGroupAroundOtherVoice, CrossStaff)
 {
     using namespace crossStaffApiTest;
-    const auto xml = std::string{xmlHeader} + kOtherVoiceInBeamGroupXml + xmlFooter;
+    const auto score = mxtest::fromXml(makeOtherVoiceInBeamGroupXml(1));
+    checkOtherVoiceInBeamGroup(score, 1);
+    checkOtherVoiceInBeamGroup(mxtest::fromXml(mxtest::toXml(score)), 1);
+}
+
+T_END;
+
+// the same, with the other voice on the staff the group crosses to
+TEST(writeCrossStaffBeamGroupAroundOtherStaffVoice, CrossStaff)
+{
+    using namespace crossStaffApiTest;
+    const auto score = mxtest::fromXml(makeOtherVoiceInBeamGroupXml(2));
+    checkOtherVoiceInBeamGroup(score, 2);
+    checkOtherVoiceInBeamGroup(mxtest::fromXml(mxtest::toXml(score)), 2);
+}
+
+T_END;
+
+// a beam group over a rest written as a <forward> stays one group, so a group that crosses staves
+// keeps its notes on one staff
+TEST(readCrossStaffBeamGroupOverForwardRest, CrossStaff)
+{
+    using namespace crossStaffApiTest;
+    std::string xml = xmlHeader;
+    xml += makeNoteXml("C", 5, "1", "begin");
+    xml += R"(      <forward>
+        <duration>1</duration>
+      </forward>
+)";
+    xml += makeNoteXml("A", 3, "2", "continue");
+    xml += makeNoteXml("E", 5, "1", "end");
+    xml += xmlFooter;
+
+    const auto check = [](const ScoreData &inScore) {
+        REQUIRE(inScore.parts.size() == 1);
+        const auto &measure = inScore.parts.at(0).measures.at(0);
+        REQUIRE(measure.staves.size() == 2);
+        CHECK(measure.staves.at(1).voices.empty());
+        REQUIRE(measure.staves.at(0).voices.size() == 1);
+        const auto &notes = measure.staves.at(0).voices.begin()->second.notes;
+        REQUIRE(notes.size() == 3);
+        CHECK_EQUAL(0, notes.at(0).tickTimePosition);
+        CHECK_EQUAL(2, notes.at(1).tickTimePosition);
+        CHECK_EQUAL(3, notes.at(2).tickTimePosition);
+        CHECK(!notes.at(0).crossStaffIndex.has_value());
+        REQUIRE(notes.at(1).crossStaffIndex.has_value());
+        CHECK_EQUAL(1, *notes.at(1).crossStaffIndex);
+        CHECK(!notes.at(2).crossStaffIndex.has_value());
+        CHECK(notes.at(0).beams == std::vector<Beam>{Beam::begin});
+        CHECK(notes.at(1).beams == std::vector<Beam>{Beam::extend});
+        CHECK(notes.at(2).beams == std::vector<Beam>{Beam::end});
+    };
 
     const auto score = mxtest::fromXml(xml);
-    checkOtherVoiceInBeamGroup(score);
-    checkOtherVoiceInBeamGroup(mxtest::fromXml(mxtest::toXml(score)));
+    check(score);
+    check(mxtest::fromXml(mxtest::toXml(score)));
 }
 
 T_END;
