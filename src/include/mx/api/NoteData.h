@@ -212,6 +212,13 @@ class NoteData
     // instruments respond to it, so leave it empty unless the release really matters.
     std::optional<double> velocityStop;
 
+    // Which instruments of the note's part play it, named by their InstrumentData::uniqueId. Leave
+    // it empty for a note played by the part's instrument, which is the usual case. In a drum kit
+    // part, name the drum that plays the note. Name more than one when several instruments of the
+    // part play the note in unison. An id that is not one of the part's instruments is not written
+    // and the write reports an error diagnostic. This is the <instrument> element of <note>.
+    std::vector<std::string> instruments;
+
     int userRequestedVoiceNumber;
 
     // Most users can ignore this; leave it unspecified. It only controls whether the note's
@@ -296,6 +303,7 @@ MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(accidentalSmufl)
 MXAPI_EQUALS_MEMBER(velocityStart)
 MXAPI_EQUALS_MEMBER(velocityStop)
+MXAPI_EQUALS_MEMBER(instruments)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
 MXAPI_EQUALS_MEMBER(writeStaffNumber)
 MXAPI_EQUALS_MEMBER(crossStaffIndex)

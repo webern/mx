@@ -70,6 +70,33 @@ bool partWriterHasInstrumentChange(const api::PartData &inPartData)
     return false;
 }
 
+bool partWriterHasNoteInstrument(const api::PartData &inPartData, const std::string &instrumentId)
+{
+    if (instrumentId.empty())
+    {
+        return false;
+    }
+
+    for (const auto &measure : inPartData.measures)
+    {
+        for (const auto &staff : measure.staves)
+        {
+            for (const auto &voice : staff.voices)
+            {
+                for (const auto &note : voice.second.notes)
+                {
+                    const auto &ids = note.instruments;
+                    if (std::find(ids.cbegin(), ids.cend(), instrumentId) != ids.cend())
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
 // The base of the ids given to parts that bring no instrument id of their own, e.g. "ID1000000".
 // High enough to be unlikely to collide with ids already present in a parsed score.
 constexpr int kSynthesizedInstrumentIdBase = 1000000;
@@ -89,6 +116,19 @@ core::Token PartWriter::partInstrumentId(bool isReported) const
         return core::Token::parse(myPartData.instrumentData.uniqueId, outcome);
     }
     return core::Token{"ID" + std::to_string(kSynthesizedInstrumentIdBase + myPartIndex)};
+}
+
+// The id an additional instrument carries: the caller's uniqueId when it set one; otherwise derived
+// from the part's place in the score and the instrument's place in the part, e.g. "ID1000000-1".
+core::Token PartWriter::additionalInstrumentId(size_t index) const
+{
+    const auto &uniqueId = myPartData.additionalInstruments.at(index).uniqueId;
+    if (!uniqueId.empty())
+    {
+        return writtenToken("instrument id", uniqueId);
+    }
+    return core::Token{"ID" + std::to_string(kSynthesizedInstrumentIdBase + myPartIndex) + "-" +
+                       std::to_string(index + 1)};
 }
 
 PartWriter::PartWriter(const api::PartData &inPartData, int inPartIndex, int inTicksPerQuarter,
@@ -156,37 +196,28 @@ core::ScorePart PartWriter::getScorePart() const
     }
 
     const core::Token instrumentId = partInstrumentId();
-
-    core::ScoreInstrument scoreInstrument{};
     bool addScoreInstrument = false;
-    scoreInstrument.setID(instrumentId);
-
-    if (myPartData.instrumentData.name.size() > 0)
-    {
-        addScoreInstrument = true;
-        scoreInstrument.setInstrumentName(myPartData.instrumentData.name);
-    }
-
-    if (myPartData.instrumentData.abbreviation.size() > 0)
-    {
-        addScoreInstrument = true;
-        scoreInstrument.setInstrumentAbbreviation(myPartData.instrumentData.abbreviation);
-    }
-
-    api::InstrumentChangeData sound{};
-    sound.soundID = myPartData.instrumentData.soundID;
-    sound.soloOrEnsemble = myPartData.instrumentData.soloOrEnsemble;
-    sound.virtualLibrary = myPartData.instrumentData.midiData.virtualLibrary;
-    sound.virtualName = myPartData.instrumentData.midiData.virtualName;
-    scoreInstrument.setVirtualInstrumentData(writeVirtualInstrumentData(sound));
-
-    if (scoreInstrument.virtualInstrumentData() != core::VirtualInstrumentDataGroup{})
-    {
-        addScoreInstrument = true;
-    }
+    const core::ScoreInstrument scoreInstrument =
+        makeScoreInstrument(myPartData.instrumentData, instrumentId, addScoreInstrument);
 
     // An instrument change refers to the part's score-instrument by id, so the part needs one.
     if (partWriterHasInstrumentChange(myPartData))
+    {
+        addScoreInstrument = true;
+    }
+
+    // The first score-instrument is the part's instrument, so it is written ahead of any additional
+    // instrument. A note can name it too.
+    if (!myPartData.additionalInstruments.empty() ||
+        partWriterHasNoteInstrument(myPartData, myPartData.instrumentData.uniqueId))
+    {
+        addScoreInstrument = true;
+    }
+
+    // Once the part has playback data, a score-instrument is required, so write one even when
+    // the caller described no instrument. It already carries the id the midi elements refer to,
+    // which is what makes that reference resolve.
+    if (addMidiGroup(myPartData.instrumentData.midiData, instrumentId, false, scorePart))
     {
         addScoreInstrument = true;
     }
@@ -196,121 +227,158 @@ core::ScorePart PartWriter::getScorePart() const
         scorePart.addScoreInstrument(scoreInstrument);
     }
 
+    for (size_t i = 0; i < myPartData.additionalInstruments.size(); ++i)
+    {
+        const auto &additional = myPartData.additionalInstruments[i];
+        const core::Token additionalId = additionalInstrumentId(i);
+        bool hasContent = false;
+        scorePart.addScoreInstrument(makeScoreInstrument(additional, additionalId, hasContent));
+        addMidiGroup(additional.midiData, additionalId, true, scorePart);
+    }
+
+    return scorePart;
+}
+
+core::ScoreInstrument PartWriter::makeScoreInstrument(const api::InstrumentData &instrument, const core::Token &id,
+                                                      bool &outHasContent) const
+{
+    core::ScoreInstrument scoreInstrument{};
+    scoreInstrument.setID(id);
+
+    if (instrument.name.size() > 0)
+    {
+        outHasContent = true;
+        scoreInstrument.setInstrumentName(instrument.name);
+    }
+
+    if (instrument.abbreviation.size() > 0)
+    {
+        outHasContent = true;
+        scoreInstrument.setInstrumentAbbreviation(instrument.abbreviation);
+    }
+
+    api::InstrumentChangeData sound{};
+    sound.soundID = instrument.soundID;
+    sound.soloOrEnsemble = instrument.soloOrEnsemble;
+    sound.virtualLibrary = instrument.midiData.virtualLibrary;
+    sound.virtualName = instrument.midiData.virtualName;
+    scoreInstrument.setVirtualInstrumentData(writeVirtualInstrumentData(sound));
+
+    if (scoreInstrument.virtualInstrumentData() != core::VirtualInstrumentDataGroup{})
+    {
+        outHasContent = true;
+    }
+
+    return scoreInstrument;
+}
+
+bool PartWriter::addMidiGroup(const api::MidiData &midiData, const core::Token &id, bool isAdditional,
+                              core::ScorePart &outScorePart) const
+{
     bool addMidiElement = false;
     core::ScorePartMIDIGroup midiGroup{};
     core::MIDIDevice midiDevice{};
     core::MIDIInstrument midiInstrument{};
-    midiInstrument.setID(instrumentId);
+    midiInstrument.setID(id);
 
-    const auto &apiMidiData = myPartData.instrumentData.midiData;
-    if (apiMidiData.device.size() > 0 || apiMidiData.devicePort.has_value())
+    if (midiData.device.size() > 0 || midiData.devicePort.has_value())
     {
         addMidiElement = true;
-        midiDevice.setValue(apiMidiData.device);
+        midiDevice.setValue(midiData.device);
 
-        if (apiMidiData.devicePort.has_value())
+        if (midiData.devicePort.has_value())
         {
-            const core::MIDI16 port{*apiMidiData.devicePort};
-            reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-device port", *apiMidiData.devicePort,
+            const core::MIDI16 port{*midiData.devicePort};
+            reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-device port", *midiData.devicePort,
                            port.value());
             midiDevice.setPort(port);
         }
 
-        // The midi-device attaches to this part's instrument, the same instrument the
-        // midi-instrument below is written for. Emit that link only when the source stated it;
-        // for a single-instrument part it is otherwise implied.
-        if (apiMidiData.writeDeviceId == api::Bool::yes)
+        // The midi-device attaches to the same instrument the midi-instrument below is written for.
+        // The part's instrument is implied, so its link is written only when asked for. Without the
+        // link, a device applies to every instrument of the part, so an additional instrument's link
+        // is written unless asked not to be.
+        const bool writeId =
+            midiData.writeDeviceId == api::Bool::yes || (isAdditional && midiData.writeDeviceId != api::Bool::no);
+        if (writeId)
         {
-            midiDevice.setID(instrumentId);
+            midiDevice.setID(id);
         }
 
         midiGroup.setMIDIDevice(midiDevice);
     }
 
-    if (myPartData.instrumentData.midiData.name.size() > 0)
+    if (midiData.name.size() > 0)
     {
         addMidiElement = true;
-        midiInstrument.setMIDIName(myPartData.instrumentData.midiData.name);
+        midiInstrument.setMIDIName(midiData.name);
     }
 
-    if (myPartData.instrumentData.midiData.bank >= 0)
+    if (midiData.bank >= 0)
     {
         addMidiElement = true;
-        const core::MIDI16384 bank{myPartData.instrumentData.midiData.bank};
-        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-bank", myPartData.instrumentData.midiData.bank,
-                       bank.value());
+        const core::MIDI16384 bank{midiData.bank};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-bank", midiData.bank, bank.value());
         midiInstrument.setMIDIBank(bank);
     }
 
-    if (myPartData.instrumentData.midiData.channel >= 0)
+    if (midiData.channel >= 0)
     {
         addMidiElement = true;
-        const core::MIDI16 channel{myPartData.instrumentData.midiData.channel};
-        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-channel",
-                       myPartData.instrumentData.midiData.channel, channel.value());
+        const core::MIDI16 channel{midiData.channel};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-channel", midiData.channel, channel.value());
         midiInstrument.setMIDIChannel(channel);
     }
 
-    if (myPartData.instrumentData.midiData.program >= 0)
+    if (midiData.program >= 0)
     {
         addMidiElement = true;
-        const core::MIDI128 program{myPartData.instrumentData.midiData.program};
-        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-program",
-                       myPartData.instrumentData.midiData.program, program.value());
+        const core::MIDI128 program{midiData.program};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-program", midiData.program, program.value());
         midiInstrument.setMIDIProgram(program);
     }
 
-    if (myPartData.instrumentData.midiData.unpitched != api::VALUE_UNSPECIFIED)
+    if (midiData.unpitched != api::VALUE_UNSPECIFIED)
     {
         addMidiElement = true;
-        const core::MIDI128 unpitched{myPartData.instrumentData.midiData.unpitched};
-        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-unpitched",
-                       myPartData.instrumentData.midiData.unpitched, unpitched.value());
+        const core::MIDI128 unpitched{midiData.unpitched};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "midi-unpitched", midiData.unpitched,
+                       unpitched.value());
         midiInstrument.setMIDIUnpitched(unpitched);
     }
 
-    if (myPartData.instrumentData.midiData.isElevationSpecified)
+    if (midiData.isElevationSpecified)
     {
         addMidiElement = true;
-        const core::RotationDegrees elevation{core::Decimal{myPartData.instrumentData.midiData.elevation}};
-        reportAdjusted(diagnostics(), partLocation(myPartIndex), "elevation",
-                       myPartData.instrumentData.midiData.elevation, elevation.value().value());
+        const core::RotationDegrees elevation{core::Decimal{midiData.elevation}};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "elevation", midiData.elevation,
+                       elevation.value().value());
         midiInstrument.setElevation(elevation);
     }
 
-    if (myPartData.instrumentData.midiData.isPanSpecified)
+    if (midiData.isPanSpecified)
     {
         addMidiElement = true;
-        const core::RotationDegrees pan{core::Decimal{myPartData.instrumentData.midiData.pan}};
-        reportAdjusted(diagnostics(), partLocation(myPartIndex), "pan", myPartData.instrumentData.midiData.pan,
-                       pan.value().value());
+        const core::RotationDegrees pan{core::Decimal{midiData.pan}};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "pan", midiData.pan, pan.value().value());
         midiInstrument.setPan(pan);
     }
 
-    if (myPartData.instrumentData.midiData.isVolumeSpecified)
+    if (midiData.isVolumeSpecified)
     {
         addMidiElement = true;
-        const core::Percent volume{core::Decimal{myPartData.instrumentData.midiData.volume}};
-        reportAdjusted(diagnostics(), partLocation(myPartIndex), "volume", myPartData.instrumentData.midiData.volume,
-                       volume.value().value());
+        const core::Percent volume{core::Decimal{midiData.volume}};
+        reportAdjusted(diagnostics(), partLocation(myPartIndex), "volume", midiData.volume, volume.value().value());
         midiInstrument.setVolume(volume);
     }
 
     if (addMidiElement)
     {
         midiGroup.setMIDIInstrument(midiInstrument);
-        scorePart.addMIDIGroup(midiGroup);
+        outScorePart.addMIDIGroup(midiGroup);
     }
 
-    // Once the part has playback data, a score-instrument is required, so write one even when
-    // the caller described no instrument. It already carries the id the midi elements above
-    // refer to, which is what makes that reference resolve.
-    if (addMidiElement && !addScoreInstrument)
-    {
-        scorePart.addScoreInstrument(scoreInstrument);
-    }
-
-    return scorePart;
+    return addMidiElement;
 }
 
 core::PartwisePart PartWriter::getPartwisePart() const
@@ -362,6 +430,17 @@ void PartWriter::writeMeasures(const mx::api::PartData &inPartData, core::Partwi
     cursor.isFirstMeasureInPart = true;
     // getScorePart reports an invalid instrument id; the instrument changes only repeat it.
     cursor.instrumentId = partInstrumentId(false).value();
+    if (!inPartData.instrumentData.uniqueId.empty())
+    {
+        cursor.partInstrumentIds.push_back(inPartData.instrumentData.uniqueId);
+    }
+    for (const auto &additional : inPartData.additionalInstruments)
+    {
+        if (!additional.uniqueId.empty())
+        {
+            cursor.partInstrumentIds.push_back(additional.uniqueId);
+        }
+    }
 
     core::OneOrMore<core::PartwiseMeasure> measures{};
     for (const auto &measure : inPartData.measures)

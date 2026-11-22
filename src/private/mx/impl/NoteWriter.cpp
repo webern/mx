@@ -19,6 +19,7 @@
 #include "mx/core/generated/GraceNormalNoteGroup.h"
 #include "mx/core/generated/GraceNoteChoice.h"
 #include "mx/core/generated/GraceNoteGroup.h"
+#include "mx/core/generated/Instrument.h"
 #include "mx/core/generated/LyricChoice.h"
 #include "mx/core/generated/LyricSyllableGroup.h"
 #include "mx/core/generated/LyricTextGroup.h"
@@ -112,6 +113,7 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     setNotehead();
     setStemDirection();
     setMiscData();
+    setInstruments();
     impl::setId(myNoteData.id, myOutNote, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
     NotationsWriter notationsWriter{myNoteData, myCursor, myScoreWriter};
     impl::setAttributesFromPositionData(myNoteData.positionData, myOutNote);
@@ -728,6 +730,27 @@ void NoteWriter::setLyrics() const
         }
 
         myOutNote.addLyric(std::move(lyric));
+    }
+}
+
+void NoteWriter::setInstruments() const
+{
+    const auto &partIds = myCursor.partInstrumentIds;
+    for (const auto &id : myNoteData.instruments)
+    {
+        if (id.empty() || std::find(partIds.cbegin(), partIds.cend(), id) == partIds.cend())
+        {
+            myScoreWriter.getDiagnostics().report(
+                api::Severity::error, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
+                "note instrument \"" + id + "\" is not one of the part's instruments; it is not written");
+            continue;
+        }
+
+        // The part's instruments are written with the same id, so the reference resolves.
+        core::ValueParseOutcome outcome = core::ValueParseOutcome::valid;
+        core::Instrument instrument;
+        instrument.setID(core::Token::parse(id, outcome));
+        myOutNote.addInstrument(std::move(instrument));
     }
 }
 

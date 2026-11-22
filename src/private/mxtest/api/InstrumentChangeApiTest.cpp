@@ -82,8 +82,8 @@ ScoreData readWithDiagnostics(const std::string &xml, Diagnostics &diagnostics)
     return score.value();
 }
 
-// A part with two score-instruments: a change for the second one is outside the api's
-// one-instrument model.
+// A part with two score-instruments: a change for the second one is not read, because an
+// instrument change applies only to the part's instrument.
 std::string twoInstrumentXml()
 {
     return R"(<?xml version="1.0" encoding="UTF-8"?>

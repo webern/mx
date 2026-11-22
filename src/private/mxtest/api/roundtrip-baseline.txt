@@ -111,6 +111,8 @@ musuite/testCompleteMeasureRests.xml
 musuite/testDCalCoda.xml
 musuite/testDCalFine.xml
 musuite/testDalSegno.xml
+musuite/testDrumset1.xml
+musuite/testDrumset2.xml
 musuite/testDynamics1.xml
 musuite/testDynamics2.xml
 musuite/testDynamics3.xml

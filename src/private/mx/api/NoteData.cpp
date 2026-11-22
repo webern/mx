@@ -14,7 +14,7 @@ NoteData::NoteData()
       graceStealTimePrevious{}, graceStealTimeFollowing{}, graceMakeTimeTicks{}, isCue{false},
       notehead{Notehead::normal}, noteheadFilled{Bool::unspecified}, noteheadSmufl{},
       noteheadParentheses{Bool::unspecified}, noteheadColor{}, pitchData{}, accidentalSmufl{}, velocityStart{},
-      velocityStop{}, userRequestedVoiceNumber{VALUE_UNSPECIFIED}, writeStaffNumber{Bool::unspecified},
+      velocityStop{}, instruments{}, userRequestedVoiceNumber{VALUE_UNSPECIFIED}, writeStaffNumber{Bool::unspecified},
       stem{Stem::unspecified}, tickTimePosition{0}, durationData{}, beams{}, positionData{}, printData{},
       printLeger{Bool::unspecified}, noteAttachmentData{}, lyrics{}
 {
