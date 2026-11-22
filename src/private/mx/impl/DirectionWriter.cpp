@@ -154,7 +154,7 @@ static void applyBracketLineData(const api::LineData &lineData, core::Bracket &b
 DirectionWriter::DirectionWriter(const api::DirectionData &inDirectionData, const MeasureCursor &inCursor,
                                  const SpannerResolver &inSpannerResolver, DiagnosticsContext diagnostics)
     : myDirectionData{inDirectionData}, myCursor{inCursor}, mySpannerResolver{inSpannerResolver}, myConverter{},
-      myDiagnostics{std::move(diagnostics)}, myPlacements{}, myIsFirstDirectionTypeAdded{false}
+      myDiagnostics{std::move(diagnostics)}, myPlacements{}, myIsDirectionTypeAdded{false}
 {
 }
 
@@ -163,7 +163,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     std::vector<core::MusicDataChoice> output{};
     core::Direction direction{};
     myPlacements.clear();
-    myIsFirstDirectionTypeAdded = false;
+    myIsDirectionTypeAdded = false;
 
     if (myDirectionData.placement != api::Placement::unspecified)
     {
@@ -221,7 +221,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     }
 
     // Assign the direction to a voice via the editorial-voice <voice>. Only emitted when this
-    // direction also writes direction-type content (guarded by myIsFirstDirectionTypeAdded below),
+    // direction also writes direction-type content (guarded by myIsDirectionTypeAdded below),
     // so a voice carried in from a figured-bass or harmony element never produces an empty
     // <direction>.
     if (myDirectionData.voice >= 0)
@@ -233,7 +233,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
 
     emitDirectionTypes(direction);
 
-    if (myIsFirstDirectionTypeAdded)
+    if (myIsDirectionTypeAdded)
     {
         // The direction has other content; attach the <sound> as a child of the <direction>.
         if (myDirectionData.isSoundDataSpecified && myDirectionData.soundData.isSpecified())
@@ -272,7 +272,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
 
     // clear state
     myPlacements.clear();
-    myIsFirstDirectionTypeAdded = false;
+    myIsDirectionTypeAdded = false;
     return output;
 }
 
@@ -653,10 +653,10 @@ static core::OneOrMore<core::MetronomeNote> makeMetronomeNotes(const Converter &
                                                                const DiagnosticsContext &diagnostics,
                                                                const api::Location &location)
 {
-    core::OneOrMore<core::MetronomeNote> out{makeMetronomeNote(converter, notes.front(), diagnostics, location)};
-    for (std::size_t i = 1; i < notes.size(); ++i)
+    core::OneOrMore<core::MetronomeNote> out{};
+    for (const auto &note : notes)
     {
-        out.add(makeMetronomeNote(converter, notes.at(i), diagnostics, location));
+        out.add(makeMetronomeNote(converter, note, diagnostics, location));
     }
     return out;
 }
@@ -775,8 +775,7 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
         return;
     }
 
-    bool isFirstItemAdded = false;
-    core::OneOrMore<core::DirectionTypeChoiceChoice> choiceSet{core::DirectionTypeChoiceChoice{}};
+    core::OneOrMore<core::DirectionTypeChoiceChoice> choiceSet{};
 
     for (const auto &item : inRun)
     {
@@ -827,15 +826,7 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             choiceItem = core::DirectionTypeChoiceChoice::words(std::move(outWords));
         }
 
-        if (!isFirstItemAdded)
-        {
-            isFirstItemAdded = true;
-            choiceSet = core::OneOrMore<core::DirectionTypeChoiceChoice>{std::move(choiceItem)};
-        }
-        else
-        {
-            choiceSet.add(std::move(choiceItem));
-        }
+        choiceSet.add(std::move(choiceItem));
     }
 
     core::DirectionType dt{};
@@ -1102,7 +1093,6 @@ void DirectionWriter::emitHarpPedals(const api::HarpPedalsData &item, core::Dire
         return;
     }
     core::HarpPedals harpPedals{};
-    bool isFirstTuningAdded = false;
     for (const auto &tuning : item.pedalTunings)
     {
         core::PedalTuning pedalTuning{};
@@ -1114,15 +1104,7 @@ void DirectionWriter::emitHarpPedals(const api::HarpPedalsData &item, core::Dire
         pedalTuning.setPedalStep(myConverter.convert(tuning.step));
         pedalTuning.setPedalAlter(
             core::Semitones{core::Decimal{Converter::convertToAlter(tuning.alter, tuning.cents)}});
-        if (!isFirstTuningAdded)
-        {
-            harpPedals.setPedalTuning(core::OneOrMore<core::PedalTuning>{std::move(pedalTuning)});
-            isFirstTuningAdded = true;
-        }
-        else
-        {
-            harpPedals.addPedalTuning(std::move(pedalTuning));
-        }
+        harpPedals.addPedalTuning(std::move(pedalTuning));
     }
     setAttributesFromPositionData(item.positionData, harpPedals);
     setAttributesFromFontData(item.fontData, harpPedals);
@@ -1145,7 +1127,6 @@ void DirectionWriter::emitScordatura(const api::ScordaturaData &item, core::Dire
         return;
     }
     core::Scordatura scordatura{};
-    bool isFirstAccordAdded = false;
     for (const auto &accordData : item.accords)
     {
         core::Accord accord{};
@@ -1154,15 +1135,7 @@ void DirectionWriter::emitScordatura(const api::ScordaturaData &item, core::Dire
             accord.setString(core::StringNumber{*accordData.stringNumber});
         }
         accord.setTuning(makeTuningGroup(accordData, myConverter, myDiagnostics, cursorLocation(myCursor), "accord"));
-        if (!isFirstAccordAdded)
-        {
-            scordatura.setAccord(core::OneOrMore<core::Accord>{std::move(accord)});
-            isFirstAccordAdded = true;
-        }
-        else
-        {
-            scordatura.addAccord(std::move(accord));
-        }
+        scordatura.addAccord(std::move(accord));
     }
     setId(item.id, scordatura, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
@@ -1419,16 +1392,8 @@ void DirectionWriter::emitDirectionTypes(core::Direction &direction)
 
 void DirectionWriter::addDirectionType(core::DirectionType directionType, core::Direction &ioDirection)
 {
-    if (!myIsFirstDirectionTypeAdded)
-    {
-        // Replace the default-constructed direction type (OneOrMore starts with one default item).
-        ioDirection.setDirectionType(core::OneOrMore<core::DirectionType>{std::move(directionType)});
-        myIsFirstDirectionTypeAdded = true;
-    }
-    else
-    {
-        ioDirection.addDirectionType(std::move(directionType));
-    }
+    ioDirection.addDirectionType(std::move(directionType));
+    myIsDirectionTypeAdded = true;
 }
 
 std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int inOffset,
@@ -1472,7 +1437,6 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
     const auto chordEnd = chords.cend();
 
     bool isFirstChord = true;
-    bool isFirstHarmonyChordGroup = true;
 
     for (; chordIter != chordEnd; ++chordIter)
     {
@@ -1800,15 +1764,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             harmony.setFrame(frame);
         }
 
-        if (isFirstHarmonyChordGroup)
-        {
-            isFirstHarmonyChordGroup = false;
-            harmony.setHarmonyChord(core::OneOrMore<core::HarmonyChordGroup>{grp});
-        }
-        else
-        {
-            harmony.addHarmonyChord(grp);
-        }
+        harmony.addHarmonyChord(grp);
     }
 
     if (!chords.empty())
@@ -1834,8 +1790,6 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
         }
 
         core::FiguredBass figuredBass{};
-
-        bool isFirstFigure = true;
 
         for (const auto &figureData : figuredBassData.figures)
         {
@@ -1882,15 +1836,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
                 figure.setExtend(std::move(extend));
             }
 
-            if (isFirstFigure)
-            {
-                isFirstFigure = false;
-                figuredBass.setFigure(core::OneOrMore<core::Figure>{figure});
-            }
-            else
-            {
-                figuredBass.addFigure(figure);
-            }
+            figuredBass.addFigure(figure);
         }
 
         setId(figuredBassData.id, figuredBass, myDiagnostics, cursorLocation(myCursor));
