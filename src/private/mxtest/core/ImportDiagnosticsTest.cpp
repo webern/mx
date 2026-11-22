@@ -270,3 +270,79 @@ TEST(ValidBespokeValuesReportNothing, ImportDiagnostics)
     REQUIRE(parsed.ok);
     CHECK(parsed.diagnostics.empty());
 }
+
+// MuseScore 2 and 3 write a <tie> on cue notes, where the schema allows only the <tied> notation.
+inline std::string importDiagnosticsCueNote(const std::string &grace, const std::string &ties)
+{
+    return "<note>" + grace + "<cue/><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration>" + ties +
+           "<voice>1</voice><type>quarter</type><notations><tied type=\"start\"/></notations></note>";
+}
+
+TEST(TieOnCueNoteIsSkippedAndReported, ImportDiagnostics)
+{
+    const auto parsed =
+        importDiagnosticsParse(importDiagnosticsScore("", importDiagnosticsCueNote("", "<tie type=\"start\"/>")));
+    REQUIRE(parsed.ok);
+    REQUIRE(parsed.diagnostics.size() == 1);
+    const Diagnostic &diagnostic = parsed.diagnostics.front();
+    CHECK(DiagnosticCode::droppedData == diagnostic.code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note/tie"}, diagnostic.path);
+    CHECK_EQUAL(std::string{"element <tie> is not allowed here and was skipped"}, diagnostic.message);
+
+    const auto musicData = parsed.document.asScorePartwise().part().front().measure().front().musicData();
+    REQUIRE(musicData.size() == 1);
+    REQUIRE(musicData[0].isNote());
+    const Note &note = musicData[0].asNote();
+    CHECK(note.choice().isCueNoteGroup());
+    REQUIRE(note.editorialVoice().voice().has_value());
+    CHECK_EQUAL(std::string{"1"}, *note.editorialVoice().voice());
+    REQUIRE(note.notations().size() == 1);
+    REQUIRE(note.notations().front().choice().size() == 1);
+    REQUIRE(note.notations().front().choice().front().isTied());
+    CHECK(TiedType::start() == note.notations().front().choice().front().asTied().type());
+}
+
+TEST(EachTieOnGraceCueNoteIsReported, ImportDiagnostics)
+{
+    const auto parsed = importDiagnosticsParse(
+        importDiagnosticsScore("", importDiagnosticsCueNote("<grace/>", "<tie type=\"stop\"/><tie type=\"start\"/>")));
+    REQUIRE(parsed.ok);
+    REQUIRE(parsed.diagnostics.size() == 2);
+    CHECK(DiagnosticCode::droppedData == parsed.diagnostics[0].code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note/tie[1]"}, parsed.diagnostics[0].path);
+    CHECK(DiagnosticCode::droppedData == parsed.diagnostics[1].code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note/tie[2]"}, parsed.diagnostics[1].path);
+    const auto musicData = parsed.document.asScorePartwise().part().front().measure().front().musicData();
+    REQUIRE(musicData.size() == 1);
+    CHECK(musicData[0].asNote().choice().isGraceNoteGroup());
+}
+
+TEST(TieOnNormalNoteIsKeptAndNotReported, ImportDiagnostics)
+{
+    const auto parsed = importDiagnosticsParse(
+        importDiagnosticsScore("", "<note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration>"
+                                   "<tie type=\"stop\"/><tie type=\"start\"/><voice>1</voice></note>"));
+    REQUIRE(parsed.ok);
+    CHECK(parsed.diagnostics.empty());
+    const auto musicData = parsed.document.asScorePartwise().part().front().measure().front().musicData();
+    REQUIRE(musicData.size() == 1);
+    const Note &note = musicData[0].asNote();
+    REQUIRE(note.choice().isNormalNoteGroup());
+    const auto ties = note.choice().asNormalNoteGroup().tie();
+    REQUIRE(ties.size() == 2);
+    CHECK(StartStop::stop() == ties[0].type());
+    CHECK(StartStop::start() == ties[1].type());
+}
+
+TEST(OtherOutOfOrderNoteElementStillFails, ImportDiagnostics)
+{
+    mx::xml::Document doc;
+    REQUIRE(doc.loadString(importDiagnosticsScore("", "<note><pitch><step>C</step><octave>4</octave></pitch>"
+                                                      "<duration>1</duration><type>quarter</type><voice>1</voice>"
+                                                      "</note>")
+                               .c_str()));
+    const auto result = parse(doc, ParseContext{});
+    REQUIRE(!result.ok());
+    CHECK(ErrorCode::wrongElementOrder == result.error().code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note/voice"}, result.error().path);
+}
