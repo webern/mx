@@ -300,6 +300,9 @@ class ComplexPlate:
     # Every element name anywhere in the resolved content, for
     # misplaced-vs-unknown error classification in strict parsers.
     element_names: list[str] = field(default_factory=list)
+    # The configured skip elements ([import] skip-elements) a parser drops,
+    # with a diagnostic, when it finds them after the last field.
+    skip_at_end: list[str] = field(default_factory=list)
     base: PlateRef | None = None
     all_members: list[Member] | None = None
     # True when some derived type extends this one (an inheriting target
@@ -367,6 +370,10 @@ class ContentField:
     # leaves the default-constructed value instead of erroring.
     nullable: bool = False
     first: list[str] = field(default_factory=list)
+    # The configured skip elements ([import] skip-elements) a parser drops,
+    # with a diagnostic, when it finds them where this field may start: only
+    # those no field from here to the end of the content can start with.
+    skip_before: list[str] = field(default_factory=list)
     doc: str | None = None
 
 
