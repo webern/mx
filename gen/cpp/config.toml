@@ -125,6 +125,11 @@ words = [
 # "und" (undetermined).
 [import.attribute-defaults]
 "lyric-language" = { "xml:lang" = "und" }
+# An element listed under a type is skipped, with a diagnostic, where the
+# type's content has no place for it. MuseScore 2 and 3 write a <tie> on cue
+# notes, where the schema allows only <tied> inside <notations>.
+[import.skip-elements]
+"note" = ["tie"]
 
 # ---- the render manifest: which templates produce which files ----------- #
 # One template per shape (value shapes here; the complex/group/choice shapes

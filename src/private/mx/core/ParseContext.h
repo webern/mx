@@ -27,6 +27,7 @@ enum class DiagnosticCode
     missingValueDefaulted,
     duplicateId,
     danglingIdReference,
+    droppedData,
 };
 
 struct Diagnostic
@@ -63,6 +64,15 @@ void reportIdRepair(const ParseContext &context, ValueParseOutcome outcome, xml:
                     std::string_view text, std::string_view replacement);
 
 void reportAttributeDefaulted(const ParseContext &context, xml::Node el, const char *attribute, std::string_view value);
+
+/// Reports that `el` was left out of the document because the schema does not
+/// allow it where it was found.
+void reportElementSkipped(const ParseContext &context, xml::Node el);
+
+/// Moves `cursor` past every consecutive element named `tag`, reporting each
+/// one as skipped. The generated parsers call this only where the schema has
+/// no place for `tag` (see [import.skip-elements] in gen/cpp/config.toml).
+void skipElements(xml::Node &cursor, const char *tag, const ParseContext &context);
 
 /// The lenient parse of a value type, reporting any repair it made.
 template <typename T>

@@ -678,9 +678,11 @@ class _Builder:
 
         fields: list[ContentField] = []
         element_names: list[str] = []
+        skip_at_end: list[str] = []
         if ct.content is not None:
             fields = [self._field(ct.name, n) for n in self.field_nodes[ct.name]]
             element_names = self.resolver.particle_element_names(ct.content)
+            skip_at_end = self._place_skips(ct.name, fields)
 
         plate = ComplexPlate(
             name=self.type_names[ct.name],
@@ -691,6 +693,7 @@ class _Builder:
             content=self.resolver.content(ct),
             fields=fields,
             element_names=element_names,
+            skip_at_end=skip_at_end,
             base=self._plate_ref(ir.Ref(ct.base, "complex")) if ct.base else None,
             all_members=all_members,
             is_base=ct.name in self._base_wires,
@@ -871,6 +874,42 @@ class _Builder:
             first=first,
             doc=doc,
         )
+
+    def _skip_element_errors(self) -> list[str]:
+        """Every [import] skip-elements key must name a composite type, and
+        every element one that occurs in that type's content."""
+        errors: list[str] = []
+        for owner, elements in self.cfg.import_skip_elements.items():
+            ct = self.complex_by_name.get(owner)
+            if ct is None:
+                errors.append(f"import.skip-elements.{owner}: no such complex type")
+                continue
+            if ct.kind != "composite":
+                errors.append(
+                    f"import.skip-elements.{owner}: type has no element content "
+                    f"of its own to skip from"
+                )
+                continue
+            names = set(self.resolver.particle_element_names(ct.content))
+            errors += [
+                f"import.skip-elements.{owner}.{element}: no such element "
+                f"in the type's content"
+                for element in elements
+                if element not in names
+            ]
+        return errors
+
+    def _place_skips(self, owner_wire: str, fields: list[ContentField]) -> list[str]:
+        """Sets each field's `skip_before` from [import] skip-elements and
+        returns the skips for the end of the content. A skip element is
+        dropped at a position only when no field from there on can start
+        with it, so an element the content model accepts parses as before."""
+        skips = self.cfg.import_skip_elements.get(owner_wire, ())
+        remaining: set[str] = set()
+        for f in reversed(fields):
+            remaining.update(f.first)
+            f.skip_before = [e for e in skips if e not in remaining]
+        return list(skips)
 
     def _instance_nullable(self, node: ir.Particle) -> bool:
         """Whether ONE instance of the field's type can match the empty
@@ -1081,6 +1120,8 @@ class _Builder:
                     f"optional; a default would change present-vs-absent "
                     f"round-trip fidelity"
                 )
+
+        errors += self._skip_element_errors()
 
         for enum, value in r.enum_values:
             vt = self.values_by_name.get(enum)

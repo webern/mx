@@ -145,6 +145,11 @@ class Config:
     # parser; a missing required attribute with no entry is a parse error.
     # Keyed (complex type wire, attribute wire) -> wire literal.
     import_attribute_defaults: dict[tuple[str, str], str] = field(default_factory=dict)
+    # The import-policy skip table: while parsing the content of a complex
+    # type, an element named here that the content model has no place for at
+    # that point is skipped (and reported) instead of failing the parse.
+    # Keyed complex type wire -> element wires.
+    import_skip_elements: dict[str, tuple[str, ...]] = field(default_factory=dict)
     render: RenderSection | None = None  # presence selects the press pipeline
 
 
@@ -208,6 +213,7 @@ def load(config_path) -> Config:
         docs=_docs(data.get("docs", {})),
         renames=_renames(data.get("rename", {})),
         import_attribute_defaults=_import_defaults(data.get("import", {})),
+        import_skip_elements=_import_skips(data.get("import", {})),
         render=_render(data["render"], base) if "render" in data else None,
     )
 
@@ -220,7 +226,7 @@ def load(config_path) -> Config:
 
 def _import_defaults(t: dict) -> dict[tuple[str, str], str]:
     """[import] attribute-defaults: { "type" = { "attr" = "literal" } }."""
-    _check_keys(t, {"attribute-defaults"}, "import")
+    _check_keys(t, {"attribute-defaults", "skip-elements"}, "import")
     out: dict[tuple[str, str], str] = {}
     for type_wire, attrs in t.get("attribute-defaults", {}).items():
         if not isinstance(attrs, dict):
@@ -236,6 +242,14 @@ def _import_defaults(t: dict) -> dict[tuple[str, str], str]:
                 )
             out[(type_wire, attr_wire)] = literal
     return out
+
+
+def _import_skips(t: dict) -> dict[str, tuple[str, ...]]:
+    """[import] skip-elements: { "type" = ["element", ...] }."""
+    return {
+        type_wire: _string_list(elements, f"import.skip-elements.{type_wire}")
+        for type_wire, elements in t.get("skip-elements", {}).items()
+    }
 
 
 def _check_keys(table: dict, allowed: set[str], where: str) -> None:
