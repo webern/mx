@@ -1,15 +1,15 @@
 {
-  "version": "0.7.3",
-  "base_sha": "703a79949896daa74f5e7b2b530da2381f33889f",
-  "run_id": 44940245986,
+  "version": "0.7.4",
+  "base_sha": "e5b663688ea9a943f9fca094524cd33690eb4d5d",
+  "run_id": 45031947728,
   "targets": [
     {
       "target": "swift",
-      "version": "0.7.3",
-      "base_sha": "703a79949896daa74f5e7b2b530da2381f33889f",
-      "artifact": "mx-release-swift-703a79949896daa74f5e7b2b530da2381f33889f",
+      "version": "0.7.4",
+      "base_sha": "e5b663688ea9a943f9fca094524cd33690eb4d5d",
+      "artifact": "mx-release-swift-e5b663688ea9a943f9fca094524cd33690eb4d5d",
       "archive": "Mx.xcframework.zip",
-      "checksum": "dc5afee6ca9b0755eabc835638a609f3875e6fcb2bd8b7d8421b3ec8de044f1d",
+      "checksum": "08fab07000c7e1304dbbd5300bee58da8276a05f8851b09740bcee5b68f33cbf",
       "platforms": [
         "macos-arm64",
         "macos-x86_64",
