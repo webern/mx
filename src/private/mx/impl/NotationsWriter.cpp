@@ -9,10 +9,12 @@
 #include "mx/core/generated/ArrowChoice.h"
 #include "mx/core/generated/ArrowChoiceGroup.h"
 #include "mx/core/generated/ArrowDirection.h"
+#include "mx/core/generated/ArrowStyle.h"
 #include "mx/core/generated/ArticulationsChoice.h"
 #include "mx/core/generated/BreathMark.h"
 #include "mx/core/generated/Caesura.h"
 #include "mx/core/generated/CaesuraValue.h"
+#include "mx/core/generated/CircularArrow.h"
 #include "mx/core/generated/EmptyLine.h"
 #include "mx/core/generated/EmptyPlacement.h"
 #include "mx/core/generated/EmptyPlacementSmufl.h"
@@ -245,6 +247,30 @@ NotationsWriter::NotationsWriter(const api::NoteData &inNoteData, const MeasureC
                                  const ScoreWriter &inScoreWriter)
     : myNoteData{inNoteData}, myCursor{inCursor}, myScoreWriter{inScoreWriter}, myConverter{}
 {
+}
+
+std::optional<core::ArrowStyle> notationsWriterArrowStyle(api::ArrowStyle inStyle)
+{
+    switch (inStyle)
+    {
+    case api::ArrowStyle::single:
+        return core::ArrowStyle::single();
+    case api::ArrowStyle::double_:
+        return core::ArrowStyle::double_();
+    case api::ArrowStyle::filled:
+        return core::ArrowStyle::filled();
+    case api::ArrowStyle::hollow:
+        return core::ArrowStyle::hollow();
+    case api::ArrowStyle::paired:
+        return core::ArrowStyle::paired();
+    case api::ArrowStyle::combined:
+        return core::ArrowStyle::combined();
+    case api::ArrowStyle::other:
+        return core::ArrowStyle::other();
+    case api::ArrowStyle::unspecified:
+        break;
+    }
+    return std::nullopt;
 }
 
 core::Notations NotationsWriter::getNotations() const
@@ -1494,9 +1520,25 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &o
             direction = core::ArrowDirection::southeast();
         else if (mark.name == "arrowOpenDownLeft")
             direction = core::ArrowDirection::southwest();
-        core::ArrowChoiceGroup acg;
-        acg.setArrowDirection(direction);
-        arrow.setChoice(core::ArrowChoice::group(acg));
+        const auto arrowData = mark.choice.arrow();
+        if (arrowData.circular != api::CircularArrowDirection::unspecified)
+        {
+            arrow.setChoice(core::ArrowChoice::circularArrow(
+                arrowData.circular == api::CircularArrowDirection::anticlockwise ? core::CircularArrow::anticlockwise()
+                                                                                 : core::CircularArrow::clockwise()));
+        }
+        else
+        {
+            core::ArrowChoiceGroup acg;
+            acg.setArrowDirection(direction);
+            acg.setArrowStyle(notationsWriterArrowStyle(arrowData.style));
+            acg.setArrowhead(arrowData.arrowhead);
+            arrow.setChoice(core::ArrowChoice::group(acg));
+        }
+        if (arrowData.smufl.has_value())
+        {
+            arrow.setSmufl(core::SmuflGlyphName{*arrowData.smufl});
+        }
         outTechnical.addChoice(core::TechnicalChoice::arrow(arrow));
         break;
     }

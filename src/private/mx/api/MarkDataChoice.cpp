@@ -104,6 +104,21 @@ MarkDataChoice::MarkDataChoice(PedalMarkData value)
     }
 }
 
+// An arrow with nothing set is stored as none, so a plain arrow compares equal however it was built.
+MarkDataChoice::MarkDataChoice(ArrowMarkData value)
+{
+    const bool isEmpty = value.style == ArrowStyle::unspecified && !value.arrowhead &&
+                         value.circular == CircularArrowDirection::unspecified && !value.smufl.has_value();
+    if (isEmpty)
+    {
+        myValue = std::monostate{};
+    }
+    else
+    {
+        myValue = std::move(value);
+    }
+}
+
 MarkDataChoice::Kind MarkDataChoice::kind() const
 {
     if (std::holds_alternative<TremoloMarkData>(myValue))
@@ -149,6 +164,10 @@ MarkDataChoice::Kind MarkDataChoice::kind() const
     if (std::holds_alternative<PedalMarkData>(myValue))
     {
         return Kind::pedal;
+    }
+    if (std::holds_alternative<ArrowMarkData>(myValue))
+    {
+        return Kind::arrow;
     }
     return Kind::none;
 }
@@ -310,6 +329,20 @@ const PedalMarkData MarkDataChoice::pedal() const
         return *value;
     }
     return PedalMarkData{};
+}
+
+bool MarkDataChoice::isArrow() const
+{
+    return std::holds_alternative<ArrowMarkData>(myValue);
+}
+
+const ArrowMarkData MarkDataChoice::arrow() const
+{
+    if (const auto *value = std::get_if<ArrowMarkData>(&myValue))
+    {
+        return *value;
+    }
+    return ArrowMarkData{};
 }
 
 bool MarkDataChoice::operator==(const MarkDataChoice &other) const

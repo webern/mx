@@ -7,6 +7,8 @@
 #include "mx/core/generated/ArrowChoice.h"
 #include "mx/core/generated/ArrowChoiceGroup.h"
 #include "mx/core/generated/ArrowDirection.h"
+#include "mx/core/generated/ArrowStyle.h"
+#include "mx/core/generated/CircularArrow.h"
 #include "mx/core/generated/Fingering.h"
 #include "mx/core/generated/Handbell.h"
 #include "mx/core/generated/HandbellValue.h"
@@ -104,6 +106,53 @@ std::string technicalFunctionsHandbellToSmuflName(const mx::core::HandbellValue 
     default:
         return "handbellsGyro";
     }
+}
+
+api::ArrowStyle technicalFunctionsArrowStyle(const core::ArrowStyle &inStyle)
+{
+    switch (inStyle.tag())
+    {
+    case core::ArrowStyle::Tag::single:
+        return api::ArrowStyle::single;
+    case core::ArrowStyle::Tag::double_:
+        return api::ArrowStyle::double_;
+    case core::ArrowStyle::Tag::filled:
+        return api::ArrowStyle::filled;
+    case core::ArrowStyle::Tag::hollow:
+        return api::ArrowStyle::hollow;
+    case core::ArrowStyle::Tag::paired:
+        return api::ArrowStyle::paired;
+    case core::ArrowStyle::Tag::combined:
+        return api::ArrowStyle::combined;
+    case core::ArrowStyle::Tag::other:
+        return api::ArrowStyle::other;
+    }
+    return api::ArrowStyle::unspecified;
+}
+
+api::ArrowMarkData technicalFunctionsArrowMarkData(const core::Arrow &inArrow)
+{
+    api::ArrowMarkData outData{};
+    if (inArrow.choice().kind() == core::ArrowChoice::Kind::group)
+    {
+        const auto &group = inArrow.choice().asGroup();
+        if (group.arrowStyle().has_value())
+        {
+            outData.style = technicalFunctionsArrowStyle(*group.arrowStyle());
+        }
+        outData.arrowhead = group.arrowhead();
+    }
+    else
+    {
+        outData.circular = inArrow.choice().asCircularArrow().tag() == core::CircularArrow::Tag::anticlockwise
+                               ? api::CircularArrowDirection::anticlockwise
+                               : api::CircularArrowDirection::clockwise;
+    }
+    if (inArrow.smufl().has_value())
+    {
+        outData.smufl = inArrow.smufl()->toString();
+    }
+    return outData;
 }
 
 api::HarmonicMarkData harmonicMarkDataFromCore(const core::Harmonic &inHarmonic)
@@ -294,6 +343,7 @@ bool TechnicalFunctions::parseTechnicalMark(const core::TechnicalChoice &technic
         const auto &arrow = technicalChoice.asArrow();
         parseMarkDataAttributes(arrow, outMarkData);
         outMarkData.name = technicalFunctionsArrowToSmuflName(arrow);
+        outMarkData.choice = api::MarkDataChoice{technicalFunctionsArrowMarkData(arrow)};
         return true;
     }
     case core::TechnicalChoice::Kind::handbell: {
