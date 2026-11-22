@@ -7,6 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mxtest/api/TestHelpers.h"
 
 #include <sstream>
 
@@ -820,6 +821,67 @@ TEST(DirectionSystemRelationUnwritable, DirectionMarksRoundTrip)
         REQUIRE(directions.size() == 1);
         CHECK(directions.front().systemRelation == SystemRelation::unspecified);
     }
+}
+
+T_END;
+
+// Every xml:space value of <words> is written and read back, and an unspecified one is not written.
+TEST(WordsXmlSpaceRoundTrips, DirectionMarksRoundTrip)
+{
+    const std::vector<std::pair<XmlSpace, std::string>> cases{
+        {XmlSpace::unspecified, ""},
+        {XmlSpace::default_, "xml:space=\"default\""},
+        {XmlSpace::preserve, "xml:space=\"preserve\""},
+    };
+    for (const auto &[space, attribute] : cases)
+    {
+        DirectionData direction;
+        WordsData words;
+        words.text = "RHYTHM!   ";
+        words.xmlSpace = space;
+        direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{words}}});
+        ScoreData score;
+        score.parts.emplace_back();
+        score.parts.back().measures.emplace_back().staves.emplace_back().directions.push_back(direction);
+        const auto xml = mxtest::toXml(score);
+        CHECK((xml.find("xml:space") == std::string::npos) == attribute.empty());
+        CHECK(attribute.empty() || xml.find(attribute) != std::string::npos);
+
+        const auto directions = roundTripDirectionData(direction);
+        REQUIRE(directions.size() == 1);
+        REQUIRE(directions.front().directionTypes.front().isWordsRun());
+        const auto outRun = directions.front().directionTypes.front().wordsRun();
+        REQUIRE(outRun.size() == 1);
+        CHECK(outRun.front().words().xmlSpace == space);
+        CHECK(outRun.front().words().text == "RHYTHM!   ");
+    }
+}
+
+T_END;
+
+// xml:space="preserve" on <words> in a file is read, with the trailing spaces of the text kept.
+TEST(WordsXmlSpaceReadsFromXml, DirectionMarksRoundTrip)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <direction placement="above"><direction-type><words xml:space="preserve">RHYTHM!   </words></direction-type></direction>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    const auto score = mxtest::fromXml(xml);
+    const auto &directions = score.parts.front().measures.front().staves.front().directions;
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isWordsRun());
+    const auto run = directions.front().directionTypes.front().wordsRun();
+    REQUIRE(run.size() == 1);
+    CHECK(run.front().words().xmlSpace == XmlSpace::preserve);
+    CHECK(run.front().words().text == "RHYTHM!   ");
 }
 
 T_END;

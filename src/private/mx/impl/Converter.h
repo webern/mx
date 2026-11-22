@@ -70,6 +70,7 @@
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/Winged.h"
 #include "mx/core/generated/WoodValue.h"
+#include "mx/core/generated/XMLSpace.h"
 #include "mx/core/generated/YesNo.h"
 
 #include <algorithm>
@@ -266,6 +267,8 @@ class Converter
     core::EnclosureShape convert(api::Enclosure value) const;
     api::SymbolSize convert(core::SymbolSize value) const;
     core::SymbolSize convert(api::SymbolSize value) const;
+    api::XmlSpace convert(core::XMLSpace value) const;
+    core::XMLSpace convert(api::XmlSpace value) const;
 
     static double convertToAlter(int semitones, double cents);
     static std::pair<int, double> convertToSemitonesAndCents(double alter);
@@ -336,6 +339,7 @@ class Converter
     const static EnumMap<core::TipDirection, api::TipDirection> tipDirectionMap;
     const static EnumMap<core::EnclosureShape, api::Enclosure> enclosureMap;
     const static EnumMap<core::SymbolSize, api::SymbolSize> symbolSizeMap;
+    const static EnumMap<core::XMLSpace, api::XmlSpace> xmlSpaceMap;
 
   private:
     template <typename CORE_TYPE, typename API_TYPE>

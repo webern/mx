@@ -1643,6 +1643,11 @@ const Converter::EnumMap<core::SymbolSize, api::SymbolSize> Converter::symbolSiz
     {core::SymbolSize::large(), api::SymbolSize::large},
 };
 
+const Converter::EnumMap<core::XMLSpace, api::XmlSpace> Converter::xmlSpaceMap = {
+    {core::XMLSpace::default_(), api::XmlSpace::default_},
+    {core::XMLSpace::preserve(), api::XmlSpace::preserve},
+};
+
 api::Step Converter::convert(core::Step inStep) const
 {
     return findApiItem(stepMap, api::Step::c, inStep);
@@ -2230,6 +2235,16 @@ api::SymbolSize Converter::convert(core::SymbolSize value) const
 core::SymbolSize Converter::convert(api::SymbolSize value) const
 {
     return findCoreItem(symbolSizeMap, core::SymbolSize::full(), value);
+}
+
+api::XmlSpace Converter::convert(core::XMLSpace value) const
+{
+    return findApiItem(xmlSpaceMap, api::XmlSpace::unspecified, value);
+}
+
+core::XMLSpace Converter::convert(api::XmlSpace value) const
+{
+    return findCoreItem(xmlSpaceMap, core::XMLSpace::default_(), value);
 }
 
 double Converter::convertToAlter(int semitones, double cents)

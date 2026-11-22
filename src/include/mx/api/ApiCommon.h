@@ -131,6 +131,22 @@ enum class SymbolSize
     // Larger than normal.
     large
 };
+
+// Whether the spaces at the two ends of a piece of text belong to it, MusicXML's xml:space
+// attribute. Set preserve when the text begins or ends with spaces that must be kept, such as
+// "RHYTHM!   " with its trailing spaces. Leave it unspecified otherwise; an application is then
+// free to trim the ends, which is usually wanted for text that was indented in the file.
+enum class XmlSpace
+{
+    // The attribute is absent.
+    unspecified,
+
+    // Stated explicitly: the ends of the text may be trimmed.
+    default_,
+
+    // The spaces at the ends of the text are part of it.
+    preserve
+};
 } // namespace api
 } // namespace mx
 
