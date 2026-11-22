@@ -53,8 +53,7 @@ struct BeatsPerMinute
     // underline, overline and lineThrough are not used.
     FontData fontData;
 
-    BeatsPerMinute()
-        : durationName{DurationName::unspecified}, dots{0}, tiedBeatUnits{}, beatsPerMinute{}, fontData{}
+    BeatsPerMinute() : durationName{DurationName::unspecified}, dots{0}, tiedBeatUnits{}, beatsPerMinute{}, fontData{}
     {
     }
 };
