@@ -104,11 +104,11 @@ TEST(drumKitWritesEveryInstrument, NoteInstrument)
     CHECK(xml.find("<score-instrument id=\"P1-I39\">") != std::string::npos);
     CHECK(xml.find("<score-instrument id=\"P1-I43\">") != std::string::npos);
     CHECK(xml.find("<midi-instrument id=\"P1-I39\">") != std::string::npos);
-    CHECK(xml.find("<midi-device id=\"P1-I43\" port=\"2\">Kit</midi-device>") != std::string::npos);
+    CHECK(xml.find("<midi-device port=\"2\" id=\"P1-I43\">Kit</midi-device>") != std::string::npos);
     CHECK(xml.find("<midi-unpitched>43</midi-unpitched>") != std::string::npos);
-    CHECK(xml.find("<instrument id=\"P1-I36\"/>") != std::string::npos);
-    CHECK(xml.find("<instrument id=\"P1-I39\"/>") != std::string::npos);
-    CHECK(xml.find("<instrument id=\"P1-I43\"/>") != std::string::npos);
+    CHECK(xml.find("<instrument id=\"P1-I36\" />") != std::string::npos);
+    CHECK(xml.find("<instrument id=\"P1-I39\" />") != std::string::npos);
+    CHECK(xml.find("<instrument id=\"P1-I43\" />") != std::string::npos);
     CHECK(xml.find("<score-instrument id=\"P1-I36\">") < xml.find("<score-instrument id=\"P1-I39\">"));
 }
 
@@ -254,8 +254,8 @@ TEST(noteNamesTwoInstruments, NoteInstrument)
     note.instruments = {"P1-I1", "P1-I2"};
 
     const auto xml = mxtest::toXml(score);
-    const auto first = xml.find("<instrument id=\"P1-I1\"/>");
-    const auto other = xml.find("<instrument id=\"P1-I2\"/>");
+    const auto first = xml.find("<instrument id=\"P1-I1\" />");
+    const auto other = xml.find("<instrument id=\"P1-I2\" />");
     REQUIRE(first != std::string::npos);
     REQUIRE(other != std::string::npos);
     CHECK(first < other);
@@ -306,7 +306,7 @@ TEST(noteNamesPartsOnlyInstrument, NoteInstrument)
     // its id.
     const auto xml = mxtest::toXml(score);
     CHECK(xml.find("<score-instrument id=\"P1-I7\">") != std::string::npos);
-    CHECK(xml.find("<instrument id=\"P1-I7\"/>") != std::string::npos);
+    CHECK(xml.find("<instrument id=\"P1-I7\" />") != std::string::npos);
 
     const auto out = mxtest::fromXml(xml);
     CHECK_EQUAL("P1-I7", out.parts.front().instrumentData.uniqueId);

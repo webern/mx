@@ -373,7 +373,7 @@ TEST(noteInstrumentNotInPartIsDropped, WriteDiagnostics)
     std::ostringstream xml;
     REQUIRE(fromScore(score).value().writeToStream(xml).ok());
     CHECK(xml.str().find("P1-I9") == std::string::npos);
-    CHECK(xml.str().find(R"(<instrument id="P1-I2"/>)") != std::string::npos);
+    CHECK(xml.str().find(R"(<instrument id="P1-I2" />)") != std::string::npos);
 }
 
 T_END
