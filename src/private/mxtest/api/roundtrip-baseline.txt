@@ -16,8 +16,6 @@
 # zero tolerance.
 #
 # Format: one data/-relative path per line; # starts a comment.
-ksuite/k013a_OrchestralScoreFinale.xml
-ksuite/k013b_OrchestralScoreSibelius.xml
 ksuite/k016a_Miscellaneous_Fields.xml
 
 # Unblocked by #226: the api emits an mx provenance <identification>/<encoding>
@@ -25,7 +23,6 @@ ksuite/k016a_Miscellaneous_Fields.xml
 # leaving an empty shell behind.
 lysuite/ly33c_Spanners_Slurs.xml
 lysuite/ly33g_Slur_ChordedNotes.xml
-lysuite/ly41c_StaffGroups.xml
 lysuite/ly52b_Breaks.xml
 
 # Unblocked by #227: mx no longer force-writes print-object="no" on every
@@ -106,7 +103,6 @@ synthetic/key-accidental.3.0.xml
 # <encoding> child order on both sides before comparing (which also realigns the
 # user <software> against mx's trailing stamp, fixing the secondary value mismatch).
 ksuite/k009b_Slur_Attributes.xml
-musuite/A_Walk_through_the_Park.xml
 musuite/testAccidentals1.xml
 musuite/testBarStyles.xml
 musuite/testChordNoVoice_ref.xml
@@ -714,8 +710,6 @@ synthetic/source.3.0.xml
 # Unblocked by DirectionData::directive: the api had no field for <direction>'s
 # directive attribute, which aligns a direction with the measure's time signature,
 # so it was dropped on write.
-recsuite/ActorPreludeSample.xml
-recsuite/Binchois.xml
 recsuite/Chant.xml
 synthetic/direction.3.1.xml
 synthetic/direction.4.0.xml
@@ -861,7 +855,6 @@ musetrainer/Canon_in_D.xml
 # slur, or a tuplet and a slur, had its slur stops written among the tie stops and its slur starts
 # among the tie starts, all ahead of the tuplets, so the children came back in a different order.
 foundsuite/Invention 1.xml
-foundsuite/Απτάλικο.xml
 musetrainer/Ave_Maria_D839_-_Schubert_-_Solo_Piano_Arrg..xml
 musetrainer/Prlude_No._4_in_E_Minor_Op._28_-_Frdric_Chopin.xml
 musetrainer/Sonata_No._16_1st_Movement_K._545.xml
@@ -871,7 +864,6 @@ musetrainer/Waltz_of_the_Flowers.xml
 # default-y and end-length, so a volta bracket set at its own height and hook length came back
 # at the defaults.
 recsuite/Saltarello.xml
-recsuite/Telemann.xml
 
 # Unblocked by ChordData::rootText and ChordData::bassText. <root-step text="..."> and
 # <bass-step text="..."> spell the root or bass in place of its letter, and an empty text prints
@@ -885,7 +877,6 @@ musetrainer/Hungarian_Dance_No_5_in_G_Minor.xml
 # was written at the start of the measure with its <offset> alone: the <forward> was lost and the
 # chord moved to the downbeat.
 mjbsuite/chords_simple.xml
-mjbsuite/krz_v40.xml
 mjbsuite/processing_instructions.xml
 
 # Unblocked by ScoreData::additionalRights. Only one <rights> was kept: the first typed
