@@ -81,7 +81,7 @@ class DirectionWriter
     const SpannerResolver &mySpannerResolver;
     const Converter myConverter;
     DiagnosticsContext myDiagnostics;
-    bool myIsFirstDirectionTypeAdded;
+    bool myIsDirectionTypeAdded;
     std::set<api::Placement> myPlacements;
 };
 } // namespace impl

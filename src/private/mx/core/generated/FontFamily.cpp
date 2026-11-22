@@ -26,6 +26,10 @@ void FontFamily::setItems(std::vector<std::string> items)
 
 void FontFamily::addItem(std::string item)
 {
+    if (m_hasPlaceholder)
+    {
+        m_items.clear();
+    }
     m_items.push_back(std::move(item));
     m_text.clear();
     repair();
@@ -49,7 +53,8 @@ void FontFamily::repair()
             cleaned.push_back(std::move(item));
         }
     }
-    if (cleaned.empty())
+    m_hasPlaceholder = cleaned.empty();
+    if (m_hasPlaceholder)
     {
         cleaned.emplace_back("-");
     }
