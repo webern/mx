@@ -727,6 +727,14 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
         {
             pedalData.number = api::SpannerNumber(pedal.number()->value());
         }
+        if (pedal.sign().has_value())
+        {
+            pedalData.sign = myConverter.convert(*pedal.sign());
+        }
+        if (pedal.abbreviated().has_value())
+        {
+            pedalData.abbreviated = myConverter.convert(*pedal.abbreviated());
+        }
         pedalData.id = getId(pedal);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(pedalData)});
         return;
@@ -743,6 +751,22 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
     mark.tickTimePosition = myOutDirectionData.tickTimePosition;
     mark.positionData = getPositionData(pedal);
     mark.positionData.placement = placement;
+    api::PedalMarkData pedalMarkData{};
+    if (pedal.number().has_value())
+    {
+        pedalMarkData.number = pedal.number()->value();
+    }
+    // A pedal mark draws its sign unless sign is no, so only no is kept. That way a plain Ped. sign
+    // reads back without a payload whether or not it states sign="yes".
+    if (pedal.sign().has_value() && pedal.sign()->tag() == core::YesNo::Tag::no)
+    {
+        pedalMarkData.sign = api::Bool::no;
+    }
+    if (pedal.abbreviated().has_value())
+    {
+        pedalMarkData.abbreviated = myConverter.convert(*pedal.abbreviated());
+    }
+    mark.choice = api::MarkDataChoice{pedalMarkData};
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(mark)});
 }
 

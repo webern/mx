@@ -88,6 +88,22 @@ MarkDataChoice::MarkDataChoice(AccidentalMarkData value)
     }
 }
 
+// A pedal mark with nothing set is stored as none, so a plain pedal mark compares equal however it
+// was built.
+MarkDataChoice::MarkDataChoice(PedalMarkData value)
+{
+    const bool isEmpty =
+        !value.number.has_value() && value.sign == Bool::unspecified && value.abbreviated == Bool::unspecified;
+    if (isEmpty)
+    {
+        myValue = std::monostate{};
+    }
+    else
+    {
+        myValue = std::move(value);
+    }
+}
+
 MarkDataChoice::Kind MarkDataChoice::kind() const
 {
     if (std::holds_alternative<TremoloMarkData>(myValue))
@@ -129,6 +145,10 @@ MarkDataChoice::Kind MarkDataChoice::kind() const
     if (std::holds_alternative<AccidentalMarkData>(myValue))
     {
         return Kind::accidentalMark;
+    }
+    if (std::holds_alternative<PedalMarkData>(myValue))
+    {
+        return Kind::pedal;
     }
     return Kind::none;
 }
@@ -276,6 +296,20 @@ const AccidentalMarkData MarkDataChoice::accidentalMark() const
         return *value;
     }
     return AccidentalMarkData{};
+}
+
+bool MarkDataChoice::isPedal() const
+{
+    return std::holds_alternative<PedalMarkData>(myValue);
+}
+
+const PedalMarkData MarkDataChoice::pedal() const
+{
+    if (const auto *value = std::get_if<PedalMarkData>(&myValue))
+    {
+        return *value;
+    }
+    return PedalMarkData{};
 }
 
 bool MarkDataChoice::operator==(const MarkDataChoice &other) const

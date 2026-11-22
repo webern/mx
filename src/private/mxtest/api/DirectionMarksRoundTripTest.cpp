@@ -7,6 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mxtest/api/TestHelpers.h"
 
 #include <sstream>
 
@@ -350,6 +351,196 @@ TEST(PedalWithoutNumberWritesNoAttribute, DirectionMarksRoundTrip)
     REQUIRE(pedalEnd != std::string::npos);
     const auto pedalElement = xml.substr(pedalStart, pedalEnd - pedalStart);
     CHECK(pedalElement.find("number=") == std::string::npos);
+}
+
+T_END;
+
+// Returns the opening tag of the first <pedal> element in the XML, or an empty string.
+static std::string directionMarksFirstPedalTag(const std::string &xml)
+{
+    const auto pedalStart = xml.find("<pedal");
+    if (pedalStart == std::string::npos)
+    {
+        return {};
+    }
+    const auto pedalEnd = xml.find(">", pedalStart);
+    return xml.substr(pedalStart, pedalEnd - pedalStart);
+}
+
+// A Ped. sign and its * sign keep their number, and the Ped. sign keeps its short form.
+TEST(PedalMarkPayloadRoundTrips, DirectionMarksRoundTrip)
+{
+    MarkData pedal{Placement::below, MarkType::pedal};
+    PedalMarkData pedalPayload{};
+    pedalPayload.number = 3;
+    pedalPayload.abbreviated = Bool::yes;
+    pedal.choice = pedalPayload;
+    DirectionData pedalDirection;
+    pedalDirection.directionTypes.emplace_back(DirectionChoice{pedal});
+
+    const auto pedalDirections = roundTripDirectionData(pedalDirection);
+    REQUIRE(pedalDirections.size() == 1);
+    REQUIRE(pedalDirections.front().directionTypes.size() == 1);
+    REQUIRE(pedalDirections.front().directionTypes.front().isMark());
+    const auto pedalOut = pedalDirections.front().directionTypes.front().mark();
+    CHECK(pedalOut.markType == MarkType::pedal);
+    REQUIRE(pedalOut.choice.isPedal());
+    CHECK(pedalPayload == pedalOut.choice.pedal());
+
+    MarkData damp{Placement::below, MarkType::damp};
+    PedalMarkData dampPayload{};
+    dampPayload.number = 2;
+    dampPayload.sign = Bool::no;
+    damp.choice = dampPayload;
+    DirectionData dampDirection;
+    dampDirection.directionTypes.emplace_back(DirectionChoice{damp});
+
+    const auto dampDirections = roundTripDirectionData(dampDirection);
+    REQUIRE(dampDirections.size() == 1);
+    REQUIRE(dampDirections.front().directionTypes.size() == 1);
+    REQUIRE(dampDirections.front().directionTypes.front().isMark());
+    const auto dampOut = dampDirections.front().directionTypes.front().mark();
+    CHECK(dampOut.markType == MarkType::damp);
+    REQUIRE(dampOut.choice.isPedal());
+    CHECK(dampPayload == dampOut.choice.pedal());
+}
+
+T_END;
+
+TEST(PedalMarkReadsAttributes, DirectionMarksRoundTrip)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <direction placement="below">
+        <direction-type><pedal type="start" number="2" line="no" sign="yes" abbreviated="yes"/></direction-type>
+      </direction>
+      <direction placement="below">
+        <direction-type><pedal type="stop" number="2" line="no" sign="no"/></direction-type>
+      </direction>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(score.parts.size() == 1);
+    const auto &directions = score.parts.front().measures.front().staves.front().directions;
+    REQUIRE(directions.size() == 2);
+
+    REQUIRE(directions.at(0).directionTypes.size() == 1);
+    REQUIRE(directions.at(0).directionTypes.front().isMark());
+    const auto pedal = directions.at(0).directionTypes.front().mark();
+    CHECK(pedal.markType == MarkType::pedal);
+    REQUIRE(pedal.choice.isPedal());
+    REQUIRE(pedal.choice.pedal().number.has_value());
+    CHECK_EQUAL(2, *pedal.choice.pedal().number);
+    CHECK(Bool::unspecified == pedal.choice.pedal().sign);
+    CHECK(Bool::yes == pedal.choice.pedal().abbreviated);
+
+    REQUIRE(directions.at(1).directionTypes.size() == 1);
+    REQUIRE(directions.at(1).directionTypes.front().isMark());
+    const auto damp = directions.at(1).directionTypes.front().mark();
+    CHECK(damp.markType == MarkType::damp);
+    REQUIRE(damp.choice.isPedal());
+    REQUIRE(damp.choice.pedal().number.has_value());
+    CHECK_EQUAL(2, *damp.choice.pedal().number);
+    CHECK(Bool::no == damp.choice.pedal().sign);
+    CHECK(Bool::unspecified == damp.choice.pedal().abbreviated);
+}
+
+T_END;
+
+// A pedal mark without a payload is written as a plain sign and reads back without a payload.
+TEST(PedalMarkWithoutPayloadWritesSign, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    direction.directionTypes.emplace_back(DirectionChoice{MarkData{Placement::below, MarkType::pedal}});
+    const auto pedalTag = directionMarksFirstPedalTag(xmlForDirectionData(direction));
+    CHECK(pedalTag.find("line=\"no\"") != std::string::npos);
+    CHECK(pedalTag.find("sign=\"yes\"") != std::string::npos);
+    CHECK(pedalTag.find("number=") == std::string::npos);
+    CHECK(pedalTag.find("abbreviated=") == std::string::npos);
+
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isMark());
+    CHECK(directions.front().directionTypes.front().mark().choice.isNone());
+}
+
+T_END;
+
+// sign set to yes draws the sign, the same as leaving it unspecified, so it reads back unspecified.
+// abbreviated keeps both of its values.
+TEST(PedalMarkBoolValues, DirectionMarksRoundTrip)
+{
+    const Bool values[] = {Bool::yes, Bool::no};
+    for (const auto value : values)
+    {
+        MarkData mark{Placement::below, MarkType::pedal};
+        PedalMarkData payload{};
+        payload.abbreviated = value;
+        payload.sign = Bool::yes;
+        mark.choice = payload;
+        DirectionData direction;
+        direction.directionTypes.emplace_back(DirectionChoice{mark});
+        const auto directions = roundTripDirectionData(direction);
+        REQUIRE(directions.size() == 1);
+        REQUIRE(directions.front().directionTypes.size() == 1);
+        REQUIRE(directions.front().directionTypes.front().isMark());
+        const auto out = directions.front().directionTypes.front().mark();
+        REQUIRE(out.choice.isPedal());
+        CHECK(value == out.choice.pedal().abbreviated);
+        CHECK(Bool::unspecified == out.choice.pedal().sign);
+    }
+}
+
+T_END;
+
+// A pedal line drawn with its signs, in their short form, keeps both attributes.
+TEST(PedalLineSignAndAbbreviated, DirectionMarksRoundTrip)
+{
+    const Bool values[] = {Bool::yes, Bool::no};
+    for (const auto value : values)
+    {
+        PedalLineData pedal{PedalLineKind::start};
+        pedal.sign = value;
+        pedal.abbreviated = value == Bool::yes ? Bool::no : Bool::yes;
+        DirectionData direction;
+        direction.directionTypes.emplace_back(DirectionChoice{pedal});
+        const auto directions = roundTripDirectionData(direction);
+        REQUIRE(directions.size() == 1);
+        REQUIRE(directions.front().directionTypes.size() == 1);
+        REQUIRE(directions.front().directionTypes.front().isPedal());
+        const auto out = directions.front().directionTypes.front().pedal();
+        CHECK(pedal.sign == out.sign);
+        CHECK(pedal.abbreviated == out.abbreviated);
+        CHECK(pedal == out);
+    }
+}
+
+T_END;
+
+// A pedal line that leaves sign and abbreviated unspecified does not write either attribute.
+TEST(PedalLineWithoutSignWritesLineOnly, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    direction.directionTypes.emplace_back(DirectionChoice{PedalLineData{PedalLineKind::start}});
+    const auto pedalTag = directionMarksFirstPedalTag(xmlForDirectionData(direction));
+    CHECK(pedalTag.find("line=\"yes\"") != std::string::npos);
+    CHECK(pedalTag.find("sign=") == std::string::npos);
+    CHECK(pedalTag.find("abbreviated=") == std::string::npos);
+
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isPedal());
+    CHECK(Bool::unspecified == directions.front().directionTypes.front().pedal().sign);
+    CHECK(Bool::unspecified == directions.front().directionTypes.front().pedal().abbreviated);
 }
 
 T_END;
