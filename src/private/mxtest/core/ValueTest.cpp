@@ -255,6 +255,39 @@ TEST(FontFamilyAddItemReplacesPlaceholder, Values)
     CHECK_EQUAL(std::string{"Arial"}, f.toString());
 }
 
+TEST(TimeOnlyAddValueReplacesPlaceholder, Values)
+{
+    TimeOnly t;
+    CHECK_EQUAL(std::string{"1"}, t.toString());
+    t.addValue(3);
+    CHECK_EQUAL(std::string{"3"}, t.toString());
+    t.addValue(5);
+    CHECK_EQUAL(std::string{"3, 5"}, t.toString());
+}
+
+TEST(TimeOnlyAddValueKeepsExplicitOne, Values)
+{
+    TimeOnly t{std::vector<int>{1}};
+    t.addValue(4);
+    CHECK_EQUAL(std::string{"1, 4"}, t.toString());
+}
+
+TEST(TimeOnlyEmptySetValuesCreatesPlaceholder, Values)
+{
+    TimeOnly t{std::vector<int>{2, 6}};
+    t.setValues({});
+    t.addValue(7);
+    CHECK_EQUAL(std::size_t{1}, t.values().size());
+    CHECK_EQUAL(std::string{"7"}, t.toString());
+}
+
+TEST(EndingNumberAddValueStartsEmpty, Values)
+{
+    EndingNumber e;
+    e.addValue(2);
+    CHECK_EQUAL(std::string{"2"}, e.toString());
+}
+
 TEST(TimeOnlyAndEndingNumberStructural, Values)
 {
     CHECK_EQUAL(std::string{"1"}, TimeOnly{}.toString());

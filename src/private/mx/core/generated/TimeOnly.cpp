@@ -28,6 +28,10 @@ void TimeOnly::setValues(std::vector<int> values)
 
 void TimeOnly::addValue(int value)
 {
+    if (m_hasPlaceholder)
+    {
+        m_values.clear();
+    }
     m_values.push_back(value);
     m_text.clear();
     repair();
@@ -42,7 +46,8 @@ void TimeOnly::repair()
             v = 1;
         }
     }
-    if (m_values.empty())
+    m_hasPlaceholder = m_values.empty();
+    if (m_hasPlaceholder)
     {
         m_values.push_back(1);
     }

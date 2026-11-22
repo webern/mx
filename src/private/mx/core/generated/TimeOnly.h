@@ -19,6 +19,7 @@ namespace mx::core
 /// Structural representation: a never-empty list of positive
 /// integers (the time-through-repeat indices), serialized comma-separated.
 /// Construction clamps each value to >= 1; an empty list becomes [1].
+/// That 1 is a placeholder: the next addValue replaces it.
 class TimeOnly final
 {
   public:
@@ -61,7 +62,8 @@ class TimeOnly final
     void repair();
 
     std::vector<int> m_values;
-    std::string m_text; // preserved wire spelling; empty = none
+    std::string m_text;            // preserved wire spelling; empty = none
+    bool m_hasPlaceholder = false; // m_values holds only the 1 that repair made
 };
 
 } // namespace mx::core
