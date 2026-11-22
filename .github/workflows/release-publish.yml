@@ -22,6 +22,7 @@ permissions: {}
 jobs:
   verify-and-publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write # create the GitHub Release
       actions: read # read the pinned run's metadata + download its artifacts

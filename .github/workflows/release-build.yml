@@ -27,6 +27,7 @@ jobs:
   validate:
     name: Validate inputs
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions: {}
     steps:
       - name: Validate sha and version
@@ -70,6 +71,7 @@ jobs:
     name: Release PR
     needs: [validate, swift]
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write # push the release-prep/v* branch
       pull-requests: write # open the release PR
