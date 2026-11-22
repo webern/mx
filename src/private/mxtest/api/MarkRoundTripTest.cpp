@@ -7,6 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mxtest/api/TestHelpers.h"
 
 #include <sstream>
 #include <vector>
@@ -422,6 +423,170 @@ inline std::string markRoundTripWriteWithDiagnostics(const MarkData &inMarkData,
     std::move(document).value().writeToStream(ss);
     return ss.str();
 }
+
+// A straight arrow keeps its style, its arrowhead flag and its glyph, and its direction stays in name.
+TEST(ArrowStraightPayloadRoundTrips, MarkRoundTrip)
+{
+    MarkData mark{Placement::below, MarkType::arrow};
+    mark.name = "arrowOpenDownLeft";
+    ArrowMarkData payload{};
+    payload.style = ArrowStyle::hollow;
+    payload.arrowhead = true;
+    payload.smufl = "arrowWhiteDownLeft";
+    mark.choice = payload;
+
+    const auto marks = roundTripMarkData(mark);
+    REQUIRE(marks.size() == 1);
+    CHECK(marks.front().markType == MarkType::arrow);
+    CHECK("arrowOpenDownLeft" == marks.front().name);
+    CHECK(Placement::below == marks.front().positionData.placement);
+    REQUIRE(marks.front().choice.isArrow());
+    CHECK(payload == marks.front().choice.arrow());
+}
+
+T_END;
+
+// A circular arrow turns one way or the other. Its name reads back as arrowOpenUp.
+TEST(ArrowCircularRoundTrips, MarkRoundTrip)
+{
+    const CircularArrowDirection directions[] = {CircularArrowDirection::clockwise,
+                                                 CircularArrowDirection::anticlockwise};
+    for (const auto direction : directions)
+    {
+        MarkData mark{Placement::unspecified, MarkType::arrow};
+        ArrowMarkData payload{};
+        payload.circular = direction;
+        payload.smufl = "arrowheadBlackUp";
+        mark.choice = payload;
+
+        Diagnostics diagnostics;
+        const auto xml = markRoundTripWriteWithDiagnostics(mark, diagnostics);
+        CHECK(xml.find("<circular-arrow>") != std::string::npos);
+        CHECK(xml.find("<arrow-direction>") == std::string::npos);
+
+        const auto marks = roundTripMarkData(mark);
+        REQUIRE(marks.size() == 1);
+        CHECK(marks.front().markType == MarkType::arrow);
+        CHECK("arrowOpenUp" == marks.front().name);
+        REQUIRE(marks.front().choice.isArrow());
+        CHECK(payload == marks.front().choice.arrow());
+    }
+}
+
+T_END;
+
+TEST(ArrowStyleValues, MarkRoundTrip)
+{
+    const ArrowStyle styles[] = {ArrowStyle::single, ArrowStyle::double_,  ArrowStyle::filled, ArrowStyle::hollow,
+                                 ArrowStyle::paired, ArrowStyle::combined, ArrowStyle::other};
+    for (const auto style : styles)
+    {
+        MarkData mark{Placement::unspecified, MarkType::arrow};
+        mark.name = "arrowOpenRight";
+        ArrowMarkData payload{};
+        payload.style = style;
+        mark.choice = payload;
+
+        const auto marks = roundTripMarkData(mark);
+        REQUIRE(marks.size() == 1);
+        CHECK("arrowOpenRight" == marks.front().name);
+        REQUIRE(marks.front().choice.isArrow());
+        CHECK(style == marks.front().choice.arrow().style);
+        CHECK(payload == marks.front().choice.arrow());
+    }
+}
+
+T_END;
+
+TEST(ArrowReadsElements, MarkRoundTrip)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note>
+        <pitch><step>C</step><octave>4</octave></pitch>
+        <duration>2</duration>
+        <type>half</type>
+        <notations>
+          <technical>
+            <arrow smufl="guitarStrumDown">
+              <arrow-direction>down</arrow-direction>
+              <arrow-style>paired</arrow-style>
+              <arrowhead/>
+            </arrow>
+          </technical>
+        </notations>
+      </note>
+      <note>
+        <pitch><step>D</step><octave>4</octave></pitch>
+        <duration>2</duration>
+        <type>half</type>
+        <notations>
+          <technical>
+            <arrow>
+              <circular-arrow>anticlockwise</circular-arrow>
+            </arrow>
+          </technical>
+        </notations>
+      </note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(score.parts.size() == 1);
+    const auto &notes = score.parts.front().measures.front().staves.front().voices.at(0).notes;
+    REQUIRE(notes.size() == 2);
+
+    const auto &straightMarks = notes.at(0).noteAttachmentData.marks;
+    REQUIRE(straightMarks.size() == 1);
+    CHECK(straightMarks.front().markType == MarkType::arrow);
+    CHECK("arrowOpenDown" == straightMarks.front().name);
+    REQUIRE(straightMarks.front().choice.isArrow());
+    const auto straight = straightMarks.front().choice.arrow();
+    CHECK(ArrowStyle::paired == straight.style);
+    CHECK(straight.arrowhead);
+    CHECK(CircularArrowDirection::unspecified == straight.circular);
+    REQUIRE(straight.smufl.has_value());
+    CHECK("guitarStrumDown" == *straight.smufl);
+
+    const auto &circularMarks = notes.at(1).noteAttachmentData.marks;
+    REQUIRE(circularMarks.size() == 1);
+    CHECK(circularMarks.front().markType == MarkType::arrow);
+    REQUIRE(circularMarks.front().choice.isArrow());
+    const auto circular = circularMarks.front().choice.arrow();
+    CHECK(CircularArrowDirection::anticlockwise == circular.circular);
+    CHECK(ArrowStyle::unspecified == circular.style);
+    CHECK(!circular.arrowhead);
+    CHECK(!circular.smufl.has_value());
+}
+
+T_END;
+
+// A plain arrow does not need a payload, and does not write a style, an arrowhead or a glyph.
+TEST(ArrowDefaultsToNoPayload, MarkRoundTrip)
+{
+    MarkData mark{Placement::unspecified, MarkType::arrow};
+    mark.name = "arrowOpenLeft";
+
+    Diagnostics diagnostics;
+    const auto xml = markRoundTripWriteWithDiagnostics(mark, diagnostics);
+    CHECK(xml.find("<arrow-direction>left</arrow-direction>") != std::string::npos);
+    CHECK(xml.find("<arrow-style>") == std::string::npos);
+    CHECK(xml.find("<arrowhead") == std::string::npos);
+    CHECK(xml.find("smufl=") == std::string::npos);
+
+    const auto marks = roundTripMarkData(mark);
+    REQUIRE(marks.size() == 1);
+    CHECK("arrowOpenLeft" == marks.front().name);
+    CHECK(marks.front().choice.isNone());
+}
+
+T_END;
 
 TEST(OrnamentAccidentals, MarkRoundTrip)
 {

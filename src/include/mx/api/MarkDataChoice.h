@@ -322,6 +322,77 @@ MXAPI_EQUALS_MEMBER(abbreviated)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PedalMarkData);
 
+// How a straight arrow is drawn, in the terms Unicode uses for arrows.
+enum class ArrowStyle
+{
+    // Leave the style to the application.
+    unspecified,
+
+    // A shaft drawn with one line, like ->.
+    single,
+
+    // A shaft drawn with two lines, like =>.
+    double_,
+
+    // A single arrow drawn as a solid, filled-in shape.
+    filled,
+
+    // A single arrow drawn as an outline that is not filled in.
+    hollow,
+
+    // Two single arrows side by side, pointing the same way.
+    paired,
+
+    // For an arrow that points two ways, one arrow in each direction joined into one symbol.
+    combined,
+
+    // A style that none of the others describe.
+    other,
+};
+
+// Which way a circular arrow turns.
+enum class CircularArrowDirection
+{
+    // The arrow is straight, not circular.
+    unspecified,
+
+    // The arrow turns clockwise.
+    clockwise,
+
+    // The arrow turns anticlockwise (counterclockwise).
+    anticlockwise,
+};
+
+// Payload for MarkType::arrow: an arrow drawn on a note, for example to show which way to strum a
+// chord. An arrow is either straight or circular. A straight arrow points the way MarkData::name
+// says, as a SMuFL glyph name such as "arrowOpenLeft" or "arrowOpenDownRight", and can use style
+// and arrowhead. Setting circular makes it a circular arrow instead, and then name, style and
+// arrowhead are not used. Leaving every field at its default is the same as having no payload.
+struct ArrowMarkData
+{
+    // How a straight arrow is drawn.
+    ArrowStyle style = ArrowStyle::unspecified;
+
+    // true: only the head of a straight arrow is drawn, without its shaft.
+    bool arrowhead = false;
+
+    // Which way a circular arrow turns. Leave it unspecified for a straight arrow.
+    CircularArrowDirection circular = CircularArrowDirection::unspecified;
+
+    // The SMuFL glyph to draw when a specific arrow-shaped glyph is wanted, for example
+    // "guitarStrumUp" or "handbellsSwingUp". It should match the arrow the other fields describe.
+    // Leave it absent to let the application choose the glyph.
+    std::optional<std::string> smufl;
+};
+
+MXAPI_EQUALS_BEGIN(ArrowMarkData)
+MXAPI_EQUALS_MEMBER(style)
+MXAPI_EQUALS_MEMBER(arrowhead)
+MXAPI_EQUALS_MEMBER(circular)
+MXAPI_EQUALS_MEMBER(smufl)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(ArrowMarkData);
+
 // A variant class that carries data for MarkType values whose payload does not fit MarkData's
 // common fields.
 //
@@ -352,7 +423,8 @@ class MarkDataChoice
         harmonic,
         ornament,
         accidentalMark,
-        pedal
+        pedal,
+        arrow
     };
 
     MarkDataChoice();
@@ -388,6 +460,10 @@ class MarkDataChoice
     // is none.
     MarkDataChoice(PedalMarkData value);
 
+    // Builds an arrow payload, unless every field is left at its default, in which case the result
+    // is none.
+    MarkDataChoice(ArrowMarkData value);
+
     Kind kind() const;
     bool isNone() const;
     bool isTremolo() const;
@@ -401,6 +477,7 @@ class MarkDataChoice
     bool isOrnament() const;
     bool isAccidentalMark() const;
     bool isPedal() const;
+    bool isArrow() const;
 
     // Returns a copy of the internally held TremoloMarkData.
     //
@@ -456,12 +533,18 @@ class MarkDataChoice
     // returned.
     const PedalMarkData pedal() const;
 
+    // Returns a copy of the internally held ArrowMarkData.
+    //
+    // Check isArrow() first. If this is not an arrow payload, a default constructed ArrowMarkData is
+    // returned.
+    const ArrowMarkData arrow() const;
+
     bool operator==(const MarkDataChoice &other) const;
 
   private:
     std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData, OtherMarkData,
                  StandardDynamic, CompoundDynamicsData, OtherNotationMarkData, HarmonicMarkData, OrnamentMarkData,
-                 AccidentalMarkData, PedalMarkData>
+                 AccidentalMarkData, PedalMarkData, ArrowMarkData>
         myValue;
 };
 
