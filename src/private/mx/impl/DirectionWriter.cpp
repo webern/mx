@@ -310,8 +310,22 @@ void DirectionWriter::emitMark(api::MarkData mark, core::Direction &direction)
             pedal.setType(core::PedalType::stop());
         }
 
+        // A pedal mark is the sign form, so it is written with line="no" and, unless the payload
+        // turns the sign off, sign="yes".
+        const auto pedalMarkData = mark.choice.pedal();
         pedal.setLine(core::YesNo::no());
-        pedal.setSign(core::YesNo::yes());
+        pedal.setSign(pedalMarkData.sign == api::Bool::no ? core::YesNo::no() : core::YesNo::yes());
+        if (pedalMarkData.number.has_value())
+        {
+            const core::NumberLevel numberLevel{*pedalMarkData.number};
+            reportAdjusted(myDiagnostics, cursorLocation(myCursor), "pedal number", *pedalMarkData.number,
+                           numberLevel.value());
+            pedal.setNumber(numberLevel);
+        }
+        if (pedalMarkData.abbreviated != api::Bool::unspecified)
+        {
+            pedal.setAbbreviated(myConverter.convert(pedalMarkData.abbreviated));
+        }
         setAttributesFromPositionData(mark.positionData, pedal);
         core::DirectionType dt{};
         dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
@@ -360,6 +374,14 @@ void DirectionWriter::emitPedal(const api::PedalLineData &item, const void *inId
     core::Pedal pedal{};
     pedal.setType(corePedalType(item.kind));
     pedal.setLine(core::YesNo::yes());
+    if (item.sign != api::Bool::unspecified)
+    {
+        pedal.setSign(myConverter.convert(item.sign));
+    }
+    if (item.abbreviated != api::Bool::unspecified)
+    {
+        pedal.setAbbreviated(myConverter.convert(item.abbreviated));
+    }
 
     const auto number = mySpannerResolver.emittedNumber(item.number, inIdentity);
     if (number.has_value())

@@ -297,6 +297,31 @@ MXAPI_EQUALS_MEMBER(accidentals)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(OrnamentMarkData);
 
+// Payload for the piano pedal signs: MarkType::pedal, the Ped. sign that presses the pedal, and
+// MarkType::damp, the * sign that lifts it. A pedal drawn as a line is a PedalLineData instead.
+// Leaving every field at its default is the same as having no payload.
+struct PedalMarkData
+{
+    // Pairs a Ped. sign with the * sign that ends it when two pedalings overlap. Give both signs of
+    // a pair the same number. Leave it absent when the pedalings do not overlap.
+    std::optional<int> number;
+
+    // no: the sign is not drawn, though the pedal is still pressed or lifted here. Leave it
+    // unspecified to draw the sign; yes means the same.
+    Bool sign = Bool::unspecified;
+
+    // yes: the Ped. sign is drawn in its short form, P. Leave it unspecified to draw the full Ped.
+    // sign. The * sign does not have a short form, so a damp mark does not use this.
+    Bool abbreviated = Bool::unspecified;
+};
+
+MXAPI_EQUALS_BEGIN(PedalMarkData)
+MXAPI_EQUALS_MEMBER(number)
+MXAPI_EQUALS_MEMBER(sign)
+MXAPI_EQUALS_MEMBER(abbreviated)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(PedalMarkData);
+
 // A variant class that carries data for MarkType values whose payload does not fit MarkData's
 // common fields.
 //
@@ -326,7 +351,8 @@ class MarkDataChoice
         otherNotation,
         harmonic,
         ornament,
-        accidentalMark
+        accidentalMark,
+        pedal
     };
 
     MarkDataChoice();
@@ -358,6 +384,10 @@ class MarkDataChoice
     // the result is none.
     MarkDataChoice(AccidentalMarkData value);
 
+    // Builds a pedal payload, unless every field is left at its default, in which case the result
+    // is none.
+    MarkDataChoice(PedalMarkData value);
+
     Kind kind() const;
     bool isNone() const;
     bool isTremolo() const;
@@ -370,6 +400,7 @@ class MarkDataChoice
     bool isHarmonic() const;
     bool isOrnament() const;
     bool isAccidentalMark() const;
+    bool isPedal() const;
 
     // Returns a copy of the internally held TremoloMarkData.
     //
@@ -419,12 +450,18 @@ class MarkDataChoice
     // constructed AccidentalMarkData is returned.
     const AccidentalMarkData accidentalMark() const;
 
+    // Returns a copy of the internally held PedalMarkData.
+    //
+    // Check isPedal() first. If this is not a pedal payload, a default constructed PedalMarkData is
+    // returned.
+    const PedalMarkData pedal() const;
+
     bool operator==(const MarkDataChoice &other) const;
 
   private:
     std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData, OtherMarkData,
                  StandardDynamic, CompoundDynamicsData, OtherNotationMarkData, HarmonicMarkData, OrnamentMarkData,
-                 AccidentalMarkData>
+                 AccidentalMarkData, PedalMarkData>
         myValue;
 };
 

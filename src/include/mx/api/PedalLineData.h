@@ -63,14 +63,26 @@ struct PedalLineData
     // right downstroke. In non-ambiguous cases, leaving this unset is fine.
     SpannerNumber number;
 
+    // yes: the pedal signs (Ped. or Sost., and *) are drawn as well as the line. Leave it
+    // unspecified to draw the line alone.
+    Bool sign;
+
+    // yes: when sign is yes, the line begins with the short P or S sign instead of Ped. or Sost.
+    // Leave it unspecified for the full sign. Only a start or sostenuto event uses this.
+    Bool abbreviated;
+
     // The <pedal> element's id attribute (see Id.h).
     std::optional<Id> id;
 
-    PedalLineData() : kind{PedalLineKind::unspecified}, tickTimePosition{0}, positionData{}, number{}, id{}
+    PedalLineData()
+        : kind{PedalLineKind::unspecified}, tickTimePosition{0}, positionData{}, number{}, sign{Bool::unspecified},
+          abbreviated{Bool::unspecified}, id{}
     {
     }
 
-    PedalLineData(PedalLineKind inKind) : kind{inKind}, tickTimePosition{0}, positionData{}, number{}, id{}
+    PedalLineData(PedalLineKind inKind)
+        : kind{inKind}, tickTimePosition{0}, positionData{}, number{}, sign{Bool::unspecified},
+          abbreviated{Bool::unspecified}, id{}
     {
     }
 };
@@ -80,6 +92,8 @@ MXAPI_EQUALS_MEMBER(kind)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(number)
+MXAPI_EQUALS_MEMBER(sign)
+MXAPI_EQUALS_MEMBER(abbreviated)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PedalLineData);
