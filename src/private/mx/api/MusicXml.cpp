@@ -90,6 +90,8 @@ DiagnosticCode mirrorToApiDiagnosticCode(core::DiagnosticCode code)
         return DiagnosticCode::duplicateId;
     case core::DiagnosticCode::danglingIdReference:
         return DiagnosticCode::danglingIdReference;
+    case core::DiagnosticCode::droppedData:
+        return DiagnosticCode::droppedData;
     }
     return DiagnosticCode::invalidValue;
 }

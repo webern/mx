@@ -1,4 +1,7 @@
 {{#fields}}
+{{#skip_before}}
+    skipElements(cursor, {{value_q}}, context);
+{{/skip_before}}
 {{#is_element}}
 {{#is_required}}
     if (cursorIs(cursor, {{tag_q}}))
