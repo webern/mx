@@ -245,101 +245,167 @@ void PartReader::parseScorePart() const
         myOutPartData.groups.push_back(group);
     }
 
-    if (!myScorePart.scoreInstrument().empty())
+    const auto scoreInstruments = myScorePart.scoreInstrument();
+    for (size_t i = 0; i < scoreInstruments.size(); ++i)
     {
-        parseScoreInstrument(myScorePart.scoreInstrument().front());
+        if (i == 0)
+        {
+            parseScoreInstrument(scoreInstruments[i], myOutPartData.instrumentData);
+        }
+        else
+        {
+            parseScoreInstrument(scoreInstruments[i], myOutPartData.additionalInstruments.emplace_back());
+        }
     }
 
-    if (!myScorePart.midiGroup().empty())
+    // Each midi group names the instrument it plays by id. A first group that names no instrument
+    // of the part belongs to the part's instrument; any other such group is not read.
+    const auto midiGroups = myScorePart.midiGroup();
+    for (size_t i = 0; i < midiGroups.size(); ++i)
     {
-        parseMidiDeviceInstrumentGroup(myScorePart.midiGroup().front());
+        bool isAdditional = false;
+        api::InstrumentData *instrument = findMidiGroupInstrument(midiGroups[i], isAdditional);
+        if (instrument == nullptr && i == 0)
+        {
+            instrument = &myOutPartData.instrumentData;
+        }
+
+        if (instrument != nullptr)
+        {
+            parseMidiDeviceInstrumentGroup(midiGroups[i], isAdditional, *instrument);
+        }
     }
 }
 
-void PartReader::parseScoreInstrument(const core::ScoreInstrument &scoreInstrument) const
+void PartReader::parseScoreInstrument(const core::ScoreInstrument &scoreInstrument,
+                                      api::InstrumentData &outInstrument) const
 {
-    myOutPartData.instrumentData.uniqueId = scoreInstrument.id().value();
-    myOutPartData.instrumentData.name = scoreInstrument.instrumentName();
+    outInstrument.uniqueId = scoreInstrument.id().value();
+    outInstrument.name = scoreInstrument.instrumentName();
 
     if (scoreInstrument.instrumentAbbreviation().has_value())
     {
-        myOutPartData.instrumentData.abbreviation = *scoreInstrument.instrumentAbbreviation();
+        outInstrument.abbreviation = *scoreInstrument.instrumentAbbreviation();
     }
 
     auto sound =
         readVirtualInstrumentData(scoreInstrument.virtualInstrumentData(), myDiagnostics, partLocation(myPartIndex));
-    myOutPartData.instrumentData.soundID = sound.soundID;
-    myOutPartData.instrumentData.soloOrEnsemble = sound.soloOrEnsemble;
-    myOutPartData.instrumentData.midiData.virtualLibrary = std::move(sound.virtualLibrary);
-    myOutPartData.instrumentData.midiData.virtualName = std::move(sound.virtualName);
+    outInstrument.soundID = sound.soundID;
+    outInstrument.soloOrEnsemble = sound.soloOrEnsemble;
+    outInstrument.midiData.virtualLibrary = std::move(sound.virtualLibrary);
+    outInstrument.midiData.virtualName = std::move(sound.virtualName);
 }
 
-void PartReader::parseMidiDeviceInstrumentGroup(const core::ScorePartMIDIGroup &grp) const
+api::InstrumentData *PartReader::findMidiGroupInstrument(const core::ScorePartMIDIGroup &grp,
+                                                         bool &outIsAdditional) const
 {
+    std::string id;
+    if (grp.midiInstrument().has_value())
+    {
+        id = grp.midiInstrument()->id().value();
+    }
+    else if (grp.midiDevice().has_value() && grp.midiDevice()->id().has_value())
+    {
+        id = grp.midiDevice()->id()->value();
+    }
+
+    outIsAdditional = false;
+    if (id.empty())
+    {
+        return nullptr;
+    }
+
+    if (myOutPartData.instrumentData.uniqueId == id)
+    {
+        return &myOutPartData.instrumentData;
+    }
+
+    for (auto &additional : myOutPartData.additionalInstruments)
+    {
+        if (additional.uniqueId == id)
+        {
+            outIsAdditional = true;
+            return &additional;
+        }
+    }
+
+    return nullptr;
+}
+
+void PartReader::parseMidiDeviceInstrumentGroup(const core::ScorePartMIDIGroup &grp, bool isAdditional,
+                                                api::InstrumentData &outInstrument) const
+{
+    auto &midiData = outInstrument.midiData;
     if (grp.midiDevice().has_value())
     {
-        myOutPartData.instrumentData.midiData.device = grp.midiDevice()->value();
+        midiData.device = grp.midiDevice()->value();
 
         if (grp.midiDevice()->port().has_value())
         {
-            myOutPartData.instrumentData.midiData.devicePort = grp.midiDevice()->port()->value();
+            midiData.devicePort = grp.midiDevice()->port()->value();
         }
 
+        // The writer links an additional instrument's device to its instrument unless told not to,
+        // and leaves the link out for the part's instrument unless told to.
         if (grp.midiDevice()->id().has_value())
         {
-            myOutPartData.instrumentData.midiData.writeDeviceId = api::Bool::yes;
+            midiData.writeDeviceId = api::Bool::yes;
+        }
+        else if (isAdditional)
+        {
+            midiData.writeDeviceId = api::Bool::no;
         }
     }
 
     if (grp.midiInstrument().has_value())
     {
-        parseMidiInstrument(*grp.midiInstrument());
+        parseMidiInstrument(*grp.midiInstrument(), midiData);
     }
 }
 
-void PartReader::parseMidiInstrument(const core::MIDIInstrument &inst) const
+void PartReader::parseMidiInstrument(const core::MIDIInstrument &inst, api::MidiData &outMidiData) const
 {
     if (inst.midiChannel().has_value())
     {
-        myOutPartData.instrumentData.midiData.channel = inst.midiChannel()->value();
+        outMidiData.channel = inst.midiChannel()->value();
     }
 
     if (inst.midiName().has_value())
     {
-        myOutPartData.instrumentData.midiData.name = *inst.midiName();
+        outMidiData.name = *inst.midiName();
     }
 
     if (inst.midiBank().has_value())
     {
-        myOutPartData.instrumentData.midiData.bank = inst.midiBank()->value();
+        outMidiData.bank = inst.midiBank()->value();
     }
 
     if (inst.midiProgram().has_value())
     {
-        myOutPartData.instrumentData.midiData.program = inst.midiProgram()->value();
+        outMidiData.program = inst.midiProgram()->value();
     }
 
     if (inst.midiUnpitched().has_value())
     {
-        myOutPartData.instrumentData.midiData.unpitched = inst.midiUnpitched()->value();
+        outMidiData.unpitched = inst.midiUnpitched()->value();
     }
 
     if (inst.volume().has_value())
     {
-        myOutPartData.instrumentData.midiData.isVolumeSpecified = true;
-        myOutPartData.instrumentData.midiData.volume = inst.volume()->value().value();
+        outMidiData.isVolumeSpecified = true;
+        outMidiData.volume = inst.volume()->value().value();
     }
 
     if (inst.pan().has_value())
     {
-        myOutPartData.instrumentData.midiData.isPanSpecified = true;
-        myOutPartData.instrumentData.midiData.pan = inst.pan()->value().value();
+        outMidiData.isPanSpecified = true;
+        outMidiData.pan = inst.pan()->value().value();
     }
 
     if (inst.elevation().has_value())
     {
-        myOutPartData.instrumentData.midiData.isElevationSpecified = true;
-        myOutPartData.instrumentData.midiData.elevation = inst.elevation()->value().value();
+        outMidiData.isElevationSpecified = true;
+        outMidiData.elevation = inst.elevation()->value().value();
     }
 }
 

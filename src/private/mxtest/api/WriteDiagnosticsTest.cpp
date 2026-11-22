@@ -350,4 +350,32 @@ TEST(curveWithUnspecifiedTypeIsReportedOnce, WriteDiagnostics)
 
 T_END
 
+// A note that names an instrument its part does not have keeps the instruments the part does have.
+TEST(noteInstrumentNotInPartIsDropped, WriteDiagnostics)
+{
+    auto score = writeDiagnosticsScore(2);
+    auto &part = score.parts.front();
+    part.instrumentData.uniqueId = "P1-I1";
+    part.instrumentData.name = "Flute";
+    auto &piccolo = part.additionalInstruments.emplace_back();
+    piccolo.uniqueId = "P1-I2";
+    piccolo.name = "Piccolo";
+    writeDiagnosticsNote(score, 1).instruments = {"P1-I9", "P1-I2"};
+
+    const auto diagnostics = writeDiagnostics(score);
+    REQUIRE(diagnostics.all().size() == 1);
+    const auto &diagnostic = diagnostics.all().front();
+    writeDiagnosticsCheck(diagnostic, DiagnosticCode::droppedData,
+                          "note instrument \"P1-I9\" is not one of the part's instruments; it is not written");
+    CHECK_EQUAL(0, diagnostic.location.partIndex);
+    CHECK_EQUAL(1, diagnostic.location.measureIndex);
+
+    std::ostringstream xml;
+    REQUIRE(fromScore(score).value().writeToStream(xml).ok());
+    CHECK(xml.str().find("P1-I9") == std::string::npos);
+    CHECK(xml.str().find(R"(<instrument id="P1-I2"/>)") != std::string::npos);
+}
+
+T_END
+
 #endif

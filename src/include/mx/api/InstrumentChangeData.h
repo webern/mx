@@ -23,7 +23,7 @@ namespace api
 // MeasureData::partNameDisplay, and its transposition with MeasureData::transpositions.
 //
 // MusicXML calls this <instrument-change>, inside a <sound>. You do not need to say which
-// instrument it changes: a part has one instrument, and the change applies to it.
+// instrument it changes: it always applies to the part's instrument, PartData::instrumentData.
 struct InstrumentChangeData
 {
     SoundID soundID = SoundID::unspecified;

@@ -14,6 +14,7 @@ namespace mx
 namespace core
 {
 class PartwisePart;
+class ScoreInstrument;
 class ScorePart;
 class Token;
 } // namespace core
@@ -44,6 +45,16 @@ class PartWriter
     // The id of this part's instrument: the caller's, or one derived from the part's position. An
     // invalid caller id is reported only when isReported is true, so it is reported once.
     core::Token partInstrumentId(bool isReported = true) const;
+    // The id of the additional instrument at index: the caller's, or one derived from its position.
+    core::Token additionalInstrumentId(size_t index) const;
+    // A score-instrument for the instrument. outHasContent is set when it carries anything besides
+    // its id.
+    core::ScoreInstrument makeScoreInstrument(const api::InstrumentData &instrument, const core::Token &id,
+                                              bool &outHasContent) const;
+    // Adds a midi group for the instrument's playback data, when it has any, and returns whether it
+    // did. isAdditional says whether the instrument is one of the part's additional instruments.
+    bool addMidiGroup(const api::MidiData &midiData, const core::Token &id, bool isAdditional,
+                      core::ScorePart &outScorePart) const;
 
   private:
     /// Writes all the measures from myPartData to outPart

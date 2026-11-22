@@ -66,6 +66,9 @@ class NoteWriter
     void setNotehead() const;
     void setStemDirection() const;
     void setLyrics() const;
+    // Writes an <instrument> for each of the note's instruments that is one of the part's, and
+    // reports each one that is not.
+    void setInstruments() const;
     void setMiscData() const;
 };
 } // namespace impl

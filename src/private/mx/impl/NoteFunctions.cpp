@@ -95,6 +95,11 @@ api::NoteData NoteFunctions::parseNote() const
         myOutNoteData.velocityStop = myNote.endDynamics()->value().value();
     }
 
+    for (const auto &instrument : myNote.instrument())
+    {
+        myOutNoteData.instruments.push_back(instrument.id().value());
+    }
+
     myOutNoteData.userRequestedVoiceNumber = reader.getVoiceNumber();
 
     // Auto rule (see NoteData::writeStaffNumber): <staff> is included on a multi-staff part and

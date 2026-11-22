@@ -60,9 +60,13 @@ class PartReader
     // so with a <staves> element, which the count alone cannot tell you when it is one.
     int calculateNumStaves(bool &outIsStavesElementPresent) const;
     void parseScorePart() const;
-    void parseScoreInstrument(const core::ScoreInstrument &scoreInstrument) const;
-    void parseMidiDeviceInstrumentGroup(const core::ScorePartMIDIGroup &grp) const;
-    void parseMidiInstrument(const core::MIDIInstrument &inst) const;
+    void parseScoreInstrument(const core::ScoreInstrument &scoreInstrument, api::InstrumentData &outInstrument) const;
+    // The instrument of myOutPartData that a midi group names by id, or nullptr when it names none.
+    // outIsAdditional reports whether that is one of the part's additional instruments.
+    api::InstrumentData *findMidiGroupInstrument(const core::ScorePartMIDIGroup &grp, bool &outIsAdditional) const;
+    void parseMidiDeviceInstrumentGroup(const core::ScorePartMIDIGroup &grp, bool isAdditional,
+                                        api::InstrumentData &outInstrument) const;
+    void parseMidiInstrument(const core::MIDIInstrument &inst, api::MidiData &outMidiData) const;
 
     template <typename ELEMENT_TYPE> void updateNumStaves(const ELEMENT_TYPE &element, int &outNumStaves) const
     {

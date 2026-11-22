@@ -30,17 +30,17 @@ struct MidiData
     // An optional port (or cable) number, from 1 to 16, that says which output the device uses. It
     // is empty when the file doesn't specify one, and most files leave it unset; you only need
     // it when you are aiming at a particular MIDI port. You don't have to attach the device to this
-    // part's instrument yourself; the library keeps them together automatically when the music is
+    // instrument yourself; the library keeps them together automatically when the music is
     // written out.
     std::optional<int> devicePort;
 
     // Most users can ignore this; leave it unspecified. It only controls whether the saved file
-    // spells out the little link that ties this part's playback device to its instrument.
-    // unspecified (the default) does the sensible thing on its own: it leaves that link out,
-    // because each part here has a single instrument and so the link isn't needed. yes/no force it
-    // to be written or left out. You never have to set this when you are creating music. When the
-    // library reads a file that did spell the link out, it sets this for you, so that saving the
-    // file brings it back the same way it came in.
+    // spells out the link that ties the playback device to this instrument. unspecified (the
+    // default) does the sensible thing on its own: it leaves the link out for the part's
+    // instrument, where it is implied, and writes it for an additional instrument, because without
+    // it MusicXML applies the device to every instrument of the part. yes/no force it to be written
+    // or left out. You never have to set this when you are creating music. When the library reads
+    // a file, it sets this to match the file, so that saving the file writes the link the same way.
     Bool writeDeviceId;
 
     std::string name;
@@ -78,30 +78,25 @@ struct MidiData
     }
 };
 
-// Describes the instrument that a part is played on. In this library every part has exactly one
-// instrument, and the name and playback settings you set here (the playback settings live in
-// midiData) apply to the whole part, from the first measure to the last.
+// Describes an instrument that plays a part: its name, its sound, and its playback settings
+// (midiData). Most parts have one instrument, and that is PartData::instrumentData.
 //
-// MusicXML itself allows a single part to carry more than one instrument. The most common case is
-// a drum kit or percussion part, where the bass drum, snare, ride cymbal, and so on are each
-// treated as a separate instrument. You also see it when a part layers or doubles two sounds that
-// play together: two sampled instruments sounding at once, or a single "Clarinet 1 & 2" line that
-// really holds two separate instruments.
+// Some parts are played by several instruments. A drum kit is the common case: the bass drum, the
+// snare and the hi-hat are separate instruments that share one staff. A shared line such as
+// "Clarinet 1 & 2" is another. Put the first instrument in PartData::instrumentData and the others
+// in PartData::additionalInstruments.
 //
-// For now this library brings in only the first instrument of such a part. Any additional
-// instruments in the file are not available here and are not written back out. We're sorry for the
-// limitation: we looked for a way to offer several instruments per part without making the ordinary
-// single-instrument case (which covers the vast majority of music) harder to understand and use,
-// and we didn't find one we were happy with, so it stays one instrument per part for the time
-// being.
+// A note says which of its part's instruments play it by listing their uniqueIds in
+// NoteData::instruments. A note that leaves that list empty is played by the part's instrument.
 //
 // What you set here is in effect from the start of the part. When the player switches to another
 // instrument partway through, as in a doubling, use SoundData::instrumentChange for the new sound
 // and MeasureData::partNameDisplay for the new name.
 struct InstrumentData
 {
-    // Identifies the instrument within the score. You can leave it empty: the library then gives
-    // the instrument a stable id of its own and keeps the part's playback pointed at it.
+    // Identifies the instrument within the score. Notes name their instruments by this id (see
+    // NoteData::instruments). You can leave it empty when no note names the instrument: the library
+    // then gives the instrument a stable id of its own and keeps the part's playback pointed at it.
     std::string uniqueId;
     std::string name;
     std::string abbreviation;
@@ -197,7 +192,13 @@ class PartData
     // <score-part> entries, not inside one).
     std::vector<std::string> groups;
 
+    // The instrument that plays the part. See InstrumentData.
     InstrumentData instrumentData;
+
+    // More instruments that play this part alongside instrumentData, such as the separate drums of a
+    // drum kit. Give each one a uniqueId so that notes can name it in NoteData::instruments. Most
+    // parts leave this empty.
+    std::vector<InstrumentData> additionalInstruments;
 
     /// The initial transposition for the part. If the music entered into the part is not in
     /// concert pitch, then this field is used to specify the transposition that is in-
@@ -314,6 +315,7 @@ MXAPI_EQUALS_MEMBER(displayAbbreviationPrintData)
 MXAPI_EQUALS_MEMBER(displayAbbreviationPositionData)
 MXAPI_EQUALS_MEMBER(groups)
 MXAPI_EQUALS_MEMBER(instrumentData)
+MXAPI_EQUALS_MEMBER(additionalInstruments)
 MXAPI_EQUALS_MEMBER(transposition)
 MXAPI_EQUALS_MEMBER(writeSingleStaffCount)
 MXAPI_EQUALS_MEMBER(measures)
