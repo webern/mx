@@ -11,10 +11,14 @@
 #include "mx/core/generated/ArrowDirection.h"
 #include "mx/core/generated/ArrowStyle.h"
 #include "mx/core/generated/ArticulationsChoice.h"
+#include "mx/core/generated/Bend.h"
+#include "mx/core/generated/BendChoice.h"
+#include "mx/core/generated/BendShape.h"
 #include "mx/core/generated/BreathMark.h"
 #include "mx/core/generated/Caesura.h"
 #include "mx/core/generated/CaesuraValue.h"
 #include "mx/core/generated/CircularArrow.h"
+#include "mx/core/generated/Divisions.h"
 #include "mx/core/generated/EmptyLine.h"
 #include "mx/core/generated/EmptyPlacement.h"
 #include "mx/core/generated/EmptyPlacementSmufl.h"
@@ -43,6 +47,8 @@
 #include "mx/core/generated/OrnamentsGroupChoice.h"
 #include "mx/core/generated/OtherPlacementText.h"
 #include "mx/core/generated/PlacementText.h"
+#include "mx/core/generated/Release.h"
+#include "mx/core/generated/Semitones.h"
 #include "mx/core/generated/ShowTuplet.h"
 #include "mx/core/generated/Slur.h"
 #include "mx/core/generated/SmuflGlyphName.h"
@@ -1540,6 +1546,39 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &o
             arrow.setSmufl(core::SmuflGlyphName{*arrowData.smufl});
         }
         outTechnical.addChoice(core::TechnicalChoice::arrow(arrow));
+        break;
+    }
+    case core::TechnicalChoice::Kind::bend: {
+        // A release offset is written in ticks, because <divisions> is ScoreData::ticksPerQuarter.
+        const auto bendData = mark.choice.bend();
+        core::Bend bend;
+        setAttributesFromMarkData(mark, bend);
+        bend.setBendAlter(core::Semitones{core::Decimal{bendData.alter}});
+        if (bendData.kind == api::BendKind::preBend)
+        {
+            bend.setChoice(core::BendChoice::preBend(core::Empty{}));
+        }
+        else if (bendData.kind == api::BendKind::release)
+        {
+            core::Release release;
+            if (bendData.releaseOffset.has_value())
+            {
+                release.setOffset(core::Divisions{core::Decimal{static_cast<double>(*bendData.releaseOffset)}});
+            }
+            bend.setChoice(core::BendChoice::release(release));
+        }
+        if (bendData.withBar.has_value())
+        {
+            core::PlacementText withBar;
+            withBar.setValue(*bendData.withBar);
+            bend.setWithBar(withBar);
+        }
+        if (bendData.shape != api::BendShape::unspecified)
+        {
+            bend.setShape(bendData.shape == api::BendShape::curved ? core::BendShape::curved()
+                                                                   : core::BendShape::angled());
+        }
+        outTechnical.addChoice(core::TechnicalChoice::bend(bend));
         break;
     }
     case core::TechnicalChoice::Kind::handbell: {

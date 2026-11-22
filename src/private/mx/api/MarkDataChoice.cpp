@@ -119,6 +119,10 @@ MarkDataChoice::MarkDataChoice(ArrowMarkData value)
     }
 }
 
+MarkDataChoice::MarkDataChoice(BendMarkData value) : myValue{std::move(value)}
+{
+}
+
 MarkDataChoice::Kind MarkDataChoice::kind() const
 {
     if (std::holds_alternative<TremoloMarkData>(myValue))
@@ -168,6 +172,10 @@ MarkDataChoice::Kind MarkDataChoice::kind() const
     if (std::holds_alternative<ArrowMarkData>(myValue))
     {
         return Kind::arrow;
+    }
+    if (std::holds_alternative<BendMarkData>(myValue))
+    {
+        return Kind::bend;
     }
     return Kind::none;
 }
@@ -343,6 +351,20 @@ const ArrowMarkData MarkDataChoice::arrow() const
         return *value;
     }
     return ArrowMarkData{};
+}
+
+bool MarkDataChoice::isBend() const
+{
+    return std::holds_alternative<BendMarkData>(myValue);
+}
+
+const BendMarkData MarkDataChoice::bend() const
+{
+    if (const auto *value = std::get_if<BendMarkData>(&myValue))
+    {
+        return *value;
+    }
+    return BendMarkData{};
 }
 
 bool MarkDataChoice::operator==(const MarkDataChoice &other) const

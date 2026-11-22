@@ -393,6 +393,68 @@ MXAPI_EQUALS_MEMBER(smufl)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(ArrowMarkData);
 
+// Whether a guitar bend is an ordinary bend, a pre-bend or a release.
+enum class BendKind
+{
+    // The note is played and then the string is bent up to the new pitch.
+    normal,
+
+    // The string is bent before the note is played, so the note starts at the bent pitch.
+    preBend,
+
+    // A bent string is let back down toward its unbent pitch. A note that is bent and then released
+    // carries two bend marks: the bend, then the release.
+    release,
+};
+
+// How a bend is drawn.
+enum class BendShape
+{
+    // Leave the shape to the application.
+    unspecified,
+
+    // The angled bend symbol common in standard notation.
+    angled,
+
+    // The curved bend symbol common in tablature, and also used in standard notation.
+    curved,
+};
+
+// Payload for MarkType::bend: a guitar bend, where the player pushes the string sideways to raise
+// the pitch of a note. A MarkType::bend mark without this payload is a bend of 0 semitones.
+struct BendMarkData
+{
+    // How far the pitch moves, in semitones, like PitchData::alter. A value such as 0.5 is a quarter
+    // tone. A pre-bend or a release usually has a negative value, and a release after a full-tone
+    // bend is -2, not 0, because it states how far the pitch moves.
+    double alter = 0.0;
+
+    // Whether this is an ordinary bend, a pre-bend or a release.
+    BendKind kind = BendKind::normal;
+
+    // Where the release starts, in ticks (see ScoreData::ticksPerQuarter) after the start of the
+    // note. Only a release uses this. Leave it absent to release at the start of the note.
+    std::optional<int> releaseOffset;
+
+    // The bend is made with the whammy bar (vibrato bar) instead of the fingers. The text says how
+    // to draw it: "scoop" and "dip" name the SMuFL guitarVibratoBarScoop and guitarVibratoBarDip
+    // glyphs, and an empty string draws the application's usual whammy bar sign. Leave it absent
+    // for a bend made with the fingers.
+    std::optional<std::string> withBar;
+
+    // Whether the bend is drawn angled or curved.
+    BendShape shape = BendShape::unspecified;
+};
+
+MXAPI_EQUALS_BEGIN(BendMarkData)
+MXAPI_DOUBLES_EQUALS_MEMBER(alter)
+MXAPI_EQUALS_MEMBER(kind)
+MXAPI_EQUALS_MEMBER(releaseOffset)
+MXAPI_EQUALS_MEMBER(withBar)
+MXAPI_EQUALS_MEMBER(shape)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(BendMarkData);
+
 // A variant class that carries data for MarkType values whose payload does not fit MarkData's
 // common fields.
 //
@@ -424,7 +486,8 @@ class MarkDataChoice
         ornament,
         accidentalMark,
         pedal,
-        arrow
+        arrow,
+        bend
     };
 
     MarkDataChoice();
@@ -464,6 +527,8 @@ class MarkDataChoice
     // is none.
     MarkDataChoice(ArrowMarkData value);
 
+    MarkDataChoice(BendMarkData value);
+
     Kind kind() const;
     bool isNone() const;
     bool isTremolo() const;
@@ -478,6 +543,7 @@ class MarkDataChoice
     bool isAccidentalMark() const;
     bool isPedal() const;
     bool isArrow() const;
+    bool isBend() const;
 
     // Returns a copy of the internally held TremoloMarkData.
     //
@@ -539,12 +605,18 @@ class MarkDataChoice
     // returned.
     const ArrowMarkData arrow() const;
 
+    // Returns a copy of the internally held BendMarkData.
+    //
+    // Check isBend() first. If this is not a bend payload, a default constructed BendMarkData is
+    // returned.
+    const BendMarkData bend() const;
+
     bool operator==(const MarkDataChoice &other) const;
 
   private:
     std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData, OtherMarkData,
                  StandardDynamic, CompoundDynamicsData, OtherNotationMarkData, HarmonicMarkData, OrnamentMarkData,
-                 AccidentalMarkData, PedalMarkData, ArrowMarkData>
+                 AccidentalMarkData, PedalMarkData, ArrowMarkData, BendMarkData>
         myValue;
 };
 

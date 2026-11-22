@@ -8,6 +8,9 @@
 #include "mx/core/generated/ArrowChoiceGroup.h"
 #include "mx/core/generated/ArrowDirection.h"
 #include "mx/core/generated/ArrowStyle.h"
+#include "mx/core/generated/Bend.h"
+#include "mx/core/generated/BendChoice.h"
+#include "mx/core/generated/BendShape.h"
 #include "mx/core/generated/CircularArrow.h"
 #include "mx/core/generated/Fingering.h"
 #include "mx/core/generated/Handbell.h"
@@ -191,6 +194,39 @@ api::HarmonicMarkData harmonicMarkDataFromCore(const core::Harmonic &inHarmonic)
     return outData;
 }
 
+// A release offset is in the measure's divisions; the cursor scales it to the score's ticks.
+api::BendMarkData technicalFunctionsBendMarkData(const core::Bend &inBend, const Cursor &inCursor)
+{
+    api::BendMarkData outData{};
+    outData.alter = inBend.bendAlter().value().value();
+    if (inBend.choice().has_value())
+    {
+        if (inBend.choice()->kind() == core::BendChoice::Kind::preBend)
+        {
+            outData.kind = api::BendKind::preBend;
+        }
+        else
+        {
+            outData.kind = api::BendKind::release;
+            const auto &offset = inBend.choice()->asRelease().offset();
+            if (offset.has_value())
+            {
+                outData.releaseOffset = inCursor.convertDurationToGlobalTickScale(offset->value().value());
+            }
+        }
+    }
+    if (inBend.withBar().has_value())
+    {
+        outData.withBar = inBend.withBar()->value();
+    }
+    if (inBend.shape().has_value())
+    {
+        outData.shape =
+            inBend.shape()->tag() == core::BendShape::Tag::curved ? api::BendShape::curved : api::BendShape::angled;
+    }
+    return outData;
+}
+
 TechnicalFunctions::TechnicalFunctions(std::span<const core::TechnicalChoice> inTechnicalChoiceSet, Cursor inCursor)
     : myTechnicalChoiceSet{inTechnicalChoiceSet}, myCursor{inCursor}
 {
@@ -314,8 +350,13 @@ bool TechnicalFunctions::parseTechnicalMark(const core::TechnicalChoice &technic
         return false;
     case core::TechnicalChoice::Kind::pullOff:
         return false;
-    case core::TechnicalChoice::Kind::bend:
-        return false;
+    case core::TechnicalChoice::Kind::bend: {
+        const auto &bend = technicalChoice.asBend();
+        parseMarkDataAttributes(bend, outMarkData);
+        outMarkData.name = "bend";
+        outMarkData.choice = api::MarkDataChoice{technicalFunctionsBendMarkData(bend, myCursor)};
+        return true;
+    }
     case core::TechnicalChoice::Kind::tap:
         return false;
     case core::TechnicalChoice::Kind::heel: {

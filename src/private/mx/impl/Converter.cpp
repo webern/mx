@@ -329,8 +329,8 @@ const Converter::EnumMap<core::TechnicalChoice::Kind, api::MarkType> Converter::
     {core::TechnicalChoice::Kind::string, api::MarkType::string_},
     // { core::TechnicalChoice::Kind::hammerOn,
     // api::MarkType::unspecified }, {
-    // core::TechnicalChoice::Kind::pullOff, api::MarkType::unspecified }, std::pair<core::TechnicalChoice::Kind,
-    // api::MarkType>{ core::TechnicalChoice::Kind::bend, api::MarkType::unspecified },
+    // core::TechnicalChoice::Kind::pullOff, api::MarkType::unspecified },
+    {core::TechnicalChoice::Kind::bend, api::MarkType::bend},
     // { core::TechnicalChoice::Kind::tap,
     // api::MarkType::unspecified },
     {core::TechnicalChoice::Kind::heel, api::MarkType::heel},

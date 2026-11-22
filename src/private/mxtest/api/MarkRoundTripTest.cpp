@@ -588,6 +588,169 @@ TEST(ArrowDefaultsToNoPayload, MarkRoundTrip)
 
 T_END;
 
+// A release that starts partway into the note, made with the whammy bar and drawn curved.
+TEST(BendPayloadRoundTrips, MarkRoundTrip)
+{
+    MarkData mark{Placement::unspecified, MarkType::bend};
+    mark.name = "bend";
+    BendMarkData payload{};
+    payload.alter = -1.5;
+    payload.kind = BendKind::release;
+    payload.releaseOffset = 105;
+    payload.withBar = "scoop";
+    payload.shape = BendShape::curved;
+    mark.choice = payload;
+
+    const auto marks = roundTripMarkData(mark);
+    REQUIRE(marks.size() == 1);
+    CHECK(marks.front().markType == MarkType::bend);
+    REQUIRE(marks.front().choice.isBend());
+    CHECK(payload == marks.front().choice.bend());
+    CHECK(mark == marks.front());
+}
+
+T_END;
+
+TEST(BendKindValues, MarkRoundTrip)
+{
+    const BendKind kinds[] = {BendKind::normal, BendKind::preBend, BendKind::release};
+    double alter = 0.5;
+    for (const auto kind : kinds)
+    {
+        MarkData mark{Placement::unspecified, MarkType::bend};
+        BendMarkData payload{};
+        payload.alter = alter;
+        payload.kind = kind;
+        mark.choice = payload;
+
+        const auto marks = roundTripMarkData(mark);
+        REQUIRE(marks.size() == 1);
+        REQUIRE(marks.front().choice.isBend());
+        CHECK(kind == marks.front().choice.bend().kind);
+        CHECK(payload == marks.front().choice.bend());
+        alter += 1.0;
+    }
+}
+
+T_END;
+
+TEST(BendShapeValues, MarkRoundTrip)
+{
+    const BendShape shapes[] = {BendShape::angled, BendShape::curved};
+    for (const auto shape : shapes)
+    {
+        MarkData mark{Placement::unspecified, MarkType::bend};
+        BendMarkData payload{};
+        payload.alter = 2.0;
+        payload.shape = shape;
+        mark.choice = payload;
+
+        const auto marks = roundTripMarkData(mark);
+        REQUIRE(marks.size() == 1);
+        REQUIRE(marks.front().choice.isBend());
+        CHECK(shape == marks.front().choice.bend().shape);
+    }
+}
+
+T_END;
+
+TEST(BendReadsElements, MarkRoundTrip)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>4</divisions></attributes>
+      <note>
+        <pitch><step>C</step><octave>4</octave></pitch>
+        <duration>8</duration>
+        <type>half</type>
+        <notations>
+          <technical>
+            <bend shape="angled">
+              <bend-alter>-2.5</bend-alter>
+              <release offset="3"/>
+              <with-bar>dip</with-bar>
+            </bend>
+          </technical>
+        </notations>
+      </note>
+      <note>
+        <pitch><step>D</step><octave>4</octave></pitch>
+        <duration>8</duration>
+        <type>half</type>
+        <notations>
+          <technical>
+            <bend>
+              <bend-alter>1</bend-alter>
+              <pre-bend/>
+              <with-bar/>
+            </bend>
+          </technical>
+        </notations>
+      </note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(score.parts.size() == 1);
+    const auto &notes = score.parts.front().measures.front().staves.front().voices.at(0).notes;
+    REQUIRE(notes.size() == 2);
+
+    const auto &releaseMarks = notes.at(0).noteAttachmentData.marks;
+    REQUIRE(releaseMarks.size() == 1);
+    CHECK(releaseMarks.front().markType == MarkType::bend);
+    REQUIRE(releaseMarks.front().choice.isBend());
+    const auto release = releaseMarks.front().choice.bend();
+    CHECK_DOUBLES_EQUAL(-2.5, release.alter, 0.0001);
+    CHECK(BendKind::release == release.kind);
+    REQUIRE(release.releaseOffset.has_value());
+    CHECK_EQUAL(3, *release.releaseOffset);
+    REQUIRE(release.withBar.has_value());
+    CHECK("dip" == *release.withBar);
+    CHECK(BendShape::angled == release.shape);
+
+    const auto &preBendMarks = notes.at(1).noteAttachmentData.marks;
+    REQUIRE(preBendMarks.size() == 1);
+    REQUIRE(preBendMarks.front().choice.isBend());
+    const auto preBend = preBendMarks.front().choice.bend();
+    CHECK_DOUBLES_EQUAL(1.0, preBend.alter, 0.0001);
+    CHECK(BendKind::preBend == preBend.kind);
+    CHECK(!preBend.releaseOffset.has_value());
+    REQUIRE(preBend.withBar.has_value());
+    CHECK(preBend.withBar->empty());
+    CHECK(BendShape::unspecified == preBend.shape);
+}
+
+T_END;
+
+// An ordinary bend writes only its alter, and reads back with every other field at its default.
+TEST(BendDefaultsWriteAlterOnly, MarkRoundTrip)
+{
+    MarkData mark{Placement::unspecified, MarkType::bend};
+    BendMarkData payload{};
+    payload.alter = 1.0;
+    mark.choice = payload;
+
+    Diagnostics diagnostics;
+    const auto xml = markRoundTripWriteWithDiagnostics(mark, diagnostics);
+    CHECK(xml.find("<bend-alter>1</bend-alter>") != std::string::npos);
+    CHECK(xml.find("<pre-bend") == std::string::npos);
+    CHECK(xml.find("<release") == std::string::npos);
+    CHECK(xml.find("<with-bar") == std::string::npos);
+    CHECK(xml.find("shape=") == std::string::npos);
+
+    const auto marks = roundTripMarkData(mark);
+    REQUIRE(marks.size() == 1);
+    REQUIRE(marks.front().choice.isBend());
+    CHECK(payload == marks.front().choice.bend());
+}
+
+T_END;
+
 TEST(OrnamentAccidentals, MarkRoundTrip)
 {
     OrnamentAccidental sharp;
