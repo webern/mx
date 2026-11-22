@@ -10,6 +10,10 @@
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/api/TestHelpers.h"
 
+#include <iterator>
+#include <string>
+#include <vector>
+
 using namespace std;
 using namespace mx::api;
 using namespace mxtest;
@@ -347,6 +351,106 @@ TEST(readPureForeignStaffGroupNotRelocated, CrossStaff)
     {
         CHECK(!note.crossStaffIndex.has_value());
     }
+}
+
+T_END;
+
+namespace crossStaffApiTest
+{
+// Voice 1 beams four eighths that cross down to staff 2 for the third one, and leaves the second
+// eighth as a rest. Voice 2 plays in that rest. There is no <backup>: the <voice> text alone tells
+// the two voices apart.
+constexpr const char *const kOtherVoiceInBeamGroupXml = R"(      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <staff>1</staff>
+        <beam number="1">begin</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>2</voice>
+        <type>eighth</type>
+        <staff>1</staff>
+      </note>
+      <note>
+        <pitch>
+          <step>A</step>
+          <octave>3</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <staff>2</staff>
+        <beam number="1">continue</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <staff>1</staff>
+        <beam number="1">end</beam>
+      </note>
+)";
+
+// Checks that the voice 1 beam group of kOtherVoiceInBeamGroupXml stays together on staff 1, with
+// its third note marked as drawn on staff 2, and that voice 2 is a voice of its own on staff 1.
+inline void checkOtherVoiceInBeamGroup(const ScoreData &inScore)
+{
+    REQUIRE(inScore.parts.size() == 1);
+    const auto &measure = inScore.parts.at(0).measures.at(0);
+    REQUIRE(measure.staves.size() == 2);
+    CHECK(measure.staves.at(1).voices.empty());
+
+    const auto &voices = measure.staves.at(0).voices;
+    REQUIRE(voices.size() == 2);
+    const auto &groupNotes = voices.begin()->second.notes;
+    const auto &otherNotes = std::next(voices.begin())->second.notes;
+
+    REQUIRE(groupNotes.size() == 3);
+    CHECK(groupNotes.at(0).pitchData.step == Step::c);
+    CHECK(groupNotes.at(1).pitchData.step == Step::a);
+    CHECK(groupNotes.at(2).pitchData.step == Step::e);
+    CHECK_EQUAL(0, groupNotes.at(0).tickTimePosition);
+    CHECK_EQUAL(2, groupNotes.at(1).tickTimePosition);
+    CHECK_EQUAL(3, groupNotes.at(2).tickTimePosition);
+    CHECK(!groupNotes.at(0).crossStaffIndex.has_value());
+    REQUIRE(groupNotes.at(1).crossStaffIndex.has_value());
+    CHECK_EQUAL(1, *groupNotes.at(1).crossStaffIndex);
+    CHECK(!groupNotes.at(2).crossStaffIndex.has_value());
+    CHECK(groupNotes.at(0).beams == std::vector<Beam>{Beam::begin});
+    CHECK(groupNotes.at(1).beams == std::vector<Beam>{Beam::extend});
+    CHECK(groupNotes.at(2).beams == std::vector<Beam>{Beam::end});
+
+    REQUIRE(otherNotes.size() == 1);
+    CHECK(otherNotes.at(0).pitchData.step == Step::g);
+    CHECK_EQUAL(1, otherNotes.at(0).tickTimePosition);
+    CHECK(!otherNotes.at(0).crossStaffIndex.has_value());
+}
+} // namespace crossStaffApiTest
+
+// a note of another voice inside a cross-staff beam group, with no <backup>, does not break the
+// group
+TEST(readCrossStaffBeamGroupAroundOtherVoice, CrossStaff)
+{
+    using namespace crossStaffApiTest;
+    const auto xml = std::string{xmlHeader} + kOtherVoiceInBeamGroupXml + xmlFooter;
+
+    const auto score = mxtest::fromXml(xml);
+    checkOtherVoiceInBeamGroup(score);
+    checkOtherVoiceInBeamGroup(mxtest::fromXml(mxtest::toXml(score)));
 }
 
 T_END;
