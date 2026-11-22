@@ -845,7 +845,7 @@ TEST(WordsXmlSpaceRoundTrips, DirectionMarksRoundTrip)
         score.parts.back().measures.emplace_back().staves.emplace_back().directions.push_back(direction);
         const auto xml = mxtest::toXml(score);
         CHECK((xml.find("xml:space") == std::string::npos) == attribute.empty());
-        CHECK(attribute.empty() || xml.find(attribute) != std::string::npos);
+        CHECK((attribute.empty() || xml.find(attribute) != std::string::npos));
 
         const auto directions = roundTripDirectionData(direction);
         REQUIRE(directions.size() == 1);
