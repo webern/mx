@@ -67,6 +67,23 @@ void reportAttributeDefaulted(const ParseContext &context, xml::Node el, const c
     context.report(Diagnostic{DiagnosticCode::missingValueDefaulted, nodePath(el), std::move(message)});
 }
 
+void reportElementSkipped(const ParseContext &context, xml::Node el)
+{
+    std::string message = "element <";
+    message += el.name();
+    message += "> is not allowed here and was skipped";
+    context.report(Diagnostic{DiagnosticCode::droppedData, nodePath(el), std::move(message)});
+}
+
+void skipElements(xml::Node &cursor, const char *tag, const ParseContext &context)
+{
+    while (cursorIs(cursor, tag))
+    {
+        reportElementSkipped(context, cursor);
+        cursor = nextElement(cursor);
+    }
+}
+
 int parseIntegerValue(std::string_view text, const ParseContext &context, xml::Node el, const char *attribute)
 {
     int value = 0;

@@ -243,6 +243,51 @@ TEST(cueNoteTiesAreNotationOnly, GraceCue)
 
 T_END;
 
+// MuseScore 2 and 3 write a <tie> on cue notes beside the <tied> notation. The file opens, the
+// <tie> is reported as skipped, and the <tied> still ties the note.
+TEST(cueNoteWithTieOpens, GraceCue)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="3.0">
+  <part-list><score-part id="P1"><part-name>One</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note>
+        <cue/>
+        <pitch><step>E</step><octave>5</octave></pitch>
+        <duration>1</duration>
+        <tie type="start"/>
+        <voice>1</voice>
+        <type>quarter</type>
+        <notations><tied type="start"/></notations>
+      </note>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    Diagnostics diagnostics;
+    std::istringstream stream{xml};
+    auto document = MusicXml::fromStream(stream, diagnostics);
+    REQUIRE(document.ok());
+    REQUIRE(diagnostics.all().size() == 1);
+    const auto &diagnostic = diagnostics.all().front();
+    CHECK(Severity::warning == diagnostic.severity);
+    CHECK(DiagnosticCode::droppedData == diagnostic.code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note/tie"}, diagnostic.location.xmlPath);
+    CHECK_EQUAL(std::string{"element <tie> is not allowed here and was skipped"}, diagnostic.message);
+
+    const auto score = getScore(document.value());
+    REQUIRE(score.ok());
+    const auto &notes = score.value().parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes;
+    REQUIRE(notes.size() == 1);
+    CHECK(notes.at(0).isCue);
+    CHECK(notes.at(0).isTieStart);
+    CHECK(!notes.at(0).isTieStop);
+}
+
+T_END;
+
 // the <tied> notation is written exactly once, whether it comes from the
 // isTieStart / isTieStop flags or from an attribute-bearing tie curve
 TEST(tiedNotationIsNotDuplicated, GraceCue)

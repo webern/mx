@@ -289,7 +289,7 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
     for (const auto &partPair : partPairs)
     {
         addScorePart(partIndex, partPair.first);
-        addPartwisePart(partIndex, partPair.second);
+        myOutScorePartwise.addPart(partPair.second);
         ++partIndex;
     }
 
@@ -359,20 +359,6 @@ void ScoreWriter::addScorePart(int partIndex, core::ScorePart scorePart) const
 
     header.setPartList(partList);
     myOutScorePartwise.setScoreHeader(header);
-}
-
-void ScoreWriter::addPartwisePart(int partIndex, core::PartwisePart partwisePart) const
-{
-    myOutScorePartwise.addPart(partwisePart);
-    const auto parts = myOutScorePartwise.part();
-
-    if (partIndex == 0 && parts.size() == 2)
-    {
-        // Remove the default placeholder part that was there before we added any real parts.
-        // Reconstruct with only the real part (the last one added).
-        core::OneOrMore<core::PartwisePart> newParts{parts[1]};
-        myOutScorePartwise.setPart(newParts);
-    }
 }
 
 bool ScoreWriter::partGroupStartExists(int partIndex) const

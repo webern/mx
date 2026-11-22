@@ -61,7 +61,6 @@ class ScoreWriter
 
   private:
     void addScorePart(int partIndex, core::ScorePart scorePart) const;
-    void addPartwisePart(int partIndex, core::PartwisePart partwisePart) const;
     bool partGroupStartExists(int partIndex) const;
     bool partGroupStopExists(int partIndex) const;
     std::vector<api::PartGroupData> findPartGroupsByStartIndex(int partIndex) const;

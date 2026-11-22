@@ -363,28 +363,15 @@ void PartWriter::writeMeasures(const mx::api::PartData &inPartData, core::Partwi
     // getScorePart reports an invalid instrument id; the instrument changes only repeat it.
     cursor.instrumentId = partInstrumentId(false).value();
 
-    // Collect all measures before setting them, to avoid the OneOrMore default-element
-    // replacement logic that the old shared-ptr API required.
-    std::vector<core::PartwiseMeasure> measures{};
-    measures.reserve(inPartData.measures.size());
-
+    core::OneOrMore<core::PartwiseMeasure> measures{};
     for (const auto &measure : inPartData.measures)
     {
         MeasureWriter writer{measure, cursor, myScoreWriter};
-        measures.push_back(writer.getPartwiseMeasure());
+        measures.add(writer.getPartwiseMeasure());
         cursor.isFirstMeasureInPart = false;
         ++cursor.measureIndex;
     }
-
-    if (!measures.empty())
-    {
-        core::OneOrMore<core::PartwiseMeasure> oneOrMore{measures.front()};
-        for (std::size_t i = 1; i < measures.size(); ++i)
-        {
-            oneOrMore.add(std::move(measures[i]));
-        }
-        outPart.setMeasure(std::move(oneOrMore));
-    }
+    outPart.setMeasure(std::move(measures));
 }
 } // namespace impl
 } // namespace mx

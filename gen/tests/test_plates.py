@@ -298,6 +298,44 @@ class Projection(unittest.TestCase):
         )
 
 
+class SkipElements(unittest.TestCase):
+    """[import] skip-elements: where a parser may drop a listed element, and
+    the fail-loud validation of the table."""
+
+    def _plates(self, skips):
+        config = Config()
+        config.import_skip_elements = skips
+        return build_plates(tiny_ir(), config)
+
+    def test_skip_is_placed_only_where_no_later_field_starts_with_it(self):
+        plate = self._plates({"note": ("pitch",)}).plate("note")
+        self.assertEqual(
+            [(f.name.wire, f.skip_before) for f in plate.fields],
+            [("pitch", []), ("tie", ["pitch"])],
+        )
+        self.assertEqual(plate.skip_at_end, ["pitch"])
+
+    def test_element_the_content_accepts_is_skipped_only_at_the_end(self):
+        plate = self._plates({"note": ("tie",)}).plate("note")
+        self.assertEqual([f.skip_before for f in plate.fields], [[], []])
+        self.assertEqual(plate.skip_at_end, ["tie"])
+
+    def test_unconfigured_types_skip_nothing(self):
+        plate = build_plates(tiny_ir(), Config()).plate("note")
+        self.assertEqual([f.skip_before for f in plate.fields], [[], []])
+        self.assertEqual(plate.skip_at_end, [])
+
+    def test_stale_or_misdirected_keys_fail_loud(self):
+        with self.assertRaises(PlatesError) as caught:
+            self._plates(
+                {"no-such-type": ("tie",), "pitch": ("tie",), "note": ("no-such",)}
+            )
+        text = "\n".join(caught.exception.errors)
+        self.assertIn("import.skip-elements.no-such-type: no such complex type", text)
+        self.assertIn("import.skip-elements.pitch: type has no element content", text)
+        self.assertIn("import.skip-elements.note.no-such: no such element", text)
+
+
 class ClampPolicy(unittest.TestCase):
     """The leniency policy is data on the plates (one decision, two backend
     spellings): facet bounds plus primitive-implied bounds, tightest wins,
@@ -529,6 +567,12 @@ class ConfigParsing(unittest.TestCase):
             config.renames.enum_values[("up-down", "")].fundamental, "none"
         )
 
+    def test_import_skip_elements_parse(self):
+        config = self._load('[import.skip-elements]\n"note" = ["tie"]\n')
+        self.assertEqual(config.import_skip_elements, {"note": ("tie",)})
+        with self.assertRaises(ConfigError):
+            self._load('[import.skip-elements]\n"note" = "tie"\n')
+
     def test_unknown_keys_fail(self):
         with self.assertRaises(ConfigError):
             self._load("[naming]\nconventions = ['pascal']\n")
@@ -754,6 +798,15 @@ class ContentProjection(unittest.TestCase):
         self.assertEqual(plate.strategy, "choice-class")
         self.assertEqual(plate.alternatives[0].tag, "note")
         self.assertFalse(plate.nullable)
+
+    def test_cue_note_tie_is_skipped_only_outside_the_note_choice(self):
+        # The note choice's branches parse their own <tie>; every position
+        # after the choice has no place for one.
+        plate = self.cpp.plate("note")
+        self.assertTrue(all(f.skip_before == ["tie"] for f in plate.fields))
+        self.assertEqual(plate.skip_at_end, ["tie"])
+        for group in ("note-choice-group-2", "note-choice-group-3", "note-choice-group-choice-group"):
+            self.assertTrue(all(not f.skip_before for f in self.cpp.plate(group).fields))
 
     def test_note_choice_hoists_branch_sequences(self):
         # The hoisted field is named by the type's owner-stripped remainder.

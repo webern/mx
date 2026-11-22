@@ -19,6 +19,7 @@
 #include "mx/core/generated/ClefGroup.h"
 #include "mx/core/generated/ClefSign.h"
 #include "mx/core/generated/Direction.h"
+#include "mx/core/generated/EditorialVoiceGroup.h"
 #include "mx/core/generated/Ending.h"
 #include "mx/core/generated/Extend.h"
 #include "mx/core/generated/Figure.h"
@@ -553,7 +554,8 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
 // own, and the note goes into the voice for its text. For example, three notes labelled 4, 5 and 4
 // make two voices: the first and third notes are in one, and the middle note is in the other. When
 // those notes name at most one voice (they all have the same text, or none of them has a <voice>),
-// they are all one voice. The header calls each of these voices a group.
+// they are all one voice. The header calls each of these voices a group. scanForCrossStaffBeamGroups
+// splits voices by the same rules, so a change here belongs there too.
 int MeasureReader::findVoiceBucket(int staff, bool isChordContinuation, const std::string &voiceText) const
 {
     auto &staffGroups = myVoiceGroups[staff];
@@ -626,28 +628,91 @@ void MeasureReader::scanForCrossStaffBeamGroups() const
         int beginStaffIndex = 0;
     };
 
-    std::map<int, OpenGroup> openGroups; // key: backup-delimited voice ordinal
-    std::map<int, int> stickyHomes;      // voice ordinal -> the voice's current home staff
-    int voiceOrdinal = 0;
+    // One voice since the last <backup>, split by <voice> text the way findVoiceBucket splits
+    // them, except that it is not split by staff, because a cross-staff group's notes name
+    // different staves. key is unique within the measure.
+    struct ScanVoice
+    {
+        std::string name;
+        int key = 0;
+    };
+
+    std::map<int, OpenGroup> openGroups; // key: ScanVoice::key
+    std::map<int, int> stickyHomes;      // ScanVoice::key -> the voice's current home staff
+    std::vector<ScanVoice> runVoices;    // the voices since the last <backup>
+    int previousVoiceKey = -1;           // the voice of the previous note since the last <backup>
+    int nextVoiceKey = 0;
     bool isBackupInProgress = false;
+
+    // the voice a note belongs to, following the rules of findVoiceBucket
+    const auto findNoteVoice = [&](bool isChordContinuation, const std::string &voiceText) {
+        const auto findVoice = [&](auto isMatch) { return std::find_if(runVoices.begin(), runVoices.end(), isMatch); };
+        auto voice = runVoices.end();
+
+        if (isChordContinuation || voiceText.empty())
+        {
+            voice = findVoice([&](const ScanVoice &v) { return v.key == previousVoiceKey; });
+        }
+        else
+        {
+            voice = findVoice([&](const ScanVoice &v) { return v.name == voiceText; });
+
+            if (voice == runVoices.end() && runVoices.size() == 1 && runVoices.front().name.empty())
+            {
+                voice = runVoices.begin();
+            }
+        }
+
+        if (voice == runVoices.end())
+        {
+            runVoices.push_back(ScanVoice{voiceText, nextVoiceKey});
+            ++nextVoiceKey;
+            voice = std::prev(runVoices.end());
+        }
+
+        if (voice->name.empty())
+        {
+            voice->name = voiceText;
+        }
+
+        previousVoiceKey = voice->key;
+        return voice->key;
+    };
+
+    // the voice a <forward> belongs to: the voice its <voice> text names, or else the voice of the
+    // note before it
+    const auto findForwardVoice = [&](const core::Forward &forward) {
+        const auto &voiceText = forward.editorialVoice().voice();
+        if (voiceText.has_value())
+        {
+            for (const auto &voice : runVoices)
+            {
+                if (voice.name == *voiceText)
+                {
+                    return voice.key;
+                }
+            }
+        }
+        return previousVoiceKey;
+    };
 
     // a properly closed group that names more than one staff is a cross-staff group; its
     // home is the staff the voice was on when the group began (or, when the group is the
     // voice's first sighting, the staff of the group's first note)
-    const auto closeGroup = [this, &stickyHomes](int inVoiceOrdinal, const OpenGroup &inGroup) {
+    const auto closeGroup = [this, &stickyHomes](int inVoiceKey, const OpenGroup &inGroup) {
         if (inGroup.staves.size() > 1)
         {
-            const auto sticky = stickyHomes.find(inVoiceOrdinal);
+            const auto sticky = stickyHomes.find(inVoiceKey);
             const int home = sticky == stickyHomes.cend() ? inGroup.beginStaffIndex : sticky->second;
             for (const auto memberIndex : inGroup.memberIndices)
             {
                 myCrossStaffHomes[memberIndex] = home;
             }
-            stickyHomes[inVoiceOrdinal] = home;
+            stickyHomes[inVoiceKey] = home;
         }
         else if (!inGroup.staves.empty())
         {
-            stickyHomes[inVoiceOrdinal] = *inGroup.staves.cbegin();
+            stickyHomes[inVoiceKey] = *inGroup.staves.cbegin();
         }
     };
 
@@ -659,10 +724,11 @@ void MeasureReader::scanForCrossStaffBeamGroups() const
 
         if (mdc.isBackup())
         {
-            // mirror parseBackup's voice-ordinal rule
+            // mirror parseBackup's rule: a run of <backup>s starts the voices over once
             if (!isBackupInProgress)
             {
-                ++voiceOrdinal;
+                runVoices.clear();
+                previousVoiceKey = -1;
             }
             isBackupInProgress = true;
             continue;
@@ -681,13 +747,14 @@ void MeasureReader::scanForCrossStaffBeamGroups() const
             if (mdc.isForward())
             {
                 // a beam group cannot contain a time gap
-                openGroups.erase(voiceOrdinal);
+                openGroups.erase(findForwardVoice(mdc.asForward()));
             }
             continue;
         }
 
         isBackupInProgress = false;
         const NoteReader reader{mdc.asNote()};
+        const int voiceKey = findNoteVoice(reader.getIsChord(), reader.getVoiceLabel());
 
         if (reader.getIsGrace() || reader.getIsChord())
         {
@@ -712,11 +779,11 @@ void MeasureReader::scanForCrossStaffBeamGroups() const
             group.beginStaffIndex = wireStaffIndex;
             group.memberIndices.push_back(mdcIndex);
             group.staves.insert(wireStaffIndex);
-            openGroups[voiceOrdinal] = std::move(group);
+            openGroups[voiceKey] = std::move(group);
             continue;
         }
 
-        const auto openGroupIter = openGroups.find(voiceOrdinal);
+        const auto openGroupIter = openGroups.find(voiceKey);
         const bool continuesGroup =
             (beamOne == api::Beam::extend || beamOne == api::Beam::end) && openGroupIter != openGroups.cend();
 
@@ -727,7 +794,7 @@ void MeasureReader::scanForCrossStaffBeamGroups() const
 
             if (beamOne == api::Beam::end)
             {
-                closeGroup(voiceOrdinal, openGroupIter->second);
+                closeGroup(voiceKey, openGroupIter->second);
                 openGroups.erase(openGroupIter);
             }
             continue;
@@ -735,8 +802,8 @@ void MeasureReader::scanForCrossStaffBeamGroups() const
 
         // an unbeamed note (or an orphan or hooked level-1 beam value) interrupts any open
         // group and moves the voice's home to its own staff
-        openGroups.erase(voiceOrdinal);
-        stickyHomes[voiceOrdinal] = wireStaffIndex;
+        openGroups.erase(voiceKey);
+        stickyHomes[voiceKey] = wireStaffIndex;
     }
 }
 

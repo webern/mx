@@ -517,6 +517,7 @@ Note parseNote(mx::xml::Node el, const ParseContext &context)
 void parseNoteContent(Note &out, mx::xml::Node el, const ParseContext &context)
 {
     mx::xml::Node cursor = firstElement(el);
+    skipElements(cursor, "tie", context);
     if (cursor && (cursorIs(cursor, "grace") || cursorIs(cursor, "cue") || cursorIs(cursor, "chord") ||
                    cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") || cursorIs(cursor, "rest")))
     {
@@ -526,55 +527,66 @@ void parseNoteContent(Note &out, mx::xml::Node el, const ParseContext &context)
     {
         throwMissingElement(el, "grace");
     }
+    skipElements(cursor, "tie", context);
     while (cursorIs(cursor, "instrument"))
     {
         out.addInstrument(parseInstrument(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level") || cursorIs(cursor, "voice")))
     {
         out.setEditorialVoice(parseEditorialVoiceGroup(el, cursor, context));
     }
+    skipElements(cursor, "tie", context);
     if (cursorIs(cursor, "type"))
     {
         out.setType(parseNoteType(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     while (cursorIs(cursor, "dot"))
     {
         out.addDot(parseEmptyPlacement(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursorIs(cursor, "accidental"))
     {
         out.setAccidental(parseAccidental(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursorIs(cursor, "time-modification"))
     {
         out.setTimeModification(parseTimeModification(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursorIs(cursor, "stem"))
     {
         out.setStem(parseStem(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursorIs(cursor, "notehead"))
     {
         out.setNotehead(parseNotehead(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursorIs(cursor, "notehead-text"))
     {
         out.setNoteheadText(parseNoteheadText(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursorIs(cursor, "staff"))
     {
         out.setStaff(parseValue<PositiveInteger>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     while (cursorIs(cursor, "beam"))
     {
         if (!out.addBeam(parseBeam(cursor, context)))
@@ -583,26 +595,31 @@ void parseNoteContent(Note &out, mx::xml::Node el, const ParseContext &context)
         }
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     while (cursorIs(cursor, "notations"))
     {
         out.addNotations(parseNotations(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     while (cursorIs(cursor, "lyric"))
     {
         out.addLyric(parseLyric(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursorIs(cursor, "play"))
     {
         out.setPlay(parsePlay(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursorIs(cursor, "listen"))
     {
         out.setListen(parseListen(cursor, context));
         cursor = nextElement(cursor);
     }
+    skipElements(cursor, "tie", context);
     if (cursor)
     {
         if (cursorIs(cursor, "grace") || cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") ||

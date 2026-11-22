@@ -17,6 +17,7 @@ namespace mx::core
 /// Structural representation: a never-empty list of non-empty,
 /// comma-free items. Construction repairs deterministically (commas inside
 /// an item become spaces, blank items drop, an empty list becomes ["-"]).
+/// That "-" is a placeholder: the next addItem replaces it.
 /// A value parsed from the wire keeps its exact spelling (the separator may
 /// be "," or ", "); a mutated value serializes items joined with ", ".
 class CommaSeparatedText final
@@ -61,7 +62,8 @@ class CommaSeparatedText final
     void repair();
 
     std::vector<std::string> m_items;
-    std::string m_text; // preserved wire spelling; empty = none
+    std::string m_text;            // preserved wire spelling; empty = none
+    bool m_hasPlaceholder = false; // m_items holds only the "-" that repair made
 };
 
 } // namespace mx::core

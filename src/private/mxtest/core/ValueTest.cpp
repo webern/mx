@@ -18,6 +18,7 @@
 #include "mx/core/generated/Color.h"
 #include "mx/core/generated/CommaSeparatedText.h"
 #include "mx/core/generated/EndingNumber.h"
+#include "mx/core/generated/FontFamily.h"
 #include "mx/core/generated/FontSize.h"
 #include "mx/core/generated/InstrumentSound.h"
 #include "mx/core/generated/MIDI16.h"
@@ -210,6 +211,48 @@ TEST(CommaSeparatedTextStructural, Values)
     CHECK_EQUAL(std::string{"a b"}, repaired.toString());
     // Wire fidelity: a parsed value keeps its exact spelling.
     CHECK_EQUAL(std::string{"Times,serif"}, CommaSeparatedText::parse("Times,serif").toString());
+}
+
+TEST(CommaSeparatedTextAddItemReplacesPlaceholder, Values)
+{
+    CommaSeparatedText t;
+    CHECK_EQUAL(std::string{"-"}, t.toString());
+    t.addItem("Times");
+    CHECK_EQUAL(std::string{"Times"}, t.toString());
+    t.addItem("serif");
+    CHECK_EQUAL(std::string{"Times, serif"}, t.toString());
+}
+
+TEST(CommaSeparatedTextAddItemKeepsExplicitDash, Values)
+{
+    CommaSeparatedText t{std::vector<std::string>{"-"}};
+    t.addItem("Times");
+    CHECK_EQUAL(std::string{"-, Times"}, t.toString());
+}
+
+TEST(CommaSeparatedTextAddBlankItemKeepsPlaceholder, Values)
+{
+    CommaSeparatedText t;
+    t.addItem("");
+    CHECK_EQUAL(std::string{"-"}, t.toString());
+    t.addItem("Times");
+    CHECK_EQUAL(std::string{"Times"}, t.toString());
+}
+
+TEST(CommaSeparatedTextEmptySetItemsCreatesPlaceholder, Values)
+{
+    CommaSeparatedText t{std::vector<std::string>{"Times", "serif"}};
+    t.setItems({});
+    t.addItem("Arial");
+    CHECK_EQUAL(std::size_t{1}, t.items().size());
+    CHECK_EQUAL(std::string{"Arial"}, t.toString());
+}
+
+TEST(FontFamilyAddItemReplacesPlaceholder, Values)
+{
+    FontFamily f;
+    f.addItem("Arial");
+    CHECK_EQUAL(std::string{"Arial"}, f.toString());
 }
 
 TEST(TimeOnlyAddValueReplacesPlaceholder, Values)

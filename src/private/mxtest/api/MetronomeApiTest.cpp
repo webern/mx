@@ -91,6 +91,24 @@ TEST(roundTripBpm, MetronomeApi)
 
 T_END;
 
+// An undotted metronome mark keeps its default dots, so the whole TempoData compares equal after
+// being written and read.
+TEST(undottedBpmEqualsAfterRoundTrip, MetronomeApi)
+{
+    BeatsPerMinute bpm;
+    bpm.durationName = DurationName::eighth;
+    bpm.beatsPerMinute = "93";
+    TempoData in;
+    in.choice = TempoChoice{bpm};
+
+    const auto out = roundTripTempo(in);
+
+    CHECK_EQUAL(0, in.choice.beatsPerMinute().dots);
+    CHECK(in == out);
+}
+
+T_END;
+
 // A non-numeric <per-minute> is legal -- per-minute is an xs:string. It is kept verbatim on
 // BeatsPerMinute::beatsPerMinute, so a mark like "quarter = fast" round-trips faithfully instead
 // of being dropped (which is what the old tempoText fallback did).
