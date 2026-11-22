@@ -120,7 +120,7 @@ bool isMarkTechnical(MarkType markType)
            (markType == MarkType::hole) || (markType == MarkType::arrow) || (markType == MarkType::handbell) ||
            (markType == MarkType::brassBend) || (markType == MarkType::flip) || (markType == MarkType::smear) ||
            (markType == MarkType::open) || (markType == MarkType::halfMuted) || (markType == MarkType::harmonMute) ||
-           (markType == MarkType::golpe) || (markType == MarkType::otherTechnical);
+           (markType == MarkType::golpe) || (markType == MarkType::otherTechnical) || (markType == MarkType::bend);
 }
 
 bool isMarkTremolo(MarkType markType)

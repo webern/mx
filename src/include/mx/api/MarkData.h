@@ -142,7 +142,7 @@ enum class MarkType
     string_,
     // hammerOn,
     // pullOff,
-    // bend,
+    bend, ///< a guitar bend; how far and what kind of bend is in MarkDataChoice (BendMarkData)
     // tap,
     heel,
     toe,
