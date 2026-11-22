@@ -54,8 +54,7 @@ struct BeatsPerMinute
     FontData fontData;
 
     BeatsPerMinute()
-        : durationName{DurationName::unspecified}, dots{VALUE_UNSPECIFIED}, tiedBeatUnits{}, beatsPerMinute{},
-          fontData{}
+        : durationName{DurationName::unspecified}, dots{0}, tiedBeatUnits{}, beatsPerMinute{}, fontData{}
     {
     }
 };
