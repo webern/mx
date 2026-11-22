@@ -19,6 +19,9 @@ on:
 jobs:
   xcframework:
     runs-on: macos-latest
+    # About twice the slowest successful build (44 minutes), so a hung build fails
+    # well before GitHub's 6-hour default.
+    timeout-minutes: 90
     permissions:
       contents: read
     env:
