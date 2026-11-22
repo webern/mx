@@ -156,7 +156,6 @@ musuite/testWords1.xml
 # and NoteWriter dropped valid zero values on round-trip.
 custom/transposition.musicxml
 ksuite/k002a_Fermatas.xml
-ksuite/k004a_Technical.xml
 
 # Unblocked by #230 (clef @number round-trip). The writer emitted a spurious
 # number="1" on mid-measure clef changes in single-staff parts (the staffIndex
@@ -364,8 +363,6 @@ mjbsuite/HasMusicXmlVersionFalse.xml
 mjbsuite/HasMusicXmlVersionTrue.xml
 synthetic/beat-type.3.0.xml
 synthetic/beats.3.0.xml
-synthetic/bend.3.0.xml
-synthetic/bend.4.0.xml
 synthetic/bracket.3.0.xml
 synthetic/dashes.3.0.xml
 synthetic/encoding-description.3.0.xml
@@ -401,7 +398,6 @@ synthetic/time-relation.3.0.xml
 synthetic/virtual-library.3.0.xml
 synthetic/virtual-name.3.0.xml
 synthetic/voice.3.0.xml
-synthetic/with-bar.3.0.xml
 synthetic/word-font.3.0.xml
 synthetic/work-number.3.0.xml
 synthetic/work-title.3.0.xml
@@ -727,9 +723,7 @@ synthetic/lyric.3.0.xml
 # <staves>, so mx omitted it, and these three sources spell out the redundant
 # <staves>1</staves>.
 lysuite/ly02b_Rests_PitchedRests.xml
-lysuite/ly32a_Notations.xml
 lysuite/ly32b_Articulations_Texts.xml
-lysuite/ly33a_Spanners.xml
 lysuite/ly33b_Spanners_Tie.xml
 
 # Unblocked by the #429 single-note spanner ordering fix: rpatters1's Finale
