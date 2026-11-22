@@ -817,4 +817,189 @@ TEST(MidNoteHarmonyOffsetSounds, DirectionData)
 
 T_END;
 
+// A one-measure score of four quarter notes with a wedge start on beat 1 and its stop on beat 4.
+inline ScoreData directionDataTestHairpin(const WedgeStart &inStart, const WedgeStop &inStop)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    for (int tick = 0; tick < 40; tick += 10)
+    {
+        staff.voices[0].notes.push_back(directionDataTestNote(tick, 10, DurationName::quarter));
+    }
+    DirectionData start{};
+    start.tickTimePosition = 0;
+    start.directionTypes.emplace_back(DirectionChoice{inStart});
+    staff.directions.push_back(start);
+    DirectionData stop{};
+    stop.tickTimePosition = 30;
+    stop.directionTypes.emplace_back(DirectionChoice{inStop});
+    staff.directions.push_back(stop);
+    return score;
+}
+
+// The text of each <wedge> element in inXml, in document order.
+inline std::vector<std::string> directionDataTestWedgeTags(const std::string &inXml)
+{
+    std::vector<std::string> tags;
+    for (auto begin = inXml.find("<wedge"); begin != std::string::npos; begin = inXml.find("<wedge", begin + 1))
+    {
+        tags.push_back(inXml.substr(begin, inXml.find('>', begin) - begin + 1));
+    }
+    return tags;
+}
+
+// The wedge start and stop of a score made by directionDataTestHairpin, after writing and reading it.
+inline std::pair<WedgeStart, WedgeStop> directionDataTestHairpinRoundTrip(const ScoreData &inScore)
+{
+    const auto rscore = mxtest::roundTrip(inScore);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 2);
+    REQUIRE(rdirections.front().directionTypes.size() == 1);
+    REQUIRE(rdirections.back().directionTypes.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.front().isWedgeStart());
+    REQUIRE(rdirections.back().directionTypes.front().isWedgeStop());
+    return {rdirections.front().directionTypes.front().wedgeStart(),
+            rdirections.back().directionTypes.front().wedgeStop()};
+}
+
+// A crescendo that grows out of nothing has its circle on the start.
+TEST(WedgeNienteCircleOnCrescendoStart, DirectionData)
+{
+    WedgeStart start;
+    start.wedgeType = WedgeType::crescendo;
+    start.nienteCircle = Bool::yes;
+    const auto score = directionDataTestHairpin(start, WedgeStop{});
+
+    const auto tags = directionDataTestWedgeTags(mxtest::toXml(score));
+    REQUIRE(tags.size() == 2);
+    CHECK(tags.front().find("type=\"crescendo\"") != std::string::npos);
+    CHECK(tags.front().find("niente=\"yes\"") != std::string::npos);
+    CHECK(tags.back().find("niente") == std::string::npos);
+
+    const auto [rstart, rstop] = directionDataTestHairpinRoundTrip(score);
+    CHECK(rstart.nienteCircle == Bool::yes);
+    CHECK(rstop.nienteCircle == Bool::unspecified);
+}
+
+T_END;
+
+// A diminuendo that fades away to nothing has its circle on the stop.
+TEST(WedgeNienteCircleOnDiminuendoStop, DirectionData)
+{
+    WedgeStart start;
+    start.wedgeType = WedgeType::diminuendo;
+    WedgeStop stop;
+    stop.nienteCircle = Bool::yes;
+    const auto score = directionDataTestHairpin(start, stop);
+
+    const auto tags = directionDataTestWedgeTags(mxtest::toXml(score));
+    REQUIRE(tags.size() == 2);
+    CHECK(tags.front().find("niente") == std::string::npos);
+    CHECK(tags.back().find("type=\"stop\"") != std::string::npos);
+    CHECK(tags.back().find("niente=\"yes\"") != std::string::npos);
+
+    const auto [rstart, rstop] = directionDataTestHairpinRoundTrip(score);
+    CHECK(rstart.nienteCircle == Bool::unspecified);
+    CHECK(rstop.nienteCircle == Bool::yes);
+}
+
+T_END;
+
+// no says outright that the point is plain, on either end.
+TEST(WedgeNienteCircleNo, DirectionData)
+{
+    WedgeStart start;
+    start.wedgeType = WedgeType::crescendo;
+    start.nienteCircle = Bool::no;
+    WedgeStop stop;
+    stop.nienteCircle = Bool::no;
+    const auto score = directionDataTestHairpin(start, stop);
+
+    const auto tags = directionDataTestWedgeTags(mxtest::toXml(score));
+    REQUIRE(tags.size() == 2);
+    CHECK(tags.front().find("niente=\"no\"") != std::string::npos);
+    CHECK(tags.back().find("niente=\"no\"") != std::string::npos);
+
+    const auto [rstart, rstop] = directionDataTestHairpinRoundTrip(score);
+    CHECK(rstart.nienteCircle == Bool::no);
+    CHECK(rstop.nienteCircle == Bool::no);
+}
+
+T_END;
+
+TEST(WedgeNienteCircleUnspecifiedDoesNotWriteAttribute, DirectionData)
+{
+    WedgeStart start;
+    start.wedgeType = WedgeType::diminuendo;
+    const auto score = directionDataTestHairpin(start, WedgeStop{});
+
+    CHECK(mxtest::toXml(score).find("niente") == std::string::npos);
+
+    const auto [rstart, rstop] = directionDataTestHairpinRoundTrip(score);
+    CHECK(rstart.nienteCircle == Bool::unspecified);
+    CHECK(rstop.nienteCircle == Bool::unspecified);
+}
+
+T_END;
+
+TEST(WedgeNienteCircleReads, DirectionData)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <direction><direction-type><wedge type="crescendo" niente="yes"/></direction-type></direction>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration><type>half</type></note>
+      <direction><direction-type><wedge type="stop"/></direction-type></direction>
+      <direction><direction-type><wedge type="diminuendo"/></direction-type></direction>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration><type>half</type></note>
+      <direction><direction-type><wedge type="stop" niente="no"/></direction-type></direction>
+    </measure>
+  </part>
+</score-partwise>)";
+
+    const auto score = mxtest::fromXml(xml);
+    const auto &directions = score.parts.front().measures.front().staves.front().directions;
+    REQUIRE(directions.size() == 4);
+    for (const auto &direction : directions)
+    {
+        REQUIRE(direction.directionTypes.size() == 1);
+    }
+    REQUIRE(directions.at(0).directionTypes.front().isWedgeStart());
+    CHECK(directions.at(0).directionTypes.front().wedgeStart().nienteCircle == Bool::yes);
+    REQUIRE(directions.at(1).directionTypes.front().isWedgeStop());
+    CHECK(directions.at(1).directionTypes.front().wedgeStop().nienteCircle == Bool::unspecified);
+    REQUIRE(directions.at(2).directionTypes.front().isWedgeStart());
+    CHECK(directions.at(2).directionTypes.front().wedgeStart().nienteCircle == Bool::unspecified);
+    REQUIRE(directions.at(3).directionTypes.front().isWedgeStop());
+    CHECK(directions.at(3).directionTypes.front().wedgeStop().nienteCircle == Bool::no);
+}
+
+T_END;
+
+TEST(WedgeNienteCircleEquality, DirectionData)
+{
+    WedgeStart start;
+    auto circledStart = start;
+    circledStart.nienteCircle = Bool::yes;
+    CHECK(start != circledStart);
+    circledStart.nienteCircle = Bool::unspecified;
+    CHECK(start == circledStart);
+
+    WedgeStop stop;
+    auto circledStop = stop;
+    circledStop.nienteCircle = Bool::yes;
+    CHECK(stop != circledStop);
+    circledStop.nienteCircle = Bool::unspecified;
+    CHECK(stop == circledStop);
+}
+
+T_END;
+
 #endif

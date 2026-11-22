@@ -411,6 +411,10 @@ void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, const void 
     {
         wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStop.spread)}});
     }
+    if (wedgeStop.nienteCircle != api::Bool::unspecified)
+    {
+        wedge.setNiente(myConverter.convert(wedgeStop.nienteCircle));
+    }
     setAttributesFromPositionData(wedgeStop.positionData, wedge);
     setId(wedgeStop.id, wedge, myDiagnostics, cursorLocation(myCursor));
     core::DirectionType dt{};
@@ -444,6 +448,10 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, const vo
         wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStart.spread)}});
     }
 
+    if (wedgeStart.nienteCircle != api::Bool::unspecified)
+    {
+        wedge.setNiente(myConverter.convert(wedgeStart.nienteCircle));
+    }
     setAttributesFromPositionData(wedgeStart.positionData, wedge);
     setAttributesFromLineData(wedgeStart.lineData, wedge);
     if (wedgeStart.isColorSpecified)
