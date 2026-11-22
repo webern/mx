@@ -39,12 +39,17 @@ class WordsData
     // block against its anchor point; MusicXML defines both attributes on `<words>`.
     HorizontalAlignment justify;
 
+    // Whether the spaces at the start and end of `text` are part of it. Set it to
+    // XmlSpace::preserve for text such as "RHYTHM!   " whose trailing spaces must be kept. It
+    // stays unspecified when the attribute is absent.
+    XmlSpace xmlSpace;
+
     // The <words> element's id attribute (see Id.h).
     std::optional<Id> id;
 
     WordsData()
         : text{}, positionData{}, fontData{}, isColorSpecified{false}, colorData{}, enclosure{Enclosure::unspecified},
-          justify{HorizontalAlignment::unspecified}, id{}
+          justify{HorizontalAlignment::unspecified}, xmlSpace{XmlSpace::unspecified}, id{}
     {
     }
 };
@@ -57,6 +62,7 @@ MXAPI_EQUALS_MEMBER(isColorSpecified)
 MXAPI_EQUALS_MEMBER(colorData)
 MXAPI_EQUALS_MEMBER(enclosure)
 MXAPI_EQUALS_MEMBER(justify)
+MXAPI_EQUALS_MEMBER(xmlSpace)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(WordsData);

@@ -495,6 +495,10 @@ void DirectionReader::parseWordsRun(const core::DirectionType &directionType)
         {
             outWords.justify = myConverter.convert(*wordEl.justify());
         }
+        if (wordEl.xmlSpace().has_value())
+        {
+            outWords.xmlSpace = myConverter.convert(*wordEl.xmlSpace());
+        }
         outWords.id = getId(wordEl);
         run.emplace_back(std::move(outWords));
     }

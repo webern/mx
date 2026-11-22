@@ -844,6 +844,10 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             {
                 outWords.setJustify(myConverter.convert(wordsData.justify));
             }
+            if (wordsData.xmlSpace != api::XmlSpace::unspecified)
+            {
+                outWords.setXMLSpace(myConverter.convert(wordsData.xmlSpace));
+            }
             setId(wordsData.id, outWords, myDiagnostics, cursorLocation(myCursor));
             choiceItem = core::DirectionTypeChoiceChoice::words(std::move(outWords));
         }
