@@ -272,16 +272,19 @@ TEST(ValidBespokeValuesReportNothing, ImportDiagnostics)
 }
 
 // MuseScore 2 and 3 write a <tie> on cue notes, where the schema allows only the <tied> notation.
-inline std::string importDiagnosticsCueNote(const std::string &grace, const std::string &ties)
+// A grace cue note has no duration.
+inline std::string importDiagnosticsCueNote(bool isGrace, const std::string &ties)
 {
-    return "<note>" + grace + "<cue/><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration>" + ties +
+    const std::string grace = isGrace ? "<grace/>" : "";
+    const std::string duration = isGrace ? "" : "<duration>1</duration>";
+    return "<note>" + grace + "<cue/><pitch><step>C</step><octave>4</octave></pitch>" + duration + ties +
            "<voice>1</voice><type>quarter</type><notations><tied type=\"start\"/></notations></note>";
 }
 
 TEST(TieOnCueNoteIsSkippedAndReported, ImportDiagnostics)
 {
     const auto parsed =
-        importDiagnosticsParse(importDiagnosticsScore("", importDiagnosticsCueNote("", "<tie type=\"start\"/>")));
+        importDiagnosticsParse(importDiagnosticsScore("", importDiagnosticsCueNote(false, "<tie type=\"start\"/>")));
     REQUIRE(parsed.ok);
     REQUIRE(parsed.diagnostics.size() == 1);
     const Diagnostic &diagnostic = parsed.diagnostics.front();
@@ -305,7 +308,7 @@ TEST(TieOnCueNoteIsSkippedAndReported, ImportDiagnostics)
 TEST(EachTieOnGraceCueNoteIsReported, ImportDiagnostics)
 {
     const auto parsed = importDiagnosticsParse(
-        importDiagnosticsScore("", importDiagnosticsCueNote("<grace/>", "<tie type=\"stop\"/><tie type=\"start\"/>")));
+        importDiagnosticsScore("", importDiagnosticsCueNote(true, "<tie type=\"stop\"/><tie type=\"start\"/>")));
     REQUIRE(parsed.ok);
     REQUIRE(parsed.diagnostics.size() == 2);
     CHECK(DiagnosticCode::droppedData == parsed.diagnostics[0].code);
