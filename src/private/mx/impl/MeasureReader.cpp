@@ -19,7 +19,6 @@
 #include "mx/core/generated/ClefGroup.h"
 #include "mx/core/generated/ClefSign.h"
 #include "mx/core/generated/Direction.h"
-#include "mx/core/generated/EditorialVoiceGroup.h"
 #include "mx/core/generated/Ending.h"
 #include "mx/core/generated/Extend.h"
 #include "mx/core/generated/Figure.h"
@@ -679,23 +678,6 @@ void MeasureReader::scanForCrossStaffBeamGroups() const
         return voice->key;
     };
 
-    // the voice a <forward> belongs to: the voice its <voice> text names, or else the voice of the
-    // note before it
-    const auto findForwardVoice = [&](const core::Forward &forward) {
-        const auto &voiceText = forward.editorialVoice().voice();
-        if (voiceText.has_value())
-        {
-            for (const auto &voice : runVoices)
-            {
-                if (voice.name == *voiceText)
-                {
-                    return voice.key;
-                }
-            }
-        }
-        return previousVoiceKey;
-    };
-
     // a properly closed group that names more than one staff is a cross-staff group; its
     // home is the staff the voice was on when the group began (or, when the group is the
     // voice's first sighting, the staff of the group's first note)
@@ -741,14 +723,11 @@ void MeasureReader::scanForCrossStaffBeamGroups() const
             continue;
         }
 
+        // A <forward> does not end an open beam group: a beam can span a rest, and the rest can be
+        // written as a <forward>.
         if (!mdc.isNote())
         {
             isBackupInProgress = false;
-            if (mdc.isForward())
-            {
-                // a beam group cannot contain a time gap
-                openGroups.erase(findForwardVoice(mdc.asForward()));
-            }
             continue;
         }
 
