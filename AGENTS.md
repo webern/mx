@@ -134,6 +134,9 @@ Before designing or changing anything in `mx::api`, read the `mx-api-doctrine` s
 (`.claude/skills/mx-api-doctrine/SKILL.md`): the seven design principles, the failure model (no UB,
 no exceptions, `Result` quarantined), choice types, and comment rules.
 
+The `<level>` element is oddly named and a weird one. If you are working on `level` or `editorial`
+`./docs/level-element-explained.md` is a good read.
+
 ## Quality gates
 
 Run `make fmt` to format. `make fmt-check` is the formatting and prose gate: it runs clang-format
