@@ -105,12 +105,13 @@ struct DirectionData
     std::vector<FiguredBassData> figuredBasses;
 
     // The editorial status of the direction's content (see LevelData), for example a dynamic the
-    // editor added, drawn in brackets. It belongs to the <direction> element, so it is written only
-    // when directionTypes is not empty. The chords and figured bass held here carry their own.
+    // editor added, drawn in brackets. MusicXML keeps it on the <direction> element, which needs at
+    // least one direction type, so give the direction something in directionTypes. The chords and
+    // figured bass held here carry their own.
     std::optional<LevelData> level;
 
     // Editorial commentary about the direction's content, printed as a footnote (see FootnoteData).
-    // Like level, it is written only when directionTypes is not empty.
+    // Like level, it is kept on the <direction> element, which needs at least one direction type.
     std::optional<FootnoteData> footnote;
 
     // The <direction> element's id attribute (see Id.h).

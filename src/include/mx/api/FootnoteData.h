@@ -25,7 +25,7 @@ struct FootnoteData
     std::string text;
 
     // Where the footnote text is drawn, in tenths of a staff space, and how it aligns against that
-    // point. placement is not used. Leave this alone to let the application place it.
+    // point. placement is ignored. Leave this alone to let the application place it.
     PositionData positionData;
 
     // The font of the footnote text.

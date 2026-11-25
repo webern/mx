@@ -123,6 +123,7 @@
 #include "mx/impl/TuningFunctions.h"
 
 #include <algorithm>
+#include <iterator>
 
 namespace mx
 {
@@ -1477,11 +1478,28 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
     }
 
     // The level and footnote also belong to the whole <harmony>; each comes from the first chord
-    // that has one.
+    // that has one. A later chord with a different one is reported.
     const auto levelChord =
         std::find_if(chords.cbegin(), chords.cend(), [](const api::ChordData &c) { return c.level.has_value(); });
     const auto footnoteChord =
         std::find_if(chords.cbegin(), chords.cend(), [](const api::ChordData &c) { return c.footnote.has_value(); });
+    if (levelChord != chords.cend() && std::any_of(levelChord, chords.cend(), [&levelChord](const api::ChordData &c) {
+            return c.level.has_value() && *c.level != *levelChord->level;
+        }))
+    {
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, cursorLocation(myCursor),
+                             "the chords of a harmony have different levels; using the level of chord " +
+                                 std::to_string(std::distance(chords.cbegin(), levelChord) + 1));
+    }
+    if (footnoteChord != chords.cend() &&
+        std::any_of(footnoteChord, chords.cend(), [&footnoteChord](const api::ChordData &c) {
+            return c.footnote.has_value() && *c.footnote != *footnoteChord->footnote;
+        }))
+    {
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, cursorLocation(myCursor),
+                             "the chords of a harmony have different footnotes; using the footnote of chord " +
+                                 std::to_string(std::distance(chords.cbegin(), footnoteChord) + 1));
+    }
     auto harmonyEditorial = harmony.editorial();
     setEditorial(levelChord != chords.cend() ? levelChord->level : std::nullopt,
                  footnoteChord != chords.cend() ? footnoteChord->footnote : std::nullopt, harmonyEditorial);

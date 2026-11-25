@@ -112,6 +112,38 @@ static const MeasureData &editorialMeasure(const ScoreData &score)
     return score.parts.at(0).measures.at(0);
 }
 
+// A one-part score authored through the api, with one quarter note in its only measure.
+static ScoreData editorialOneNoteScore()
+{
+    ScoreData score;
+    score.ticksPerQuarter = 1;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.uniqueId = "P1";
+    part.name = "Music";
+    part.measures.emplace_back();
+    auto &staff = part.measures.back().staves.emplace_back();
+    NoteData note;
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.durationTimeTicks = 1;
+    staff.voices[0].notes.push_back(note);
+    return score;
+}
+
+static StaffData &editorialStaff(ScoreData &score)
+{
+    return score.parts.at(0).measures.at(0).staves.at(0);
+}
+
+// The diagnostics that writing the score reports.
+static Diagnostics editorialWriteDiagnostics(const ScoreData &score)
+{
+    Diagnostics diagnostics;
+    const auto result = fromScore(score, diagnostics);
+    REQUIRE(result.ok());
+    return diagnostics;
+}
+
 // Writes the score and reads it back, returning the XML written along the way.
 static ScoreData editorialRoundTrip(const ScoreData &score, std::string &outXml)
 {
@@ -226,6 +258,25 @@ TEST(authoredNoteLevelFootnoteAndVoice, EditorialApi)
 
 T_END;
 
+// A footnote with only its words set is written without any attributes.
+TEST(footnoteTextOnly, EditorialApi)
+{
+    auto score = editorialOneNoteScore();
+    FootnoteData footnote;
+    footnote.text = "text";
+    editorialStaff(score).voices[0].notes.back().footnote = footnote;
+
+    std::string written;
+    const auto out = editorialRoundTrip(score, written);
+    CHECK(written.find("<footnote>text</footnote>") != std::string::npos);
+    const auto &onote = editorialMeasure(out).staves.at(0).voices.at(0).notes.at(0);
+    REQUIRE(onote.footnote.has_value());
+    CHECK(*onote.footnote == footnote);
+    CHECK(!onote.level.has_value());
+}
+
+T_END;
+
 TEST(lyric, EditorialApi)
 {
     const auto xml = editorialScoreXml(R"(      <note>
@@ -301,6 +352,7 @@ TEST(figuredBassAndFigure, EditorialApi)
     const auto xml = editorialScoreXml(R"(      <figured-bass>
         <figure>
           <figure-number>6</figure-number>
+          <footnote font-style="normal">figure note</footnote>
           <level reference="yes" type="single" bracket="no">figure layer</level>
         </figure>
         <figure>
@@ -336,14 +388,20 @@ TEST(figuredBassAndFigure, EditorialApi)
     REQUIRE(figure.level.has_value());
     CHECK(*figure.level == editorialLevel("figure layer", Bool::yes, LevelType::single, Bool::unspecified, Bool::no,
                                           SymbolSize::unspecified));
-    CHECK(!figure.footnote.has_value());
+    REQUIRE(figure.footnote.has_value());
+    FootnoteData figureFootnote;
+    figureFootnote.text = "figure note";
+    figureFootnote.fontData.style = FontStyle::normal;
+    CHECK(*figure.footnote == figureFootnote);
     CHECK(!figuredBass.figures.at(1).level.has_value());
+    CHECK(!figuredBass.figures.at(1).footnote.has_value());
 
     std::string written;
     const auto out = editorialRoundTrip(score, written);
     const auto &odirections = editorialMeasure(out).staves.at(0).directions;
     REQUIRE(odirections.size() == 1);
     CHECK(odirections.front().figuredBasses == direction.figuredBasses);
+    CHECK(written.find("<footnote font-style=\"normal\">figure note</footnote>") != std::string::npos);
 }
 
 T_END;
@@ -396,6 +454,7 @@ TEST(directionLevelFootnoteAndVoice, EditorialApi)
     const auto &odirections = editorialMeasure(out).staves.at(0).directions;
     REQUIRE(odirections.size() == 1);
     CHECK(odirections.front() == direction);
+    CHECK(editorialWriteDiagnostics(score).all().empty());
 }
 
 T_END;
@@ -443,21 +502,9 @@ T_END;
 
 // The chords of one direction become one <harmony>, which has room for one level and one footnote.
 // Each comes from the first chord that has one, and reads back onto every chord.
-TEST(harmonyFirstChordRule, EditorialApi)
+static ScoreData editorialMixedHarmonyScore()
 {
-    ScoreData score;
-    score.ticksPerQuarter = 1;
-    score.parts.emplace_back();
-    auto &part = score.parts.back();
-    part.uniqueId = "P1";
-    part.name = "Music";
-    part.measures.emplace_back();
-    auto &staff = part.measures.back().staves.emplace_back();
-    NoteData note;
-    note.durationData.durationName = DurationName::quarter;
-    note.durationData.durationTimeTicks = 1;
-    staff.voices[0].notes.push_back(note);
-
+    auto score = editorialOneNoteScore();
     DirectionData direction;
     direction.chords.resize(3);
     direction.chords.at(0).root = Step::c;
@@ -474,7 +521,14 @@ TEST(harmonyFirstChordRule, EditorialApi)
     FootnoteData thirdFootnote;
     thirdFootnote.text = "third";
     direction.chords.at(2).footnote = thirdFootnote;
-    staff.directions.push_back(direction);
+    editorialStaff(score).directions.push_back(direction);
+    return score;
+}
+
+TEST(harmonyFirstChordRule, EditorialApi)
+{
+    const auto score = editorialMixedHarmonyScore();
+    const auto &direction = editorialMeasure(score).staves.at(0).directions.at(0);
 
     std::string written;
     const auto out = editorialRoundTrip(score, written);
@@ -490,6 +544,27 @@ TEST(harmonyFirstChordRule, EditorialApi)
         REQUIRE(chord.footnote.has_value());
         CHECK(*chord.footnote == editorialExpectedFootnote());
     }
+
+    // Read back, every chord holds the same level and footnote, so writing again is silent.
+    CHECK(editorialWriteDiagnostics(out).all().empty());
+}
+
+T_END;
+
+// Chords of one harmony that disagree are reported, naming the chord whose value is used.
+TEST(harmonyDifferentEditorialIsReported, EditorialApi)
+{
+    const auto diagnostics = editorialWriteDiagnostics(editorialMixedHarmonyScore());
+    REQUIRE(diagnostics.all().size() == 2);
+    const auto &levelDiagnostic = diagnostics.all()[0];
+    CHECK(DiagnosticCode::valueAdjusted == levelDiagnostic.code);
+    CHECK(Severity::warning == levelDiagnostic.severity);
+    CHECK_EQUAL("the chords of a harmony have different levels; using the level of chord 2", levelDiagnostic.message);
+    const auto &footnoteDiagnostic = diagnostics.all()[1];
+    CHECK(DiagnosticCode::valueAdjusted == footnoteDiagnostic.code);
+    CHECK(Severity::warning == footnoteDiagnostic.severity);
+    CHECK_EQUAL("the chords of a harmony have different footnotes; using the footnote of chord 1",
+                footnoteDiagnostic.message);
 }
 
 T_END;
@@ -536,24 +611,10 @@ TEST(partGroup, EditorialApi)
 
 T_END;
 
-// A direction whose only content is a level has no <direction> element to hold it.
-TEST(directionWithoutDirectionTypesDropsLevel, EditorialApi)
+static void editorialCheckDroppedDirection(const DirectionData &direction)
 {
-    ScoreData score;
-    score.ticksPerQuarter = 1;
-    score.parts.emplace_back();
-    auto &part = score.parts.back();
-    part.uniqueId = "P1";
-    part.name = "Music";
-    part.measures.emplace_back();
-    auto &staff = part.measures.back().staves.emplace_back();
-    NoteData note;
-    note.durationData.durationName = DurationName::quarter;
-    note.durationData.durationTimeTicks = 1;
-    staff.voices[0].notes.push_back(note);
-    DirectionData direction;
-    direction.level = editorialLevel("lost", Bool::yes, LevelType::single, Bool::no, Bool::yes, SymbolSize::full);
-    staff.directions.push_back(direction);
+    auto score = editorialOneNoteScore();
+    editorialStaff(score).directions.push_back(direction);
 
     Diagnostics diagnostics;
     const auto result = fromScore(score, diagnostics);
@@ -568,6 +629,25 @@ TEST(directionWithoutDirectionTypesDropsLevel, EditorialApi)
     std::ostringstream xml;
     REQUIRE(result.value().writeToStream(xml).ok());
     CHECK(xml.str().find("<level") == std::string::npos);
+    CHECK(xml.str().find("<footnote") == std::string::npos);
+}
+
+// A direction whose only content is a level has no <direction> element to hold it.
+TEST(directionWithoutDirectionTypesDropsLevel, EditorialApi)
+{
+    DirectionData direction;
+    direction.level = editorialLevel("lost", Bool::yes, LevelType::single, Bool::no, Bool::yes, SymbolSize::full);
+    editorialCheckDroppedDirection(direction);
+}
+
+T_END;
+
+// The same for a direction whose only content is a footnote.
+TEST(directionWithoutDirectionTypesDropsFootnote, EditorialApi)
+{
+    DirectionData direction;
+    direction.footnote = editorialExpectedFootnote();
+    editorialCheckDroppedDirection(direction);
 }
 
 T_END;
