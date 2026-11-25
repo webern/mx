@@ -56,9 +56,9 @@ checked in; the test suites skip them). See `audit/README.md`.
 ## Build system
 
 The `Makefile` is the entrypoint for all build processes; it drives `cmake` and runs everything
-inside the `mx-sdk` Docker image unless `MX_TOOLCHAIN=native` (see the README's Build section).
-Lean on it and suggest improvements when it doesn't have what you need. Run `make help` for the
-target list. Extend the `mx-sdk` image when new tools are needed. Without Docker, run
+inside the `mx-sdk` Docker image unless `MX_TOOLCHAIN=native` (see the README's Build section). Lean
+on it and suggest improvements when it doesn't have what you need. Run `make help` for the target
+list. Extend the `mx-sdk` image when new tools are needed. Without Docker, run
 `MX_TOOLCHAIN=native make <target>`; `make doctor` reports which targets this machine can run.
 
 ## The corert (core roundtrip) test
@@ -134,7 +134,8 @@ Before designing or changing anything in `mx::api`, read the `mx-api-doctrine` s
 (`.claude/skills/mx-api-doctrine/SKILL.md`): the seven design principles, the failure model (no UB,
 no exceptions, `Result` quarantined), choice types, and comment rules.
 
-The `<level>` element is oddly named and a weird one. If you are working on `level` or `editorial`
+The MusicXML `<level>` element (not to be confused with the spanner numbering level attributes) is
+oddly named and hard for users to understand. If you are working on `level` or `editorial`
 `./docs/level-element-explained.md` is a good read.
 
 ## Quality gates
@@ -155,8 +156,8 @@ Adding/removing a `data/` file: bump the pinned count in `CoreRoundtripTest.cpp`
 read->write->read gate (`make api-roundtrip` / `roundtrip-baseline.txt`) is the correctness check;
 pin a fixture there to defend a feature.
 
-`make wasm-test` builds `mx::api` for Emscripten and runs the examples under Node: CI's check that mx
-still compiles and works client-side in a browser (a consumer, denigma, depends on this; issue
+`make wasm-test` builds `mx::api` for Emscripten and runs the examples under Node: CI's check that
+mx still compiles and works client-side in a browser (a consumer, denigma, depends on this; issue
 #386). `make backend-pugixml-test` builds mx against a stock pugixml (`MX_XML_BACKEND=pugixml`, see
 the README's "Bringing your own XML library") and runs the core suites: CI's check that the XML
 backend option works. `make symbol-check` only applies to the default vendored build.
