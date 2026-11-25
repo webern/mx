@@ -26,6 +26,7 @@
 #include "mx/core/generated/TypedText.h"
 #include "mx/core/generated/Work.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/NameDisplayFunctions.h"
@@ -480,6 +481,10 @@ core::PartGroup ScoreWriter::makePartGroupStart(const api::PartGroupData &apiGrp
         groupBarline.setValue(converter.convert(apiGrp.groupBarline));
         mxGrp.setGroupBarline(groupBarline);
     }
+
+    auto groupEditorial = mxGrp.editorial();
+    impl::setEditorial(apiGrp.level, apiGrp.footnote, groupEditorial);
+    mxGrp.setEditorial(std::move(groupEditorial));
 
     return mxGrp;
 }

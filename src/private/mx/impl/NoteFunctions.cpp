@@ -10,6 +10,7 @@
 #include "mx/impl/ArticulationsFunctions.h"
 #include "mx/impl/CurveFunctions.h"
 #include "mx/impl/DynamicsReader.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/FermataFunctions.h"
 #include "mx/impl/GlissandoFunctions.h"
 #include "mx/impl/IdFunctions.h"
@@ -184,7 +185,8 @@ api::NoteData NoteFunctions::parseNote() const
     myOutNoteData.isTieStop = reader.getIsTieStop();
     myOutNoteData.lyrics = reader.getLyrics();
 
-    parseMiscData();
+    myOutNoteData.level = impl::getLevel(myNote.editorialVoice());
+    myOutNoteData.footnote = impl::getFootnote(myNote.editorialVoice());
     myOutNoteData.positionData = impl::getPositionData(myNote);
     myOutNoteData.id = impl::getId(myNote);
 
@@ -349,50 +351,6 @@ void NoteFunctions::parseNotations() const
                 break;
             }
         }
-    }
-}
-
-void NoteFunctions::parseMiscData() const
-{
-    if (!myNote.editorialVoice().footnote().has_value())
-    {
-        return;
-    }
-
-    const auto &footnote = myNote.editorialVoice().footnote().value();
-
-    if (!footnote.value().empty())
-    {
-        // we expect this element to be unused if it is
-        // stuffed with ##misc-data## in the font-family
-        return;
-    }
-
-    if (!footnote.fontFamily().has_value())
-    {
-        return;
-    }
-
-    const auto &miscData = footnote.fontFamily().value();
-    const auto items = miscData.items();
-
-    if (items.empty())
-    {
-        return;
-    }
-
-    const auto &firstString = items[0];
-
-    if (firstString.substr(0, 13) != "##misc-data##")
-    {
-        return;
-    }
-
-    myOutNoteData.miscData.push_back(firstString.substr(13));
-
-    for (size_t i = 1; i < items.size(); ++i)
-    {
-        myOutNoteData.miscData.push_back(items[i]);
     }
 }
 } // namespace impl

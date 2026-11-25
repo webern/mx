@@ -221,6 +221,12 @@ const Converter::EnumMap<core::StartStopSingle, api::OtherNotationType> Converte
     {core::StartStopSingle::single(), api::OtherNotationType::single},
 };
 
+const Converter::EnumMap<core::StartStopSingle, api::LevelType> Converter::levelTypeMap = {
+    {core::StartStopSingle::start(), api::LevelType::start},
+    {core::StartStopSingle::stop(), api::LevelType::stop},
+    {core::StartStopSingle::single(), api::LevelType::single},
+};
+
 const Converter::EnumMap<core::OrnamentsGroupChoice::Kind, api::MarkType> Converter::ornamentsMap = {
     {core::OrnamentsGroupChoice::Kind::trillMark, api::MarkType::trillMark},
     {core::OrnamentsGroupChoice::Kind::turn, api::MarkType::turn},
@@ -1806,6 +1812,16 @@ core::StartStopSingle Converter::convert(api::OtherNotationType value) const
 api::OtherNotationType Converter::convert(core::StartStopSingle value) const
 {
     return findApiItem(otherNotationTypeMap, api::OtherNotationType::single, value);
+}
+
+core::StartStopSingle Converter::convertLevelType(api::LevelType value) const
+{
+    return findCoreItem(levelTypeMap, core::StartStopSingle::single(), value);
+}
+
+api::LevelType Converter::convertLevelType(core::StartStopSingle value) const
+{
+    return findApiItem(levelTypeMap, api::LevelType::unspecified, value);
 }
 
 core::OrnamentsGroupChoice::Kind Converter::convertOrnament(api::MarkType value) const

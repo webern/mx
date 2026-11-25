@@ -59,6 +59,7 @@
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionReader.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/NoteFunctions.h"
@@ -141,6 +142,9 @@ api::FigureData MeasureReader::parseFigure(const core::Figure &figure)
         }
         figureData.extend = extend;
     }
+
+    figureData.level = getLevel(figure.editorial());
+    figureData.footnote = getFootnote(figure.editorial());
 
     return figureData;
 }
@@ -1159,6 +1163,8 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
     figuredBass.id = getId(inMxFiguredBass);
     figuredBass.positionData = impl::getPositionData(inMxFiguredBass);
     figuredBass.printData = impl::getPrintData(inMxFiguredBass);
+    figuredBass.level = impl::getLevel(inMxFiguredBass.editorial());
+    figuredBass.footnote = impl::getFootnote(inMxFiguredBass.editorial());
 
     auto direction = api::DirectionData{};
     direction.tickTimePosition = myCurrentCursor.tickTimePosition;
@@ -1342,6 +1348,8 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
     barline.repeatAfterJump = repeatAfterJump;
     barline.repeatWinged = repeatWinged;
     barline.id = getId(inMxBarline);
+    barline.level = getLevel(inMxBarline.editorial());
+    barline.footnote = getFootnote(inMxBarline.editorial());
     myOutMeasureData.barlines.emplace_back(std::move(barline));
 }
 

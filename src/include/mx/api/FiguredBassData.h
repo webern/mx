@@ -5,7 +5,9 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/FootnoteData.h"
 #include "mx/api/Id.h"
+#include "mx/api/LevelData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
 
@@ -55,7 +57,14 @@ class FigureData
     // The figure's continuation line. Absent when the figure does not have one.
     std::optional<FigureExtend> extend;
 
-    FigureData() : prefix{}, figureNumber{}, suffix{}, extend{}
+    // The editorial status of this one figure (see LevelData), for example a figure the editor
+    // added, drawn in brackets.
+    std::optional<LevelData> level;
+
+    // Editorial commentary about this one figure, printed as a footnote (see FootnoteData).
+    std::optional<FootnoteData> footnote;
+
+    FigureData() : prefix{}, figureNumber{}, suffix{}, extend{}, level{}, footnote{}
     {
     }
 };
@@ -65,6 +74,8 @@ MXAPI_EQUALS_MEMBER(prefix)
 MXAPI_EQUALS_MEMBER(figureNumber)
 MXAPI_EQUALS_MEMBER(suffix)
 MXAPI_EQUALS_MEMBER(extend)
+MXAPI_EQUALS_MEMBER(level)
+MXAPI_EQUALS_MEMBER(footnote)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(FigureData);
 
@@ -97,9 +108,16 @@ class FiguredBassData
     // appearance.
     PrintData printData;
 
+    // The editorial status of the whole figured bass (see LevelData), for example figures the
+    // editor supplied where the source does not have any.
+    std::optional<LevelData> level;
+
+    // Editorial commentary about the whole figured bass, printed as a footnote (see FootnoteData).
+    std::optional<FootnoteData> footnote;
+
     FiguredBassData()
         : figures{}, parentheses{Bool::unspecified}, durationTimeTicks{VALUE_UNSPECIFIED}, id{}, positionData{},
-          printData{}
+          printData{}, level{}, footnote{}
     {
     }
 };
@@ -111,6 +129,8 @@ MXAPI_EQUALS_MEMBER(durationTimeTicks)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(printData)
+MXAPI_EQUALS_MEMBER(level)
+MXAPI_EQUALS_MEMBER(footnote)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(FiguredBassData);
 

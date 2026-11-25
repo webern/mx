@@ -6,6 +6,8 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ColorData.h"
+#include "mx/api/FootnoteData.h"
+#include "mx/api/LevelData.h"
 #include "mx/api/PositionData.h"
 
 #include <optional>
@@ -75,7 +77,14 @@ class PartGroupData
     std::optional<ColorData> bracketColor;
     GroupBarline groupBarline;
     // TODO - group time
-    // TODO - group editorial
+
+    // The editorial status of this group (see LevelData). It belongs to the group as a whole and
+    // is written on the <part-group> element that starts it.
+    std::optional<LevelData> level;
+
+    // Editorial commentary about this group, printed as a footnote (see FootnoteData). Like level,
+    // it is written on the <part-group> element that starts the group.
+    std::optional<FootnoteData> footnote;
 
     // The number attribute is used to distinguish overlapping
     // and nested part-groups, not the sequence of groups.
@@ -85,7 +94,7 @@ class PartGroupData
     PartGroupData()
         : firstPartIndex{INDEX_UNSPECIFIED}, lastPartIndex{INDEX_UNSPECIFIED}, name{},
           bracketType{BracketType::unspecified}, bracketPositionData{}, bracketColor{},
-          groupBarline{GroupBarline::unspecified}, number{NUMBER_LEVEL_UNSPECIFIED}
+          groupBarline{GroupBarline::unspecified}, level{}, footnote{}, number{NUMBER_LEVEL_UNSPECIFIED}
     {
     }
 };
@@ -101,6 +110,8 @@ MXAPI_EQUALS_MEMBER(bracketType)
 MXAPI_EQUALS_MEMBER(bracketPositionData)
 MXAPI_EQUALS_MEMBER(bracketColor)
 MXAPI_EQUALS_MEMBER(groupBarline)
+MXAPI_EQUALS_MEMBER(level)
+MXAPI_EQUALS_MEMBER(footnote)
 MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PartGroupData);

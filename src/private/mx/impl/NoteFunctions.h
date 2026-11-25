@@ -35,7 +35,6 @@ class NoteFunctions
   private:
     api::DurationName deriveNoteTypeFromDurationValue(const NoteReader &reader) const;
     void parseNotations() const;
-    void parseMiscData() const;
 };
 } // namespace impl
 } // namespace mx

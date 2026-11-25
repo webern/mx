@@ -15,6 +15,7 @@
 #include "mx/core/generated/Syllabic.h"
 #include "mx/core/generated/TextElementData.h"
 #include "mx/core/generated/Tied.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/FontFunctions.h"
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/PositionFunctions.h"
@@ -561,6 +562,8 @@ void NoteReader::setLyric()
         api::LyricData lyricData;
         lyricData.positionData = getLyricPositionData(lyric);
         lyricData.id = getId(lyric);
+        lyricData.level = getLevel(lyric.editorial());
+        lyricData.footnote = getFootnote(lyric.editorial());
 
         if (lyric.number().has_value())
         {

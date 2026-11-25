@@ -36,6 +36,7 @@
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionWriter.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/NameDisplayFunctions.h"
@@ -1205,6 +1206,9 @@ void MeasureWriter::writeBarline(const api::BarlineData &barline)
     }
 
     impl::setId(barline.id, barlineElement, myScoreWriter.getDiagnostics(), cursorLocation(myHistory.getCursor()));
+    auto barlineEditorial = barlineElement.editorial();
+    impl::setEditorial(barline.level, barline.footnote, barlineEditorial);
+    barlineElement.setEditorial(std::move(barlineEditorial));
     myOutMeasure.addMusicData(core::MusicDataChoice::barline(barlineElement));
     myHistory.log("writeBarline");
 }

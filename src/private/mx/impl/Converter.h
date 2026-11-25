@@ -7,6 +7,7 @@
 #include "mx/api/BarlineData.h"
 #include "mx/api/ClefData.h"
 #include "mx/api/KeyData.h"
+#include "mx/api/LevelData.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/NoteData.h"
 #include "mx/api/PercussionData.h"
@@ -140,6 +141,11 @@ class Converter
 
     core::StartStopSingle convert(api::OtherNotationType value) const;
     api::OtherNotationType convert(core::StartStopSingle value) const;
+
+    // The type attribute of <level>. api::LevelType::unspecified has no wire spelling; callers skip
+    // the attribute for it.
+    core::StartStopSingle convertLevelType(api::LevelType value) const;
+    api::LevelType convertLevelType(core::StartStopSingle value) const;
 
     core::OrnamentsGroupChoice::Kind convertOrnament(api::MarkType value) const;
     api::MarkType convertOrnament(core::OrnamentsGroupChoice::Kind value) const;
@@ -297,6 +303,7 @@ class Converter
     const static EnumMap<core::ArticulationsChoice::Kind, api::MarkType> articulationsMap;
     const static EnumMap<core::DynamicsChoice::Kind, api::StandardDynamic> standardDynamicsMap;
     const static EnumMap<core::StartStopSingle, api::OtherNotationType> otherNotationTypeMap;
+    const static EnumMap<core::StartStopSingle, api::LevelType> levelTypeMap;
     const static EnumMap<core::OrnamentsGroupChoice::Kind, api::MarkType> ornamentsMap;
     const static EnumMap<core::AccidentalValue, api::MarkType> accidentalMarkMap;
     const static EnumMap<core::TechnicalChoice::Kind, api::MarkType> technicalMarkMap;
