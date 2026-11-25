@@ -30,6 +30,7 @@
 #include "mx/core/generated/Work.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/NameDisplayFunctions.h"
@@ -397,7 +398,8 @@ void ScoreReader::startPartGroup(int partIndex, const core::PartGroup &inPartGro
     grpData.firstPartIndex = partIndex;
 
     // TODO - group time
-    // TODO - editorial (footnote/level)
+    grpData.level = impl::getLevel(inPartGroup.editorial());
+    grpData.footnote = impl::getFootnote(inPartGroup.editorial());
 
     myPartGroupStack.push_front(grpData);
 }

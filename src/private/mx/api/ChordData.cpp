@@ -37,7 +37,7 @@ ChordData::ChordData()
       useSymbols{Bool::unspecified}, stackDegrees{Bool::unspecified}, parenthesesDegrees{Bool::unspecified},
       bass{Step::unspecified}, bassAlter{0}, bassText{}, bassSeparator{}, bassArrangement{BassArrangement::unspecified},
       inversion{0}, hasInversion{false}, extensions{}, miscData{}, hasFrameData{false}, frameData{},
-      printFrame{Bool::unspecified}, positionData{}
+      printFrame{Bool::unspecified}, positionData{}, level{}, footnote{}
 {
 }
 

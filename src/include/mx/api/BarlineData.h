@@ -5,7 +5,9 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/FootnoteData.h"
 #include "mx/api/Id.h"
+#include "mx/api/LevelData.h"
 #include "mx/api/PositionData.h"
 
 #include <optional>
@@ -150,13 +152,20 @@ class BarlineData
     RepeatWinged repeatWinged;
     HorizontalAlignment location;
 
+    // The editorial status of this barline (see LevelData), for example a repeat sign the editor
+    // added.
+    std::optional<LevelData> level;
+
+    // Editorial commentary about this barline, printed as a footnote (see FootnoteData).
+    std::optional<FootnoteData> footnote;
+
     // The <barline> element's id attribute (see Id.h).
     std::optional<Id> id;
 
     BarlineData()
         : tickTimePosition{0}, barlineType{BarlineType::normal}, ending{}, repeat{false}, repeatTimes{0},
           repeatDirection{RepeatDirection::unspecified}, repeatAfterJump{Bool::unspecified},
-          repeatWinged{RepeatWinged::unspecified}, location{HorizontalAlignment::unspecified}, id{}
+          repeatWinged{RepeatWinged::unspecified}, location{HorizontalAlignment::unspecified}, level{}, footnote{}, id{}
     {
     }
 };
@@ -171,6 +180,8 @@ MXAPI_EQUALS_MEMBER(repeatDirection)
 MXAPI_EQUALS_MEMBER(repeatAfterJump)
 MXAPI_EQUALS_MEMBER(repeatWinged)
 MXAPI_EQUALS_MEMBER(location)
+MXAPI_EQUALS_MEMBER(level)
+MXAPI_EQUALS_MEMBER(footnote)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(BarlineData);

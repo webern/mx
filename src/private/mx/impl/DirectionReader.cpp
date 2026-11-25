@@ -84,6 +84,7 @@
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/DynamicsReader.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/MetronomeReader.h"
@@ -254,6 +255,9 @@ void DirectionReader::parseValues()
                 myOutDirectionData.soundData = std::move(soundData);
             }
         }
+
+        myOutDirectionData.level = getLevel(myDirection->editorialVoiceDirection());
+        myOutDirectionData.footnote = getFootnote(myDirection->editorialVoiceDirection());
 
         // The <direction>'s editorial-voice <voice> assigns the direction to a voice. A value of
         // VALUE_UNSPECIFIED on DirectionData::voice means none was present.
@@ -1562,6 +1566,8 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
     }
 
     chord.positionData = getPositionData(inHarmony);
+    chord.level = getLevel(inHarmony.editorial());
+    chord.footnote = getFootnote(inHarmony.editorial());
 
     myOutDirectionData.chords.push_back(chord);
 }

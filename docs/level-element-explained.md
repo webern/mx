@@ -24,7 +24,7 @@ The XSD wording (`docs/musicxml-4.0-ed15c23.xsd:2645`):
 
 The second sentence was added in 4.0 to clarify the meaning (w3c-cg/musicxml#146).
 
-Good's own example comes from his paper *Using MusicXML 2.0 for Editorial Applications* (Listing
+Good's example comes from his paper *Using MusicXML 2.0 for Editorial Applications* (Listing
 19). Two slurs in a Brahms edition come from different sources:
 
 ```xml
@@ -280,7 +280,7 @@ std::optional<LevelData> level;
   parentheses around a rest the editor added") and say that a rest's parentheses go here, not on the
   notehead.
 
-Scope recommendation, unchanged: note only. The XSD's own `reference` example is on `<attributes>`
+Scope recommendation, unchanged: note only. The XSD's `reference` example is on `<attributes>`
 (original clef/key/time). That's the strongest case for another element, but `mx::api` doesn't model
 `<attributes>` as an object, so it stays out unless someone designs one.
 

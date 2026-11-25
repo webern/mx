@@ -13,7 +13,6 @@
 #include "mx/core/generated/Elision.h"
 #include "mx/core/generated/ElisionSyllabicGroup.h"
 #include "mx/core/generated/Extend.h"
-#include "mx/core/generated/FormattedText.h"
 #include "mx/core/generated/FullNoteGroupChoice.h"
 #include "mx/core/generated/GraceCueNoteGroup.h"
 #include "mx/core/generated/GraceNormalNoteGroup.h"
@@ -39,6 +38,7 @@
 #include "mx/core/generated/TimeModification.h"
 #include "mx/core/generated/TimeModificationGroup.h"
 #include "mx/core/generated/Unpitched.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/NotationsWriter.h"
 #include "mx/impl/PositionFunctions.h"
@@ -112,7 +112,7 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     setDurationNameAndDots();
     setNotehead();
     setStemDirection();
-    setMiscData();
+    setEditorial();
     setInstruments();
     impl::setId(myNoteData.id, myOutNote, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
     NotationsWriter notationsWriter{myNoteData, myCursor, myScoreWriter};
@@ -633,6 +633,9 @@ void NoteWriter::setLyrics() const
 
         impl::setAttributesFromPositionData(lyricData.positionData, lyric);
         impl::setId(lyricData.id, lyric, myScoreWriter.getDiagnostics(), cursorLocation(myCursor));
+        auto lyricEditorial = lyric.editorial();
+        impl::setEditorial(lyricData.level, lyricData.footnote, lyricEditorial);
+        lyric.setEditorial(std::move(lyricEditorial));
         if (lyricData.positionData.horizontalAlignment != api::HorizontalAlignment::unspecified)
         {
             lyric.setJustify(myConverter.convert(lyricData.positionData.horizontalAlignment));
@@ -754,52 +757,10 @@ void NoteWriter::setInstruments() const
     }
 }
 
-void NoteWriter::setMiscData() const
+void NoteWriter::setEditorial() const
 {
-    if (myNoteData.miscData.size() == 0)
-    {
-        return;
-    }
-
-    const std::string comma = ",";
-    const std::string underscore = "_";
-
-    std::vector<std::string> miscItems;
-    bool isFirst = true;
-    for (auto s : myNoteData.miscData)
-    {
-        // Comma is the item separator in the miscellaneous-field wire encoding, so commas
-        // inside user misc-data are irreversibly replaced with underscores.
-        if (s.find(comma) != std::string::npos)
-        {
-            const auto original = s;
-            std::string::size_type position = 0;
-            while ((position = s.find(comma, position)) != std::string::npos)
-            {
-                s.replace(position, comma.size(), underscore);
-                position++;
-            }
-            myScoreWriter.getDiagnostics().report(
-                api::Severity::warning, api::DiagnosticCode::valueAdjusted, cursorLocation(myCursor),
-                "note misc data \"" + original + "\" contains a comma; using \"" + s + "\"");
-        }
-
-        if (isFirst)
-        {
-            isFirst = false;
-            miscItems.push_back(std::string{"##misc-data##"} + s);
-        }
-        else
-        {
-            miscItems.push_back(s);
-        }
-    }
-
-    core::FormattedText footnote;
-    footnote.setFontFamily(core::FontFamily{std::move(miscItems)});
-
     auto editorialVoice = myOutNote.editorialVoice();
-    editorialVoice.setFootnote(std::move(footnote));
+    impl::setEditorial(myNoteData.level, myNoteData.footnote, editorialVoice);
     myOutNote.setEditorialVoice(std::move(editorialVoice));
 }
 } // namespace impl

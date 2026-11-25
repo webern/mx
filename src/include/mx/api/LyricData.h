@@ -5,7 +5,9 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/FootnoteData.h"
 #include "mx/api/Id.h"
+#include "mx/api/LevelData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
 
@@ -66,7 +68,7 @@ class LyricData
   public:
     LyricData()
         : text{}, verseNumber{}, verseName{}, syllabic{LyricSyllabic::unspecified}, hasExtend{false},
-          extendType{LyricExtendType::unspecified}, positionData{}, printData{}, id{}
+          extendType{LyricExtendType::unspecified}, positionData{}, printData{}, level{}, footnote{}, id{}
     {
     }
 
@@ -83,6 +85,12 @@ class LyricData
     LyricExtendType extendType;
     PositionData positionData;
     PrintData printData;
+
+    // The editorial status of this lyric (see LevelData), for example a syllable the editor added.
+    std::optional<LevelData> level;
+
+    // Editorial commentary about this lyric, printed as a footnote (see FootnoteData).
+    std::optional<FootnoteData> footnote;
 
     // The <lyric> element's id attribute (see Id.h).
     std::optional<Id> id;
@@ -106,6 +114,8 @@ MXAPI_EQUALS_MEMBER(hasExtend)
 MXAPI_EQUALS_MEMBER(extendType)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(printData)
+MXAPI_EQUALS_MEMBER(level)
+MXAPI_EQUALS_MEMBER(footnote)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(LyricData);

@@ -110,6 +110,7 @@
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/DynamicsWriter.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/FontFunctions.h"
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/LineFunctions.h"
@@ -122,6 +123,7 @@
 #include "mx/impl/TuningFunctions.h"
 
 #include <algorithm>
+#include <iterator>
 
 namespace mx
 {
@@ -220,16 +222,17 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         direction.setOffset(coreOffset);
     }
 
-    // Assign the direction to a voice via the editorial-voice <voice>. Only emitted when this
-    // direction also writes direction-type content (guarded by myIsDirectionTypeAdded below),
+    // The editorial-voice group: the direction's <footnote>, <level> and <voice>. Only emitted when
+    // this direction also writes direction-type content (guarded by myIsDirectionTypeAdded below),
     // so a voice carried in from a figured-bass or harmony element never produces an empty
     // <direction>.
+    auto editorialVoice = direction.editorialVoiceDirection();
     if (myDirectionData.voice >= 0)
     {
-        core::EditorialVoiceDirectionGroup editorialVoice{};
         editorialVoice.setVoice(std::to_string(myDirectionData.voice));
-        direction.setEditorialVoiceDirection(std::move(editorialVoice));
     }
+    setEditorial(myDirectionData.level, myDirectionData.footnote, editorialVoice);
+    direction.setEditorialVoiceDirection(std::move(editorialVoice));
 
     emitDirectionTypes(direction);
 
@@ -262,6 +265,13 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         }
 
         output.push_back(core::MusicDataChoice::sound(std::move(sound)));
+    }
+
+    if (!myIsDirectionTypeAdded && (myDirectionData.level.has_value() || myDirectionData.footnote.has_value()))
+    {
+        myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, cursorLocation(myCursor),
+                             "a direction level or footnote is not written; the direction does not have any "
+                             "direction types");
     }
 
     auto harmonyMdcs = createHarmonyElements(offset, offsetSound);
@@ -1467,6 +1477,34 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
         harmony.setPrintFrame(myConverter.convert(printFrameChord->printFrame));
     }
 
+    // The level and footnote also belong to the whole <harmony>; each comes from the first chord
+    // that has one. A later chord with a different one is reported.
+    const auto levelChord =
+        std::find_if(chords.cbegin(), chords.cend(), [](const api::ChordData &c) { return c.level.has_value(); });
+    const auto footnoteChord =
+        std::find_if(chords.cbegin(), chords.cend(), [](const api::ChordData &c) { return c.footnote.has_value(); });
+    if (levelChord != chords.cend() && std::any_of(levelChord, chords.cend(), [&levelChord](const api::ChordData &c) {
+            return c.level.has_value() && *c.level != *levelChord->level;
+        }))
+    {
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, cursorLocation(myCursor),
+                             "the chords of a harmony have different levels; using the level of chord " +
+                                 std::to_string(std::distance(chords.cbegin(), levelChord) + 1));
+    }
+    if (footnoteChord != chords.cend() &&
+        std::any_of(footnoteChord, chords.cend(), [&footnoteChord](const api::ChordData &c) {
+            return c.footnote.has_value() && *c.footnote != *footnoteChord->footnote;
+        }))
+    {
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, cursorLocation(myCursor),
+                             "the chords of a harmony have different footnotes; using the footnote of chord " +
+                                 std::to_string(std::distance(chords.cbegin(), footnoteChord) + 1));
+    }
+    auto harmonyEditorial = harmony.editorial();
+    setEditorial(levelChord != chords.cend() ? levelChord->level : std::nullopt,
+                 footnoteChord != chords.cend() ? footnoteChord->footnote : std::nullopt, harmonyEditorial);
+    harmony.setEditorial(std::move(harmonyEditorial));
+
     auto chordIter = chords.cbegin();
     const auto chordEnd = chords.cend();
 
@@ -1870,10 +1908,16 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
                 figure.setExtend(std::move(extend));
             }
 
+            auto figureEditorial = figure.editorial();
+            setEditorial(figureData.level, figureData.footnote, figureEditorial);
+            figure.setEditorial(std::move(figureEditorial));
             figuredBass.addFigure(figure);
         }
 
         setId(figuredBassData.id, figuredBass, myDiagnostics, cursorLocation(myCursor));
+        auto figuredBassEditorial = figuredBass.editorial();
+        setEditorial(figuredBassData.level, figuredBassData.footnote, figuredBassEditorial);
+        figuredBass.setEditorial(std::move(figuredBassEditorial));
         setAttributesFromPositionData(figuredBassData.positionData, figuredBass);
         setAttributesFromPrintData(figuredBassData.printData, figuredBass);
 

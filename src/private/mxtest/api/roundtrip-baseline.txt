@@ -906,3 +906,9 @@ synthetic/grace.3.0.xml
 # as voice 4. They are now two voices, and the writer puts the voice-5 note in the gap it fills
 # rather than adding a <forward> and a <backup>.
 musuite/testVoiceMapper1.xml
+
+# Unblocked by LevelData and FootnoteData. The <level> of a <part-group> was dropped; a part group
+# now keeps its level and footnote, as do notes, lyrics, barlines, directions, harmonies and
+# figured bass.
+synthetic/level.3.0.xml
+synthetic/level.4.0.xml

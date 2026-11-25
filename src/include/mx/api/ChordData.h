@@ -5,6 +5,8 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/FootnoteData.h"
+#include "mx/api/LevelData.h"
 #include "mx/api/MiscData.h"
 #include "mx/api/PitchData.h"
 #include "mx/api/PositionData.h"
@@ -323,6 +325,15 @@ class ChordData
     // value; when they differ, the first chord that is not unspecified is used.
     Bool printFrame;
     PositionData positionData;
+
+    // The editorial status of the chord symbol (see LevelData), for example a chord the editor
+    // supplied. The chords of one direction share a single level, so give them all the same
+    // value; when they differ, the first chord that has one is used.
+    std::optional<LevelData> level;
+
+    // Editorial commentary about the chord symbol, printed as a footnote (see FootnoteData). The
+    // chords of one direction share a single footnote, the same way they share level.
+    std::optional<FootnoteData> footnote;
 };
 
 MXAPI_EQUALS_BEGIN(ChordData)
@@ -356,6 +367,8 @@ MXAPI_EQUALS_MEMBER(hasFrameData)
 MXAPI_EQUALS_MEMBER(frameData)
 MXAPI_EQUALS_MEMBER(printFrame)
 MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(level)
+MXAPI_EQUALS_MEMBER(footnote)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(ChordData);
 

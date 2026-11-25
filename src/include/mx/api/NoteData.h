@@ -7,7 +7,9 @@
 #include "mx/api/ColorData.h"
 #include "mx/api/CurveData.h"
 #include "mx/api/DurationData.h"
+#include "mx/api/FootnoteData.h"
 #include "mx/api/Id.h"
+#include "mx/api/LevelData.h"
 #include "mx/api/LyricData.h"
 #include "mx/api/NoteAttachmentData.h"
 #include "mx/api/PitchData.h"
@@ -266,17 +268,16 @@ class NoteData
     NoteAttachmentData noteAttachmentData;
     std::vector<LyricData> lyrics;
 
-    // these strings will be stuffed into the editorial <footnote> element
-    // preceded by the string ##misc-data##. for example if you have the
-    // strings Bob, Cat, Hello then we will get:
-    // <footnote print-object="no">##misc-data##Bob,Cat,Hello</footnote>
-    // similarly when parsing if we see ##misc-data## in this element, it
-    // will be parsed into these strings. do not use commas in your misc
-    // data strings as these are the delimiter
+    // The editorial status of this note or rest (see LevelData), for example a rest the editor
+    // added, drawn in parentheses. Parentheses around a rest go here, because a rest does not have
+    // a notehead. Leave it absent for a note that is not marked as editorial.
+    std::optional<LevelData> level;
+
+    // Editorial commentary about this note or rest, printed as a footnote (see FootnoteData).
+    std::optional<FootnoteData> footnote;
 
     // The <note> element's id attribute (see Id.h).
     std::optional<Id> id;
-    std::vector<std::string> miscData;
 };
 
 MXAPI_EQUALS_BEGIN(NoteData)
@@ -317,7 +318,8 @@ MXAPI_EQUALS_MEMBER(printData)
 MXAPI_EQUALS_MEMBER(printLeger)
 MXAPI_EQUALS_MEMBER(noteAttachmentData)
 MXAPI_EQUALS_MEMBER(lyrics)
-MXAPI_EQUALS_MEMBER(miscData)
+MXAPI_EQUALS_MEMBER(level)
+MXAPI_EQUALS_MEMBER(footnote)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(NoteData);

@@ -8,7 +8,9 @@
 #include "mx/api/ChordData.h"
 #include "mx/api/DirectionChoice.h"
 #include "mx/api/FiguredBassData.h"
+#include "mx/api/FootnoteData.h"
 #include "mx/api/Id.h"
+#include "mx/api/LevelData.h"
 #include "mx/api/SoundData.h"
 
 #include <optional>
@@ -102,6 +104,16 @@ struct DirectionData
     // serialize as their own <figured-bass> elements, not as direction-type content.
     std::vector<FiguredBassData> figuredBasses;
 
+    // The editorial status of the direction's content (see LevelData), for example a dynamic the
+    // editor added, drawn in brackets. MusicXML keeps it on the <direction> element, which needs at
+    // least one direction type, so give the direction something in directionTypes. The chords and
+    // figured bass held here carry their own.
+    std::optional<LevelData> level;
+
+    // Editorial commentary about the direction's content, printed as a footnote (see FootnoteData).
+    // Like level, it is kept on the <direction> element, which needs at least one direction type.
+    std::optional<FootnoteData> footnote;
+
     // The <direction> element's id attribute (see Id.h).
     std::optional<Id> id;
 
@@ -109,7 +121,7 @@ struct DirectionData
         : tickTimePosition{0}, placement{Placement::unspecified}, systemRelation{SystemRelation::unspecified},
           directive{Bool::unspecified}, offset{}, offsetSound{Bool::unspecified}, voice{VALUE_UNSPECIFIED},
           isStaffValueSpecified{true}, isSoundDataSpecified{false}, soundData{}, directionTypes{}, chords{},
-          figuredBasses{}, id{}
+          figuredBasses{}, level{}, footnote{}, id{}
     {
     }
 };
@@ -134,6 +146,8 @@ MXAPI_EQUALS_MEMBER(soundData)
 MXAPI_EQUALS_MEMBER(directionTypes)
 MXAPI_EQUALS_MEMBER(chords)
 MXAPI_EQUALS_MEMBER(figuredBasses)
+MXAPI_EQUALS_MEMBER(level)
+MXAPI_EQUALS_MEMBER(footnote)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(DirectionData);

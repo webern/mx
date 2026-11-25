@@ -69,7 +69,8 @@ class NoteWriter
     // Writes an <instrument> for each of the note's instruments that is one of the part's, and
     // reports each one that is not.
     void setInstruments() const;
-    void setMiscData() const;
+    // Writes the note's level and footnote, keeping the <voice> that setStaffAndVoice wrote.
+    void setEditorial() const;
 };
 } // namespace impl
 } // namespace mx
